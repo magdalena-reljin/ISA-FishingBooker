@@ -1,32 +1,23 @@
-package rs.ac.uns.ftn.isa.fisherman.model;
-import javax.persistence.*;
+package rs.ac.uns.ftn.isa.fisherman.dto;
 
-@Entity
-@Table(name="users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
-public abstract class User {
+import rs.ac.uns.ftn.isa.fisherman.model.Address;
 
-    @Id
-    @SequenceGenerator(name = "account_sequence_generator", sequenceName = "account_sequence", initialValue = 100)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence_generator")
-    @Column(name = "id", unique = true)
-    protected Long id;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 
-    @Column(name="name")
-    protected String name;
-    @Column(name="lastName")
-    protected String lastName;
-    @Column(name="email")
-    protected String email;
-    @Column(name="password")
-    protected String password;
-    @Column(name="phoneNum")
-    protected String phoneNum;
-    @Embedded
+public class CabinOwnerDTO {
+    private Long id;
+    private String name;
+    private String lastName;
+    private String email;
+    private String password;
+    private String phoneNum;
     private Address address;
-    public User(){}
-    public User(Long id, String name, String lastName, String email, String password, String phoneNum, Address address) {
+    private String registrationReason;
+
+    public CabinOwnerDTO() {}
+
+    public CabinOwnerDTO(Long id, String name, String lastName, String email, String password, String phoneNum, Address address, String registrationReason) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -34,7 +25,7 @@ public abstract class User {
         this.password = password;
         this.phoneNum = phoneNum;
         this.address = address;
-
+        this.registrationReason = registrationReason;
     }
 
     public Long getId() {
@@ -91,5 +82,13 @@ public abstract class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getRegistrationReason() {
+        return registrationReason;
+    }
+
+    public void setRegistrationReason(String registrationReason) {
+        this.registrationReason = registrationReason;
     }
 }

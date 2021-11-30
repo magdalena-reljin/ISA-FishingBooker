@@ -97,6 +97,38 @@
 
 </template>
 
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+       user: {
+         id: null,
+         role: '',
+
+       }
+    };
+  },
+  mounted() {
+    
+  },
+  methods() {
+    register: {
+    
+        
+        axios
+        .post("api/registration",)
+        .then((response) => {
+        return response; 
+         });
+    }
+  }
+};
+</script>
+
+
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
