@@ -21,58 +21,91 @@
       <form method='post' class="was-validated">
           <div class="form-row">
               <div class="col form-group">
-                  <label>Name </label>   
+                  <label id="label">Name </label>   
                     <input  type="text" class="form-control" required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
               </div> 
               <div class="col form-group">
-                  <label>Surname</label>
+                  <label id="label">Surname</label>
                     <input  type="text" class="form-control" required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
               </div> 
           </div>
           <div class="form-group">
-              <label>Email</label>
-              <input type="email" class="form-control"   required>
+              <label id="label">Email</label>
+              <input type="email" class="form-control" placeholder="someone@gmail.com"   required>
               <div class="valid-feedback">Valid.</div>
               <div class="invalid-feedback">Please fill out this field.</div>
           </div>
           <div class="col form-group">
-          <label>Password </label>   
+          <label id="label">Password </label>   
             <input type="password" class="form-control"   required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback">Please fill out this field.</div>
       </div> 
-          <br>
-          <div class="form-group">
-                  <label class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" value="1"   required>
-                <span class="form-check-label"> Male </span>
-              </label>
-              <label class="form-check form-check-inline">
-                <input  class="form-check-input" type="radio" name="gender" value=0   required>
-                <span class="form-check-label"> Female</span>
-              </label>
-              
-          </div> 
+          <div class="col form-group">
+          <label id="label">Confirm password </label>   
+            <input type="password" class="form-control"   required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+      </div> 
+
+       <div class="col form-group">
+                  <label id="label">Street and number </label>   
+                    <input  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+
+        <div class="col form-group">
+                  <label id="label">City </label>   
+                    <input  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+         </div> 
+
+        <div class="col form-group">
+                  <label id="label">Country </label>   
+                    <input  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+
+        <div class="col form-group">
+                  <label id="label">Phone number </label>   
+                    <input  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+
+        <div>
+
+        <label id="label">Choose account type</label>   
+        <select v-model="selectedClient" class="form-select form-select-sm" aria-label=".form-select-sm example" required>
+                <option >CLIENT</option>
+                <option >CABIN OWNER</option>
+                <option >BOAT OWNER</option>
+                <option >FISHING INSTRUCTOR</option>
+        </select>
+             </div>
+
+   <div v-if="selectedClient != 'CLIENT'"  class="form-group">
+    <label for="exampleFormControlTextarea1">Example textarea</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+  </div>
+   
           <br>
           <div class="form-row">
           <div class="row">
           <div class="col-12">
-  <div class="form-group">
-   <label >Birthday</label>
-   <input  type="date" name="bday" min="1930-01-01"
-          max="2003-12-31" class="form-control"  required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
-  </div>
-    <br>
+ 
+  
   </div>
       </div>
           </div> 
-          <br>
+         
           <div style="color:red;"></div>
           <br>
           <div class="form-group">
@@ -98,11 +131,13 @@
 </template>
 
 <script>
+
 import axios from "axios";
 
 export default {
   data() {
     return {
+       selectedClient: 'CLIENT',
        user: {
          id: null,
          role: '',
@@ -128,7 +163,6 @@ export default {
 </script>
 
 
-
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -145,6 +179,10 @@ export default {
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+}
+
+#label{
+  float: left;
 }
 
 #nav a.router-link-exact-active {
