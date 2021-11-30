@@ -1,2 +1,3 @@
-insert  into users (role, id, city,country,latitude, longitude, street_and_num, email, last_name, name, password, phone_num) values ('ADMIN', 1, 'Novi Sad', 'Serbia', 45.267136, 19.833549, 'Ljubice Ravasi 2a', 'dajanazlokapa1@gmail.com',
-    'Zlokapa', 'Dajana', 'Dajana99!', '+3810616789856');
+INSERT INTO users (role, id, city, country, latitude, longitude, street_and_num, email, last_name, name ,password, phone_num) values ('ADMIN',1, 'Novi Sad','Serbia',45.267136,19.833549, 'Ljubice Ravasi 2a','dajanazlokapa1@gmail.com', 'Zlokapa','Dajana','Dajana99!','+3810616789856');
+INSERT INTO users (role, id, city, country, latitude, longitude, street_and_num, email, last_name, name ,password, phone_num) values ('ADMIN',2, 'Novi Sad','Serbia',45.267136,19.833549, 'Sarplaninska 44','reljin.magdalena@gmail.com', 'Reljin','Magdalena','Magdalena99!','+3810987789856');
+INSERT INTO users (role, id, city, country, latitude, longitude, street_and_num, email, last_name, name ,password, phone_num) values ('ADMIN',3, 'Novi Sad','Serbia',45.267136,19.833549, 'Mileve Maric','aleksastojicns@gmail.com', 'Stojic','Aleksa','Aleksa99!!','+3810987789111');

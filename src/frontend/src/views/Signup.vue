@@ -132,14 +132,34 @@
 
 <script>
 
+import axios from "axios";
 
 export default {
-    data() {
-        return {
-          selectedClient: 'CLIENT'
-        }
+  data() {
+    return {
+       selectedClient: 'CLIENT',
+       user: {
+         id: null,
+         role: '',
+
+       }
+    };
+  },
+  mounted() {
+    
+  },
+  methods() {
+    register: {
+    
+        
+        axios
+        .post("api/registration",)
+        .then((response) => {
+        return response; 
+         });
     }
-}
+  }
+};
 </script>
 
 
