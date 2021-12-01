@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.isa.fisherman.repository.IUserRepository;
 public class RegistrationService {
     @Autowired
     private IUserRepository userRepository;
+
     public void RegisterCabinOwner(CabinOwner cabinOwner){
         userRepository.save(cabinOwner);
     }
