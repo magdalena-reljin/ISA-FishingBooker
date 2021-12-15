@@ -3,7 +3,7 @@
      <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
   <div class="container-fluid" style="background-color: #1d7ac9;">
   <a class="navbar-brand">
-  <img src="../assets/logoF1.png" alt="" width="194" height="80" >
+  <img src="src/assets/logoF1.png" alt="" width="194" height="80" >
 </a>
 
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -26,17 +26,9 @@
 
 
   </div>
+
 </template>
 
-<script>
-export default {
-  name: 'Home',
-  props: {
-  }
-}
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -58,3 +50,4 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+</style>

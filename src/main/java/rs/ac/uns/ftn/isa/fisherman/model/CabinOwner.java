@@ -25,4 +25,14 @@ public class CabinOwner extends User{
     public void setRegistrationReason(String registrationReason) {
         this.registrationReason = registrationReason;
     }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
 }

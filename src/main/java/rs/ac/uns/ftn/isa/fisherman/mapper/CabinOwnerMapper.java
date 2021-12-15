@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.mapper;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinOwnerDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.RegistrationDTO;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequest;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 
 public class CabinOwnerMapper {
@@ -17,5 +18,11 @@ public class CabinOwnerMapper {
     public CabinOwner DTOToCabinOwner(CabinOwnerDTO cabinOwnerDTO){
         return new CabinOwner(cabinOwnerDTO.getId(), cabinOwnerDTO.getName(), cabinOwnerDTO.getLastName(), cabinOwnerDTO.getEmail(),
                 cabinOwnerDTO.getPassword(), cabinOwnerDTO.getPhoneNum(), cabinOwnerDTO.getAddress(), cabinOwnerDTO.getRegistrationReason());
+    }
+
+    public CabinOwner UserRequestDTOToCabinOwner(UserRequest userRequest) {
+        AddressMapper addressMapper=new AddressMapper();
+        return  new CabinOwner(userRequest.getId(),userRequest.getFirstname(),userRequest.getLastname(),userRequest.getEmail(),
+                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.DTOToAddress(userRequest.getAddress()),userRequest.getRegistrationReason());
     }
 }

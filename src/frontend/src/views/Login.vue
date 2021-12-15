@@ -1,6 +1,16 @@
 <template>
   <div>
+    <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
+      <div class="container-fluid" style="background-color: #1d7ac9;">
+      <a class="navbar-brand"  href="http://localhost:8080/" >
+      <img src="src/assets/logoF1.png" alt="" width="194" height="80" >
+      </a>
     
+    
+    
+      </div>
+    
+    </nav>
 
     <br>
       <br>
@@ -54,24 +64,22 @@
 
 
   </div>
+
 </template>
 
 <script>
-export default {
-  name: 'Login',
-  props: {
-    msg: String
-  },
-  methods: {
+   export default{
+     methods: {
       goToSignUp: function() {
            this.$router.push('/signup');
-      } ,
+      } 
       
+      
+    }
   }
-}
-</script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+</script> 
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -86,7 +94,7 @@ export default {
 }
 #logincard{
   width: 47%;
-
+  /* background-image:  url("src/views/images/IMG_3872.jpeg"); */
 }
 
 #nav a {
@@ -97,5 +105,4 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-
 </style>
