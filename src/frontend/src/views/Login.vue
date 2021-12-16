@@ -3,7 +3,7 @@
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
       <a class="navbar-brand"  href="http://localhost:8080/" >
-      <img src="src/assets/logoF1.png" alt="" width="194" height="80" >
+      <img src="../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
     
     
@@ -94,7 +94,7 @@
 }
 #logincard{
   width: 47%;
-  /* background-image:  url("src/views/images/IMG_3872.jpeg"); */
+  background-image:  url("../assets/IMG_3872.jpeg"); 
 }
 
 #nav a {
