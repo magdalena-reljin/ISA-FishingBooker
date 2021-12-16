@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
@@ -79,6 +80,18 @@ public class AuthenticationController {
         this.userService.registerCabinOwner(cabinOwnerMapper.UserRequestDTOToCabinOwner(userRequest),httpServletRequest.getHeader("origin"));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
+
+    @PostMapping("/activate")
+    public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {
+        String email = verificationDTO.getEmail();
+        String code = verificationDTO.getActivationCode();
+
+        if(this.userService.activateAccount(email, code) != null){
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Success.", HttpStatus.BAD_REQUEST);
+    }
+
 
     // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
     @PostMapping(value = "/refresh")

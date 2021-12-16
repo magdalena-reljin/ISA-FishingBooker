@@ -59,8 +59,21 @@ public class UserServiceImpl implements UserService {
         sendActivationURL(cabinOwner,sourceURL);
         return cabinOwner;
     }
+
+    @Override
+    public User activateAccount(String email, String code) {
+        User user = findByEmail(email);
+        if (!user.getActivationURL().equals(code)) {
+            return null;
+        }
+        user.setEnabled(true);
+        user.setActivationURL(null);
+        user = this.userRepository.save(user);
+        return user;
+    }
+
     private void sendActivationURL(CabinOwner cabinOwner, String sourceURL) throws MessagingException {
-        String verificationURL= sourceURL + "/activation?code=" + cabinOwner.getActivationURL() + "&email=" + cabinOwner.getEmail();
+        String verificationURL= sourceURL + "/activation/" + cabinOwner.getActivationURL() + "/" + cabinOwner.getEmail();
         mailService.sendMail(cabinOwner.getEmail(),verificationURL,new UserActivationLink());
     }
 

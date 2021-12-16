@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import ConfirmEmail from '../views/ConfirmEmail.vue'
+import Activation from '../views/Activation.vue'
 
 const routes = [
   {
@@ -21,9 +22,14 @@ const routes = [
     component: Signup
   },
   {
-    path: '/confirmEmail',
+    path: '/confirmEmail/:activationCode/:email',
     name: 'ConfirmEmail',
     component: ConfirmEmail
+  },
+  {
+    path: '/activation/:activationCode/:email',
+    name: 'Activation',
+    component: Activation
   }
 ]
 

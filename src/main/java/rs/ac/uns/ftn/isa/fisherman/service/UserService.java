@@ -13,4 +13,6 @@ public interface UserService {
     User findByEmail(String email);
     List<User> findAll ();
     User registerCabinOwner(CabinOwner cabinOwner, String sourceURL) throws MessagingException;
+
+    User activateAccount(String email, String code);
 }
