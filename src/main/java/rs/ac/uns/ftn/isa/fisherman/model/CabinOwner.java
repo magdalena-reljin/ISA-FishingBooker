@@ -9,6 +9,7 @@ public class CabinOwner extends User{
     private String registrationReason;
     public CabinOwner(){}
 
+
     public CabinOwner(Long id, String name, String lastName, String email, String password, String phoneNum, Address address, String registrationReason) {
         super(id, name, lastName, email, password, phoneNum, address);
         this.registrationReason = registrationReason;

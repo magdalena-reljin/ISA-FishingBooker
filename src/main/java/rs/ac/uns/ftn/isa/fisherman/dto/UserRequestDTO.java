@@ -1,6 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-public class UserRequest {
+public class UserRequestDTO {
 
     private Long id;
 
@@ -16,7 +16,7 @@ public class UserRequest {
     private AddressDTO address;
     private String registrationReason;
 
-    public UserRequest(Long id, String email, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason) {
+    public UserRequestDTO(Long id, String email, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -27,7 +27,7 @@ public class UserRequest {
         this.registrationReason = registrationReason;
     }
 
-    public  UserRequest(){}
+    public UserRequestDTO(){}
     public String getPhoneNum() {
         return phoneNum;
     }
