@@ -27,7 +27,7 @@
                     <div class="invalid-feedback">Please fill out this field.</div>
               </div> 
               <div class="col form-group">
-                  <label id="label">Lastname</label>
+                  <label id="label">Last name</label>
                     <input   v-model="user.lastname" type="text" class="form-control" required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
@@ -92,7 +92,7 @@
              </div>
 
    <div v-if="selectedClient != 'CLIENT'"  class="form-group">
-    <label for="exampleFormControlTextarea1">Example textarea</label>
+    <label for="exampleFormControlTextarea1">Registration reason</label>
     <textarea  v-model="user.registrationReason" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
   </div>
    
@@ -164,11 +164,17 @@ export default {
   methods: {
     register: function(event) {
       event.preventDefault();
-        axios
-        .post("http://localhost:8081/auth/signup",this.user)
-        .then((response) => {
-        return response; 
-         });
+
+        if(this.selectedClient === 'CABIN OWNER'){
+               axios
+               .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
+               .then((response) => {
+                   this.$router.push('/confirmEmail/'+this.user.email);
+
+                   return response; 
+               });
+            
+        }
     }
   }
 };

@@ -1,18 +1,17 @@
-package rs.ac.uns.ftn.isa.fisherman.model;
-
+package rs.ac.uns.ftn.isa.fisherman.dto;
 
 // DTO koji enkapsulira generisani JWT i njegovo trajanje koji se vracaju klijentu
-public class UserTokenState {
+public class UserTokenStateDTO {
 
     private String accessToken;
     private Long expiresIn;
 
-    public UserTokenState() {
+    public UserTokenStateDTO() {
         this.accessToken = null;
         this.expiresIn = null;
     }
 
-    public UserTokenState(String accessToken, long expiresIn) {
+    public UserTokenStateDTO(String accessToken, long expiresIn) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
     }

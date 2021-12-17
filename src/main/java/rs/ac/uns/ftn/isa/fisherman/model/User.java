@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name="users")
@@ -37,6 +36,9 @@ public abstract class User implements UserDetails {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @Column(name = "activation_url", length = 64)
+    private String activationURL;
 
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
@@ -138,7 +140,9 @@ public abstract class User implements UserDetails {
         return true;
     }
 
+    public String getActivationURL() { return activationURL; }
 
+    public void setActivationURL(String activationCode) { this.activationURL = activationCode;}
 
     public String getPhoneNum() {
         return phoneNum;
