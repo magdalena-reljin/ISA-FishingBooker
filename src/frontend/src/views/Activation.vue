@@ -1,9 +1,32 @@
 <template>
   <div>
-    <h1>OVO JE STRANICA ZA AKTIVACIJU</h1>
+       <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
+  <div class="container-fluid" style="background-color: #1d7ac9;">
+  <a class="navbar-brand"  href="http://localhost:8080/" >
+  <img src="../assets/logoF1.png" alt="" width="194" height="80" >
+</a>
 
-    
+
+
+
+
+
   </div>
+
+</nav>
+  <br>
+  
+  <div class="jumbotron">
+  <h1 class="display-4">Hello, {{this.activationDTO.email}}!</h1>
+  <p class="lead">You have successfully verified your account.</p>
+  <hr class="my-4">
+  <p>Log in and start using Fisherman.</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="http://localhost:8080/login" role="button">Go to login</a>
+  </p>
+  </div>
+  </div>
+  
 </template>
 
 <script>

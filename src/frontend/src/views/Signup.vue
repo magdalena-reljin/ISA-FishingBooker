@@ -169,10 +169,11 @@ export default {
                axios
                .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
                .then((response) => {
-                return response; 
+                   this.$router.push('/confirmEmail/'+this.user.email);
+
+                   return response; 
                });
-
-
+            
         }
     }
   }

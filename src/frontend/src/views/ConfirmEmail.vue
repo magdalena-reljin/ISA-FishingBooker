@@ -1,5 +1,5 @@
 <template>
-  <div id="mainc">
+  <div >
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
       <a class="navbar-brand" href="http://localhost:8080/">
@@ -9,9 +9,20 @@
     </nav>
 
    <br>
-     <h1>aaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h1>
+   <br>
+   <div class="alert alert-primary" style="margin-top: 3%;
+  margin-bottom: 10%;
+  margin-right: 10%;
+  margin-left: 10%;" role="alert">
+   <h4 class="alert-heading">Well done! One more step...</h4>
+   <p>Activation link sent to {{this.email}}. Please check your email and confirm account.</p>
+   </div>
 
 
+
+   
+
+  
   </div>
 
 </template>
@@ -23,28 +34,11 @@
 export default {
   data() {
     return {
-       user: {
-         id: null,
-         email:'',
-         password: '',
-         firstname: '',
-         lastname: '',
-         phoneNum: '',
-         address: {
-              longitude: 0,
-             latitude: 0,
-             country: '',
-             city: '',
-           streetAndNum: ''
-         },
-         registrationReason: ''
-        
-
-       }
+       email: '',
     };
   },
   mounted() {
-    
+    this.email = this.$route.params.email
   },
   methods: {
     
@@ -54,32 +48,5 @@ export default {
 
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#label{
-  float: left;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-#mainc{
-
-  background-image: linear-gradient(#278ade,black);
-}
 </style>

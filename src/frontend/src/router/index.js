@@ -22,7 +22,7 @@ const routes = [
     component: Signup
   },
   {
-    path: '/confirmEmail/:activationCode/:email',
+    path: '/confirmEmail/:email',
     name: 'ConfirmEmail',
     component: ConfirmEmail
   },
