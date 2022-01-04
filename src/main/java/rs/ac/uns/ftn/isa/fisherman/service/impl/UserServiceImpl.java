@@ -9,9 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.UserActivationLink;
-import rs.ac.uns.ftn.isa.fisherman.model.Authority;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
-import rs.ac.uns.ftn.isa.fisherman.model.User;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
@@ -67,6 +65,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public BoatOwner registerBoatOwner(BoatOwner boatOwner, String sourceURL) throws MessagingException {
+        List<Authority> auth = authorityService.findByname(boatOwner.getRoleApp());
+        boatOwner.setAuthorities(auth);
+        String activationURL= RandomString.make(64);
+        boatOwner.setActivationURL(activationURL);
+        boatOwner.setPassword(passwordEncoder.encode(boatOwner.getPassword()));
+        boatOwner=userRepository.save(boatOwner);
+        sendActivationURLBoatOwner(boatOwner,sourceURL);
+        return boatOwner;
+
+    }
+
+    @Override
+    public FishingInstructor registerFishingInstructor(FishingInstructor fishingInstructor, String sourceURL) throws MessagingException {
+        List<Authority> auth = authorityService.findByname(fishingInstructor.getRoleApp());
+        fishingInstructor.setAuthorities(auth);
+        String activationURL= RandomString.make(64);
+        fishingInstructor.setActivationURL(activationURL);
+        fishingInstructor.setPassword(passwordEncoder.encode(fishingInstructor.getPassword()));
+        fishingInstructor=userRepository.save(fishingInstructor);
+        sendActivationURLFishingInstructor(fishingInstructor,sourceURL);
+        return fishingInstructor;
+
+    }
+
+    @Override
     public User activateAccount(String email, String code) {
         User user = findByEmail(email);
         if (!user.getActivationURL().equals(code)) {
@@ -81,6 +105,16 @@ public class UserServiceImpl implements UserService {
     private void sendActivationURL(CabinOwner cabinOwner, String sourceURL) throws MessagingException {
         String verificationURL= sourceURL + "/activation/" + cabinOwner.getActivationURL() + "/" + cabinOwner.getEmail();
         mailService.sendMail(cabinOwner.getEmail(),verificationURL,new UserActivationLink());
+    }
+
+    private void sendActivationURLBoatOwner(BoatOwner boatOwner, String sourceURL) throws MessagingException {
+        String verificationURL= sourceURL + "/activation/" + boatOwner.getActivationURL() + "/" + boatOwner.getEmail();
+        mailService.sendMail(boatOwner.getEmail(),verificationURL,new UserActivationLink());
+    }
+
+    private void sendActivationURLFishingInstructor(FishingInstructor fishingInstructor, String sourceURL) throws MessagingException {
+        String verificationURL= sourceURL + "/activation/" + fishingInstructor.getActivationURL() + "/" + fishingInstructor.getEmail();
+        mailService.sendMail(fishingInstructor.getEmail(),verificationURL,new UserActivationLink());
     }
 
 }

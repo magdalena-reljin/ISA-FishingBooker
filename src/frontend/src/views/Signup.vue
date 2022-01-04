@@ -174,6 +174,25 @@ export default {
                    return response; 
                });
             
+        }else if(this.selectedClient === 'BOAT OWNER'){
+               axios
+               .post("http://localhost:8081/auth/signUpBoatOwner",this.user)
+               .then((response) => {
+                   this.$router.push('/confirmEmail/'+this.user.email);
+
+                   return response; 
+               });
+
+        }else if(this.selectedClient === 'FISHING INSTRUCTOR'){
+
+              axios
+               .post("http://localhost:8081/auth/signUpFishingInstructor",this.user)
+               .then((response) => {
+                   this.$router.push('/confirmEmail/'+this.user.email);
+
+                   return response; 
+               });
+
         }
     }
   }

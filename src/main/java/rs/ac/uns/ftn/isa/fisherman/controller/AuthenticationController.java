@@ -2,26 +2,23 @@ package rs.ac.uns.ftn.isa.fisherman.controller;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
+import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserTokenStateDTO;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
-import rs.ac.uns.ftn.isa.fisherman.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
@@ -52,6 +49,8 @@ public class AuthenticationController {
 
     private String success= "Success!";
     private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
+    private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
+    private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
 
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -92,10 +91,30 @@ public class AuthenticationController {
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
-        System.out.println("STIGAO SAMMMM " + userRequest.getPassword());
         this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest),httpServletRequest.getHeader("origin"));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
+
+    @PostMapping("/signUpBoatOwner")
+    public ResponseEntity<String> registerBoatOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        if (existUser != null) {
+            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
+        }
+        this.userService.registerBoatOwner(boatOwnerMapper.userRequestDtoToBoatOwner(userRequest),httpServletRequest.getHeader("origin"));
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/signUpFishingInstructor")
+    public ResponseEntity<String> registerFishingInstructor(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        if (existUser != null) {
+            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
+        }
+        this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest),httpServletRequest.getHeader("origin"));
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+
 
     @PostMapping("/activate")
     public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {
