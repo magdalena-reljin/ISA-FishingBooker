@@ -7,12 +7,24 @@ import javax.persistence.Entity;
 @DiscriminatorValue("BOAT OWNER")
 public class BoatOwner extends User {
     private static String roleApp = "ROLE_BOATOWNER";
-
+    private String registrationReason;
     public BoatOwner() {
     }
 
-    public BoatOwner(Long id, String name, String lastName, String email, String password, String phoneNum, Address address) {
+    public BoatOwner(Long id, String name, String lastName, String email, String password, String phoneNum, Address address,String registrationReason) {
         super(id, name, lastName, email, password, phoneNum, address);
+        this.registrationReason=registrationReason;
+    }
+
+
+
+
+    public String getRegistrationReason() {
+        return registrationReason;
+    }
+
+    public void setRegistrationReason(String registrationReason) {
+        this.registrationReason = registrationReason;
     }
 
     @Override
