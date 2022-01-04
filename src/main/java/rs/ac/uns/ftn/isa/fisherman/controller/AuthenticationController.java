@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.UserMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserTokenStateDTO;
@@ -22,6 +23,9 @@ import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -51,6 +55,7 @@ public class AuthenticationController {
     private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
     private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
     private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
+    private UserMapper userMapper=new UserMapper();
 
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -115,6 +120,10 @@ public class AuthenticationController {
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
+    @GetMapping("/getNewUsers")
+    public ResponseEntity<List<UserRequestDTO>>getNewUsers() throws MessagingException {
+        return new ResponseEntity<>(userService.getNewUsers(), HttpStatus.CREATED);
+    }
 
     @PostMapping("/activate")
     public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {

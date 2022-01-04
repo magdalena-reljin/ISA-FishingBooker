@@ -32,6 +32,10 @@ public abstract class User implements UserDetails {
     protected String password;
     @Column(name="phoneNum")
     protected String phoneNum;
+    @Column(name="registrationReason")
+    private String registrationReason;
+    @Column(name = "accepted")
+    private  boolean accepted;
     @Embedded
     private  Address address;
 
@@ -58,7 +62,6 @@ public abstract class User implements UserDetails {
         this.password = password;
         this.phoneNum = phoneNum;
         this.address = address;
-
     }
 
     public Long getId() {

@@ -10,6 +10,7 @@ public class FishingInstructor extends  User {
 
     private static String roleApp = "ROLE_FISHING_INSTRUCTOR";
     private String registrationReason;
+    private  boolean accepted;
 
     public FishingInstructor() {
     }
@@ -17,6 +18,7 @@ public class FishingInstructor extends  User {
     public FishingInstructor(Long id, String name, String lastName, String email, String password, String phoneNum, Address address,String registrationReason) {
         super(id, name, lastName, email, password, phoneNum, address);
         this.registrationReason=registrationReason;
+        this.accepted=false;
     }
 
     public String getRegistrationReason() {
@@ -33,6 +35,13 @@ public class FishingInstructor extends  User {
     }
 
 
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
 
     @Override
     public String getUsername() {

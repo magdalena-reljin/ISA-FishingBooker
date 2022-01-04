@@ -4,6 +4,8 @@ import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import ConfirmEmail from '../views/ConfirmEmail.vue'
 import Activation from '../views/Activation.vue'
+import ProfileAdmin from '../views/ProfileAdmin.vue'
+import RequestsFromUsers from '../views/RequestsFromUsers'
 
 const routes = [
   {
@@ -30,7 +32,17 @@ const routes = [
     path: '/activation/:activationCode/:email',
     name: 'Activation',
     component: Activation
-  }
+  },
+  {
+    path: '/profileAdmin/:email',
+    name: 'ProfileAdmin',
+    component: ProfileAdmin
+  },
+  {
+    path: '/requests/:email',
+    name: 'RequestsFromUsers',
+    component: RequestsFromUsers
+  },
 ]
 
 const router = createRouter({
