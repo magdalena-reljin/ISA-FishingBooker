@@ -31,4 +31,6 @@ public class MailService<T> {
         mail.setText(mailFormatter.getText(params),true);
         javaMailSender.send(message);
     }
+
+
 }

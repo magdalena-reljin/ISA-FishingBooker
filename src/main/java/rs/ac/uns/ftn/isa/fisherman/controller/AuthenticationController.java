@@ -14,14 +14,20 @@ import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
-import rs.ac.uns.ftn.isa.fisherman.model.User;
+
+import rs.ac.uns.ftn.isa.fisherman.mapper.UserMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
+
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserTokenStateDTO;
-import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
-import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
-import rs.ac.uns.ftn.isa.fisherman.service.UserService;
+
+import rs.ac.uns.ftn.isa.fisherman.service.*;
+
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -40,6 +46,15 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CabinOwnerService cabinOwnerService;
+
+    @Autowired
+    private FishingInstructorService fishingInstructorService;
+
+    @Autowired
+    private BoatOwnerService boatOwnerService;
+
     private LoginService loginService;
 
   @Autowired
@@ -52,14 +67,15 @@ public class AuthenticationController {
     private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
     private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
 
+    private UserMapper userMapper=new UserMapper();
+
+
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody LogInDto userRequest) {
         UserTokenState userTokenState = loginService.LogIn(userRequest);
         return ResponseEntity.ok(userTokenState);
-
-
     }
 
 
@@ -93,6 +109,53 @@ public class AuthenticationController {
         }
         this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest),httpServletRequest.getHeader("origin"));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+    @PostMapping("/acceptAccount")
+    public ResponseEntity<String> acceptAccount(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        userService.acceptAccount(userService.findByEmail(userRequest.getEmail()));
+
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
+    @PostMapping("/denyAccount/{reason}")
+    public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        System.out.println("usaaaaaaaaaaaaaaaaaaaaao"+reason);
+        userService.denyAccount(userService.findByEmail(userRequest.getEmail()),reason);
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
+
+    @PostMapping("/signUpBoatOwner")
+    public ResponseEntity<String> registerBoatOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        if (existUser != null) {
+            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
+        }
+        this.userService.registerBoatOwner(boatOwnerMapper.userRequestDtoToBoatOwner(userRequest),httpServletRequest.getHeader("origin"));
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/signUpFishingInstructor")
+    public ResponseEntity<String> registerFishingInstructor(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        if (existUser != null) {
+            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
+        }
+        this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest),httpServletRequest.getHeader("origin"));
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getNewUsers")
+    public List<UserRequestDTO> getNewUsers() throws MessagingException {
+        List<UserRequestDTO> newUsers=new ArrayList<UserRequestDTO>();
+        for(CabinOwner cabinOwner: cabinOwnerService.getNewCabinOwners()) {
+            newUsers.add(cabinOwnerMapper.CabinOwnerToUserRequestDto(cabinOwner));
+        }
+        for(BoatOwner boatOwner: boatOwnerService.getNewBoatOwners()) {
+            newUsers.add(boatOwnerMapper.boatOwnerToUserRequestDto(boatOwner));
+        }
+        for(FishingInstructor fishingInstructor: fishingInstructorService.getNewFishingInstructors()) {
+            newUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
+        }
+        return newUsers;
     }
 
     @PostMapping("/signUpBoatOwner")

@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
 
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
@@ -18,5 +20,11 @@ public interface UserService {
     User registerBoatOwner(BoatOwner boatOwner, String sourceURL) throws MessagingException;
     User registerFishingInstructor(FishingInstructor fishingInstructor, String sourceURL) throws MessagingException;
 
+    List<UserRequestDTO> getNewUsers();
+
+
     User activateAccount(String email, String code);
+
+    void acceptAccount(User user);
+    void denyAccount(User user,String reason);
 }

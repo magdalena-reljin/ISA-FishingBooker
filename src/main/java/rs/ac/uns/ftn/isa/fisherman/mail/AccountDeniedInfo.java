@@ -1,8 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.mail;
 
-public class UserActivationLink implements MailFormatter<String> {
+public class AccountDeniedInfo implements MailFormatter<String> {
     @Override
-    public String getText(String link) {
+    public String getText(String reason) {
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -12,8 +12,8 @@ public class UserActivationLink implements MailFormatter<String> {
                 "    <title>Document</title>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "    <h1>Welcome to Fisherman!</h1>\n" +
-                "    <h2>Please confirm your account by clicking on activation url:  <a href=\"" + link + "\">ACTIVATION URL</a> </h2>\n" +
+                "    <h1>Hello!</h1>\n" +
+                "    <h2>Your request for registration has been deined. Reason:  " + reason+"</h2>\n" +
                 "    <br>\n" +
                 "    <h2>Sincerely,</h2>\n" +
                 "    <h2>Fisherman team.</h2>\n" +
@@ -22,9 +22,9 @@ public class UserActivationLink implements MailFormatter<String> {
                 "</html>";
     }
 
+
     @Override
     public String getSubject() {
-        return "Welcome cabin owner!";
+        return "Fisherman - account denied";
     }
 }
-

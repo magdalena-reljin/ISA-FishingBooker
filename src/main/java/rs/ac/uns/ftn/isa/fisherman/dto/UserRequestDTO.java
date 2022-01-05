@@ -15,8 +15,9 @@ public class UserRequestDTO {
     private String phoneNum;
     private AddressDTO address;
     private String registrationReason;
+    private String role;
 
-    public UserRequestDTO(Long id, String email, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason) {
+    public UserRequestDTO(Long id, String email, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason,String role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -25,6 +26,15 @@ public class UserRequestDTO {
         this.phoneNum = phoneNum;
         this.address = address;
         this.registrationReason = registrationReason;
+        this.role=role;
+    }
+
+    public UserRequestDTO(String email, String firstname, String lastname, String role,String registrationReason) {
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.role = role;
+        this.registrationReason=registrationReason;
     }
 
     public UserRequestDTO(){}
@@ -90,5 +100,13 @@ public class UserRequestDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

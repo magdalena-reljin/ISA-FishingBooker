@@ -1,0 +1,193 @@
+<template>
+  <div>
+    <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
+      <div class="container-fluid" style="background-color: #1d7ac9;">
+      <a class="navbar-brand"  href="http://localhost:8080/" >
+      <img src="../assets/logoF1.png" alt="" width="194" height="80" >
+      </a>
+    
+    
+    
+      </div>
+    
+    </nav>
+
+    <ul class="nav justify-content-center" style="background-color: black;">
+
+      <li class="nav-item">
+      <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+      <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+    </svg> HOME</a>
+      </li>
+      <li class="nav-item">
+      <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+      <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+    </svg> USERS</a>
+      </li>
+      <li class="nav-item">
+      <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+    </svg> REVIEWS</a>
+      </li>
+       <li class="nav-item">
+      <a style="color: white;"  class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+</svg> REQUESTS</a>
+      </li>
+       
+     </ul>
+    &nbsp;  &nbsp;
+<h1>USER REQUESTS </h1>
+&nbsp;  
+<h2 v-if="!userRequestDTO.length"> No requests.</h2>
+<table v-else class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Role</th>
+      <th scope="col">First name</th>
+      <th scope="col">Last name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Registration reason</th>
+       <th>&nbsp;</th>
+      
+
+    </tr>
+  </thead>
+   
+  <tbody>
+    <tr  v-for="(user,index) in userRequestDTO" :key="index">
+       <th scope="row">{{index +1}}</th>
+      <td>{{user.role}}</td>
+      <td>{{user.firstname}}</td>
+      <td>{{user.lastname}}</td>
+      <td>{{user.email}}</td>
+       <td>{{user.registrationReason}}</td>
+      <td>
+        <tr>
+        <button @click="accept(user)"  type="button" class="btn btn-outline-success" >ACCEPT</button>
+        <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >DENY</button>
+       
+        </tr>          
+                          
+      
+      
+      
+      
+      
+      </td>
+      
+      
+    </tr>
+  </tbody>
+</table>
+    
+    
+
+  
+  </div>
+
+
+</template>
+
+<script>
+
+
+import axios from "axios";
+   export default{
+     data(){
+       return{
+           email: '',
+           denyClick: false,
+           userRequestDTO:[
+            {
+               
+               email: '',
+               firstname: '',
+               lastname: '',
+               registrationReason: '',
+               role: '',
+           }]
+       
+       }
+     },
+     mounted() {
+  // GET request using axios with error handling
+          
+          this.email = this.$route.params.email
+          this.loadData();
+      
+
+      },
+     methods: {
+       loadData: function(){
+             axios.get("http://localhost:8081/auth/getNewUsers")
+            .then(response => {this.userRequestDTO = response.data
+              
+              })
+             .catch(error => {
+                 this.errorMessage = error.message;
+                 console.error("There was an error!", error);
+           });
+       },
+       accept: function(user){
+                  axios.post("http://localhost:8081/auth/acceptAccount",user)
+                  .then(response => {this.userRequestDTO = response.data
+                        this.loadData();
+
+                   })
+                 .catch(error => {
+                  this.errorMessage = error.message;
+                   console.error("There was an error!", error);
+                  });
+       },
+       deny: function(user){
+                  this.denyClick=true;
+                  axios.post("http://localhost:8081/auth/denyAccount/"+this.reason,user)
+                  .then(response => {this.userRequestDTO = response.data
+                        this.loadData();
+                   })
+                 .catch(error => {
+                  this.errorMessage = error.message;
+                   console.error("There was an error!", error);
+                  });
+       },
+       redirectDeny: function(user){
+         this.$router.push('/reasonForDenying/'+this.email+"/"+user.email);
+                  
+       },
+       
+      
+    }
+  }
+
+</script> 
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#nav {
+  padding: 30px;
+}
+#logincard{
+  width: 47%;
+  background-image:  url("../assets/IMG_3872.jpeg"); 
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+</style>

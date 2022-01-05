@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.mapper;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinOwnerDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
+import rs.ac.uns.ftn.isa.fisherman.model.User;
 
 public class CabinOwnerMapper {
 
@@ -23,5 +24,9 @@ public class CabinOwnerMapper {
                 userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtotoaddress(userRequest.getAddress()),userRequest.getRegistrationReason());
         System.out.println("AAAAAAAAAAAAAAAAAAAAA"+  cabinOwner.getPassword());
         return cabinOwner;
+    }
+    public UserRequestDTO CabinOwnerToUserRequestDto(CabinOwner cabinOwner){
+
+       return new UserRequestDTO(cabinOwner.getEmail(),cabinOwner.getName(),cabinOwner.getLastName(),cabinOwner.getRoleApp(),cabinOwner.getRegistrationReason());
     }
 }
