@@ -20,7 +20,7 @@ public interface UserService {
     User registerBoatOwner(BoatOwner boatOwner, String sourceURL) throws MessagingException;
     User registerFishingInstructor(FishingInstructor fishingInstructor, String sourceURL) throws MessagingException;
 
-    List<UserRequestDTO> getNewUsers();
+
 
 
     User activateAccount(String email, String code);

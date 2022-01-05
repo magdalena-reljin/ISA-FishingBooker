@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,22 +12,16 @@ import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
-
 import rs.ac.uns.ftn.isa.fisherman.mapper.UserMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserTokenStateDTO;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
-
 import rs.ac.uns.ftn.isa.fisherman.service.*;
-
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
-
 import java.util.ArrayList;
 import java.util.List;
 
-//Kontroler zaduzen za autentifikaciju korisnika
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
@@ -69,18 +61,12 @@ public class AuthenticationController {
 
     private UserMapper userMapper=new UserMapper();
 
-
-    // Prvi endpoint koji pogadja korisnik kada se loguje.
-    // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody LogInDto userRequest) {
         UserTokenState userTokenState = loginService.LogIn(userRequest);
         return ResponseEntity.ok(userTokenState);
     }
 
-
-
-    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
     @PostMapping(value = "/refresh")
     public ResponseEntity<UserTokenStateDTO> refreshAuthenticationToken(HttpServletRequest request) {
 
@@ -99,8 +85,6 @@ public class AuthenticationController {
         }
     }
 
-
-    // Endpoint za registraciju novog korisnika
     @PostMapping("/signUpCabinOwner")
     public ResponseEntity<String> registerCabinOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
         User existUser = this.userService.findByEmail(userRequest.getEmail());
@@ -118,7 +102,6 @@ public class AuthenticationController {
     }
     @PostMapping("/denyAccount/{reason}")
     public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        System.out.println("usaaaaaaaaaaaaaaaaaaaaao"+reason);
         userService.denyAccount(userService.findByEmail(userRequest.getEmail()),reason);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
@@ -158,27 +141,6 @@ public class AuthenticationController {
         return newUsers;
     }
 
-    @PostMapping("/signUpBoatOwner")
-    public ResponseEntity<String> registerBoatOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        User existUser = this.userService.findByEmail(userRequest.getEmail());
-        if (existUser != null) {
-            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
-        }
-        this.userService.registerBoatOwner(boatOwnerMapper.userRequestDtoToBoatOwner(userRequest),httpServletRequest.getHeader("origin"));
-        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
-    }
-
-    @PostMapping("/signUpFishingInstructor")
-    public ResponseEntity<String> registerFishingInstructor(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        User existUser = this.userService.findByEmail(userRequest.getEmail());
-        if (existUser != null) {
-            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
-        }
-        this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest),httpServletRequest.getHeader("origin"));
-        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
-    }
-
-
     @PostMapping("/activate")
     public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {
         String email = verificationDTO.getEmail();
@@ -190,22 +152,5 @@ public class AuthenticationController {
         return new ResponseEntity<>(success, HttpStatus.BAD_REQUEST);
     }
 
-
-   /* ///OVA METODA JE BILA NA VEZBAMA ----> NE ZNAM DA LI RADI KOD NAS ALI JEDAN JE NACIN DA SAZNAMO :)
-    @PostMapping(value = "/change-password")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
-        userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
-
-        Map<String, String> result = new HashMap<>();
-        result.put("result", "success");
-        return ResponseEntity.accepted().body(result);
-    }
-
-    static class PasswordChanger {
-        public String oldPassword;
-        public String newPassword;
-    }
-    */
 
 }

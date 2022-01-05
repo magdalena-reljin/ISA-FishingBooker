@@ -20,7 +20,6 @@ public class LogInServiceImpl implements LoginService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
 
-
     @Autowired
     public LogInServiceImpl(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserRepository userRepository) {
         this.tokenUtils = tokenUtils;
@@ -28,7 +27,6 @@ public class LogInServiceImpl implements LoginService {
         this.userRepository = userRepository;
 
     }
-
     public UserTokenState LogIn(LogInDto authenticationRequest) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),

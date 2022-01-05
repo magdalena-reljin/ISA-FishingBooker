@@ -7,45 +7,25 @@ import javax.persistence.Entity;
 @DiscriminatorValue("CABIN OWNER")
 public class CabinOwner extends User{
     private String registrationReason;
-    private  boolean accepted;
     private  static String roleApp = "ROLE_CABINOWNER";
     public CabinOwner(){}
-
-
     public CabinOwner(Long id, String name, String lastName, String email, String password, String phoneNum, Address address, String registrationReason) {
         super(id, name, lastName, email, password, phoneNum, address);
         this.registrationReason = registrationReason;
-        this.accepted=false;
     }
-
     public CabinOwner(String registrationReason) {
         this.registrationReason = registrationReason;
     }
-
     public String getRegistrationReason() {
         return registrationReason;
     }
-
     public void setRegistrationReason(String registrationReason) {
         this.registrationReason = registrationReason;
     }
-
-    public boolean isAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
-    }
-
-
-
     @Override
     public String getRoleApp() {
         return roleApp;
     }
-
-
     @Override
     public String getUsername() {
         return null;
