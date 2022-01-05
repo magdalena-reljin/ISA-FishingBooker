@@ -169,7 +169,7 @@ export default {
                axios
                .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
                .then((response) => {
-                   this.$router.push('/confirmEmail/'+this.user.email);
+                   this.$router.push('/accountAlert/'+this.user.email);
 
                    return response; 
                });
@@ -178,7 +178,7 @@ export default {
                axios
                .post("http://localhost:8081/auth/signUpBoatOwner",this.user)
                .then((response) => {
-                   this.$router.push('/confirmEmail/'+this.user.email);
+                   this.$router.push('/accountAlert/'+this.user.email);
 
                    return response; 
                });
@@ -188,7 +188,7 @@ export default {
               axios
                .post("http://localhost:8081/auth/signUpFishingInstructor",this.user)
                .then((response) => {
-                   this.$router.push('/confirmEmail/'+this.user.email);
+                   this.$router.push('/accountAlert/'+this.user.email);
 
                    return response; 
                });

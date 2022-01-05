@@ -15,7 +15,7 @@
   margin-right: 10%;
   margin-left: 10%;" role="alert">
    <h4 class="alert-heading">Well done! One more step...</h4>
-   <p>Activation link sent to {{this.email}}. Please check your email and confirm account.</p>
+   <p>Registration request will be sent to admin for reviewing. Info about registration will be sent to {{this.email}} soon.</p>
    </div>
 
 

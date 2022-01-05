@@ -21,4 +21,7 @@ public interface UserService {
     List<UserRequestDTO> getNewUsers();
 
     User activateAccount(String email, String code);
+
+    void acceptAccount(User user);
+    void denyAccount(User user,String reason);
 }

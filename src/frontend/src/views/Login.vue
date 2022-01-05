@@ -76,7 +76,8 @@ import axios from "axios";
          LogInDto:{
            email: '',
            password:''
-         }
+         },
+         
        }
      },
      methods: {
@@ -85,7 +86,15 @@ import axios from "axios";
                 axios
                .post("http://localhost:8081/auth/login",this.LogInDto)
                .then((response) => {
-                  console.log("USPEO!!!")
+                  console.log("USPEO!!!"+response.data.userType)
+                  if(response.data.userType==='Admin')
+                     this.$router.push('/profileAdmin/'+this.LogInDto.email);
+                  else if(response.data.userType==='BoatOwner')
+                     this.$router.push('/boatOwnerHome/'+this.LogInDto.email);
+                  else if(response.data.userType==='CabinOwner')
+                     this.$router.push('/cabinOwnerHome/'+this.LogInDto.email);
+                  else if(response.data.userType==='FishingInstructor')
+                     this.$router.push('/fishingInstructorHome/'+this.LogInDto.email);
 
                    return response; 
                });

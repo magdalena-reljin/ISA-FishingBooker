@@ -31,7 +31,7 @@
     </svg> REVIEWS</a>
       </li>
        <li class="nav-item">
-      <a style="color: white;"  class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+      <a style="color: white;" @click="requests()" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
   <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
   <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
 </svg> REQUESTS</a>
@@ -39,55 +39,36 @@
        
      </ul>
     &nbsp;  &nbsp;
-<h1>USER REQUESTS </h1>
+<h1>Enter reason for denying {{this.user.email}}'s request: </h1>
 &nbsp;  
-<h2 v-if="!userRequestDTO.length"> No requests.</h2>
-<table v-else class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Role</th>
-      <th scope="col">First name</th>
-      <th scope="col">Last name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Registration reason</th>
-       <th>&nbsp;</th>
-      
 
-    </tr>
-  </thead>
    
-  <tbody>
-    <tr  v-for="(user,index) in userRequestDTO" :key="index">
-       <th scope="row">{{index +1}}</th>
-      <td>{{user.role}}</td>
-      <td>{{user.firstname}}</td>
-      <td>{{user.lastname}}</td>
-      <td>{{user.email}}</td>
-       <td>{{user.registrationReason}}</td>
-      <td>
-        <tr>
-        <button @click="accept(user)"  type="button" class="btn btn-outline-success" >ACCEPT</button>
-        <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >DENY</button>
-       
-        </tr>          
-                          
-      
-      
-      
-      
-      
-      </td>
-      
-      
-    </tr>
-  </tbody>
-</table>
-    
-    
 
+<div class="form-floating" style="margin-top: 3%;
+  margin-bottom: 10%;
+  margin-right: 10%;
+  margin-left: 10%;">
   
+  <textarea v-model="reason" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 300px"></textarea>
+  <label for="floatingTextarea2">Reason for denying registration:</label>
+  
+  
+  &nbsp;
+  <div class="d-grid gap-2">
+ <button @click="deny()" class="btn btn-outline-primary" type="button">Send email</button>
   </div>
+</div>
+
+
+
+
+
+
+
+      
+  </div>
+    
+  
 
 
 </template>
@@ -100,8 +81,8 @@ import axios from "axios";
      data(){
        return{
            email: '',
-           denyClick: false,
-           userRequestDTO:[
+           person: '',
+           user:
             {
                
                email: '',
@@ -109,55 +90,30 @@ import axios from "axios";
                lastname: '',
                registrationReason: '',
                role: '',
-           }]
+           }
        
        }
      },
      mounted() {
-  // GET request using axios with error handling
-          
           this.email = this.$route.params.email
-          this.loadData();
-      
-
+           this.user.email = this.$route.params.person
+          
       },
      methods: {
-       loadData: function(){
-             axios.get("http://localhost:8081/auth/getNewUsers")
-            .then(response => {this.userRequestDTO = response.data
-              
-              })
-             .catch(error => {
-                 this.errorMessage = error.message;
-                 console.error("There was an error!", error);
-           });
-       },
-       accept: function(user){
-                  axios.post("http://localhost:8081/auth/acceptAccount",user)
-                  .then(response => {this.userRequestDTO = response.data
-                        this.loadData();
-
-                   })
-                 .catch(error => {
-                  this.errorMessage = error.message;
-                   console.error("There was an error!", error);
-                  });
-       },
-       deny: function(user){
-                  this.denyClick=true;
-                  axios.post("http://localhost:8081/auth/denyAccount/"+this.reason,user)
-                  .then(response => {this.userRequestDTO = response.data
-                        this.loadData();
-                   })
-                 .catch(error => {
-                  this.errorMessage = error.message;
-                   console.error("There was an error!", error);
-                  });
-       },
-       redirectDeny: function(user){
-         this.$router.push('/reasonForDenying/'+this.email+"/"+user.email);
+       
+       deny: function(){
                   
-       },
+                  axios.post("http://localhost:8081/auth/denyAccount/"+this.reason,this.user)
+                  .then(response => {
+                      this.$router.push('/requests/'+this.email);
+                      return response;
+                   })
+                 .catch(error => {
+                  this.errorMessage = error.message;
+                   console.error("There was an error!", error);
+                  });
+
+       }
        
       
     }
