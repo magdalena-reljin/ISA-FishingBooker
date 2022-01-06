@@ -10,6 +10,7 @@ import ReasonForDenying from '../views/ReasonForDenying'
 import CabinOwnerHome from '../views/CabinOwnerHome'
 import BoatOwnerHome from '../views/BoatOwnerHome'
 import FishingInstructorHome from '../views/FishingInstructorHome'
+import EditProfile from '../views/EditProfile'
 
 const routes = [
   {
@@ -66,6 +67,11 @@ const routes = [
     path: '/fishingInstructorHome/:email',
     name: 'FishingInstructorHome',
     component: FishingInstructorHome
+  },
+  {
+    path: '/editProfile/:role/:email',
+    name: 'EditProfile',
+    component: EditProfile
   },
 ]
 

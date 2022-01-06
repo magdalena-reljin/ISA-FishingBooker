@@ -12,7 +12,7 @@
     
     </nav>
 
-    <ul class="nav justify-content-center" style="background-color: black;">
+    <ul class="nav justify-content-center" style="background-color: #0b477b;">
 
       <li class="nav-item">
       <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">

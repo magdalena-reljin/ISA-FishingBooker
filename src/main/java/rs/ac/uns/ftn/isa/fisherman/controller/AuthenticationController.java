@@ -19,8 +19,11 @@ import rs.ac.uns.ftn.isa.fisherman.dto.UserTokenStateDTO;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
+import rs.ac.uns.ftn.isa.fisherman.service.impl.FirebaseService;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,6 +52,9 @@ public class AuthenticationController {
 
     private LoginService loginService;
 
+    @Autowired
+    FirebaseService firebaseService;
+
   @Autowired
   public  AuthenticationController(LoginService logInService){
       this.loginService = logInService;
@@ -65,6 +71,14 @@ public class AuthenticationController {
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody LogInDto userRequest) {
         UserTokenState userTokenState = loginService.LogIn(userRequest);
         return ResponseEntity.ok(userTokenState);
+    }
+    @PostMapping("/savePicture")
+    public void savePicture(@RequestBody Photo photo) throws ExecutionException, InterruptedException {
+        System.out.println("ovo je slikaaaaaaaa"+photo.getUrl());
+        System.out.println("ovo je slikaaaaaaaa"+photo.getTitle());
+        System.out.println("ovo je slikaaaaaaaa"+photo.getUrl());
+        Photo newPhoto=new Photo(photo.getUrl(), photo.getTitle());
+        firebaseService.savePhoto(newPhoto);
     }
 
     @PostMapping(value = "/refresh")
@@ -104,6 +118,17 @@ public class AuthenticationController {
     public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
         userService.denyAccount(userService.findByEmail(userRequest.getEmail()),reason);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
+    @GetMapping("/getUserByEmail/{email}")
+    public UserRequestDTO getUserByEmail(@PathVariable ("email") String email){
+        System.out.println("aaaaaaaaaaaaaaaaaaa ");
+        return userMapper.userToUserRequestDTO(userService.findByEmail(email));
+    }
+
+    @PostMapping("/findByEmail")
+    public UserRequestDTO findByEmail(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
+        System.out.println("aaaaaaaaaaaaaaaaaaa ");
+        return userMapper.userToUserRequestDTO(userService.findByEmail(userRequest.getEmail()));
     }
 
     @PostMapping("/signUpBoatOwner")

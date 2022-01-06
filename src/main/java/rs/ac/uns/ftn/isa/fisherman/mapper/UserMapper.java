@@ -7,8 +7,9 @@ public class UserMapper {
 
     public UserRequestDTO userToUserRequestDTO(User user){
         System.out.println("USER ROLE"+ user.getRoleApp());
-        //UserRequestDTO userD= new UserRequestDTO(user.getEmail(),user.getName(),user.getLastName(),user.getRoleApp());
-       // System.out.println("DTO ROLE"+ userD.getRole());
-        return  null;
+        AddressMapper addressMapper=new AddressMapper();
+        return new UserRequestDTO(user.getId(),user.getEmail(),user.getPassword(),user.getName(),
+                user.getLastName(), user.getPhoneNum(),addressMapper.adressToDTO(user.getAddress()),"","");
     }
+
 }

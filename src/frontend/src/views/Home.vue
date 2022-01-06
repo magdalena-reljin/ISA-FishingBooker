@@ -19,15 +19,50 @@
 
 
 
+  
+
+
+
+
+
+
   </div>
 
 </nav>
+  
 
 
 
+
+   
   </div>
 
 </template>
+
+
+
+<script>
+export default {
+  data() {
+    return {
+      photo:{
+          id: 0,
+          url: '',
+          title: '',
+      },
+      selectedFile: null,
+       
+    };
+  },
+  mounted() {
+    
+  },
+  methods: {
+    
+  }
+};
+</script>
+
 
 <style>
 #app {
