@@ -5,6 +5,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mail.AccountAcceptedInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.AccountDeniedInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -98,6 +99,18 @@ public class UserServiceImpl implements UserService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void editUser(UserRequestDTO userRequest) {
+        User newInfo= findByEmail(userRequest.getEmail());
+        newInfo.setPhoneNum(userRequest.getPhoneNum());
+        newInfo.getAddress().setCountry(userRequest.getAddress().getCountry());
+        newInfo.getAddress().setCity(userRequest.getAddress().getCity());
+        newInfo.getAddress().setStreetAndNum(userRequest.getAddress().getStreetAndNum());
+        newInfo.getAddress().setLongitude(userRequest.getAddress().getLongitude());
+        newInfo.getAddress().setLatitude(userRequest.getAddress().getLatitude());
+        userRepository.save(newInfo);
     }
 
 }

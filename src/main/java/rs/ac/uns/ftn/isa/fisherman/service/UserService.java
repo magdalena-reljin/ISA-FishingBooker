@@ -27,4 +27,6 @@ public interface UserService {
 
     void acceptAccount(User user);
     void denyAccount(User user,String reason);
+
+    void editUser(UserRequestDTO userRequest);
 }

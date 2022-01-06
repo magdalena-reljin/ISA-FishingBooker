@@ -119,16 +119,15 @@ public class AuthenticationController {
         userService.denyAccount(userService.findByEmail(userRequest.getEmail()),reason);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
-    @GetMapping("/getUserByEmail/{email}")
-    public UserRequestDTO getUserByEmail(@PathVariable ("email") String email){
-        System.out.println("aaaaaaaaaaaaaaaaaaa ");
-        return userMapper.userToUserRequestDTO(userService.findByEmail(email));
-    }
 
     @PostMapping("/findByEmail")
     public UserRequestDTO findByEmail(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
-        System.out.println("aaaaaaaaaaaaaaaaaaa ");
         return userMapper.userToUserRequestDTO(userService.findByEmail(userRequest.getEmail()));
+    }
+    @PostMapping("/editUser")
+    public void editUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
+        System.out.println("aaaaaaaaaaaaaaaaaaa ");
+        userService.editUser(userRequest);
     }
 
     @PostMapping("/signUpBoatOwner")
