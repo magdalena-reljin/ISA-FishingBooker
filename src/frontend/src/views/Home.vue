@@ -30,7 +30,7 @@
 
 </nav>
   
-
+<input @change="uploadImage" type="file">
 
 
 
@@ -42,7 +42,13 @@
 
 
 <script>
+
+      
+      import { getStorage,ref1, uploadBytesResumable } from "firebase/storage";
+      import { getDatabase,ref, set } from "firebase/database";
+      import {getAuth} from "firebase/auth";
 export default {
+
   data() {
     return {
       photo:{
@@ -58,7 +64,40 @@ export default {
     
   },
   methods: {
+    uploadImage(e){
+     
+      var file=e.target.files[0]
+       console.log('usaoooooooooooo'+file.name)
+      const storage = getStorage();
+      const mountainImagesRef = ref1(storage, 'images/'+file.name);
+      uploadBytesResumable(mountainImagesRef, file);
+
+ 
+       this.saveUrlToRealTimeDB(file);
+    },
+    saveUrlToRealTimeDB: function(file){
+        const auth= getAuth();
+        const id=auth.photo.id.uid;
+        const db = getDatabase();
+        set(ref(db, 'images/' +id), {
+        image: file.url,
+        title: file.name,
+        }); 
+     
+    }
     
+    
+
+
+
+
+
+
+
+
+
+
+
   }
 };
 </script>
