@@ -17,4 +17,7 @@ public class FishingInstructorServiceImpl implements FishingInstructorService {
 
     @Override
     public List<FishingInstructor> getNewFishingInstructors() {return fishingInstructorRepository.getNewFishingInstructor();}
+
+    @Override
+    public List<FishingInstructor> getNewActiveInstructors() {return  fishingInstructorRepository.getActiveFishingInstructor();}
 }

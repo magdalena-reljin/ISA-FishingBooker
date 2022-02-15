@@ -35,7 +35,7 @@
           </div>
           <div class="form-group">
               <label id="label">Email</label>
-              <input  v-model="user.email" type="email" class="form-control" placeholder="someone@gmail.com"   required>
+              <input  v-model="user.username" type="email" class="form-control" placeholder="someone@gmail.com"   required>
               <div class="valid-feedback">Valid.</div>
               <div class="invalid-feedback">Please fill out this field.</div>
           </div>
@@ -140,7 +140,7 @@ export default {
        selectedClient: 'CLIENT',
        user: {
          id: null,
-         email:'',
+         username:'',
          password: '',
          firstname: '',
          lastname: '',
@@ -169,7 +169,7 @@ export default {
                axios
                .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
                .then((response) => {
-                   this.$router.push('/accountAlert/'+this.user.email);
+                   this.$router.push('/accountAlert/'+this.user.username);
 
                    return response; 
                });
@@ -179,7 +179,7 @@ export default {
                .post("http://localhost:8081/auth/signUpBoatOwner",this.user)
                .then((response) => {
 
-                   this.$router.push('/accountAlert/'+this.user.email);
+                   this.$router.push('/accountAlert/'+this.user.username);
 
 
                    return response; 
@@ -191,7 +191,7 @@ export default {
                .post("http://localhost:8081/auth/signUpFishingInstructor",this.user)
                .then((response) => {
 
-                   this.$router.push('/accountAlert/'+this.user.email);
+                   this.$router.push('/accountAlert/'+this.user.username);
 
 
                    return response; 

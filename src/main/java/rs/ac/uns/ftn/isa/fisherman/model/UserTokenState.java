@@ -1,4 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
+import java.util.List;
 import java.util.Objects;
 
 public class UserTokenState {
@@ -15,7 +16,8 @@ public class UserTokenState {
             this.expiresIn = expiresIn;
         }
 
-        public String getUserType() {
+
+    public String getUserType() {
             return userType;
         }
 

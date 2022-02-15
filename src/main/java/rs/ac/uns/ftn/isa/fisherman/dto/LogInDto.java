@@ -3,27 +3,27 @@ package rs.ac.uns.ftn.isa.fisherman.dto;
 import java.util.Objects;
 
 public class LogInDto {
-    private String email;
+    private String username;
     private String password;
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public LogInDto(String email, String password) {
-        this.email = email;
+    public LogInDto(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
@@ -35,18 +35,18 @@ public class LogInDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LogInDto logInDto = (LogInDto) o;
-        return Objects.equals(email, logInDto.email) && Objects.equals(password, logInDto.password);
+        return Objects.equals(username, logInDto.username) && Objects.equals(password, logInDto.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, password);
+        return Objects.hash(username, password);
     }
 
     @Override
     public String toString() {
         return "LogInDto{" +
-                "email='" + email + '\'' +
+                "email='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

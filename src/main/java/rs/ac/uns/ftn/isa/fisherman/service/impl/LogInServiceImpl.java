@@ -10,8 +10,10 @@ import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
+
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
+
 
 @Service
 public class LogInServiceImpl implements LoginService {
@@ -28,16 +30,24 @@ public class LogInServiceImpl implements LoginService {
 
     }
     public UserTokenState LogIn(LogInDto authenticationRequest) {
+        System.out.println("STIGLO OD DTTTOOO"+authenticationRequest.getUsername()+authenticationRequest.getPassword());
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
+                .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()));
-
+        if(authentication.isAuthenticated()){
+            System.out.println("AUTENTIFIKOVAN SA<<<<<MMMM");
+        }else {
+            System.out.println("NISAMMM JBGGGG!!!");
+        }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
-        String username = user.getUsername();
-        String userType = user.getClass().getSimpleName();
-        String accessToken = tokenUtils.generateToken(username);
+        String userType= userRepository.findRoleById(user.getId());
+        String accessToken = tokenUtils.generateToken(user.getUsername());
         int accessExpiresIn = tokenUtils.getExpiredIn();
-        return new UserTokenState(userType, accessToken, accessExpiresIn);
+        System.out.println("USERRRR"+userType);
+        return new UserTokenState(userType,accessToken, accessExpiresIn);
+
     }
+
+
 }

@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +14,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.security.auth.RestAthenticationEntryPoint;
 import rs.ac.uns.ftn.isa.fisherman.security.auth.TokenAuthenticationFilter;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
-
 
 @Configuration
 // Ukljucivanje podrske za anotacije "@Pre*" i "@Post*" koje ce aktivirati autorizacione provere za svaki pristup metodi
@@ -35,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Servis koji se koristi za citanje podataka o korisnicima aplikacije
     @Autowired
-    private CustomUserDetailsService jwtUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     // Handler za vracanje 401 kada klijent sa neodogovarajucim korisnickim imenom i lozinkom pokusa da pristupi resursu
     @Autowired
@@ -48,49 +47,71 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    // Definisemo uputstvo za authentication managera koji servis da koristi da izvuce podatke o korisniku koji zeli da se autentifikuje,
-    //kao i kroz koji enkoder da provuce lozinku koju je dobio od klijenta u zahtevu da bi adekvatan hash koji dobije kao rezultat bcrypt algoritma uporedio sa onim koji se nalazi u bazi (posto se u bazi ne cuva plain lozinka)
+    // Definisemo nacin utvrdjivanja korisnika pri autentifikaciji
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+        auth
+                // Definisemo uputstva AuthenticationManager-u:
+
+                // 1. koji servis da koristi da izvuce podatke o korisniku koji zeli da se autentifikuje
+                // prilikom autentifikacije, AuthenticationManager ce sam pozivati loadUserByUsername() metodu ovog servisa
+                .userDetailsService(customUserDetailsService)
+
+                // 2. kroz koji enkoder da provuce lozinku koju je dobio od klijenta u zahtevu
+                // da bi adekvatan hash koji dobije kao rezultat hash algoritma uporedio sa onim koji se nalazi u bazi (posto se u bazi ne cuva plain lozinka)
+                .passwordEncoder(passwordEncoder());
     }
 
     // Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
     @Autowired
     private TokenUtils tokenUtils;
 
-    // Definisemo prava pristupa odredjenim URL-ovima
+    // Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 // komunikacija izmedju klijenta i servera je stateless posto je u pitanju REST aplikacija
+                // ovo znaci da server ne pamti nikakvo stanje, tokeni se ne cuvaju na serveru
+                // ovo nije slucaj kao sa sesijama koje se cuvaju na serverskoj strani - STATEFULL aplikacija
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
                 // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
-                // svim korisnicima dopusti da pristupe putanjama /auth/**, (/h2-console/** ako se koristi H2 baza) i /api/foo
-                .authorizeRequests().antMatchers("/auth/**").permitAll().antMatchers("/h2-console/**").permitAll().antMatchers("/api/foo").permitAll()
+                // svim korisnicima dopusti da pristupe sledecim putanjama:
+                .authorizeRequests().antMatchers("/auth/**").permitAll()        // /auth/**
+                .antMatchers("/h2-console/**").permitAll()    // /h2-console/** ako se koristi H2 baza)
+                .antMatchers("/api/foo").permitAll()        // /api/foo
+
+                // ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
+                // koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
+                // samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:
+                 .antMatchers("/account").hasAuthority("ROLE_ADMIN")
 
                 // za svaki drugi zahtev korisnik mora biti autentifikovan
                 .anyRequest().authenticated().and()
+
                 // za development svrhe ukljuci konfiguraciju za CORS iz WebConfig klase
                 .cors().and()
 
                 // umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
-                        BasicAuthenticationFilter.class);
-        // zbog jednostavnosti primera
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class);
+
+        // zbog jednostavnosti primera ne koristimo Anti-CSRF token (https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
         http.csrf().disable();
     }
 
-    // Generalna bezbednost aplikacije
+    // Definisanje konfiguracije koja utice na generalnu bezbednost aplikacije
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
+        // Autentifikacija ce biti ignorisana ispod navedenih putanja (kako bismo ubrzali pristup resursima)
+        // Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
+
+        // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
         web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
-        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
+
+        // Ovim smo dozvolili pristup statickim resursima aplikacije
+        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
     }
-
 }

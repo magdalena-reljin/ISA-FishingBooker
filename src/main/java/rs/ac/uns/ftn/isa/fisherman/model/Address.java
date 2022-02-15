@@ -2,9 +2,9 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
+
 @Embeddable
-public class Address implements Serializable {
+public class Address {
     private static final long serialVersionUID = 2405172041950251807L;
 
     @Column(name ="longitude")

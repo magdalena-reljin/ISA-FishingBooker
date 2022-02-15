@@ -35,13 +35,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) throws UsernameNotFoundException {
-      return userRepository.findByEmail(email);
+    public User findByUsername(String username) throws UsernameNotFoundException {
+      return userRepository.findByUsername(username);
     }
     public List<User> findAll() throws AccessDeniedException {
         return userRepository.findAll();
     }
 
+    public String findRoleById(Long id){
+        return userRepository.findRoleById(id);
+    }
     @Override
     public CabinOwner registerCabinOwner(CabinOwner cabinOwner, String sourceURL) throws MessagingException {
         List<Authority> auth = authorityService.findByname(cabinOwner.getRoleApp());
@@ -52,6 +55,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public BoatOwner registerBoatOwner(BoatOwner boatOwner, String sourceURL) throws MessagingException {
+
         List<Authority> auth = authorityService.findByname(boatOwner.getRoleApp());
         boatOwner.setAuthorities(auth);
         boatOwner.setPassword(passwordEncoder.encode(boatOwner.getPassword()));
@@ -68,7 +72,7 @@ public class UserServiceImpl implements UserService {
         return fishingInstructor;
     }
     public User activateAccount(String email, String code) {
-        User user = findByEmail(email);
+        User user = findByUsername(email);
         if (!user.getActivationURL().equals(code)) {
             return null;
         }
@@ -78,20 +82,20 @@ public class UserServiceImpl implements UserService {
         return user;
     }
     private void sendActivationURL(CabinOwner cabinOwner, String sourceURL) throws MessagingException {
-        String verificationURL= sourceURL + "/activation/" + cabinOwner.getActivationURL() + "/" + cabinOwner.getEmail();
-        mailService.sendMail(cabinOwner.getEmail(),verificationURL,new AccountAcceptedInfo());
+        String verificationURL= sourceURL + "/activation/" + cabinOwner.getActivationURL() + "/" + cabinOwner.getUsername();
+        mailService.sendMail(cabinOwner.getUsername(),verificationURL,new AccountAcceptedInfo());
     }
     public void acceptAccount(User user){
         user.setEnabled(true);
         userRepository.save(user);
         try {
-            mailService.sendMail(user.getEmail(),user.getEmail(),new AccountAcceptedInfo());
+            mailService.sendMail(user.getUsername(),user.getUsername(),new AccountAcceptedInfo());
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
     public void denyAccount(User user,String reason){
-        String email=user.getEmail();
+        String email=user.getUsername();
         userRepository.delete(user);
 
         try {
@@ -103,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(UserRequestDTO userRequest) {
-        User newInfo= findByEmail(userRequest.getEmail());
+        User newInfo= findByUsername(userRequest.getUsername());
         newInfo.setPhoneNum(userRequest.getPhoneNum());
         newInfo.getAddress().setCountry(userRequest.getAddress().getCountry());
         newInfo.getAddress().setCity(userRequest.getAddress().getCity());

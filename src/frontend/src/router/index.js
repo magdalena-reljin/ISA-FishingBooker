@@ -11,6 +11,7 @@ import CabinOwnerHome from '../views/CabinOwnerHome'
 import BoatOwnerHome from '../views/BoatOwnerHome'
 import FishingInstructorHome from '../views/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
+import AllUsers from '../views/AllUsers'
 
 const routes = [
   {
@@ -72,6 +73,11 @@ const routes = [
     path: '/editProfile/:role/:email',
     name: 'EditProfile',
     component: EditProfile
+  },
+  {
+    path: '/allUsers/:email',
+    name: 'AllUsers',
+    component: AllUsers
   },
 ]
 

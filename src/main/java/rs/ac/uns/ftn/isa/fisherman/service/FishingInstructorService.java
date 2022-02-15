@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface FishingInstructorService {
     List<FishingInstructor> getNewFishingInstructors();
+    List<FishingInstructor> getNewActiveInstructors();
 }
