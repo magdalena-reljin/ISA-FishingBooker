@@ -29,7 +29,7 @@
                       <span class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                       <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                     </svg></span>
-                      <input v-model="LogInDto.email" type="email"  class="form-control" placeholder="Email">
+                      <input v-model="LogInDto.username" type="email"  class="form-control" placeholder="Email">
                     </div>
                     <div class="input-group mb-4">
                       <span class="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
@@ -70,31 +70,51 @@
 <script>
 
 import axios from "axios";
+import config from "../configuration/config";
    export default{
      data(){
        return{
          LogInDto:{
-           email: '',
+           username: '',
            password:''
          },
          
        }
      },
      methods: {
+
+      storageLoginData: function(response) {
+      if (response.data) {
+        console.log("USAOOOOOOOOOO!!!!!!!!!!!!!!!!!!!")
+        localStorage.logedIn = true;
+        localStorage.jwtToken = response.data.accessToken;
+         console.log("Token"+localStorage.jwtToken)
+        localStorage.roles = response.data.userType;
+         console.log("Token"+localStorage.roles)
+        config.requestHeader.headers = {
+          Authorization: "Bearer "+ localStorage.jwtToken,
+         
+        };
+        console.log("USAOOOOOOOOOO!!!!!!!!!!!!!!!!!!! HEADERRRRRRRRRRRRRRRRRRRRR"+ config.requestHeader.headers.Authorization)
+         }
+      },
       logIn: function(){
         if(this.email != '' && this.password != ''){
                 axios
                .post("http://localhost:8081/auth/login",this.LogInDto)
                .then((response) => {
+                
                   console.log("USPEO!!!"+response.data.userType)
-                  if(response.data.userType==='Admin')
-                     this.$router.push('/profileAdmin/'+this.LogInDto.email);
-                  else if(response.data.userType==='BoatOwner')
-                     this.$router.push('/boatOwnerHome/'+this.LogInDto.email);
-                  else if(response.data.userType==='CabinOwner')
-                     this.$router.push('/cabinOwnerHome/'+this.LogInDto.email);
-                  else if(response.data.userType==='FishingInstructor')
-                     this.$router.push('/fishingInstructorHome/'+this.LogInDto.email);
+                  this.storageLoginData(response);
+                  if(response.data.userType==='ADMIN'){
+                     this.$router.push('/profileAdmin/'+this.LogInDto.username);
+                  }
+                  else if(response.data.userType==='BOAT OWNER')
+                     this.$router.push('/boatOwnerHome/'+this.LogInDto.username);
+                  else if(response.data.userType==='CABIN OWNER')
+                     this.$router.push('/cabinOwnerHome/'+this.LogInDto.username);
+                  else if(response.data.userType==='FISHING INSTRUCTOR')
+                     this.$router.push('/fishingInstructorHome/'+this.LogInDto.username);
 
                    return response; 
                });

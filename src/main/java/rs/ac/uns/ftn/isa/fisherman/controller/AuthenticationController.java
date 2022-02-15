@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +16,6 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.UserMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
-import rs.ac.uns.ftn.isa.fisherman.dto.UserTokenStateDTO;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
@@ -72,6 +72,7 @@ public class AuthenticationController {
         UserTokenState userTokenState = loginService.LogIn(userRequest);
         return ResponseEntity.ok(userTokenState);
     }
+
     @PostMapping("/savePicture")
     public void savePicture(@RequestBody Photo photo) throws ExecutionException, InterruptedException {
         System.out.println("ovo je slikaaaaaaaa"+photo.getUrl());
@@ -81,7 +82,7 @@ public class AuthenticationController {
         firebaseService.savePhoto(newPhoto);
     }
 
-    @PostMapping(value = "/refresh")
+   /* @PostMapping(value = "/refresh")
     public ResponseEntity<UserTokenStateDTO> refreshAuthenticationToken(HttpServletRequest request) {
 
         String token = tokenUtils.getToken(request);
@@ -97,11 +98,13 @@ public class AuthenticationController {
             UserTokenStateDTO userTokenState = new UserTokenStateDTO();
             return ResponseEntity.badRequest().body(userTokenState);
         }
-    }
+    }*/
+
+
 
     @PostMapping("/signUpCabinOwner")
     public ResponseEntity<String> registerCabinOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
@@ -110,19 +113,19 @@ public class AuthenticationController {
     }
     @PostMapping("/acceptAccount")
     public ResponseEntity<String> acceptAccount(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        userService.acceptAccount(userService.findByEmail(userRequest.getEmail()));
+        userService.acceptAccount(userService.findByUsername(userRequest.getUsername()));
 
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
     @PostMapping("/denyAccount/{reason}")
     public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        userService.denyAccount(userService.findByEmail(userRequest.getEmail()),reason);
+        userService.denyAccount(userService.findByUsername(userRequest.getUsername()),reason);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 
     @PostMapping("/findByEmail")
     public UserRequestDTO findByEmail(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
-        return userMapper.userToUserRequestDTO(userService.findByEmail(userRequest.getEmail()));
+        return userMapper.userToUserRequestDTO(userService.findByUsername(userRequest.getUsername()));
     }
     @PostMapping("/editUser")
     public void editUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
@@ -132,7 +135,7 @@ public class AuthenticationController {
 
     @PostMapping("/signUpBoatOwner")
     public ResponseEntity<String> registerBoatOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
@@ -142,7 +145,7 @@ public class AuthenticationController {
 
     @PostMapping("/signUpFishingInstructor")
     public ResponseEntity<String> registerFishingInstructor(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        User existUser = this.userService.findByEmail(userRequest.getEmail());
+        User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }

@@ -11,8 +11,8 @@ public class Admin extends User {
     private Boolean isPredefined;
 
     public Admin(){}
-    public Admin(Long id, String name, String lastName, String email, String password, String phoneNum, Address address, Boolean isPredefined) {
-        super(id, name, lastName, email, password, phoneNum, address);
+    public Admin(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, Boolean isPredefined) {
+        super(id, name, lastName, username, password, phoneNum, address);
         this.isPredefined = isPredefined;
 
     }
@@ -31,8 +31,5 @@ public class Admin extends User {
         isPredefined = predefined;
     }
 
-    @Override
-    public String getUsername() {
-        return null;
-    }
+
 }

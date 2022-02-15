@@ -4,6 +4,8 @@ import router from './router'
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import {getAuth} from "firebase/auth"
+import axios from "axios"
+import config from "./configuration/config"
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -19,8 +21,10 @@ const firebaseConfig = {
   
   // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+axios.defaults.headers['Authorization']=config.requestHeader.headers.Authorization
 getDatabase(app);
 getAuth();
 createApp(App).use(router).mount('#app')
+
 
 

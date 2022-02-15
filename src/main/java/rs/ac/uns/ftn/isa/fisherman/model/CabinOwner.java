@@ -9,8 +9,8 @@ public class CabinOwner extends User{
     private String registrationReason;
     private  static String roleApp = "ROLE_CABINOWNER";
     public CabinOwner(){}
-    public CabinOwner(Long id, String name, String lastName, String email, String password, String phoneNum, Address address, String registrationReason) {
-        super(id, name, lastName, email, password, phoneNum, address);
+    public CabinOwner(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, String registrationReason) {
+        super(id, name, lastName, username, password, phoneNum, address);
         this.registrationReason = registrationReason;
     }
     public CabinOwner(String registrationReason) {
@@ -26,8 +26,5 @@ public class CabinOwner extends User{
     public String getRoleApp() {
         return roleApp;
     }
-    @Override
-    public String getUsername() {
-        return null;
-    }
+
 }

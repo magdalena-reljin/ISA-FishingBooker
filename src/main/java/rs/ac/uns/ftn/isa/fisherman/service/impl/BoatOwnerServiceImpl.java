@@ -16,4 +16,8 @@ public class BoatOwnerServiceImpl implements BoatOwnerService {
 
     @Override
     public List<BoatOwner> getNewBoatOwners() { return boatOwnerRepository.getNewBoatOwners();}
+
+    @Override
+    public List<BoatOwner> getActiveBoatOwners() {return boatOwnerRepository.getActiveBoatOwners();}
+
 }

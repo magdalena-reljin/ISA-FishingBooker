@@ -31,12 +31,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     // Funkcija koja na osnovu username-a iz baze vraca objekat User-a
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAASASASASAS"+username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
+            System.out.println("VRATIOOO u loaddddddd"+user.getUsername()+user.getPassword()+user.getLastName()+user.getRoleApp()+user.getName());
             return user;
         }
+
     }
 
     // Funkcija pomocu koje korisnik menja svoju lozinku

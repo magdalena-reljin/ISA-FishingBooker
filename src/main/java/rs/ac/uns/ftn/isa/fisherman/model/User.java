@@ -26,8 +26,8 @@ public abstract class User implements UserDetails {
     protected String name;
     @Column(name="lastName")
     protected String lastName;
-    @Column(name="email")
-    protected String email;
+    @Column(name="username")
+    protected String username;
     @Column(name="password")
     protected String password;
     @Column(name="phoneNum")
@@ -51,11 +51,11 @@ public abstract class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;
     protected User(){}
-    protected User(Long id, String name, String lastName, String email, String password, String phoneNum, Address address) {
+    protected User(Long id, String name, String lastName, String username, String password, String phoneNum, Address address) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.phoneNum = phoneNum;
         this.address = address;
@@ -85,12 +85,12 @@ public abstract class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getRoleApp() {

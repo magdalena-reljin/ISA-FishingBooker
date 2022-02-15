@@ -7,7 +7,7 @@ public class CabinOwnerDTO {
     private Long id;
     private String name;
     private String lastName;
-    private String email;
+    private String username;
     private String password;
     private String phoneNum;
     private Address address;
@@ -15,11 +15,11 @@ public class CabinOwnerDTO {
 
     public CabinOwnerDTO() {}
 
-    public CabinOwnerDTO(Long id, String name, String lastName, String email, String password, String phoneNum, Address address, String registrationReason) {
+    public CabinOwnerDTO(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, String registrationReason) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.phoneNum = phoneNum;
         this.address = address;
@@ -50,12 +50,12 @@ public class CabinOwnerDTO {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
