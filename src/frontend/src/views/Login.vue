@@ -74,10 +74,14 @@ import config from "../configuration/config";
    export default{
      data(){
        return{
+         passwordC: null,
          LogInDto:{
            username: '',
            password:''
          },
+         user:{
+           username: ''
+         }
          
        }
      },
@@ -100,10 +104,20 @@ import config from "../configuration/config";
                 axios
                .post("http://localhost:8081/auth/login",this.LogInDto)
                .then((response) => {
-
+                 this.user.username=this.LogInDto.username
                   this.storageLoginData(response);
+                  this.getPasswordStatus();
                   if(response.data.userType==='ADMIN'){
-                     this.$router.push('/profileAdmin/'+this.LogInDto.username);
+                    
+                        if(this.passwordC==true){
+
+                            this.$router.push('/profileAdmin/'+this.LogInDto.username);
+                        }
+                        else if(this.passwordC==false) {
+                           
+                            this.$router.push('/changedPasswordInfo/'+this.LogInDto.username);
+                        }
+                        
                   }
                   else if(response.data.userType==='BOAT OWNER')
                      this.$router.push('/boatOwnerHome/'+this.LogInDto.username);
@@ -119,7 +133,18 @@ import config from "../configuration/config";
       },
       goToSignUp: function() {
            this.$router.push('/signup');
-      } 
+      },
+      getPasswordStatus: function(){
+
+           axios.post("http://localhost:8081/account/passwordStatus",this.user)
+                            .then(response => {
+                              this.passwordC=response.data
+                 
+                     
+                    
+                   })
+      
+      }
       
       
     }
