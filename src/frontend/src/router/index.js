@@ -12,6 +12,7 @@ import BoatOwnerHome from '../views/BoatOwnerHome'
 import FishingInstructorHome from '../views/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
 import AllUsers from '../views/AllUsers'
+import AddAdmin from '../views/AddAdmin'
 
 const routes = [
   {
@@ -78,6 +79,11 @@ const routes = [
     path: '/allUsers/:email',
     name: 'AllUsers',
     component: AllUsers
+  },
+  {
+    path: '/addAdmin/:email',
+    name: 'AddAdmin',
+    component: AddAdmin
   },
 ]
 

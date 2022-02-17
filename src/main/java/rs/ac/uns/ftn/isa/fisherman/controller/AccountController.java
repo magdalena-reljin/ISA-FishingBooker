@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
@@ -19,12 +20,14 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
+
 
 public class AccountController {
 
@@ -42,6 +45,7 @@ public class AccountController {
     private BoatOwnerService boatOwnerService;
 
     public  AccountController(){}
+    private String success= "Success!";
     private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
     private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
     private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
@@ -65,6 +69,47 @@ public class AccountController {
             allUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
         }
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
 
+    @PostMapping("/acceptAccount")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> acceptAccount(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        userService.acceptAccount(userService.findByUsername(userRequest.getUsername()));
+
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
+    @PostMapping("/denyAccount/{reason}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        userService.denyAccount(userService.findByUsername(userRequest.getUsername()),reason);
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
+
+    @GetMapping("/getNewUsers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserRequestDTO> getNewUsers() throws MessagingException {
+        List<UserRequestDTO> newUsers=new ArrayList<UserRequestDTO>();
+        for(CabinOwner cabinOwner: cabinOwnerService.getNewCabinOwners()) {
+            newUsers.add(cabinOwnerMapper.CabinOwnerToUserRequestDto(cabinOwner));
+        }
+        for(BoatOwner boatOwner: boatOwnerService.getNewBoatOwners()) {
+            newUsers.add(boatOwnerMapper.boatOwnerToUserRequestDto(boatOwner));
+        }
+        for(FishingInstructor fishingInstructor: fishingInstructorService.getNewFishingInstructors()) {
+            newUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
+        }
+        return newUsers;
+    }
+
+    @PostMapping("/activate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {
+        String email = verificationDTO.getEmail();
+        String code = verificationDTO.getActivationCode();
+
+        if(this.userService.activateAccount(email, code) != null){
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(success, HttpStatus.BAD_REQUEST);
     }
 }

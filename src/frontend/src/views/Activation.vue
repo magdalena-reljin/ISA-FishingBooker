@@ -49,7 +49,7 @@ export default {
     console.log("ovo je aktivacioni kod: "+ this.activationDTO.activationCode)
     console.log("ovo je email: "+ this.activationDTO.email)
      axios
-     .post("http://localhost:8081/auth/activate",this.activationDTO)
+     .post("http://localhost:8081/account/activate",this.activationDTO)
      .then((response) => {
       return response; 
      });

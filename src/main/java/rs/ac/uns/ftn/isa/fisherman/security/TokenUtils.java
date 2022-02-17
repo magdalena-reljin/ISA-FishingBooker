@@ -57,7 +57,6 @@ public class TokenUtils {
      * @return JWT token
      */
     public String generateToken(String username) {
-        System.out.println("USERNAME U TOKENUU"+username);
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
@@ -111,15 +110,13 @@ public class TokenUtils {
      * @return JWT token ili null ukoliko se token ne nalazi u odgovarajućem zaglavlju HTTP zahteva.
      */
     public String getToken(HttpServletRequest request) {
-        System.out.println("USAOOO U GETTOKEN");
         String authHeader = getAuthHeaderFromHeader(request);
 
         // JWT se prosledjuje kroz header 'Authorization' u formatu:
         // Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-        if(authHeader== null){System.out.println("PICKA JE NULL");}
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            System.out.println("TOKEEEEEEEEEEEEEEEEEEEENNNNNNNN"+authHeader.substring(7));
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {;
             return authHeader.substring(7); // preuzimamo samo token (vrednost tokena je nakon "Bearer " prefiksa)
         }
 
@@ -132,7 +129,6 @@ public class TokenUtils {
      * @return Korisničko ime iz tokena ili null ukoliko ne postoji.
      */
     public String getUsernameFromToken(String token) {
-        System.out.println("USERNAME FROM TOKENNNN");
         String username;
 
         try {
@@ -143,7 +139,6 @@ public class TokenUtils {
         } catch (Exception e) {
             username = null;
         }
-        System.out.println("USERNAME FROM TOKENNNN VRATIOOOOO"+username);
         return username;
     }
 
@@ -214,10 +209,8 @@ public class TokenUtils {
      * @return Podaci iz tokena.
      */
     private Claims getAllClaimsFromToken(String token) {
-        System.out.println("POSLAOOOO JEEEEEEEEEEEEEEEEEEEEEEE"+token);
         Claims claims;
         try {
-            System.out.println("USAOOOOOOOOO");
 
             claims = Jwts.parser()
                     .setSigningKey(SECRET)
@@ -230,7 +223,6 @@ public class TokenUtils {
         }
 
         // Preuzimanje proizvoljnih podataka je moguce pozivom funkcije claims.get(key)
-        System.out.println("VRATIOOOOOOOOO JEEEEE claims+++++++++"+claims);
         return claims;
     }
 

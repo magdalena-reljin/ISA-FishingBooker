@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
@@ -6,8 +6,8 @@
       <img src="../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
     
-      
-        
+    
+    
       </div>
     
     </nav>
@@ -21,7 +21,7 @@
     </svg> HOME</a>
       </li>
       <li class="nav-item">
-      <a  style="color: white;" @click="allUsers()" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+      <a style="color: white;" @click="users()" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
       <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
     </svg> USERS</a>
       </li>
@@ -49,114 +49,68 @@
   <path fill-rule="evenodd" d="M11 7.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
 </svg> DELETING ACCOUNT REQUESTS</a>
       </li>
-      <li class="nav-item">
+       <li class="nav-item">
       <a @click="redirectMyAccount()" style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
   <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
 </svg> MY ACCOUNT</a>
       </li>
        
      </ul>
-
-<br>
-<h1>ALL ACTIVE USERS </h1>
+    &nbsp;  &nbsp;
+<h1>ADD NEW ADMIN </h1>
 &nbsp;  
-<h2 v-if="!userRequestDTO.length"> No requests.</h2>
-<table v-else class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Role</th>
-      <th scope="col">First name</th>
-      <th scope="col">Last name</th>
-      <th scope="col">Username</th>
-      <th scope="col">Registration reason</th>
-       <th>&nbsp;</th>
-      
 
-    </tr>
-  </thead>
-   
-  <tbody>
-    <tr  v-for="(user,index) in userRequestDTO" :key="index">
-       <th scope="row">{{index +1}}</th>
-      <td>{{user.role}}</td>
-      <td>{{user.firstname}}</td>
-      <td>{{user.lastname}}</td>
-      <td>{{user.username}}</td>
-       <td>{{user.registrationReason}}</td>
-      <td>
-        <tr>
-        <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >BLOCKED</button>
-       
-        </tr>          
-                          
-      
-      
-      
-      
-      
-      </td>
-      
-      
-    </tr>
-  </tbody>
-</table>
+    
+    
 
-
+  
   </div>
 
 
- 
-
 </template>
- 
+
 <script>
 
-import axios from "axios";
+
    export default{
      data(){
        return{
-         email: '',
-           userRequestDTO:[
-            {
-               
-               username: '',
-               firstname: '',
-               lastname: '',
-               role: '',
-           }]
+           email: '',
+         
        
        }
      },
      mounted() {
-       this.email = this.$route.params.email
-         axios.get("http://localhost:8081/account/getAllUsers")
-            .then(response => {this.userRequestDTO = response.data
-              
-              })
-             .catch(error => {
-                 this.errorMessage = error.message;
-                 console.error("There was an error!", error);
-           });
-   
+  // GET request using axios with error handling
+          
+          this.email = this.$route.params.email
+          
+      
 
-     },
+      },
      methods: {
-       requests: function(){
-         this.$router.push('/requests/'+ this.email);
-       },
-       redirectMyAccount: function(){
-          this.$router.push('/editProfile/'+'admin/'+ this.email);
-       },
-          addAdmin: function(){
-          this.$router.push('/addAdmin/'+ this.email);
-       },
-        home: function(){
-           this.$router.push('/profileAdmin/'+this.email);
+     
+       redirectDeny: function(user){
+         this.$router.push('/reasonForDenying/'+this.email+"/"+user.email);
+                  
        },
        users: function(){
            this.$router.push('/allUsers/'+this.email);
        },
+       requests: function(){
+            this.$router.push('/requests/'+this.email);
+       },
+       redirectMyAccount: function(){
+           this.$router.push('/editProfile/'+'ADMIN/'+this.email);
+       },
+       home: function(){
+           this.$router.push('/profileAdmin/'+this.email);
+       },
+        addAdmin: function(){
+          this.$router.push('/addAdmin/'+ this.email);
+       }
+
+       
       
     }
   }

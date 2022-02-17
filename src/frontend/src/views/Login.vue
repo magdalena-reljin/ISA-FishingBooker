@@ -85,17 +85,14 @@ import config from "../configuration/config";
 
       storageLoginData: function(response) {
       if (response.data) {
-        console.log("USAOOOOOOOOOO!!!!!!!!!!!!!!!!!!!")
         localStorage.logedIn = true;
         localStorage.jwtToken = response.data.accessToken;
-         console.log("Token"+localStorage.jwtToken)
         localStorage.roles = response.data.userType;
-         console.log("Token"+localStorage.roles)
         config.requestHeader.headers = {
           Authorization: "Bearer "+ localStorage.jwtToken,
          
         };
-        console.log("USAOOOOOOOOOO!!!!!!!!!!!!!!!!!!! HEADERRRRRRRRRRRRRRRRRRRRR"+ config.requestHeader.headers.Authorization)
+      
          }
       },
       logIn: function(){
@@ -103,8 +100,6 @@ import config from "../configuration/config";
                 axios
                .post("http://localhost:8081/auth/login",this.LogInDto)
                .then((response) => {
-                
-                  console.log("USPEO!!!"+response.data.userType)
                   this.storageLoginData(response);
                   if(response.data.userType==='ADMIN'){
                      this.$router.push('/profileAdmin/'+this.LogInDto.username);
