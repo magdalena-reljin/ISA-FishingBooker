@@ -14,6 +14,7 @@ import EditProfile from '../views/EditProfile'
 import AllUsers from '../views/AllUsers'
 import AddAdmin from '../views/AddAdmin'
 
+
 const routes = [
   {
     path: '/',
@@ -85,7 +86,7 @@ const routes = [
     name: 'AddAdmin',
     component: AddAdmin
   },
-]
+  ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

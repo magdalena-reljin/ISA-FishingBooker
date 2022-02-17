@@ -20,6 +20,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
+
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
-
-
 public class AccountController {
 
 
@@ -69,6 +68,7 @@ public class AccountController {
             allUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
         }
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
+
     }
 
     @PostMapping("/acceptAccount")

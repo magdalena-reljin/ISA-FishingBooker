@@ -33,6 +33,7 @@ public class LogInServiceImpl implements LoginService {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
         String userType= userRepository.findRoleById(user.getId());

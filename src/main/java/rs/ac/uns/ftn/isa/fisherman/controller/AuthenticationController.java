@@ -119,7 +119,6 @@ public class AuthenticationController {
     }
     @PostMapping("/editUser")
     public void editUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
-        System.out.println("aaaaaaaaaaaaaaaaaaa ");
         userService.editUser(userRequest);
     }
 

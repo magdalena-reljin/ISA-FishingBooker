@@ -57,6 +57,7 @@ public class TokenUtils {
      * @return JWT token
      */
     public String generateToken(String username) {
+        System.out.println("USERNAME U TOKENUU"+username);
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
@@ -116,7 +117,8 @@ public class TokenUtils {
         // Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7); // preuzimamo samo token (vrednost tokena je nakon "Bearer " prefiksa)
         }
 
@@ -129,6 +131,7 @@ public class TokenUtils {
      * @return Korisničko ime iz tokena ili null ukoliko ne postoji.
      */
     public String getUsernameFromToken(String token) {
+    
         String username;
 
         try {
@@ -139,6 +142,7 @@ public class TokenUtils {
         } catch (Exception e) {
             username = null;
         }
+     
         return username;
     }
 
@@ -209,9 +213,9 @@ public class TokenUtils {
      * @return Podaci iz tokena.
      */
     private Claims getAllClaimsFromToken(String token) {
+
         Claims claims;
         try {
-
             claims = Jwts.parser()
                     .setSigningKey(SECRET)
                     .parseClaimsJws(token)

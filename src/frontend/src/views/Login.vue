@@ -92,7 +92,7 @@ import config from "../configuration/config";
           Authorization: "Bearer "+ localStorage.jwtToken,
          
         };
-      
+
          }
       },
       logIn: function(){
@@ -100,6 +100,7 @@ import config from "../configuration/config";
                 axios
                .post("http://localhost:8081/auth/login",this.LogInDto)
                .then((response) => {
+
                   this.storageLoginData(response);
                   if(response.data.userType==='ADMIN'){
                      this.$router.push('/profileAdmin/'+this.LogInDto.username);
