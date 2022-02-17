@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findRoleById(id);
     }
     @Override
-    public CabinOwner registerCabinOwner(CabinOwner cabinOwner, String sourceURL) throws MessagingException {
+    public CabinOwner registerCabinOwner(CabinOwner cabinOwner) throws MessagingException {
         List<Authority> auth = authorityService.findByname(cabinOwner.getRoleApp());
         cabinOwner.setAuthorities(auth);
         cabinOwner.setPassword(passwordEncoder.encode(cabinOwner.getPassword()));
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         return cabinOwner;
     }
     @Override
-    public BoatOwner registerBoatOwner(BoatOwner boatOwner, String sourceURL) throws MessagingException {
+    public BoatOwner registerBoatOwner(BoatOwner boatOwner) throws MessagingException {
 
         List<Authority> auth = authorityService.findByname(boatOwner.getRoleApp());
         boatOwner.setAuthorities(auth);
@@ -64,7 +64,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public FishingInstructor registerFishingInstructor(FishingInstructor fishingInstructor, String sourceURL) throws MessagingException {
+    public Admin registerAdmin(Admin admin) {
+        List<Authority> auth = authorityService.findByname(admin.getRoleApp());
+        admin.setAuthorities(auth);
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setEnabled(true);
+        admin=userRepository.save(admin);
+        return admin;
+    }
+
+    @Override
+    public FishingInstructor registerFishingInstructor(FishingInstructor fishingInstructor) throws MessagingException {
         List<Authority> auth = authorityService.findByname(fishingInstructor.getRoleApp());
         fishingInstructor.setAuthorities(auth);
         fishingInstructor.setPassword(passwordEncoder.encode(fishingInstructor.getPassword()));

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
@@ -108,7 +109,7 @@ public class AuthenticationController {
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
-        this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest),httpServletRequest.getHeader("origin"));
+        this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
@@ -128,20 +129,26 @@ public class AuthenticationController {
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
-        this.userService.registerBoatOwner(boatOwnerMapper.userRequestDtoToBoatOwner(userRequest),httpServletRequest.getHeader("origin"));
+        this.userService.registerBoatOwner(boatOwnerMapper.userRequestDtoToBoatOwner(userRequest));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
     @PostMapping("/signUpFishingInstructor")
-    public ResponseEntity<String> registerFishingInstructor(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
+    public ResponseEntity<String> registerFishingInstructor( @RequestBody UserRequestDTO userRequest) throws MessagingException {
         User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
-        this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest),httpServletRequest.getHeader("origin"));
+        this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePassword) {
+        userDetailsService.changePassword(changePassword.getOldPassword(),changePassword.getNewPassword());
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
 
 
 

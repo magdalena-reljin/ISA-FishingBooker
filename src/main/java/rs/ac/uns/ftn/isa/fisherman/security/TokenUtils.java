@@ -57,7 +57,6 @@ public class TokenUtils {
      * @return JWT token
      */
     public String generateToken(String username) {
-        System.out.println("USERNAME U TOKENUU"+username);
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)

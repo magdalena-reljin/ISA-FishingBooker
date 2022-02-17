@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.model.Admin;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
+import rs.ac.uns.ftn.isa.fisherman.repository.AdminRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
 
 @Service
@@ -23,6 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -31,12 +36,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     // Funkcija koja na osnovu username-a iz baze vraca objekat User-a
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAASASASASAS"+username);
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            System.out.println("VRATIOOO u loaddddddd"+user.getUsername()+user.getPassword()+user.getLastName()+user.getRoleApp()+user.getName());
             return user;
         }
 
@@ -62,11 +65,18 @@ public class CustomUserDetailsService implements UserDetailsService {
         logger.debug("Changing password for user '" + username + "'");
 
         User user = (User) loadUserByUsername(username);
-
+        if(user.getRoleApp().equals("ROLE_ADMIN")){
+            Admin admin = adminRepository.findByUsername(username);
+            admin.setChangedPassword(true);
+            admin.setPassword(passwordEncoder.encode(newPassword));
+            adminRepository.save(admin);
+        }else {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
         // pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
         // ne zelimo da u bazi cuvamo lozinke u plain text formatu
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+
 
     }
 }

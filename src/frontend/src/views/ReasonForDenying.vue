@@ -85,7 +85,7 @@ import axios from "axios";
            user:
             {
                
-               email: '',
+               username: '',
                firstname: '',
                lastname: '',
                registrationReason: '',
@@ -96,7 +96,7 @@ import axios from "axios";
      },
      mounted() {
           this.email = this.$route.params.email
-           this.user.email = this.$route.params.person
+           this.user.username = this.$route.params.person
           
       },
      methods: {

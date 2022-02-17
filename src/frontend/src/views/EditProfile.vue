@@ -38,7 +38,7 @@
 
         <div class="form-group">
           <label>Email:</label>
-          <input class="form-control" type="text" v-model="userRequestDto.email" disabled>
+          <input class="form-control" type="text" v-model="userRequestDto.username" disabled>
 
         </div>
         <div class="form-group">
@@ -140,7 +140,7 @@ import axios from "axios";
 
            userRequestDto: {
             id: 0,
-            email:'',
+            username:'',
             password: '',
             firstname: '',
             lastname: '',
@@ -168,7 +168,7 @@ import axios from "axios";
        loadData: function(){
            console.log(this.role);
            console.log(this.email);
-           this.userRequestDto.email=this.email
+           this.userRequestDto.username=this.email
                  axios.post("http://localhost:8081/auth/findByEmail/",this.userRequestDto)
                  .then(response => {
                         this.userRequestDto = response.data

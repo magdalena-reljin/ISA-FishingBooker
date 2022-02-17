@@ -13,6 +13,8 @@ import FishingInstructorHome from '../views/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
 import AllUsers from '../views/AllUsers'
 import AddAdmin from '../views/AddAdmin'
+import ChangedPasswordInfo from '../views/ChangedPasswordInfo'
+import ChangedPassword from '../views/ChangedPassword'
 
 
 const routes = [
@@ -85,6 +87,16 @@ const routes = [
     path: '/addAdmin/:email',
     name: 'AddAdmin',
     component: AddAdmin
+  },
+  {
+    path: '/changedPasswordInfo/:email',
+    name: 'ChangedPasswordInfo',
+    component: ChangedPasswordInfo
+  },
+  {
+    path: '/changedPassword/:email',
+    name: 'ChangedPassword',
+    component: ChangedPassword
   },
   ]
 
