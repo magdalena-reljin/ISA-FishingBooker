@@ -12,6 +12,8 @@ import BoatOwnerHome from '../views/BoatOwnerHome'
 import FishingInstructorHome from '../views/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
 import AllUsers from '../views/AllUsers'
+import AddAdmin from '../views/AddAdmin'
+
 
 const routes = [
   {
@@ -79,7 +81,12 @@ const routes = [
     name: 'AllUsers',
     component: AllUsers
   },
-]
+  {
+    path: '/addAdmin/:email',
+    name: 'AddAdmin',
+    component: AddAdmin
+  },
+  ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

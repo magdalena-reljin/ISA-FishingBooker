@@ -30,21 +30,15 @@ public class LogInServiceImpl implements LoginService {
 
     }
     public UserTokenState LogIn(LogInDto authenticationRequest) {
-        System.out.println("STIGLO OD DTTTOOO"+authenticationRequest.getUsername()+authenticationRequest.getPassword());
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()));
-        if(authentication.isAuthenticated()){
-            System.out.println("AUTENTIFIKOVAN SA<<<<<MMMM");
-        }else {
-            System.out.println("NISAMMM JBGGGG!!!");
-        }
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
         String userType= userRepository.findRoleById(user.getId());
         String accessToken = tokenUtils.generateToken(user.getUsername());
         int accessExpiresIn = tokenUtils.getExpiredIn();
-        System.out.println("USERRRR"+userType);
         return new UserTokenState(userType,accessToken, accessExpiresIn);
 
     }

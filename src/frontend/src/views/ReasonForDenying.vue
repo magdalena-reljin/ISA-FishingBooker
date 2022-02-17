@@ -103,7 +103,7 @@ import axios from "axios";
        
        deny: function(){
                   
-                  axios.post("http://localhost:8081/auth/denyAccount/"+this.reason,this.user)
+                  axios.post("http://localhost:8081/account/denyAccount/"+this.reason,this.user)
                   .then(response => {
                       this.$router.push('/requests/'+this.email);
                       return response;

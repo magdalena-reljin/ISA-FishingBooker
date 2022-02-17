@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
@@ -57,50 +57,9 @@
        
      </ul>
     &nbsp;  &nbsp;
-<h1>USER REQUESTS </h1>
+<h1>ADD NEW ADMIN </h1>
 &nbsp;  
-<h2 v-if="!userRequestDTO.length"> No requests.</h2>
-<table v-else class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Role</th>
-      <th scope="col">First name</th>
-      <th scope="col">Last name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Registration reason</th>
-       <th>&nbsp;</th>
-      
 
-    </tr>
-  </thead>
-   
-  <tbody>
-    <tr  v-for="(user,index) in userRequestDTO" :key="index">
-       <th scope="row">{{index +1}}</th>
-      <td>{{user.role}}</td>
-      <td>{{user.firstname}}</td>
-      <td>{{user.lastname}}</td>
-      <td>{{user.email}}</td>
-       <td>{{user.registrationReason}}</td>
-      <td>
-        <tr>
-        <button @click="accept(user)"  type="button" class="btn btn-outline-success" >ACCEPT</button>
-        <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >DENY</button>
-       
-        </tr>          
-                          
-      
-      
-      
-      
-      
-      </td>
-      
-      
-    </tr>
-  </tbody>
-</table>
     
     
 
@@ -113,21 +72,11 @@
 <script>
 
 
-import axios from "axios";
    export default{
      data(){
        return{
            email: '',
-           denyClick: false,
-           userRequestDTO:[
-            {
-               
-               email: '',
-               firstname: '',
-               lastname: '',
-               registrationReason: '',
-               role: '',
-           }]
+         
        
        }
      },
@@ -135,43 +84,12 @@ import axios from "axios";
   // GET request using axios with error handling
           
           this.email = this.$route.params.email
-          this.loadData();
+          
       
 
       },
      methods: {
-       loadData: function(){
-             axios.get("http://localhost:8081/account/getNewUsers")
-            .then(response => {this.userRequestDTO = response.data
-              
-              })
-             .catch(error => {
-                 this.errorMessage = error.message;
-                 console.error("There was an error!", error);
-           });
-       },
-       accept: function(user){
-                  axios.post("http://localhost:8081/account/acceptAccount",user)
-                  .then(response => {this.userRequestDTO = response.data
-                        this.loadData();
-
-                   })
-                 .catch(error => {
-                  this.errorMessage = error.message;
-                   console.error("There was an error!", error);
-                  });
-       },
-       deny: function(user){
-                  this.denyClick=true;
-                  axios.post("http://localhost:8081/account/denyAccount/"+this.reason,user)
-                  .then(response => {this.userRequestDTO = response.data
-                        this.loadData();
-                   })
-                 .catch(error => {
-                  this.errorMessage = error.message;
-                   console.error("There was an error!", error);
-                  });
-       },
+     
        redirectDeny: function(user){
          this.$router.push('/reasonForDenying/'+this.email+"/"+user.email);
                   

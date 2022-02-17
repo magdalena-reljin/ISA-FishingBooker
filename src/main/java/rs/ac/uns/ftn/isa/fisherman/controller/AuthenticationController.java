@@ -60,7 +60,7 @@ public class AuthenticationController {
       this.loginService = logInService;
   }
 
-    private String success= "Success!";
+
     private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
     private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
     private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
@@ -111,17 +111,7 @@ public class AuthenticationController {
         this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest),httpServletRequest.getHeader("origin"));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
-    @PostMapping("/acceptAccount")
-    public ResponseEntity<String> acceptAccount(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        userService.acceptAccount(userService.findByUsername(userRequest.getUsername()));
 
-        return new ResponseEntity<>("Success.", HttpStatus.OK);
-    }
-    @PostMapping("/denyAccount/{reason}")
-    public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        userService.denyAccount(userService.findByUsername(userRequest.getUsername()),reason);
-        return new ResponseEntity<>("Success.", HttpStatus.OK);
-    }
 
     @PostMapping("/findByEmail")
     public UserRequestDTO findByEmail(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
@@ -129,7 +119,6 @@ public class AuthenticationController {
     }
     @PostMapping("/editUser")
     public void editUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
-        System.out.println("aaaaaaaaaaaaaaaaaaa ");
         userService.editUser(userRequest);
     }
 
@@ -153,31 +142,9 @@ public class AuthenticationController {
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
-    @GetMapping("/getNewUsers")
-    public List<UserRequestDTO> getNewUsers() throws MessagingException {
-        List<UserRequestDTO> newUsers=new ArrayList<UserRequestDTO>();
-        for(CabinOwner cabinOwner: cabinOwnerService.getNewCabinOwners()) {
-            newUsers.add(cabinOwnerMapper.CabinOwnerToUserRequestDto(cabinOwner));
-        }
-        for(BoatOwner boatOwner: boatOwnerService.getNewBoatOwners()) {
-            newUsers.add(boatOwnerMapper.boatOwnerToUserRequestDto(boatOwner));
-        }
-        for(FishingInstructor fishingInstructor: fishingInstructorService.getNewFishingInstructors()) {
-            newUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
-        }
-        return newUsers;
-    }
 
-    @PostMapping("/activate")
-    public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {
-        String email = verificationDTO.getEmail();
-        String code = verificationDTO.getActivationCode();
 
-        if(this.userService.activateAccount(email, code) != null){
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(success, HttpStatus.BAD_REQUEST);
-    }
+
 
 
 }
