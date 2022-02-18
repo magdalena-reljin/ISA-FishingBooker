@@ -107,7 +107,7 @@
             </div>
             <div class="col">
              <div class="form-group">
-             <button @click="changePassword()" type="submit" class="btn btn-outline-danger">Delete account</button>
+             <button  @click="deleteAccount()" type="submit" class="btn btn-outline-danger">Delete account</button>
             </div>
             </div>
         </div>
@@ -183,6 +183,12 @@ import axios from "axios";
                         return response;
                    })
 
+       },
+       changePassword: function(){
+            this.$router.push('/changedPassword/'+this.email); 
+       },
+       deleteAccount: function(){
+            this.$router.push('/deleteAccount/'+this.email); 
        }
        
       

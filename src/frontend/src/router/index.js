@@ -15,6 +15,7 @@ import AllUsers from '../views/AllUsers'
 import AddAdmin from '../views/AddAdmin'
 import ChangedPasswordInfo from '../views/ChangedPasswordInfo'
 import ChangedPassword from '../views/ChangedPassword'
+import DeleteAccount from '../views/DeleteAccount'
 
 
 const routes = [
@@ -97,6 +98,11 @@ const routes = [
     path: '/changedPassword/:email',
     name: 'ChangedPassword',
     component: ChangedPassword
+  },
+  {
+    path: '/deleteAccount/:email',
+    name: 'DeleteAccount',
+    component: DeleteAccount
   },
   ]
 

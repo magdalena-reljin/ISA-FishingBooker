@@ -1,13 +1,19 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @DiscriminatorValue("CABIN OWNER")
 public class CabinOwner extends User{
     private String registrationReason;
     private  static String roleApp = "ROLE_CABINOWNER";
+
+    @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Cabin> cabins;
+
+
     public CabinOwner(){}
     public CabinOwner(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, String registrationReason) {
         super(id, name, lastName, username, password, phoneNum, address);
@@ -27,4 +33,11 @@ public class CabinOwner extends User{
         return roleApp;
     }
 
+    public Set<Cabin> getCabins() {
+        return cabins;
+    }
+
+    public void setCabins(Set<Cabin> cabins) {
+        this.cabins = cabins;
+    }
 }

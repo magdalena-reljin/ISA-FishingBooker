@@ -7,10 +7,11 @@ import rs.ac.uns.ftn.isa.fisherman.model.*;
 
 import javax.mail.MessagingException;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserService {
-    User findById(Long id);
+    Optional<User> findById(Long id);
     User findByUsername(String username);
     List<User> findAll ();
     User registerCabinOwner(CabinOwner cabinOwner) throws MessagingException;

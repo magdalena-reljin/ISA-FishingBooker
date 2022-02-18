@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.dto;
 public class ChangePasswordDto {
     private String oldPassword;
     private String newPassword;
+    
 
     public String getOldPassword() {
         return oldPassword;
@@ -20,8 +21,9 @@ public class ChangePasswordDto {
         this.newPassword = newPassword;
     }
 
-    public ChangePasswordDto() {
-    }
+
+    public ChangePasswordDto() {}
+
 
     public ChangePasswordDto(String oldPassword, String newPassword) {
         this.oldPassword = oldPassword;
