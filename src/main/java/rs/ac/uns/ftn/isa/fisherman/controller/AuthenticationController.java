@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
@@ -20,14 +19,12 @@ import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
-import rs.ac.uns.ftn.isa.fisherman.service.impl.FirebaseService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin
 public class AuthenticationController {
 
     @Autowired
@@ -53,11 +50,9 @@ public class AuthenticationController {
 
     private LoginService loginService;
 
-    @Autowired
-    FirebaseService firebaseService;
 
-  @Autowired
-  public  AuthenticationController(LoginService logInService){
+    @Autowired
+   public  AuthenticationController(LoginService logInService){
       this.loginService = logInService;
   }
 
@@ -74,14 +69,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(userTokenState);
     }
 
-    @PostMapping("/savePicture")
-    public void savePicture(@RequestBody Photo photo) throws ExecutionException, InterruptedException {
-        System.out.println("ovo je slikaaaaaaaa"+photo.getUrl());
-        System.out.println("ovo je slikaaaaaaaa"+photo.getTitle());
-        System.out.println("ovo je slikaaaaaaaa"+photo.getUrl());
-        Photo newPhoto=new Photo(photo.getUrl(), photo.getTitle());
-        firebaseService.savePhoto(newPhoto);
-    }
+
 
    /* @PostMapping(value = "/refresh")
     public ResponseEntity<UserTokenStateDTO> refreshAuthenticationToken(HttpServletRequest request) {
@@ -147,11 +135,7 @@ public class AuthenticationController {
     @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePassword) {
         userDetailsService.changePassword(changePassword.getOldPassword(),changePassword.getNewPassword());
-        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
-
-
-
-
 
 }

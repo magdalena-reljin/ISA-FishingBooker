@@ -47,7 +47,7 @@
       </div> 
           <div class="col form-group">
           <label id="label">Confirm password </label>   
-            <input type="password" class="form-control"   required>
+            <input v-model="confirmPassword" type="password" class="form-control"   required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback">Please fill out this field.</div>
       </div> 
@@ -106,8 +106,10 @@
       </div>
           </div> 
          
-          <div style="color:red;"></div>
+          <div style="color:red;" v-if="notMatching==true"><label>Passwords are not matching!</label></div>
+        
           <br>
+
           <div class="form-group">
               <button type="submit" class="btn btn-primary"> Sign up  </button>
           </div>                                                
@@ -138,6 +140,8 @@ export default {
   data() {
     return {
        selectedClient: 'CLIENT',
+       confirmPassword: '',
+       notMatching: false,
        user: {
          id: null,
          username:'',
@@ -164,7 +168,7 @@ export default {
   methods: {
     register: function(event) {
       event.preventDefault();
-
+        if(this.confirmPassword === this.user.password){
         if(this.selectedClient === 'CABIN OWNER'){
                axios
                .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
@@ -197,6 +201,9 @@ export default {
                    return response; 
                });
 
+        }
+        }else{
+             this.notMatching=true;
         }
     }
   }
@@ -233,4 +240,10 @@ export default {
 
   background-image: linear-gradient(#278ade,black);
 }
+
+#password
+{
+color:red
+}
+
 </style>

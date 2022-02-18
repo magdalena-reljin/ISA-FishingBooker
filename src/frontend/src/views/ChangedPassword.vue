@@ -64,11 +64,11 @@
           </div> 
          
           <div style="color:red;"></div>
-          <label id="password" v-if="passwordsNotMatching == true" >Passwords are not matching!</label>
+           <label id="password" v-if="passwordsArentMatching==true" >Passwords are not matching!</label>
           <br>
-        
+           <br>
           <div class="form-group">
-              <button type="submit" class="btn btn-primary"> Change </button>
+              <button type="submit" class="btn btn-primary"> Confirm change </button>
           </div>                                                
       </form>
       </article> 
@@ -100,12 +100,13 @@ export default {
   data() {
     return {
        email: '',
-       passwordsNotMatching: false,
+       passwordsArentMatching: false,
        confirmPassword: '',
        changePasswordDto:{
            oldPassword: '',
            newPassword: ''
-       }
+       },
+      
     };
   },
   mounted() {
@@ -114,24 +115,23 @@ export default {
   methods: {
     changePassword: function(event){
          event.preventDefault();
-         if(this.confirmPassword===this.changePasswordDto.newPassword){
+         this.changePasswordDto.username=this.email
+         
+                      if(this.confirmPassword===this.changePasswordDto.newPassword){
+                         axios
+                         .post("http://localhost:8081/auth/changePassword",this.changePasswordDto)
+                         .then((response) => {
+                              this.$router.push('/login');
+                              return response
+                          })
+                       }else {
+                          this.passwordsArentMatching=true
 
-         axios
-          .post("http://localhost:8081/auth/changePassword",this.changePasswordDto)
-               .then((response) => {
-                  this.$router.push('/login');
-                 
-                   return response
-
-               })
-         }else {
-             this.passwordsNotMatching= true;
-
-         }
+                       }
+               
 
 
     },
-   
   }
 };
 </script>
