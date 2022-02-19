@@ -10,6 +10,13 @@ INSERT INTO AUTHORITY (id ,name) VALUES (2, 'ROLE_CABINOWNER');
 INSERT INTO AUTHORITY (id ,name) VALUES (3, 'ROLE_BOATOWNER');
 INSERT INTO AUTHORITY (id ,name) VALUES (4, 'ROLE_FISHING_INSTRUCTOR');
 
+INSERT INTO SERVICES(id, name, price) VALUES (1, 'Parking', 10.0);
+INSERT INTO SERVICES(id, name, price) VALUES (2, 'Wifi', 3.0);
+INSERT INTO SERVICES(id, name, price) VALUES (3, 'Air conditioning', 2.0);
+INSERT INTO SERVICES(id, name, price) VALUES (4, 'TV', 5.0);
+INSERT INTO SERVICES(id, name, price) VALUES (5, 'Breakfast', 12.0);
+
+
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 1);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (2, 2);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (3, 3);

@@ -7,7 +7,7 @@ import Activation from '../views/Activation.vue'
 import ProfileAdmin from '../views/ProfileAdmin.vue'
 import RequestsFromUsers from '../views/RequestsFromUsers'
 import ReasonForDenying from '../views/ReasonForDenying'
-import CabinOwnerHome from '../views/CabinOwnerHome'
+import CabinOwnerHome from '../views/CabinOwner/CabinOwnerHome'
 import BoatOwnerHome from '../views/BoatOwnerHome'
 import FishingInstructorHome from '../views/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
@@ -16,6 +16,7 @@ import AddAdmin from '../views/AddAdmin'
 import ChangedPasswordInfo from '../views/ChangedPasswordInfo'
 import ChangedPassword from '../views/ChangedPassword'
 import DeleteAccount from '../views/DeleteAccount'
+import AddNewCabin from '../views/CabinOwner/AddNewCabin'
 
 
 const routes = [
@@ -103,6 +104,11 @@ const routes = [
     path: '/deleteAccount/:email',
     name: 'DeleteAccount',
     component: DeleteAccount
+  },
+  {
+    path: '/addNewCabin/:email',
+    name: 'AddNewCabin',
+    component: AddNewCabin
   },
   ]
 

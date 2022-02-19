@@ -7,4 +7,6 @@ import java.util.List;
 public interface CabinService {
      Cabin findById(Long id);
      List<Cabin> findAll();
+
+    Cabin findByName(String cabin);
 }

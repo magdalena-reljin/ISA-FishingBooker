@@ -21,7 +21,7 @@ public class AdditionalServicesController {
     private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
 
     @PostMapping("/findById")
-    public ResponseEntity<AdditionalServicesDto> denyAccount(@RequestBody AdditionalServicesDto additionalServicesDto){
+    public ResponseEntity<AdditionalServicesDto> findById(@RequestBody AdditionalServicesDto additionalServicesDto){
         AdditionalServices additionalServices=additionalServicesService.findById(additionalServicesDto.getId());
         AdditionalServicesDto additionalServicesDto1=additionalServiceMapper.AdditionalServiceToAdditionalServiceDto(additionalServices);
         return new ResponseEntity<>(additionalServicesDto1,HttpStatus.OK);

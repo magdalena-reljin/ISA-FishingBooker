@@ -21,9 +21,11 @@ public class Cabin {
     @Column(name="description", nullable = false)
     protected String description;
 
-    @OneToMany(mappedBy = "cabin", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    protected Set<Room> rooms;
+    @Column(name="numOfRooms")
+    protected Integer numOfRooms;
+
+    @Column(name="bedsPerRoom")
+    protected Integer bedsPerRoom;
 
 
     @Column(name="rules")
@@ -35,12 +37,12 @@ public class Cabin {
     @Embedded
     private  Address address;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "cabin_services",
-            joinColumns = {@JoinColumn(name = "cabin_id")},
-            inverseJoinColumns = {@JoinColumn(name = "service_id)")})
-    private List<AdditionalServices> additionalServices;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "cabin_services",
+            joinColumns = @JoinColumn(name = "cabin_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
+    private Set<AdditionalServices> additionalServices;
 
     @Column(name = "rating")
     private Double rating = 0.0;
@@ -54,6 +56,10 @@ public class Cabin {
     @JoinColumn(name = "users_id")
     private CabinOwner cabinOwner;
 
+    public Cabin() {
+
+    }
+
     public CabinOwner getCabinOwner() {
         return cabinOwner;
     }
@@ -62,13 +68,7 @@ public class Cabin {
         this.cabinOwner = cabinOwner;
     }
 
-    public Set<Room> getRooms() {
-        return rooms;
-    }
 
-    public void setRooms(Set<Room> rooms) {
-        this.rooms = rooms;
-    }
 
     public Double getRating() {
         return rating;
@@ -127,11 +127,11 @@ public class Cabin {
         this.price = prices;
     }
 
-    public List<AdditionalServices> getAdditionalServices() {
+    public Set<AdditionalServices> getAdditionalServices() {
         return additionalServices;
     }
 
-    public void setAdditionalServices(List<AdditionalServices> additionalServices) {
+    public void setAdditionalServices(Set<AdditionalServices> additionalServices) {
         this.additionalServices = additionalServices;
     }
 
@@ -143,13 +143,28 @@ public class Cabin {
         this.address = address;
     }
 
-    public Cabin(){}
+    public Integer getNumOfRooms() {
+        return numOfRooms;
+    }
 
-    public Cabin(Long id, String name, String description, Set<Room> rooms, String rules, double price, Address address, List<AdditionalServices> additionalServices, Double rating, Set<Image> images, CabinOwner cabinOwner) {
+    public void setNumOfRooms(Integer numOfRooms) {
+        this.numOfRooms = numOfRooms;
+    }
+
+    public Integer getBedsPerRoom() {
+        return bedsPerRoom;
+    }
+
+    public void setBedsPerRoom(Integer bedsPerRoom) {
+        this.bedsPerRoom = bedsPerRoom;
+    }
+
+    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Set<AdditionalServices> additionalServices, Double rating, Set<Image> images, CabinOwner cabinOwner) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.rooms = rooms;
+        this.numOfRooms = numOfRooms;
+        this.bedsPerRoom = bedsPerRoom;
         this.rules = rules;
         this.price = price;
         this.address = address;
