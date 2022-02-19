@@ -19,6 +19,7 @@ import DeleteAccount from '../views/DeleteAccount'
 import AddNewCabin from '../views/CabinOwner/AddNewCabin'
 
 
+
 const routes = [
   {
     path: '/',

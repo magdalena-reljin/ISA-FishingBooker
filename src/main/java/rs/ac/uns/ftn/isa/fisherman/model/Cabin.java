@@ -28,6 +28,7 @@ public class Cabin {
     protected Integer bedsPerRoom;
 
 
+
     @Column(name="rules")
     protected String rules;
 
@@ -38,11 +39,13 @@ public class Cabin {
     private  Address address;
 
 
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "cabin_services",
             joinColumns = @JoinColumn(name = "cabin_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     private Set<AdditionalServices> additionalServices;
+
 
     @Column(name = "rating")
     private Double rating = 0.0;
@@ -56,6 +59,7 @@ public class Cabin {
     @JoinColumn(name = "users_id")
     private CabinOwner cabinOwner;
 
+
     public Cabin() {
 
     }
@@ -67,8 +71,6 @@ public class Cabin {
     public void setCabinOwner(CabinOwner cabinOwner) {
         this.cabinOwner = cabinOwner;
     }
-
-
 
     public Double getRating() {
         return rating;
@@ -132,6 +134,7 @@ public class Cabin {
     }
 
     public void setAdditionalServices(Set<AdditionalServices> additionalServices) {
+
         this.additionalServices = additionalServices;
     }
 
@@ -142,7 +145,6 @@ public class Cabin {
     public void setAddress(Address address) {
         this.address = address;
     }
-
     public Integer getNumOfRooms() {
         return numOfRooms;
     }
