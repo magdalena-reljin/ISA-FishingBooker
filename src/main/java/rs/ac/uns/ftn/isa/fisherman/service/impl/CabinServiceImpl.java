@@ -19,4 +19,8 @@ public class CabinServiceImpl implements CabinService {
     public List<Cabin> findAll(){
         return cabinRepository.findAll();
     }
+    @Override
+    public Cabin findByName(String cabin) {
+        return cabinRepository.findByName(cabin);
+    }
 }

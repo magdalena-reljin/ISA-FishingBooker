@@ -23,4 +23,9 @@ public class CabinOwnerServiceImpl implements CabinOwnerService {
     @Override
     public List<CabinOwner> getActiveCabinOwners() {return cabinOwnerRepository.getActiveCabinOwners();}
 
+    @Override
+    public CabinOwner findByUsername(String username) {
+        return cabinOwnerRepository.findByUsername(username);
+    }
+
 }

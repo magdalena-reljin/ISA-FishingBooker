@@ -8,4 +8,6 @@ import java.util.List;
 public interface CabinOwnerService {
     List<CabinOwner> getNewCabinOwners();
     List<CabinOwner> getActiveCabinOwners();
+
+    CabinOwner findByUsername(String ownerUsername);
 }
