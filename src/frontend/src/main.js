@@ -6,6 +6,8 @@ import { getDatabase } from "firebase/database";
 import {getAuth} from "firebase/auth"
 import axios from "axios"
 import config from "./configuration/config"
+import OpenLayersMap from 'vue3-openlayers'
+import 'vue3-openlayers/dist/vue3-openlayers.css'
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -24,7 +26,7 @@ const app = initializeApp(firebaseConfig);
 axios.defaults.headers['Authorization']=config.requestHeader.headers.Authorization
 getDatabase(app);
 getAuth();
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(OpenLayersMap).mount('#app')
 
 
 

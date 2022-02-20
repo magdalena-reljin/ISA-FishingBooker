@@ -96,7 +96,7 @@
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
          </div> 
-
+        <hr style="background-color: white;">
         <div class="col form-group">
                   <label id="label">Country </label>   
                     <input   v-model="cabinDto.addressDto.country" type="text" class="form-control" required>
@@ -104,7 +104,7 @@
                     <div class="invalid-feedback">Please fill out this field.</div>
         </div> 
 
-        <hr style="background-color: white;">
+        
         <div class="col form-group">
                   <label id="label">Longitude </label>   
                     <input   v-model="cabinDto.addressDto.longitude" type="text" class="form-control" required>
@@ -117,6 +117,10 @@
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
         </div> 
+        <hr style="color: white;">
+        <div class="form-group" align="center" vertical-align="center" style=" width: 100%; height: 400px">
+              <PickLocationMap :coordinates=[21.0059,44.0165] />
+        </div>
 
       </div>
       </div>
@@ -155,7 +159,7 @@
           <label id="label">Description</label>
           <textarea  v-model="cabinDto.description" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
        </div>
-
+       
          <div  class="form-group">
           <label id="label">Rules</label>
          <textarea  v-model="cabinDto.rules" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
@@ -235,9 +239,13 @@
 </template>
 
 <script>
-  
-
+   import PickLocationMap from '../../components/PickLocationMap'
+   import axios from "axios";
+     
    export default{
+    components: {
+    PickLocationMap
+    },
      data(){
        return{
          email: '',
@@ -316,7 +324,55 @@
                  this.cabinDto.images[i]={ name: event.target.files[i].name}
                  console.log("slika dodata  "+this.cabinDto.images[i].name)
               }
-       }
+       },
+       updateLocation: function(latitude,longitude){
+
+           console.log("POGODIO");
+                 axios.get("https://nominatim.openstreetmap.org/reverse", {
+                           params: {
+                           lat: longitude,
+                           lon: latitude,
+                           format: "json",
+                 },
+                 })
+                 .then((response) => {
+                       const { address } = response.data;
+                       var flag = false;
+            var street
+            var number
+                if (address) {
+    
+                if (address.road) {
+                    street = address.road;
+      
+                    flag = true;
+                } else if (address.street) {
+                    street = address.street;
+                    flag = true;
+                }
+                if (flag && address["house-number"]) {
+                    number = address["house-number"];
+                }
+                else if (flag && address["house_number"]) {
+                    number = address["house_number"];
+                }
+                if (flag && address.town) {
+                    this.cabinDto.addressDto.city = address.town;
+                }
+                else if (flag && address.city) {
+                    this.cabinDto.addressDto.city = address.city;
+                }
+                 else if (address.country) {
+                    this.cabinDto.addressDto.country = address.country;
+                }
+                this.cabinDto.addressDto.streetAndNum= street + number
+                this.cabinDto.addressDto.longitude=longitude
+                 this.cabinDto.addressDto.latitude=latitude
+                
+            }
+            
+        })
+    }
       
     }
   }
