@@ -1,16 +1,16 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
 public class ImageDto {
-    private Long Id;
+    private Long id;
     private String url;
-    private String cabin;
+
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getUrl() {
@@ -19,21 +19,14 @@ public class ImageDto {
     public ImageDto(){
     }
 
-    public ImageDto(Long id, String url, String cabin) {
-        Id = id;
+    public ImageDto(Long id, String url) {
+        this.id = id;
         this.url = url;
-        this.cabin = cabin;
     }
 
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public String getCabin() {
-        return cabin;
-    }
 
-    public void setCabin(String cabin) {
-        this.cabin = cabin;
-    }
 }

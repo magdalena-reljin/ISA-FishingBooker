@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-import java.util.List;
 import java.util.Set;
 
 public class CabinDto {
@@ -11,7 +10,7 @@ public class CabinDto {
     protected int bedsPerRoom; //
     protected String rules; //
     protected double price=0.0; ///
-    private AddressDTO address; //
+    private AddressDTO addressDto; //
     private Set<AdditionalServicesDto> additionalServices;
     private Double rating = 0.0;
     private Set<ImageDto> images;
@@ -59,12 +58,12 @@ public class CabinDto {
         this.price = price;
     }
 
-    public AddressDTO getAddress() {
-        return address;
+    public AddressDTO getAddressDto() {
+        return addressDto;
     }
 
-    public void setAddress(AddressDTO address) {
-        this.address = address;
+    public void setAddressDto(AddressDTO addressDto) {
+        this.addressDto = addressDto;
     }
 
     public Set<AdditionalServicesDto> getAdditionalServices() {
@@ -126,7 +125,7 @@ public class CabinDto {
         this.bedsPerRoom = bedsPerRoom;
         this.rules = rules;
         this.price = price;
-        this.address = address;
+        this.addressDto = address;
         this.additionalServices = additionalServices;
         this.rating = rating;
         this.images = images;

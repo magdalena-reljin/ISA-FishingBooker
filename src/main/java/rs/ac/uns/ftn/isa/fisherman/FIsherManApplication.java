@@ -8,6 +8,7 @@ public class FIsherManApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FIsherManApplication.class, args);
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+     System.getProperty("user.dir"));
 	}
 
 }

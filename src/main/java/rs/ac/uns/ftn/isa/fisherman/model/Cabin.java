@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,10 +16,10 @@ public class Cabin {
     @Column(name = "id", unique = true)
     protected Long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name="name")
     protected String name;
 
-    @Column(name="description", nullable = false)
+    @Column(name="description")
     protected String description;
 
     @Column(name="numOfRooms")
@@ -36,28 +37,34 @@ public class Cabin {
     protected double price=0.0;
 
     @Embedded
-    private  Address address;
+    protected  Address address;
 
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinTable(name = "cabin_services",
             joinColumns = @JoinColumn(name = "cabin_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
-    private Set<AdditionalServices> additionalServices;
+    protected Set<AdditionalServices> additionalServices;
 
 
     @Column(name = "rating")
-    private Double rating = 0.0;
+    protected Double rating = 0.0;
 
-    @OneToMany(mappedBy = "cabin", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "cabin_images",
+            joinColumns = @JoinColumn(name = "cabin_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
     private Set<Image> images;
 
 
 
     @ManyToOne
     @JoinColumn(name = "users_id")
-    private CabinOwner cabinOwner;
+    protected CabinOwner cabinOwner;
+
+
 
 
     public Cabin() {
@@ -161,7 +168,7 @@ public class Cabin {
         this.bedsPerRoom = bedsPerRoom;
     }
 
-    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Set<AdditionalServices> additionalServices, Double rating, Set<Image> images, CabinOwner cabinOwner) {
+    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Double rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -174,5 +181,8 @@ public class Cabin {
         this.rating = rating;
         this.images = images;
         this.cabinOwner = cabinOwner;
+        this.additionalServices = new HashSet<>();
+        this.images = new HashSet<>();
     }
+
 }
