@@ -15,9 +15,12 @@ public class Image {
     @Column(name="url")
     protected String url;
 
-    @ManyToOne()
-    @JoinColumn(name="cabin_id")
-    protected Cabin cabin;
+
+
+
+
+
+
 
     public Long getId() {
         return id;
@@ -35,18 +38,8 @@ public class Image {
         this.url = url;
     }
     public Image(){}
-
-    public Cabin getCabin() {
-        return cabin;
-    }
-
-    public void setCabin(Cabin cabin) {
-        this.cabin = cabin;
-    }
-
-    public Image(Long id, String url, Cabin cabin) {
+    public Image(Long id, String url) {
         this.id = id;
         this.url = url;
-        this.cabin = cabin;
     }
 }

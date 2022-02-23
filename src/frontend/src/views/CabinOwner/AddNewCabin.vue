@@ -174,16 +174,13 @@
           <div class="row">
           <div class="col form-group">
               <label id="label">Additional service</label>
-              <input v-model="names" type="text"  class="form-control" required >
-              <div class="valid-feedback">Valid.</div>
-              <div class="invalid-feedback">Please fill out this field.</div>
+              <input v-model="names" type="text"  class="form-control" >
           </div>
 
           <div class="col form-group">
                     <label id="label">Price per night ($)</label>   
-                    <input v-model="prices"  type="text" pattern="[0-9]+\.?[0-9]*" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
+                    <input v-model="prices"  type="text" pattern="[0-9]+\.?[0-9]*" class="form-control" >
+                  
           </div> 
               <div id="AddButton" class=" col form-group">
                     <br>
@@ -263,7 +260,6 @@
                   country: '',
                   city: '',    
                   streetAndNum: ''
-
               },
              additionalServices: [{
                  id: null,
@@ -284,7 +280,10 @@
            names: '',
            idx: 0,
            tableHidden: true,
-           selectedFile: null
+           selectedFile: null,
+           imagesSelected: false,
+           imagesSelectedEvent: null,
+           additionalServicesAdded: false,
        
        }
      },
@@ -303,6 +302,7 @@
        },
        addService: function(){   
               if(this.names!='' && this.prices!=''){
+              this.additionalServicesAdded=true
               this.tableHidden=false  
               this.cabinDto.additionalServices[this.idx]={
               name: this.names,
@@ -317,13 +317,18 @@
               this.idx--;
        },
        onFileSelected: function(event){
+              console.log(event)
+            /*  this.imagesSelected=true
               this.selectedFile = event.target.files[0]
-              console.log("slike1 "+event.target.files[0].name)
-              console.log("slike2 "+event.target.files[1].name)
-              for(var i=0; i<event.target.files.length; i++ ){
-                 this.cabinDto.images[i]={ name: event.target.files[i].name}
-                 console.log("slika dodata  "+this.cabinDto.images[i].name)
-              }
+              var i
+              for(i=0; i<event.target.files.length; i++ ){
+                var url= event.target.files[i].name
+                this.cabinDto.images[i]={id: null,url: url, cabin: ''}
+                 console.log("slika dodata  "+this.cabinDto.images[i].url+ this.cabinDto.images[i].cabin)
+              }*/
+              this.imagesSelected=true
+              this.imagesSelectedEvent=event
+
        },
        updateLocation: function(latitude,longitude){
 
@@ -362,17 +367,42 @@
                 else if (flag && address.city) {
                     this.cabinDto.addressDto.city = address.city;
                 }
-                 else if (address.country) {
+                else if (address.country) {
                     this.cabinDto.addressDto.country = address.country;
                 }
-                this.cabinDto.addressDto.streetAndNum= street + number
+                this.cabinDto.addressDto.streetAndNum= street + ' ' +number
                 this.cabinDto.addressDto.longitude=longitude
-                 this.cabinDto.addressDto.latitude=latitude
-                
-            }
-            
-        })
-    }
+                this.cabinDto.addressDto.latitude=latitude
+                }
+               })
+             
+        },
+        addNewCabin: function(event){
+               event.preventDefault();
+               if(this.additionalServicesAdded==false)
+                  this.cabinDto.additionalServices=null   
+               axios.post("http://localhost:8081/cabins/save",this.cabinDto)
+               .then(response => {
+                        
+                        if(this.imagesSelected==true)
+                        this.saveImages()
+                        this.$router.push('/cabinOwnerHome/'+ this.email);
+                        return response;   
+              })
+        },
+        saveImages: function(){
+               for( var i = 0; i <  this.imagesSelectedEvent.target.files.length; i++ ){
+                    let formData = new FormData();
+                    let file =  this.imagesSelectedEvent.target.files[i];
+                    formData.append('file', file);
+                       axios.post("http://localhost:8081/firebase/uploadCabinImage/"+this.cabinDto.name,formData
+                    )
+                    .then(response => {
+                      
+                      return response;
+                    })
+                   }                 
+        }
       
     }
   }

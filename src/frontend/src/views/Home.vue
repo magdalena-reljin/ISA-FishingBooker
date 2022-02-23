@@ -49,6 +49,13 @@
     
    </div>
 
+
+   <div class="mb-3">
+             <label id="label" for="formFileMultiple" class="form-label">Import pictures</label>
+             <input  @change="onFileSelected" class="form-control" type="file"  multiple>
+    </div>
+    <button @click="preuzmi()">PREUZMI SLIKE</button>
+
    
   </div>
 
@@ -77,7 +84,9 @@ export default {
           title: '',
       },
       selectedFile: null,
-      cela: ''
+      cela: '',
+      mojEvent: null
+    
        
     };
   },
@@ -159,11 +168,39 @@ export default {
               console.log("adresa "+ this.cela)
 
         })
-    }
+    },
+    onFileSelected: function(event){
+              console.log("lepo"+event)
+              this.mojEvent=event
+              
+
+    },
+    preuzmi: function(){
+       
+         for( var i = 0; i <  this.mojEvent.target.files.length; i++ ){
+                 let formData = new FormData();
+                    let file =  this.mojEvent.target.files[i];
+                    formData.append('file', file);
+                     axios.post("http://localhost:8081/firebase/profile/pic",formData, {
+                       headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    })
+                    .then(response => {
+                      
+                      return response;
+                    })
+
+
+          }
+
+
+    },
+    
     
     
 
-
+    
 
 
 
