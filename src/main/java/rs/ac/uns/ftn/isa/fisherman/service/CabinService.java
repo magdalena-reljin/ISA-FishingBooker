@@ -1,9 +1,11 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CabinService {
      Cabin findById(Long id);
@@ -12,4 +14,6 @@ public interface CabinService {
     void save(Cabin cabin);
 
     void addNewImage(String cabinName, Image image);
+
+    Set<Cabin> findByOwnersId(Long id);
 }

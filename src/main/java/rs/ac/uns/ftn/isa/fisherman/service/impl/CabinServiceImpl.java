@@ -38,4 +38,9 @@ public class CabinServiceImpl implements CabinService {
         currentImages.add(image);
         cabinRepository.save(cabin);
     }
+
+    @Override
+    public Set<Cabin> findByOwnersId(Long id) {
+        return cabinRepository.findByOwnersId(id);
+    }
 }
