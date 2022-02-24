@@ -10,23 +10,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ImageMapper {
-    private CabinMapper cabinMapper = new CabinMapper();
-    @Autowired
-    private CabinService cabinService;
 
     public Image ImageDtoToImage(ImageDto image){
         return new Image(image.getId(),image.getUrl());
     }
+
+    public ImageDto ImageToImageDto(Image image) { return new ImageDto(image.getId(),image.getUrl());}
+
     public Set<Image> ImageDtosToImages(Set<ImageDto> imageDtos){
         Set<Image> images = new HashSet<>();
         for(ImageDto imageDto: imageDtos)
             images.add(ImageDtoToImage(imageDto));
         return images;
     }
-    /*public Set<ImageDto> ImagesToImageDtos(Set<Image> images){
-        Set<ImageDto> imageDtos = new HashSet<>();
+    public Set<ImageDto> ImageToImageDtos(Set<Image> images){
+        Set<ImageDto> imagesDtos = new HashSet<>();
         for(Image image: images)
-            imageDtos.add(ImageToImageDto(image));
-        return imageDtos;
-    }*/
+            imagesDtos.add(ImageToImageDto(image));
+        return imagesDtos;
+    }
 }

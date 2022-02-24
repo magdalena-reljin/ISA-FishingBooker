@@ -13,6 +13,7 @@ public class CabinOwnerDTO {
     private Address address;
     private String registrationReason;
 
+
     public CabinOwnerDTO() {}
 
     public CabinOwnerDTO(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, String registrationReason) {

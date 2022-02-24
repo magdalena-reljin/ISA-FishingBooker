@@ -215,8 +215,7 @@
          
         
 
-        <div id="ConfirmButton"  class="form-group">
-                    <br>
+        <div id="ConfirmButton"  class="form-group"><br>
               <button type="submit"  class="btn btn-lg btn-success"> Confirm  </button>
         </div>   
           
@@ -386,11 +385,11 @@
                         
                         if(this.imagesSelected==true)
                         this.saveImages()
-                        this.$router.push('/cabinOwnerHome/'+ this.email);
                         return response;   
               })
         },
         saveImages: function(){
+            
                for( var i = 0; i <  this.imagesSelectedEvent.target.files.length; i++ ){
                     let formData = new FormData();
                     let file =  this.imagesSelectedEvent.target.files[i];
@@ -398,10 +397,11 @@
                        axios.post("http://localhost:8081/firebase/uploadCabinImage/"+this.cabinDto.name,formData
                     )
                     .then(response => {
-                      
+                       this.$router.push('/cabinOwnerHome/'+ this.email);
                       return response;
                     })
-                   }                 
+              
+              }                
         }
       
     }

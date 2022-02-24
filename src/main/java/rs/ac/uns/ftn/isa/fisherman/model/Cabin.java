@@ -34,12 +34,10 @@ public class Cabin {
     protected String rules;
 
     @Column(name="price", nullable = false)
-    protected double price=0.0;
+    protected double price;
 
     @Embedded
     protected  Address address;
-
-
 
     @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinTable(name = "cabin_services",
@@ -47,9 +45,8 @@ public class Cabin {
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     protected Set<AdditionalServices> additionalServices;
 
-
     @Column(name = "rating")
-    protected Double rating = 0.0;
+    protected Double rating;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(
@@ -58,18 +55,11 @@ public class Cabin {
             inverseJoinColumns = @JoinColumn(name = "image_id"))
     private Set<Image> images;
 
-
-
     @ManyToOne
     @JoinColumn(name = "users_id")
     protected CabinOwner cabinOwner;
 
-
-
-
-    public Cabin() {
-
-    }
+    public Cabin() {}
 
     public CabinOwner getCabinOwner() {
         return cabinOwner;
@@ -177,9 +167,7 @@ public class Cabin {
         this.rules = rules;
         this.price = price;
         this.address = address;
-        this.additionalServices = additionalServices;
         this.rating = rating;
-        this.images = images;
         this.cabinOwner = cabinOwner;
         this.additionalServices = new HashSet<>();
         this.images = new HashSet<>();

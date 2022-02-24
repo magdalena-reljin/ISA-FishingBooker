@@ -17,7 +17,7 @@ import ChangedPasswordInfo from '../views/ChangedPasswordInfo'
 import ChangedPassword from '../views/ChangedPassword'
 import DeleteAccount from '../views/DeleteAccount'
 import AddNewCabin from '../views/CabinOwner/AddNewCabin'
-
+import CabinProfile from '../views/CabinOwner/CabinProfile'
 
 
 const routes = [
@@ -110,6 +110,11 @@ const routes = [
     path: '/addNewCabin/:email',
     name: 'AddNewCabin',
     component: AddNewCabin
+  },
+  {
+    path: '/cabinProfile/:email/:cabinName',
+    name: 'CabinProfile',
+    component: CabinProfile
   },
   ]
 
