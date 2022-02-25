@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 
@@ -16,4 +15,8 @@ public interface CabinService {
     void addNewImage(String cabinName, Image image);
 
     Set<Cabin> findByOwnersId(Long id);
+
+    void delete(Cabin cabin);
+
+    void edit(Cabin cabin, Boolean deleteOldImages);
 }

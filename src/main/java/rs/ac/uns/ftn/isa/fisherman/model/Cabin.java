@@ -173,4 +173,17 @@ public class Cabin {
         this.images = new HashSet<>();
     }
 
+    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Set<AdditionalServices> additionalServices, Double rating) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.numOfRooms = numOfRooms;
+        this.bedsPerRoom = bedsPerRoom;
+        this.rules = rules;
+        this.price = price;
+        this.address = address;
+        this.additionalServices = additionalServices;
+        this.rating = rating;
+        this.cabinOwner = cabinOwner;
+    }
 }

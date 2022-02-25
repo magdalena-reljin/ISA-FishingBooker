@@ -2,11 +2,14 @@ package rs.ac.uns.ftn.isa.fisherman.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 
 public class CabinMapper {
     private AddressMapper addressMapper=new AddressMapper();
+    private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
     @Autowired
     private CabinOwnerService cabinOwnerService;
 
@@ -15,6 +18,13 @@ public class CabinMapper {
                 cabin.getRules(),cabin.getPrice(),addressMapper.dtotoaddress(cabin.getAddressDto()),
                 cabin.getRating());
 
+    }
+    public Cabin CabinDtoEditToCabin(CabinDto cabin){
+        return new Cabin(cabin.getId(), cabin.getName(), cabin.getDescription(), cabin.getNumOfRooms(),
+                cabin.getBedsPerRoom(), cabin.getRules(), cabin.getPrice(),
+                addressMapper.dtotoaddress(cabin.getAddressDto()),
+                additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(cabin.getAdditionalServices()),
+                cabin.getRating());
     }
     public CabinDto CabinToCabinDto(Cabin cabin){
         ImageMapper imageMapper=new ImageMapper();

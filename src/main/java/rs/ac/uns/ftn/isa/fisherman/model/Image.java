@@ -15,13 +15,6 @@ public class Image {
     @Column(name="url")
     protected String url;
 
-
-
-
-
-
-
-
     public Long getId() {
         return id;
     }

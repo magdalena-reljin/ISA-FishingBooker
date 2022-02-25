@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
+
 import Signup from '../views/Signup.vue'
 import AccountAlert from '../views/AccountAlert.vue'
 import Activation from '../views/Activation.vue'
 import ProfileAdmin from '../views/ProfileAdmin.vue'
 import RequestsFromUsers from '../views/RequestsFromUsers'
 import ReasonForDenying from '../views/ReasonForDenying'
-import CabinOwnerHome from '../views/CabinOwner/CabinOwnerHome'
 import BoatOwnerHome from '../views/BoatOwnerHome'
 import FishingInstructorHome from '../views/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
@@ -18,7 +17,7 @@ import ChangedPassword from '../views/ChangedPassword'
 import DeleteAccount from '../views/DeleteAccount'
 import AddNewCabin from '../views/CabinOwner/AddNewCabin'
 import CabinProfile from '../views/CabinOwner/CabinProfile'
-
+import EditCabinProfile from '../views/CabinOwner/EditCabinProfile'
 
 const routes = [
   {
@@ -29,7 +28,8 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: () => import("../views/Login.vue"),
+    props: true,
   },
   {
     path: '/signup',
@@ -64,7 +64,8 @@ const routes = [
   {
     path: '/cabinOwnerHome/:email',
     name: 'CabinOwnerHome',
-    component: CabinOwnerHome
+    component: () => import("../views/CabinOwner/CabinOwnerHome.vue"),
+    props: true
   },
   {
     path: '/boatOwnerHome/:email',
@@ -116,11 +117,16 @@ const routes = [
     name: 'CabinProfile',
     component: CabinProfile
   },
+  {
+    path: '/editCabinProfile/:email/:cabinName',
+    name: 'EditCabinProfile',
+    component: EditCabinProfile
+  },
   ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
 
 export default router
