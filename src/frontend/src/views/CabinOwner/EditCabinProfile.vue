@@ -14,18 +14,19 @@
 
     <ul class="nav justify-content-center" style="background-color: #0b477b;">
 
-      <li @click="myCabins()" class="nav-item">
+      <li @click="home()" class="nav-item">
       <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
       <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
     </svg> MY CABINS</a>
       </li>
-      <li class="nav-item">
+      <li @click="addNewCabin()" class="nav-item">
       <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 </svg> ADD NEW CABIN</a>
       </li>
+
       <li @click="myProfile()" class="nav-item">
       <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
   <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
@@ -51,19 +52,17 @@
        
      </ul>
 
-     
-      
-      <br>
+     <br>
       <div class="container"  >
       
       <div class="row justify-content-center"  >
       <div class="col-md-12" >
       <div class="card" >
       <header id="header" class="card-header" >
-          <h4 class="card-title mt-2">Add new cabin</h4>
+          <h4 class="card-title mt-2">Edit cabin profile</h4>
       </header>
       <article class="card-body"  >
-      <form @submit="addNewCabin" method='post' class="was-validated">
+      <form @submit="editCabin" method='post' class="was-validated">
 
          <div class="row">  
              <div class="col">  
@@ -75,7 +74,7 @@
               </div> 
               <div class="col form-group">
                   <label id="label">Name </label>   
-                    <input v-model="cabinDto.name" type="text" class="form-control" required>
+                    <input v-model="cabinDto.name" type="text" class="form-control" disabled>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
               </div> 
@@ -107,19 +106,19 @@
         
         <div class="col form-group">
                   <label id="label">Longitude </label>   
-                    <input   v-model="cabinDto.addressDto.longitude" type="text" class="form-control" required>
+                    <input   v-model="cabinDto.addressDto.longitude" type="text" class="form-control" disabled>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
         </div> 
         <div class="col form-group">
                   <label id="label">Latitude </label>   
-                    <input   v-model="cabinDto.addressDto.latitude" type="text" class="form-control" required>
+                    <input   v-model="cabinDto.addressDto.latitude" type="text" class="form-control" disabled>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
         </div> 
         <hr style="color: white;">
         <div class="form-group" align="center" vertical-align="center" style=" width: 100%; height: 400px">
-              <PickLocationMap :coordinates=[21.0059,44.0165] />
+              <PickLocationMap :coordinates=[cabinDto.addressDto.latitude,cabinDto.addressDto.longitude] />
         </div>
 
       </div>
@@ -151,7 +150,7 @@
                 
 
         <div class="mb-3">
-             <label id="label" for="formFileMultiple" class="form-label">Import pictures</label>
+             <label id="label" for="formFileMultiple" class="form-label">Import new pictures</label>
                   <input @change="onFileSelected" class="form-control" type="file" id="formFileMultiple" multiple>
         </div>
      
@@ -190,7 +189,7 @@
           </div>
 
 
-          <table v-if="tableHidden==false" class="table">
+          <table  class="table">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -213,12 +212,14 @@
                 </tbody>
           </table>
          
-        
-
-        <div id="ConfirmButton"  class="form-group"><br>
-              <button type="submit"  class="btn btn-lg btn-success"> Confirm  </button>
+        <div class="row">
+        <div id="ConfirmButton" style=" text-align: left; " class="col"><br>
+              <button @click="deleteCabin()" style="width: 80%;" class="btn btn-lg btn-danger"> Delete cabin forever  </button>
         </div>   
-          
+        <div id="ConfirmButton"  class="col"><br>
+              <button type="submit" style="width: 80%;"  class="btn btn-lg btn-success"> Confirm changes</button>
+        </div>   
+        </div>
         
 
         </div>
@@ -230,18 +231,24 @@
       </div> 
       </div>
 
+      
+
+
+
+
   </div>
 
 </template>
 
 <script>
-   import PickLocationMap from '../../components/PickLocationMap'
    import axios from "axios";
-     
+   import PickLocationMap from '../../components/OpenLayersMap.vue'
+
    export default{
-    components: {
-    PickLocationMap
-    },
+     components: {
+       PickLocationMap
+     },
+     
      data(){
        return{
          email: '',
@@ -275,29 +282,45 @@
              }],
              ownerUsername: ''
          },
-           prices: '',
-           names: '',
-           idx: 0,
-           tableHidden: true,
-           selectedFile: null,
-           imagesSelected: false,
-           imagesSelectedEvent: null,
-           additionalServicesAdded: false,
+          user:{
+           username: ''
+         },
+         cabinName: '',
+         idx: 0,
+         imagesSelected: false,
+         imagesSelectedEvent: null,
+
        
        }
      },
      mounted() {
        this.email = this.$route.params.email
-       this.cabinDto.ownerUsername=this.email
-       
+       this.cabinName= this.$route.params.cabinName
+       this.getCabin()
 
      },
      methods: {
        myProfile: function(){
          this.$router.push('/editProfile/'+'cabinOwner/'+ this.email);
        },
-       myCabins: function(){
+       addNewCabin: function(){
+         this.$router.push('/addNewCabin/'+ this.email);
+
+       },
+       home: function(){
          this.$router.push('/cabinOwnerHome/'+ this.email);
+
+       },
+       getCabin: function(){
+             this.cabinDto.name=this.cabinName
+             axios.post("http://localhost:8081/cabins/findByName",this.cabinDto)
+               .then(response => {
+                        this.cabinDto=response.data
+                        this.idx=this.cabinDto.additionalServices.length
+
+                    
+              })
+
        },
        addService: function(){   
               if(this.names!='' && this.prices!=''){
@@ -315,72 +338,36 @@
               this.cabinDto.additionalServices.splice(tableIndex,1)
               this.idx--;
        },
+       deleteCabin: function(){
+           axios.post("http://localhost:8081/cabins/delete",this.cabinDto)
+               .then(response => {
+                    this.$router.push('/cabinOwnerHome/'+ this.email);
+                    return response;
+              })
+       },
+       editCabin: function(event){
+           event.preventDefault()
+           if(this.imagesSelected==true)
+               this.cabinDto.images=null
+           
+           axios.post("http://localhost:8081/cabins/edit",this.cabinDto)
+               .then(response => {
+                    if(this.imagesSelected==true)
+                        this.saveImages()
+                    else
+                       this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
+                    
+                    return response;
+              })
+
+       },
        onFileSelected: function(event){
               console.log(event)
               this.imagesSelected=true
               this.imagesSelectedEvent=event
 
        },
-       updateLocation: function(latitude,longitude){
-
-           console.log("POGODIO");
-                 axios.get("https://nominatim.openstreetmap.org/reverse", {
-                           params: {
-                           lat: longitude,
-                           lon: latitude,
-                           format: "json",
-                 },
-                 })
-                 .then((response) => {
-                       const { address } = response.data;
-                       var flag = false;
-            var street
-            var number
-                if (address) {
-    
-                if (address.road) {
-                    street = address.road;
-      
-                    flag = true;
-                } else if (address.street) {
-                    street = address.street;
-                    flag = true;
-                }
-                if (flag && address["house-number"]) {
-                    number = address["house-number"];
-                }
-                else if (flag && address["house_number"]) {
-                    number = address["house_number"];
-                }
-                if (flag && address.town) {
-                    this.cabinDto.addressDto.city = address.town;
-                }
-                else if (flag && address.city) {
-                    this.cabinDto.addressDto.city = address.city;
-                }
-                else if (address.country) {
-                    this.cabinDto.addressDto.country = address.country;
-                }
-                this.cabinDto.addressDto.streetAndNum= street + ' ' +number
-                this.cabinDto.addressDto.longitude=longitude
-                this.cabinDto.addressDto.latitude=latitude
-                }
-               })
-             
-        },
-        addNewCabin: function(event){
-               event.preventDefault();
-               if(this.additionalServicesAdded==false)
-                  this.cabinDto.additionalServices=null   
-               axios.post("http://localhost:8081/cabins/save",this.cabinDto)
-               .then(response => {
-                        
-                        if(this.imagesSelected==true)
-                        this.saveImages()
-                        return response;   
-              })
-        },
-        saveImages: function(){
+       saveImages: function(){
             
                for( var i = 0; i <  this.imagesSelectedEvent.target.files.length; i++ ){
                     let formData = new FormData();
@@ -389,12 +376,14 @@
                        axios.post("http://localhost:8081/firebase/uploadCabinImage/"+this.cabinDto.name,formData
                     )
                     .then(response => {
-                       this.$router.push('/cabinOwnerHome/'+ this.email);
+                       this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
                       return response;
                     })
               
               }                
         }
+       
+
       
     }
   }
@@ -408,16 +397,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-#ConfirmButton{
-
-   text-align: right;
-
-}
-#AddButton{
-
-   text-align: left;
-
 }
 
 #nav {
@@ -436,6 +415,4 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-
-
 </style>

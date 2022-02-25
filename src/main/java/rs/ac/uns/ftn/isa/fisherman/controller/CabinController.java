@@ -7,18 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.ImageDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.ImageMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
-import rs.ac.uns.ftn.isa.fisherman.service.FirebaseService;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -29,17 +24,15 @@ public class CabinController {
     private CabinService cabinService;
     @Autowired
     private CabinOwnerService cabinOwnerService;
-    @Autowired
-    private FirebaseService firebaseService;
+
     private CabinMapper cabinMapper=new CabinMapper();
     private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
-    private ImageMapper imageMapper=new ImageMapper();
+
     private String success="Success";
 
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody CabinDto cabinDto){
-         System.out.println("pogodio sam save u cabinnnnnnnnn"+ cabinDto.getDescription());
         Boolean services=false;
         Cabin cabin=cabinMapper.CabinDtoToCabin(cabinDto);
         cabin.setCabinOwner(cabinOwnerService.findByUsername(cabinDto.getOwnerUsername()));
@@ -68,5 +61,22 @@ public class CabinController {
     public ResponseEntity<CabinDto> findByName(@RequestBody CabinDto cabinDto){
         CabinDto cabin= cabinMapper.CabinToCabinDto(cabinService.findByName(cabinDto.getName()));
         return new ResponseEntity<>(cabin,HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('CABINOWNER')")
+    @PostMapping("/delete")
+    public ResponseEntity<String> delete(@RequestBody CabinDto cabinDto){
+        Cabin cabin=cabinMapper.CabinDtoToCabin(cabinDto);
+        cabinService.delete(cabin);
+        return new ResponseEntity<>(success,HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('CABINOWNER')")
+    @PostMapping("/edit")
+    public ResponseEntity<String> edit(@RequestBody CabinDto cabinDto){
+        Cabin cabin=cabinMapper.CabinDtoEditToCabin(cabinDto);
+        Boolean deleteOldImages=false;
+        if(cabinDto.getImages()==null)
+            deleteOldImages=true;
+        cabinService.edit(cabin,deleteOldImages);
+        return new ResponseEntity<>(success,HttpStatus.OK);
     }
 }

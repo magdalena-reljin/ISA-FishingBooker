@@ -194,7 +194,7 @@
               if(this.cabinsLoaded==true)
                return this.cabinDtos[index].addressDto.streetAndNum + ", " + this.cabinDtos[index].addressDto.city + ", "
                + this.cabinDtos[index].addressDto.country
-              return ""
+              return  "logoF1.png"
        },
        seeProfile: function(cabinName){
               this.$router.push('/cabinProfile/'+ this.email+'/'+cabinName);

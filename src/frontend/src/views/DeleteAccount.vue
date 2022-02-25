@@ -23,7 +23,7 @@
     <h3 style="text-align:center;" class="mb-0">Delete account</h3>
 </div>
 <div class="card-body">
-    <form  @submit="deleteAcc" method='post' class="was-validated">
+    <form  @submit="editData" method='post' class="was-validated">
         <div class="form-group">
             <label>Reason for deleting account:</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
@@ -35,7 +35,7 @@
         
              
              <div class="form-group">
-             <button type="submit" class="btn btn-danger">Confirm request for deleting</button>
+             <button @click="editData()" type="submit" class="btn btn-outline-dark">Save changes</button>
              </div>
              
         
@@ -114,9 +114,6 @@ import axios from "axios";
        },
        changePassword: function(){
             this.$router.push('/changedPassword/'+this.email); 
-       },
-       deleteAcc: function(){
-            this.$router.push('/login'); 
        }
        
       

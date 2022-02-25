@@ -5,11 +5,11 @@
       <a class="navbar-brand"  href="http://localhost:8080/" >
       <img src="../../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
-    
-    
-    
+
+
+
       </div>
-    
+
     </nav>
 
     <ul class="nav justify-content-center" style="background-color: #0b477b;">
@@ -49,21 +49,25 @@
   <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
 </svg> STATISTCS</a>
       </li>
-       
+
      </ul>
 
-    
+
     <div style="margin-top: 1%; width: 100%; height: 100;" class="row">
        <div style="padding-left: 3%;" class="col-sm-6">
-   
+
         <div class="row" style="padding-top: 2%;"> 
-             <div class=col>
+             
              <h1 style="text-align: left;">{{cabinDto.name.toUpperCase()}}</h1>
-             </div>
-             
-             
+              <h6 style="text-align: left; color: gray;"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                         <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                         <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                         </svg> {{getFullAddress()}}
+                         </h6>
+
+
         </div>
-        
+
         <div  style="height: 70%; width:100%; " id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
          <div   class="carousel-indicators">
              <button class="active" @click="clickedImage(index)" v-for="(image,index) in cabinDto.images" :key="index" type="button" data-bs-target="#carouselExampleIndicators" ></button>
@@ -83,94 +87,95 @@
         </button>
 
    </div>
-   
 
-        <div style="text-align: left; padding-left: 1%; padding-top: 1%; border: 1px solid #404040; ">
+
+        <div style="text-align: left; padding-left: 1%; padding-top: 1%; border: 2px solid #bfbfbf; ">
             <p>{{cabinDto.description}}</p>
-    
+
              <p>Rules: {{cabinDto.rules}}</p>
         </div>
-        
-      
-       
-            
+
+
+
+
 
        </div>
 
-        <div  style=" text-align: left; border: 1px solid #404040; padding-left: 2% " class="col-sm-4">
-         
-         
+        <div  style=" text-align: left; border: 2px solid #bfbfbf; padding-left: 2%; margin-top: 6.5%;" class="col-sm-4">
 
-             <div class="row"> 
+
+
+             <div class="row" > 
                  <div style="text-align: left; font-size: 200%; " class="col">
                             <span  class="badge bg-warning text-light"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
                             </svg> {{cabinDto.rating}}</span>
              </div>
                  <div class="col">
-                    <h4 style="text-align: right; padding-top: 4%" >Booking information</h4>
+                    <h4 style="text-align: right; padding-top: 5%" >Booking information</h4>
                  </div>
              </div>
-           
+
             <hr>
             <div class="row"> 
                  <div class="col">
-                 <p>• Owner:</p>
+                 <p>Owner:</p>
                  </div>
                  <div class="col">
-                 <p>{{cabinDto.ownerUsername}}</p>
+                 <p><b>{{cabinDto.ownerUsername}}</b></p>
                  </div>
              </div>
-            
+
             <div class="row"> 
                  <div class="col">
-                 <p>• Price per night:</p>
+                 <p>Price per night:</p>
                  </div>
                  <div class="col" style="color: green">
-                 <p>{{cabinDto.price}}$</p>
+                 <p><b>{{cabinDto.price}}$</b></p>
                  </div>
              </div>
-              
+
             <div class="row"> 
                 <div class="col">
-                <p>• Number of rooms: </p>
+                <p>Number of rooms: </p>
                 </div>
                 <div class="col">
                  <p>{{cabinDto.numOfRooms}}</p>
                  </div>
             </div>
-             
+
             <div class="row"> 
                  <div class="col">
-                 <p>• Beds per room: </p>
+                 <p>Beds per room: </p>
                  </div>
                  <div class="col">
                  <p>{{cabinDto.bedsPerRoom}}</p>
                  </div>
             </div>
 
-            
-             
-            <p>• Additional services:</p>
+
+
+            <p>Additional services:</p>
             <div v-for="(service,index) in cabinDto.additionalServices" :key="index" class="group" role="group" aria-label="Basic outlined example">
-                
-                <span v-if="service.price==0" class="badge rounded-pill bg-success text-dark">{{service.name}} - Free</span>
-                <span v-else class="badge rounded-pill bg-info text-light">{{service.name}} - {{service.price}}$ per night</span>
+
+                <span v-if="service.price==0" style="background-color: #59d47a;" class="badge rounded-pill text-light">{{service.name}} - Free</span>
+                <span v-else style="background-color: #703636;" class="badge rounded-pill text-light">{{service.name}} - {{service.price}}$ per night</span>
             </div>
 
 
 
-             
+
         </div>
-        
-       <div  class="col">
-                <h2 >f</h2>
+
+       <div  class="col" style="margin-top: 3%;">
+           <button @click="editProfile()" style="background-color: #1d7ac9; width: 100%; " type="button" class="btn text-light rounded-pill">EDIT PROFILE</button>
+
        </div>
-        
-       <div style=" text-align: left; border: 1px solid #404040; padding-left: 2%; margin-top: 2%; width: 80.5%; margin-left: 3%;" class="row-cols-sm-1"> 
+
+       <div style=" text-align: left; border: 2px solid #bfbfbf; padding-left: 2%; margin-top: 2%; width: 80.5%; margin-left: 3%;" class="row-cols-sm-1"> 
              <OpenLayersMap :coordinates=[cabinDto.addressDto.latitude,cabinDto.addressDto.longitude] />
        </div>
-      
+
 
     </div>
 
@@ -187,7 +192,7 @@
      components: {
        OpenLayersMap
      },
-     
+
      data(){
        return{
          email: '',
@@ -230,7 +235,7 @@
          imageIndex: 0,
          maxImageIndex: 0
 
-       
+
        }
      },
      mounted() {
@@ -251,6 +256,9 @@
          this.$router.push('/cabinOwnerHome/'+ this.email);
 
        },
+       editProfile: function(){
+        this.$router.push('/editCabinProfile/'+ this.email+'/'+this.cabinName);
+       },
        getCabin: function(){
              this.cabinDto.name=this.cabinName
              axios.post("http://localhost:8081/cabins/findByName",this.cabinDto)
@@ -270,7 +278,7 @@
                  this.currentImageUrl=this.cabinDto.images[this.imageIndex].url
                  console.log("image url "+this.currentImageUrl)
              }
-                 
+
 
        },
        nextImage: function(){
@@ -281,20 +289,17 @@
                  this.currentImageUrl=this.cabinDto.images[this.imageIndex].url
                   console.log("povecao "+ this.imageIndex)
              }
-            
+
        },
        clickedImage: function(index){
             this.imageIndex=index
             this.currentImageUrl=this.cabinDto.images[this.imageIndex].url
+       },
+       getFullAddress: function(){
+               return this.cabinDto.addressDto.streetAndNum + ", " + this.cabinDto.addressDto.city + ", "
+               + this.cabinDto.addressDto.country
        }
-       /*
-       getFullAddress: function(index){
-              if(this.cabinsLoaded==true)
-               return this.cabinDtos[index].addressDto.streetAndNum + ", " + this.cabinDtos[index].addressDto.city + ", "
-               + this.cabinDtos[index].addressDto.country
-              return ""
-       }
-      */
+    
     }
   }
 
@@ -308,7 +313,6 @@
   text-align: center;
   color: #2c3e50;
 }
-
 #nav {
   padding: 30px;
 }
@@ -316,12 +320,10 @@
   width: 47%;
   background-image:  url("../../assets/IMG_3872.jpeg"); 
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
 }

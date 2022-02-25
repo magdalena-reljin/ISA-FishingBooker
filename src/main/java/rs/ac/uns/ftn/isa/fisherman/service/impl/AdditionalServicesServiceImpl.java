@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.isa.fisherman.repository.AdditionalServicesRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AdditionalServicesServiceImpl implements AdditionalServicesService {
@@ -17,5 +18,13 @@ public class AdditionalServicesServiceImpl implements AdditionalServicesService 
     }
     public AdditionalServices findById(Long id){
         return additionalServicesRepository.findById(id);
+    }
+
+    @Override
+    public void delete (Set<AdditionalServices> oldAdditionalServices) {
+        if(oldAdditionalServices==null)
+        System.out.println("ja sam nullllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+        for(AdditionalServices additionalService: oldAdditionalServices)
+            additionalServicesRepository.delete(additionalService);
     }
 }
