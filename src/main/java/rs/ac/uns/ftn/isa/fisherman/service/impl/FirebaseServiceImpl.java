@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.isa.fisherman.dto.ImageDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
+import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.FirebaseService;
 
@@ -29,6 +30,8 @@ public class FirebaseServiceImpl implements FirebaseService {
     private String tempUrl="";
     @Autowired
     private CabinService cabinService;
+    @Autowired
+    private AdventureService adventureService;
     private String uploadFile(File file, String fileName) throws IOException {
         String currentDirectory = System.getProperty("user.dir");
         BlobId blobId = BlobId.of("isafisherman-94973.appspot.com", fileName);
@@ -83,6 +86,14 @@ public class FirebaseServiceImpl implements FirebaseService {
         download(newFileName);
         Image image = new Image(null,newFileName);
         cabinService.addNewImage(cabinName,image);
+    }
+
+    @Override
+    public void uploadAdventureImage(MultipartFile newImage,String adventureName) throws IOException {
+        String newFileName= upload(newImage);
+        download(newFileName);
+        Image image = new Image(null,newFileName);
+        adventureService.addNewImage(adventureName,image);
     }
 
 

@@ -7,4 +7,5 @@ import java.util.Set;
 public interface FirebaseService {
      void download(String fileName) throws IOException;
      void uploadCabinImage(MultipartFile images,String cabinName) throws IOException;
+     void uploadAdventureImage(MultipartFile newImage,String adventureName)throws IOException;
 }
