@@ -34,4 +34,14 @@ public class FirebaseController {
         firebaseService.download(img.getUrl());
     }
 
+    @RequestMapping(value="/uploadAdventureImage/{adventure}",method = {RequestMethod.POST})
+    public void uploadAdventureImage(@PathVariable("adventure") String adventure,@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        System.out.println("HIT -/upload | File Name : {}"+ multipartFile.getOriginalFilename());
+        try {
+            firebaseService.uploadAdventureImage(multipartFile,adventure);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

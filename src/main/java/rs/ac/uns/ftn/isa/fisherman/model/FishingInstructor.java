@@ -1,8 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @DiscriminatorValue("FISHING INSTRUCTOR")
@@ -14,6 +14,9 @@ public class FishingInstructor extends  User {
         super(id, name, lastName, username, password, phoneNum, address);
         this.registrationReason=registrationReason;
     }
+
+    @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Adventure> adventures;
     public String getRegistrationReason() {
         return registrationReason;
     }
@@ -26,4 +29,11 @@ public class FishingInstructor extends  User {
         return roleApp;
     }
 
+    public Set<Adventure> getAdventures() {
+        return adventures;
+    }
+
+    public void setAdventures(Set<Adventure> adventures) {
+        this.adventures = adventures;
+    }
 }

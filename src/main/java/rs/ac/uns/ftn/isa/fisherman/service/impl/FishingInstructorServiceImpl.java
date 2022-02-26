@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
@@ -20,4 +21,9 @@ public class FishingInstructorServiceImpl implements FishingInstructorService {
 
     @Override
     public List<FishingInstructor> getNewActiveInstructors() {return  fishingInstructorRepository.getActiveFishingInstructor();}
+
+    @Override
+    public FishingInstructor findByUsername(String fishingInstructorUsername) {
+       return  fishingInstructorRepository.findByUsername(fishingInstructorUsername);
+    }
 }

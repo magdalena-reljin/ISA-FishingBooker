@@ -8,7 +8,7 @@ import ProfileAdmin from '../views/ProfileAdmin.vue'
 import RequestsFromUsers from '../views/RequestsFromUsers'
 import ReasonForDenying from '../views/ReasonForDenying'
 import BoatOwnerHome from '../views/BoatOwnerHome'
-import FishingInstructorHome from '../views/FishingInstructorHome'
+import FishingInstructorHome from '../views/FishingInstructor/FishingInstructorHome'
 import EditProfile from '../views/EditProfile'
 import AllUsers from '../views/AllUsers'
 import AddAdmin from '../views/AddAdmin'
@@ -18,6 +18,7 @@ import DeleteAccount from '../views/DeleteAccount'
 import AddNewCabin from '../views/CabinOwner/AddNewCabin'
 import CabinProfile from '../views/CabinOwner/CabinProfile'
 import EditCabinProfile from '../views/CabinOwner/EditCabinProfile'
+import AddNewAdventure from '../views/FishingInstructor/AddNewAdventure'
 
 const routes = [
   {
@@ -121,6 +122,11 @@ const routes = [
     path: '/editCabinProfile/:email/:cabinName',
     name: 'EditCabinProfile',
     component: EditCabinProfile
+  },
+  {
+    path: '/addNewAdventure/:email',
+    name: 'AddNewAdventure',
+    component: AddNewAdventure
   },
   ]
 
