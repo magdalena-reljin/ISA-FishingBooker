@@ -15,4 +15,8 @@ public interface AdventureService {
     Set<Adventure> findAdventuresByInstructorId(Long id);
 
     Adventure findAdventureByName(String adventureName, Long fishingInstructorId);
+
+    void delete(Adventure adventure);
+
+    void edit(Adventure adventure, Long id);
 }

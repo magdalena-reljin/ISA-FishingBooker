@@ -11,7 +11,9 @@ import rs.ac.uns.ftn.isa.fisherman.dto.FishingInstructorDto;
 
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
+import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import java.util.HashSet;
@@ -64,5 +66,22 @@ public class AdventureController {
         String adventureName= adventureDto.getName();
         Adventure adventure= adventureService.findAdventureByName(adventureName,fishingInstructorId);
         return new ResponseEntity<>(adventureMapper.AdventureToAdventureDto(adventure), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PostMapping("/deleteAdventure")
+    public ResponseEntity<String> deleteAdventure(@RequestBody AdventureDto adventureDto){
+          adventureService.delete(adventureMapper.AdventureDtoToAdventure(adventureDto));
+        return new ResponseEntity<>(success, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PostMapping("/edit")
+    public ResponseEntity<String> editAdventure(@RequestBody AdventureDto adventureDto){
+        FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername());
+
+        Adventure adventure = adventureMapper.AdventureDtoToEditAdventure(adventureDto);
+        adventureService.edit(adventure,fishingInstructor.getId());
+        return new ResponseEntity<>(success, HttpStatus.OK);
     }
 }

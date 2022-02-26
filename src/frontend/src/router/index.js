@@ -20,6 +20,7 @@ import CabinProfile from '../views/CabinOwner/CabinProfile'
 import EditCabinProfile from '../views/CabinOwner/EditCabinProfile'
 import AddNewAdventure from '../views/FishingInstructor/AddNewAdventure'
 import AdventureProfile from '../views/FishingInstructor/AdventureProfile'
+import EditAdventure from '../views/FishingInstructor/EditAdventure'
 
 const routes = [
   {
@@ -133,6 +134,11 @@ const routes = [
     path: '/adventureProfile/:email/:adventureName',
     name: 'AdventureProfile',
     component: AdventureProfile
+  },
+  {
+    path: '/editAdventure/:email/:adventureName',
+    name: 'EditAdventure',
+    component: EditAdventure
   },
   ]
 

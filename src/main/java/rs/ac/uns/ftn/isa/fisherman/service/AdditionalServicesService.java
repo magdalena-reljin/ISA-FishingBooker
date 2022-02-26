@@ -9,4 +9,6 @@ public interface AdditionalServicesService {
     List<AdditionalServices> getAll();
     AdditionalServices findById(Long id);
     void delete(Set<AdditionalServices> additionalServices);
+
+    void deleteAll(Set<AdditionalServices> additionalServices);
 }

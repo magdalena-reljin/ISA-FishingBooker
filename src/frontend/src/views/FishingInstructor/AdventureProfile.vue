@@ -315,6 +315,8 @@ import OpenLayersMap from '../../components/OpenLayersMap.vue'
        getFullAddress: function(){
                return this.adventureDto.address.streetAndNum + ", " + this.adventureDto.address.city + ", "
                + this.adventureDto.address.country
+       },editProfile: function(){
+            this.$router.push('/editAdventure/'+ this.email+'/'+this.adventureDto.name);
        }
 
        

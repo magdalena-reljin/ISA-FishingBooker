@@ -27,4 +27,9 @@ public class AdditionalServicesServiceImpl implements AdditionalServicesService 
         for(AdditionalServices additionalService: oldAdditionalServices)
             additionalServicesRepository.delete(additionalService);
     }
+
+    @Override
+    public void deleteAll(Set<AdditionalServices> additionalServices) {
+        additionalServicesRepository.deleteAll(additionalServices);
+    }
 }

@@ -166,6 +166,21 @@ public class Adventure {
 
     }
 
+    public Adventure(Long id, String name, Address address, String description, String instructorsBiography, Set<Image> images, Integer maxPeople, double price, String rules, String equipment, Set<AdditionalServices> additionalServices, String cancelingCondition) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.description = description;
+        this.instructorsBiography = instructorsBiography;
+        this.images = images;
+        this.maxPeople = maxPeople;
+        this.price = price;
+        this.rules = rules;
+        this.equipment = equipment;
+        this.additionalServices = additionalServices;
+        this.cancelingCondition = cancelingCondition;
+    }
+
     public double getPrice() {
         return price;
     }

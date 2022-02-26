@@ -133,6 +133,8 @@ public class AdventureDto {
         this.fishingInstructorUsername = fishingInstructorUsername;
     }
 
+
+
     public double getPrice() {
         return price;
     }

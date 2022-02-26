@@ -59,7 +59,7 @@
       <div class="col-md-12" >
       <div class="card" >
       <header id="header" class="card-header" >
-          <h4 class="card-title mt-2">Add new cabin</h4>
+          <h4 class="card-title mt-2">Add new adventure</h4>
       </header>
       <article class="card-body"  >
       <form @submit="addNewAdventure" method='post' class="was-validated">
