@@ -8,7 +8,7 @@ public class AdventureDto {
     private String name;
     private AddressDTO address;
     private  String description;
-    private String instruktorsBiography;
+    private String instructorsBiography;
     private Set<ImageDto> images;
     private Integer maxPeople;
     private double price;
@@ -50,12 +50,14 @@ public class AdventureDto {
         this.description = description;
     }
 
-    public String getInstruktorsBiography() {
-        return instruktorsBiography;
+
+    public String getInstructorsBiography() {
+        return instructorsBiography;
     }
 
-    public void setInstruktorsBiography(String instruktorsBiography) {
-        this.instruktorsBiography = instruktorsBiography;
+    public void setInstructorsBiography(String instructorsBiography) {
+        this.instructorsBiography = instructorsBiography;
+
     }
 
     public Set<ImageDto> getImages() {
@@ -114,12 +116,13 @@ public class AdventureDto {
         this.fishingInstructorUsername = fishingInstructorUsername;
     }
 
-    public AdventureDto(Long id, String name, AddressDTO address, String description, String instruktorsBiography, Set<ImageDto> images, Integer maxPeople, double price, String rules, String equipment, Set<AdditionalServicesDto> additionalServices, String cancelingCondition, String fishingInstructorUsername) {
+
+    public AdventureDto(Long id, String name, AddressDTO address, String description, String instructorsBiography, Set<ImageDto> images, Integer maxPeople, double price, String rules, String equipment, Set<AdditionalServicesDto> additionalServices, String cancelingCondition, String fishingInstructorUsername) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.description = description;
-        this.instruktorsBiography = instruktorsBiography;
+        this.instructorsBiography = instructorsBiography;
         this.images = images;
         this.maxPeople = maxPeople;
         this.price = price;

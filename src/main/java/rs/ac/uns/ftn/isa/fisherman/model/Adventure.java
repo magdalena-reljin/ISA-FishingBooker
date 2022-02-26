@@ -24,8 +24,10 @@ public class Adventure {
     @Column(name="description")
     protected String description;
 
-    @Column(name="instruktorsBiography")
-    protected String instruktorsBiography;
+
+    @Column(name="instructorsBiography")
+    protected String instructorsBiography;
+
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(
@@ -91,12 +93,12 @@ public class Adventure {
         this.description = description;
     }
 
-    public String getInstruktorsBiography() {
-        return instruktorsBiography;
+    public String getInstructorsBiography() {
+        return instructorsBiography;
     }
 
-    public void setInstruktorsBiography(String instruktorsBiography) {
-        this.instruktorsBiography = instruktorsBiography;
+    public void setInstructorsBiography(String instructorsBiography) {
+        this.instructorsBiography = instructorsBiography;
     }
 
     public Set<Image> getImages() {
@@ -147,17 +149,20 @@ public class Adventure {
         this.cancelingCondition = cancelingCondition;
     }
 
-    public Adventure(Long id, String name, Address address, String description, String instruktorsBiography, Integer maxPeople, double price, String rules, String equipment, String cancelingCondition) {
+    public Adventure(Long id, String name, Address address, String description, String instructorsBiography, Integer maxPeople, double price, String rules, String equipment, String cancelingCondition) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.description = description;
-        this.instruktorsBiography = instruktorsBiography;
+        this.instructorsBiography = instructorsBiography;
         this.maxPeople = maxPeople;
         this.price = price;
         this.rules = rules;
         this.equipment = equipment;
         this.cancelingCondition = cancelingCondition;
+        this.additionalServices= new HashSet<>();
+        this.images = new HashSet<>();
+
 
     }
 

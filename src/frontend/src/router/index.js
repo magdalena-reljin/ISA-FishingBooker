@@ -19,6 +19,7 @@ import AddNewCabin from '../views/CabinOwner/AddNewCabin'
 import CabinProfile from '../views/CabinOwner/CabinProfile'
 import EditCabinProfile from '../views/CabinOwner/EditCabinProfile'
 import AddNewAdventure from '../views/FishingInstructor/AddNewAdventure'
+import AdventureProfile from '../views/FishingInstructor/AdventureProfile'
 
 const routes = [
   {
@@ -127,6 +128,11 @@ const routes = [
     path: '/addNewAdventure/:email',
     name: 'AddNewAdventure',
     component: AddNewAdventure
+  },
+  {
+    path: '/adventureProfile/:email/:adventureName',
+    name: 'AdventureProfile',
+    component: AdventureProfile
   },
   ]
 
