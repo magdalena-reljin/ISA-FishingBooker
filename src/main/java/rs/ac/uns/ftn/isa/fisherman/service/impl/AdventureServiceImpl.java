@@ -30,4 +30,12 @@ public class AdventureServiceImpl implements AdventureService {
         currentImages.add(image);
         adventureRepository.save(adventure);
     }
+    public Set<Adventure> findAdventuresByInstructorId(Long id){
+        return adventureRepository.findAdventuresByInstructorId(id);
+    }
+
+    @Override
+    public Adventure findAdventureByName(String name, Long fishingInstructorId) {
+        return adventureRepository.findAdventureByName(name,fishingInstructorId);
+    }
 }

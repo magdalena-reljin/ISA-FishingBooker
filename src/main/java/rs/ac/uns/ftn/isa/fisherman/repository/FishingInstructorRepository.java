@@ -15,6 +15,6 @@ public interface FishingInstructorRepository extends JpaRepository<FishingInstru
     @Query(value="SELECT role,id,activation_url,city,country,latitude,longitude,street_and_num,username,enabled,last_name,last_password_reset_date,name,password,phone_num,registration_reason,is_predefined FROM users where role='FISHING INSTRUCTOR' and enabled=true",nativeQuery = true)
     List<FishingInstructor> getActiveFishingInstructor();
 
-    @Query(value="SELECT role,id,activation_url,city,country,latitude,longitude,street_and_num,username,enabled,last_name,last_password_reset_date,name,password,phone_num,registration_reason,is_predefined FROM users where username=:username",nativeQuery = true)
+    @Query(value="SELECT role,id,activation_url,city,country,latitude,longitude,street_and_num,username,rating,enabled,last_name,last_password_reset_date,name,password,phone_num,registration_reason,is_predefined FROM users where username=:username",nativeQuery = true)
     FishingInstructor findByUsername(@Param("username")String username );
 }

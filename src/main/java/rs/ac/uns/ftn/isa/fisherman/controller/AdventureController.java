@@ -6,11 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.FishingInstructorDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/adventures", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,19 +32,6 @@ public class AdventureController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody AdventureDto adventureDto){
-
-        System.out.println("JEBEM TI MATER"+adventureDto.getId());
-        System.out.println("JEBEM TI MATER"+adventureDto.getCancelingCondition());
-        System.out.println("JEBEM TI MATER"+adventureDto.getDescription());
-        System.out.println("JEBEM TI MATER"+adventureDto.getEquipment());
-        System.out.println("JEBEM TI MATER"+adventureDto.getFishingInstructorUsername());
-        System.out.println("JEBEM TI MATER"+adventureDto.getName());
-        System.out.println("JEBEM TI MATER"+adventureDto.getInstruktorsBiography());
-        System.out.println("JEBEM TI MATER"+adventureDto.getRules());
-        System.out.println("JEBEM TI MATER"+adventureDto.getMaxPeople());
-        System.out.println("JEBEM TI MATER"+adventureDto.getPrice());
-
-
         Boolean services=false;
         Adventure adventure=adventureMapper.AdventureDtoToAdventure(adventureDto);
         adventure.setFishingInstructor(fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername()));
@@ -55,5 +46,21 @@ public class AdventureController {
             adventureService.save(adventure);
         return new ResponseEntity<>(success, HttpStatus.CREATED);
     }
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PostMapping("/findAdventuresByInstructorUsername")
+    public ResponseEntity<Set<AdventureDto>> findAdventuresByInstructorUsername(@RequestBody FishingInstructorDto instructor){
+        Set<AdventureDto> adventures=new HashSet<>();
+        for(Adventure adventure: adventureService.findAdventuresByInstructorId(fishingInstructorService.findByUsername(instructor.getUsername()).getId()))
+            adventures.add(adventureMapper.AdventureToAdventureDto(adventure));
+        return new ResponseEntity<>(adventures, HttpStatus.OK);
+    }
 
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PostMapping("/findByName")
+    public ResponseEntity<AdventureDto> findByName(@RequestBody AdventureDto adventureDto){
+        Long fishingInstructorId= fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername()).getId();
+        String adventureName= adventureDto.getName();
+        Adventure adventure= adventureService.findAdventureByName(adventureName,fishingInstructorId);
+        return new ResponseEntity<>(adventureMapper.AdventureToAdventureDto(adventure), HttpStatus.OK);
+    }
 }
