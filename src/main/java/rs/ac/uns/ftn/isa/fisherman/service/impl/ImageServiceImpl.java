@@ -15,4 +15,6 @@ public class ImageServiceImpl implements ImageService {
         for(Image image: images)
             imageRepository.delete(image);
     }
+
+
 }

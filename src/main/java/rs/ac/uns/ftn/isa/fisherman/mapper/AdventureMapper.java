@@ -23,4 +23,11 @@ public class AdventureMapper {
                 adventure.getMaxPeople(),adventure.getPrice(),adventure.getRules(),adventure.getEquipment(),additionalServiceMapper.AdditionalServicesToAdditionalServiceDtos(adventure.getAdditionalServices()),
                 adventure.getCancelingCondition(),adventure.getFishingInstructor().getUsername());
     }
+
+    public Adventure AdventureDtoToEditAdventure(AdventureDto adventureDto){
+            return new Adventure(adventureDto.getId(),adventureDto.getName(),addressMapper.dtotoaddress(adventureDto.getAddress()),
+                    adventureDto.getDescription(),adventureDto.getInstructorsBiography(),imageMapper.ImageDtosToImages(adventureDto.getImages()),
+                    adventureDto.getMaxPeople(),adventureDto.getPrice(),adventureDto.getRules(),adventureDto.getEquipment(),additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices()),
+                    adventureDto.getCancelingCondition());
+    }
 }
