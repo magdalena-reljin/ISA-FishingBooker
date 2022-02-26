@@ -12,12 +12,14 @@ public class AdventureMapper {
 
         return  new Adventure(adventure.getId(),adventure.getName(),addressMapper.dtotoaddress(adventure.getAddress()),
                 adventure.getDescription(),adventure.getInstructorsBiography(),adventure.getMaxPeople(),adventure.getPrice(),
+
                 adventure.getRules(),adventure.getEquipment(),adventure.getCancelingCondition());
     }
 
     public AdventureDto AdventureToAdventureDto(Adventure adventure){
         return new AdventureDto(adventure.getId(),adventure.getName(),addressMapper.adressToDTO(adventure.getAddress())
         ,adventure.getDescription(),adventure.getInstructorsBiography(),imageMapper.ImageToImageDtos(adventure.getImages()),
+
                 adventure.getMaxPeople(),adventure.getPrice(),adventure.getRules(),adventure.getEquipment(),additionalServiceMapper.AdditionalServicesToAdditionalServiceDtos(adventure.getAdditionalServices()),
                 adventure.getCancelingCondition(),adventure.getFishingInstructor().getUsername());
     }

@@ -50,12 +50,14 @@ public class AdventureDto {
         this.description = description;
     }
 
+
     public String getInstructorsBiography() {
         return instructorsBiography;
     }
 
     public void setInstructorsBiography(String instructorsBiography) {
         this.instructorsBiography = instructorsBiography;
+
     }
 
     public Set<ImageDto> getImages() {
@@ -113,6 +115,7 @@ public class AdventureDto {
     public void setFishingInstructorUsername(String fishingInstructorUsername) {
         this.fishingInstructorUsername = fishingInstructorUsername;
     }
+
 
     public AdventureDto(Long id, String name, AddressDTO address, String description, String instructorsBiography, Set<ImageDto> images, Integer maxPeople, double price, String rules, String equipment, Set<AdditionalServicesDto> additionalServices, String cancelingCondition, String fishingInstructorUsername) {
         this.id = id;

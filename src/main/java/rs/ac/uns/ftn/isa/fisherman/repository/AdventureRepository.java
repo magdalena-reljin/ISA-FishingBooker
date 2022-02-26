@@ -11,7 +11,6 @@ import java.util.Set;
 
 public interface AdventureRepository extends JpaRepository<Adventure, Long> {
     Adventure findByName(String cabinName);
-
     @Query(value = "SELECT * FROM adventure WHERE users_id=:users_id",nativeQuery = true)
     Set<Adventure> findAdventuresByInstructorId(@Param("users_id")Long id);
 

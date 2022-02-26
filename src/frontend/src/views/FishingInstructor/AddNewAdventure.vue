@@ -76,6 +76,7 @@
             <div  class="form-group">
           <label id="label">Biography</label>
           <textarea  v-model="adventureDto.instructorsBiography" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+
        </div>
               <div class="col form-group">
                   <label id="label">Name </label>   
@@ -270,7 +271,9 @@
                   streetAndNum: ''
               },
               description: '',
+
              instructorsBiography: '',
+
                 images: [{
                  id: null,
                  url: '',
@@ -384,7 +387,9 @@
         addNewAdventure: function(event){
                event.preventDefault();
                if(this.additionalServicesAdded==false)
+
                   this.adventureDto.additionalServices=null   
+
                axios.post("http://localhost:8081/adventures/save",this.adventureDto,{
             headers: {
             "Access-Control-Allow-Origin": process.env.VUE_APP_URL,

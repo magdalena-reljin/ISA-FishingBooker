@@ -6,13 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureDto;
+
 import rs.ac.uns.ftn.isa.fisherman.dto.FishingInstructorDto;
+
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,6 +47,7 @@ public class AdventureController {
             adventureService.save(adventure);
         return new ResponseEntity<>(success, HttpStatus.CREATED);
     }
+
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/findAdventuresByInstructorUsername")
     public ResponseEntity<Set<AdventureDto>> findAdventuresByInstructorUsername(@RequestBody FishingInstructorDto instructor){

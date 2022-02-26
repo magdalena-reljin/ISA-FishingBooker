@@ -24,8 +24,10 @@ public class Adventure {
     @Column(name="description")
     protected String description;
 
+
     @Column(name="instructorsBiography")
     protected String instructorsBiography;
+
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(
@@ -160,6 +162,7 @@ public class Adventure {
         this.cancelingCondition = cancelingCondition;
         this.additionalServices= new HashSet<>();
         this.images = new HashSet<>();
+
 
     }
 
