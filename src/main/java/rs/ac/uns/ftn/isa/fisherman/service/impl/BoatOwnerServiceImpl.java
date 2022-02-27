@@ -20,4 +20,10 @@ public class BoatOwnerServiceImpl implements BoatOwnerService {
     @Override
     public List<BoatOwner> getActiveBoatOwners() {return boatOwnerRepository.getActiveBoatOwners();}
 
+    @Override
+    public BoatOwner findByUsername(String ownersUsername) {
+        return boatOwnerRepository.findByUsername(ownersUsername);
+    }
+
+
 }

@@ -8,4 +8,5 @@ public interface BoatOwnerService {
     List<BoatOwner> getNewBoatOwners();
     List<BoatOwner> getActiveBoatOwners();
 
+    BoatOwner findByUsername(String ownersUsername);
 }

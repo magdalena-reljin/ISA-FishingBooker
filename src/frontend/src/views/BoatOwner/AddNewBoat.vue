@@ -18,7 +18,7 @@
       <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
     </svg> MY BOATS</a>
       </li>
-      <li @click="addNewBoat()" class="nav-item">
+      <li class="nav-item">
       <a style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -48,7 +48,227 @@
       </li>
        
      </ul>
+     <br>
+     <div class="container"  >
+      
+      <div class="row justify-content-center"  >
+      <div class="col-md-12" >
+      <div class="card" >
+      <header id="header" class="card-header" >
+          <h4 class="card-title mt-2">Add new boat</h4>
+      </header>
+      <article class="card-body"  >
+      <form @submit="addNewBoat" method='post' class="was-validated">
 
+         <div class="row">  
+             <div class="col">  
+                  <div class="row"> 
+          <div class="form-row">
+              <div class="col form-group">
+                  <label id="label">Owner</label>
+                    <input   v-model="boatDto.ownersUsername" type="text" class="form-control" disabled>
+              </div> 
+              <div class="col form-group">
+                  <label id="label">Name </label>   
+                    <input v-model="boatDto.name" type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+              </div> 
+             
+              
+          </div>
+      
+         <div class="col form-group">
+                  <label id="label">Type </label>   
+                    <input v-model="boatDto.type" type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+              </div> 
+        <div class="col form-group">
+                  <label id="label">Length(m)</label>   
+                    <input v-model="boatDto.length"  type="text"  pattern="[0-9]+\.?[0-9]*" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+        <hr >
+        <div class="col form-group">
+                  <label id="label">Engine code</label>   
+                    <input  v-model="boatDto.engineCode"  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+        <div class="col form-group">
+                  <label id="label">Engine power</label>   
+                    <input  v-model="boatDto.enginePower"  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+        <div class="col form-group">
+                  <label id="label">Max speed</label>   
+                    <input  v-model="boatDto.maxSpeed"  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+
+          <hr >
+
+       <div class="col form-group">
+                  <label id="label">Street and number </label>   
+                    <input  v-model="boatDto.addressDto.streetAndNum"  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+
+        <div class="col form-group">
+                  <label id="label">City </label>   
+                    <input  v-model="boatDto.addressDto.city"  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+         </div> 
+        <hr style="background-color: white;">
+        <div class="col form-group">
+                  <label id="label">Country </label>   
+                    <input   v-model="boatDto.addressDto.country" type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+
+        
+        <div class="col form-group">
+                  <label id="label">Longitude </label>   
+                    <input   v-model="boatDto.addressDto.longitude" type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+        <div class="col form-group">
+                  <label id="label">Latitude </label>   
+                    <input   v-model="boatDto.addressDto.latitude" type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+        </div> 
+        <hr style="color: white;">
+        <div class="form-group" align="center" vertical-align="center" style=" width: 100%; height: 400px">
+              <PickLocationMap :coordinates=[21.0059,44.0165] />
+        </div>
+
+      </div>
+      </div>
+
+
+   <div class="col">
+       <div class="row">
+        <div class="col form-group">
+              <label id="label">Price ($)</label>
+              <input v-model="boatDto.price" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" >
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+          </div>
+
+           <div class="col form-group">
+              <label id="label">Max people</label>
+              <input min="1" v-model="boatDto.maxPeople" type="number" class="form-control" >
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+          </div>
+
+          <div class="form-group">
+                    <label id="label">Canceling conditions</label>   
+                    <input v-model="boatDto.cancelingCondition"  type="text" class="form-control" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+          </div> 
+
+                
+
+        <div class="mb-3">
+             <label id="label" for="formFileMultiple" class="form-label">Import pictures</label>
+                  <input @change="onFileSelected" class="form-control" type="file" id="formFileMultiple" multiple>
+        </div>
+     
+        <div  class="form-group">
+          <label id="label">Description</label>
+          <textarea  v-model="boatDto.description" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+        </div>
+        <div  class="form-group">
+          <label id="label">Navigation equipment</label>
+          <textarea  v-model="boatDto.navigationEquipment" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+        </div>
+       
+        <div  class="form-group">
+          <label id="label">Fishing equipment</label>
+          <textarea  v-model="boatDto.fishingEquipment" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+        </div>
+       
+       
+         <div  class="form-group">
+          <label id="label">Rules</label>
+         <textarea  v-model="boatDto.rules" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+         </div>
+
+       <hr style="color: white;">
+            
+       </div>     
+       
+        <hr>
+        
+          <div class="row">
+          <div class="col form-group">
+              <label id="label">Additional service</label>
+              <input v-model="names" type="text"  class="form-control" >
+          </div>
+
+          <div class="col form-group">
+                    <label id="label">Price($)</label>   
+                    <input v-model="prices"  type="text" pattern="[0-9]+\.?[0-9]*" class="form-control" >
+                  
+          </div> 
+              <div id="AddButton" class=" col form-group">
+                    <br>
+              <input @click="addService()" type="button" value="add" class="btn btn-outline-success" >
+              </div> 
+           
+          </div>
+
+
+          <table v-if="tableHidden==false" class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Service</th>
+                    <th scope="col">Price ($)</th>
+                    <th scope="col">&nbsp;</th>
+                  </tr>
+                 </thead>
+   
+                <tbody>
+                <tr  v-for="(service,index) in boatDto.additionalServices" :key="index" >
+                <th scope="row">{{index +1}}</th>
+                <td>{{service.name}}</td>
+                <td>{{service.price}}</td>
+                <td>
+
+                  <input @click="removeService(index)" type="button" value="remove" class="btn btn-outline-danger" >
+                </td>
+                </tr>          
+                </tbody>
+          </table>
+         
+        
+
+        <div id="ConfirmButton"  class="form-group"><br>
+              <button type="submit"  class="btn btn-lg btn-success"> Confirm  </button>
+        </div>   
+          
+        
+
+        </div>
+        </div>   
+        </form>
+      </article> 
+      </div>
+      </div> 
+      </div> 
+      </div>
 
 
   </div>
@@ -56,30 +276,196 @@
 </template>
 
 <script>
+  import PickLocationMap from '../../components/PickLocationMap'
+  import axios from "axios";
 
 
    export default{
+    components: {
+    PickLocationMap
+    },
      data(){
        return{
          email: '',
-       
+         boatDto: {
+
+         id: null,
+         ownersUsername: '',
+         name: '',
+         type: '',
+         length: '',
+         engineCode: '',
+         enginePower: '',
+         maxSpeed: '',
+         navigationEquipment: '',
+         addressDto: {
+                  longitude: 0.0,
+                  latitude: 0.0,
+                  country: '',
+                  city: '',    
+                  streetAndNum: ''
+         },
+         description: '',
+         images:[{
+                  id: null,
+                  url: '',
+                  cabin: ''
+         }],
+         maxPeople: 1, 
+         rules: '',
+         fishingEquipment: '',
+         price: 1.0,
+         additionalServices: [{
+                  id: null,
+                  name: '',
+                  price: 0.0  
+         }],
+         cancelingCondition: '',
+         rating: '', 
+         },
+         prices: '',
+           names: '',
+           idx: 0,
+           tableHidden: true,
+           selectedFile: null,
+           imagesSelected: false,
+           imagesSelectedEvent: null,
+           additionalServicesAdded: false,
+           loader: null
+
        }
+
      },
      mounted() {
        this.email = this.$route.params.email
-   
+       this.boatDto.ownersUsername= this.email
 
      },
      methods: {
        myAccount: function(){
           this.$router.push('/editProfile/'+'boatOwner/'+ this.email);
        },
-       addNewBoat: function(){
-          this.$router.push('/addNewBoat/'+ this.email);
-       },
        myBoats: function(){
          this.$router.push('/boatOwnerHome/'+ this.email);
-       }
+       },
+       addService: function(){   
+              if(this.names!='' && this.prices!=''){
+              this.additionalServicesAdded=true
+              this.tableHidden=false  
+              this.boatDto.additionalServices[this.idx]={
+              name: this.names,
+              price: this.prices }
+              this.idx++
+              this.names=''
+              this.prices=''
+              }
+       },
+       removeService: function(tableIndex) {
+              this.boatDto.additionalServices.splice(tableIndex,1)
+              this.idx--;
+       },
+       onFileSelected: function(event){
+              console.log(event)
+              this.imagesSelected=true
+              this.imagesSelectedEvent=event
+
+       },
+       updateLocation: function(latitude,longitude){
+
+           console.log("POGODIO");
+                 axios.get("https://nominatim.openstreetmap.org/reverse", {
+                           params: {
+                           lat: longitude,
+                           lon: latitude,
+                           format: "json",
+                 },
+                 })
+                 .then((response) => {
+                       const { address } = response.data;
+                       var flag = false;
+            var street
+            var number
+                if (address) {
+    
+                if (address.road) {
+                    street = address.road;
+      
+                    flag = true;
+                } else if (address.street) {
+                    street = address.street;
+                    flag = true;
+                }
+                if (flag && address["house-number"]) {
+                    number = address["house-number"];
+                }
+                else if (flag && address["house_number"]) {
+                    number = address["house_number"];
+                }
+                if (flag && address.town) {
+                    this.boatDto.addressDto.city = address.town;
+                }
+                else if (flag && address.city) {
+                    this.boatDto.addressDto.city = address.city;
+                }
+                else if (address.country) {
+                    this.boatDto.addressDto.country = address.country;
+                }
+                this.boatDto.addressDto.streetAndNum= street + ' ' +number
+                this.boatDto.addressDto.longitude=longitude
+                this.boatDto.addressDto.latitude=latitude
+                }
+               })
+             
+        },
+        addNewBoat: function(event){
+               event.preventDefault();
+               if(this.additionalServicesAdded==false)
+                  this.boatDto.additionalServices=null   
+
+                   this.loader = this.$loading.show({
+                    // Optional parameters
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    onCancel: this.onCancel,
+                });
+               axios.post("http://localhost:8081/boats/save",this.boatDto,{
+            headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            "Authorization": "Bearer " + localStorage.jwt ,
+            }
+             })
+               .then(response => {
+                        
+                        if(this.imagesSelected==true)
+                        this.saveImages()
+                        else{
+                        this.loader.hide();
+                        this.$router.push('/boatOwnerHome/'+ this.email);
+                        }
+                        return response;   
+              })
+        },
+        saveImages: function(){
+            
+               for( var i = 0; i <  this.imagesSelectedEvent.target.files.length; i++ ){
+                    let formData = new FormData();
+                    let file =  this.imagesSelectedEvent.target.files[i];
+                    formData.append('file', file);
+                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name,formData,{
+                        headers: {
+                        "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                        "Authorization": "Bearer " + localStorage.jwt ,
+                        }
+             })
+                    .then(response => {
+                       this.loader.hide();
+                       this.loader=null
+                       this.$router.push('/boatOwnerHome/'+ this.email);
+                      return response;
+                    })
+              
+              }                
+        }
        
       
     }
