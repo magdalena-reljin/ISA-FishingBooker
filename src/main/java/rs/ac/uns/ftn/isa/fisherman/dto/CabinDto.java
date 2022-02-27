@@ -4,17 +4,17 @@ import java.util.Set;
 
 public class CabinDto {
     protected Long id;
-    protected String name; //
-    protected String description; //
-    protected int numOfRooms; //
-    protected int bedsPerRoom; //
-    protected String rules; //
-    protected double price=0.0; ///
-    private AddressDTO addressDto; //
+    protected String name;
+    protected String description;
+    protected int numOfRooms;
+    protected int bedsPerRoom;
+    protected String rules;
+    protected double price;
+    private AddressDTO addressDto;
     private Set<AdditionalServicesDto> additionalServices;
-    private Double rating = 0.0;
+    private Double rating;
     private Set<ImageDto> images;
-    private String ownerUsername; ///
+    private String ownerUsername;
 
     public Long getId() {
         return id;
