@@ -16,4 +16,6 @@ public interface BoatOwnerRepository extends JpaRepository<BoatOwner,Integer> {
     @Query(value="SELECT * FROM users where username=:username",nativeQuery = true)
     BoatOwner findByUsername(@Param("username")String username);
 
+
+
 }

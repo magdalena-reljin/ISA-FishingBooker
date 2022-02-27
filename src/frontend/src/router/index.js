@@ -23,6 +23,7 @@ import AddNewAdventure from '../views/FishingInstructor/AddNewAdventure'
 import AdventureProfile from '../views/FishingInstructor/AdventureProfile'
 import EditAdventure from '../views/FishingInstructor/EditAdventure'
 import AddNewBoat from '../views/BoatOwner/AddNewBoat'
+import BoatProfile from '../views/BoatOwner/BoatProfile'
 
 const routes = [
   {
@@ -144,6 +145,11 @@ const routes = [
     path: '/addNewBoat/:email',
     name: 'AddNewBoat',
     component: AddNewBoat
+  },
+  {
+    path: '/boatProfile/:email/:boatName',
+    name: 'BoatProfile',
+    component: BoatProfile
   },
 
 ]
