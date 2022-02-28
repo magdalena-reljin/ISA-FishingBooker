@@ -309,6 +309,10 @@
          idx: 0,
          imagesSelected: false,
          imagesSelectedEvent: null,
+         tableHidden: true,
+         additionalServicesAdded: false,
+         names: '',
+         prices: '',
          
 
        
@@ -343,6 +347,10 @@
                .then(response => {
                         this.cabinDto=response.data
                         this.idx=this.cabinDto.additionalServices.length
+                        if(this.cabinDto.additionalServices.length>0){
+                            this.tableHidden=false;
+                            this.additionalServicesAdded=true
+                        }
 
                     
               })
@@ -388,18 +396,20 @@
               }
              })
                .then(response => {
-                       this.$swal.fire({
+                       
+                    if(this.imagesSelected==true){
+                        this.saveImages()
+                    }else{
+                      this.$swal.fire({
                        position: 'top-end',
                        icon: 'success',
                        title: 'Changes saved',
                        showConfirmButton: false,
                        timer: 1500
                        })
-                    if(this.imagesSelected==true)
-                        this.saveImages()
-                    else
                        this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
-                    
+
+                    }
                     return response;
               })
 
@@ -424,6 +434,13 @@
              }
                     )
                     .then(response => {
+                      this.$swal.fire({
+                       position: 'top-end',
+                       icon: 'success',
+                       title: 'Changes saved',
+                       showConfirmButton: false,
+                       timer: 1500
+                       })
                        this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
                       return response;
                     })

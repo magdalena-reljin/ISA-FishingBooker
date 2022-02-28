@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
+import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
+import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
 
@@ -59,5 +62,24 @@ public class BoatController {
         String boatName= boatDto.getName();
         Boat boat= boatService.findByNameAndOwner(boatName,boatOwner);
         return new ResponseEntity<>(boatMapper.boatToBoatDto(boat), HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('BOATOWNER')")
+    @PostMapping("/edit")
+    public ResponseEntity<String> edit(@RequestBody BoatDto boatDto){
+        BoatOwner owner=boatOwnerService.findByUsername(boatDto.getOwnersUsername());
+        Boat boat=boatMapper.boatDtoToBoatEdit(boatDto);
+        boat.setBoatOwner(owner);
+        Boolean deleteOldImages=false;
+        if(boatDto.getImages()==null)
+            deleteOldImages=true;
+        boatService.edit(boat,deleteOldImages);
+        return new ResponseEntity<>(success,HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('BOATOWNER')")
+    @PostMapping("/delete")
+    public ResponseEntity<String> delete(@RequestBody BoatDto boatDto){
+        Boat boat=boatMapper.boatDtoToBoat(boatDto);
+        boatService.delete(boat.getId());
+        return new ResponseEntity<>(success,HttpStatus.OK);
     }
 }

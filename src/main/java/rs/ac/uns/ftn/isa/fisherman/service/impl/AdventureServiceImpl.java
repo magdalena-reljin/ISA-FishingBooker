@@ -49,18 +49,18 @@ public class AdventureServiceImpl implements AdventureService {
     }
 
     @Override
-    public void delete(Adventure adventure) {
+    public void delete(Long id) {
+        Adventure adventure=adventureRepository.findByID(id);
+        Set<AdditionalServices> additionalServices=adventure.getAdditionalServices();
+        Set<Image> images=adventure.getImages();
         adventureRepository.delete(adventure);
+        additionalServicesService.delete(additionalServices);
+        imageService.delete(images);
     }
 
     @Override
     public void edit(Adventure adventure, Long instructorId) {
         Adventure oldAdventure= adventureRepository.findAdventureByName(adventure.getName(),instructorId);
-        System.out.println("NASAOO SAMM STARII"+oldAdventure.getDescription());
-        System.out.println("NASAOO SAMM NOVIII"+adventure.getDescription());
-        for(AdditionalServices adventure1: adventure.getAdditionalServices())
-           System.out.println("SERVISIIIIIIII *************************************************************"+ adventure1.getName()+ adventure1.getPrice());
-
         oldAdventure.setDescription(adventure.getDescription());
         oldAdventure.setAddress(adventure.getAddress());
         oldAdventure.setEquipment(adventure.getEquipment());
@@ -76,21 +76,6 @@ public class AdventureServiceImpl implements AdventureService {
         adventureRepository.save(oldAdventure);
         Set<AdditionalServices> savedServices=adventureRepository.findAdventureByName(adventure.getName(),instructorId).getAdditionalServices();
         if(adventure.getImages()==null)   imageService.delete(oldImages);
-        additionalServicesService.delete(findDeletedAdditionalServices(oldAdditionalServices,savedServices));
-    }
-
-    private Set<AdditionalServices> findDeletedAdditionalServices(Set<AdditionalServices> oldServices,Set<AdditionalServices> newServices){
-        Set<AdditionalServices> deletedServices=new HashSet<>();
-        boolean exits=false;
-        for(AdditionalServices oldAdditionalService: oldServices) {
-            for(AdditionalServices newAdditionalService: newServices){
-                if (newAdditionalService.getId().equals(oldAdditionalService.getId()))
-                    exits = true;
-            }
-            if(!exits)
-                deletedServices.add(oldAdditionalService);
-            exits=false;
-        }
-        return deletedServices;
+        additionalServicesService.delete(additionalServicesService.findDeletedAdditionalServices(oldAdditionalServices,savedServices));
     }
 }

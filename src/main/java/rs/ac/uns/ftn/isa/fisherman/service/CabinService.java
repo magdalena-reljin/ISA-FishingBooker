@@ -16,7 +16,7 @@ public interface CabinService {
 
     Set<Cabin> findByOwnersId(Long id);
 
-    void delete(Cabin cabin);
+    void delete(Long id);
 
     void edit(Cabin cabin, Boolean deleteOldImages);
 }

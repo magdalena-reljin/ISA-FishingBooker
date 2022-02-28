@@ -121,7 +121,7 @@
                  <p>Owner:</p>
                  </div>
                  <div class="col">
-                 <p><b>{{boatDto.ownerUsername}}</b></p>
+                 <p><b>{{boatDto.ownersUsername}}</b></p>
                  </div>
              </div>
 
@@ -269,7 +269,7 @@
           this.$router.push('/boatOwnerHome/'+ this.email);
        },
        editProfile: function(){
-          console.log("aaaaaa")
+         this.$router.push('/editBoatProfile/'+ this.email+'/'+this.boatName);
        },
        getBoat: function(){
                   this.boatDto.name=this.boatName
@@ -285,6 +285,7 @@
                         this.boatLoaded=true;
                         this.currentImageUrl=this.boatDto.images[0].url
                         this.maxImageIndex=this.boatDto.images.length-1
+                        
                         console.log("image url "+this.currentImageUrl)
                         console.log("max index"+ this.boatDto.images.length)
                   })
