@@ -53,8 +53,13 @@ public class CabinServiceImpl implements CabinService {
     }
 
     @Override
-    public void delete(Cabin cabin) {
+    public void delete(Long id) {
+        Cabin cabin=cabinRepository.findById(id);
+        Set<AdditionalServices> additionalServices=cabin.getAdditionalServices();
+        Set<Image> images=cabin.getImages();
         cabinRepository.delete(cabin);
+        additionalServicesService.delete(additionalServices);
+        imageService.delete(images);
     }
 
     @Override
@@ -73,20 +78,7 @@ public class CabinServiceImpl implements CabinService {
         cabinRepository.save(oldCabin);
         Set<AdditionalServices> savedServices= cabinRepository.findByName(oldCabin.getName()).getAdditionalServices();
         if(deleteOldImages)   imageService.delete(oldImages);
-        additionalServicesService.delete(findDeletedAdditionalServices(oldAdditionalServices,savedServices));
+        additionalServicesService.delete(additionalServicesService.findDeletedAdditionalServices(oldAdditionalServices,savedServices));
     }
-    private Set<AdditionalServices> findDeletedAdditionalServices(Set<AdditionalServices> oldServices,Set<AdditionalServices> newServices){
-        Set<AdditionalServices> deletedServices=new HashSet<>();
-        boolean exits=false;
-        for(AdditionalServices oldAdditionalService: oldServices) {
-            for(AdditionalServices newAdditionalService: newServices){
-                if (newAdditionalService.getId().equals(oldAdditionalService.getId()))
-                    exits = true;
-            }
-            if(!exits)
-                deletedServices.add(oldAdditionalService);
-            exits=false;
-        }
-        return deletedServices;
-    }
+
 }

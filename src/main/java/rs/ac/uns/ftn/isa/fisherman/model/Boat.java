@@ -97,6 +97,26 @@ public class Boat {
         this.additionalServices=new HashSet<>();
         this.images=new HashSet<>();
     }
+    public Boat(Long id, String name, String type, double length, String engineCode, String enginePower, String maxSpeed, String navigationEquipment, Address address, String description, Integer maxPeople, String rules, String fishingEquipment, double price, double rating, String cancelingCondition,Set<AdditionalServices> additionalServices) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.length = length;
+        this.engineCode = engineCode;
+        this.enginePower = enginePower;
+        this.maxSpeed = maxSpeed;
+        this.navigationEquipment = navigationEquipment;
+        this.address = address;
+        this.description = description;
+        this.maxPeople = maxPeople;
+        this.rules = rules;
+        this.fishingEquipment = fishingEquipment;
+        this.price = price;
+        this.rating = rating;
+        this.cancelingCondition = cancelingCondition;
+        this.additionalServices=additionalServices;
+        this.images=new HashSet<>();
+    }
 
     public BoatOwner getBoatOwner() {
         return boatOwner;

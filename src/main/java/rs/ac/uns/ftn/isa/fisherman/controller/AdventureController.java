@@ -71,7 +71,7 @@ public class AdventureController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/deleteAdventure")
     public ResponseEntity<String> deleteAdventure(@RequestBody AdventureDto adventureDto){
-          adventureService.delete(adventureMapper.AdventureDtoToAdventure(adventureDto));
+        adventureService.delete(adventureDto.getId());
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
@@ -79,7 +79,6 @@ public class AdventureController {
     @PostMapping("/edit")
     public ResponseEntity<String> editAdventure(@RequestBody AdventureDto adventureDto){
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername());
-
         Adventure adventure = adventureMapper.AdventureDtoToEditAdventure(adventureDto);
         adventureService.edit(adventure,fishingInstructor.getId());
         return new ResponseEntity<>(success, HttpStatus.OK);

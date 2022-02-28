@@ -11,10 +11,11 @@ import java.util.Set;
 public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageRepository imageRepository;
+
+    @Override
     public void delete(Set<Image> images){
         for(Image image: images)
             imageRepository.delete(image);
     }
-
 
 }

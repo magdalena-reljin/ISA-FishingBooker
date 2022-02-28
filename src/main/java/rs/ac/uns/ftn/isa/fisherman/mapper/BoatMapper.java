@@ -12,6 +12,11 @@ public class BoatMapper {
                 boat.getMaxSpeed(), boat.getNavigationEquipment(), addressMapper.dtotoaddress(boat.getAddressDto()),boat.getDescription(),
                 boat.getMaxPeople(), boat.getRules(), boat.getFishingEquipment(), boat.getPrice(), boat.getRating(), boat.getCancelingCondition());
     }
+    public Boat boatDtoToBoatEdit(BoatDto boat){
+        return new Boat(boat.getId(),boat.getName(),boat.getType(),boat.getLength(), boat.getEngineCode(), boat.getEnginePower(),
+                boat.getMaxSpeed(), boat.getNavigationEquipment(), addressMapper.dtotoaddress(boat.getAddressDto()),boat.getDescription(),
+                boat.getMaxPeople(), boat.getRules(), boat.getFishingEquipment(), boat.getPrice(), boat.getRating(), boat.getCancelingCondition(),additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(boat.getAdditionalServices()));
+    }
 
     public BoatDto boatToBoatDto(Boat boat) {
         return new BoatDto(boat.getId(),boat.getBoatOwner().getUsername(),boat.getName(), boat.getType(), boat.getLength(), boat.getEngineCode(),

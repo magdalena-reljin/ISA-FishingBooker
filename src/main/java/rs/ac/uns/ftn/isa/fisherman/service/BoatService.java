@@ -14,4 +14,8 @@ public interface BoatService {
     Boat findByName(String name);
 
     Boat findByNameAndOwner(String boatName, Long boatOwner);
+
+    void edit(Boat boat, Boolean deleteOldImages);
+
+    void delete(Long id);
 }

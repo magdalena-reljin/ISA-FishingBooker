@@ -201,7 +201,6 @@
             }
              })
                .then(response => {
-                        console.log("usaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaao")
                         this.boatDtos=response.data
                         this.boatsLoaded=true
               })

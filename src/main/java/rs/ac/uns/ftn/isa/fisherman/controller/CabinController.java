@@ -66,7 +66,7 @@ public class CabinController {
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody CabinDto cabinDto){
         Cabin cabin=cabinMapper.CabinDtoToCabin(cabinDto);
-        cabinService.delete(cabin);
+        cabinService.delete(cabin.getId());
         return new ResponseEntity<>(success,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER')")
