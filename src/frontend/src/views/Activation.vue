@@ -46,8 +46,6 @@ export default {
   mounted() {
     this.activationDTO.activationCode = this.$route.params.activationCode
     this.activationDTO.email = this.$route.params.email
-    console.log("ovo je aktivacioni kod: "+ this.activationDTO.activationCode)
-    console.log("ovo je email: "+ this.activationDTO.email)
      axios
      .post("http://localhost:8081/account/activate",this.activationDTO)
      .then((response) => {

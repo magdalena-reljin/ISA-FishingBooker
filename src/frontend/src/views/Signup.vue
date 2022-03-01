@@ -175,7 +175,6 @@ export default {
                .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
                .then((response) => {
                    this.$router.push('/accountAlert/'+this.user.username);
-
                    return response; 
                });
             
@@ -183,22 +182,15 @@ export default {
                axios
                .post("http://localhost:8081/auth/signUpBoatOwner",this.user)
                .then((response) => {
-
                    this.$router.push('/accountAlert/'+this.user.username);
-
-
                    return response; 
                });
 
         }else if(this.selectedClient === 'FISHING INSTRUCTOR'){
-
               axios
                .post("http://localhost:8081/auth/signUpFishingInstructor",this.user)
                .then((response) => {
-
                    this.$router.push('/accountAlert/'+this.user.username);
-
-
                    return response; 
                });
 
