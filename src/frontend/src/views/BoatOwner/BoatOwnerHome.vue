@@ -51,6 +51,129 @@
        
      </ul>
 
+   <br>
+     <!-- search-->
+   
+    <div class="header" >
+      <form>
+        <h1 style="text-align: left; color: #0b477b;  padding-left: 2%;">Search boats</h1>
+        <br>
+        <div style="padding-left: 2%; width: 100%;" class="row" >
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            id="search-field"
+            placeholder="NAME"
+            :value="searchName" 
+            @input="searchName = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            id="search-field"
+            placeholder="TYPE"
+            :value="searchType" 
+            @input="searchType = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            placeholder="ADDRESS"
+            :value="searchAddress"
+            @input="searchAddress = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            type="text"
+            placeholder="CITY"
+            :value="searchCity"
+            @input="searchCity = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            placeholder="COUNTRY"
+            :value="searchCountry"
+            @input="searchCountry = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            placeholder="PRICE"
+            :value="searchPrice"
+            @input="searchPrice = $event.target.value"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            id="search-field"
+            placeholder="MAX PEOPLE"
+            :value="searchMaxPeople" 
+            @input="searchMaxPeople = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <select
+             style="height: 90%; width: 110%; color: #5f7280;"
+            v-model="searchRating"
+            class="form-select rounded-pill"
+            aria-label="Default select example"
+            placeholder="Rating"
+          >
+            <option  disabled value="">RATING</option>
+            <option v-bind:value="5">FIVE STARS</option>
+            <option v-bind:value="4">FOUR STARS</option>
+            <option v-bind:value="3">THREE STARS</option>
+            <option v-bind:value="2">TWO STARS</option>
+            <option v-bind:value="1">ONE STAR</option>
+          </select>
+          </div>
+
+          <div class="col" >
+          <button
+            @click="resetSearch()"
+            style="height: 90%; width: 110%; background-color: #0b477b; color: white;"
+            type="button"
+            class="btn  rounded-pill"
+          >
+            RESET SEARCH
+          </button>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+
+    <!--search-->
+     <hr/>
+
     
       <!-- Carousel wrapper -->
        <div v-if="boatsLoaded==true"
@@ -65,7 +188,7 @@
            <div class="carousel-item active">
              <div class="container">
                <div class="row">
-                 <div   v-for="(boatDto,index) in boatDtos" :key="index"   class="col-lg-4">
+                 <div   v-for="(boatDto,index) in filteredBoats" :key="index"   class="col-lg-4">
                      <div style="width: 100%; height:95%;" class="card">
                      <img style="width: 100%; height:100%;" :src="require('@/assets/' + getImageUrl(index))"/>
                       
@@ -89,6 +212,7 @@
                          </h6>
                        
                          <h6 style="text-align: left;">{{boatDto.description}}</h6>
+                         <h6 style="text-align: left;">{{boatDto.type.toUpperCase()}}</h6>
                          <div class="row">
                          <div class="col">
                             <h6 style="text-align: left; ">Max people: {{boatDto.maxPeople}}</h6>
@@ -177,6 +301,14 @@
            username: ''
          },
          boatsLoaded: false,
+         searchName: "",
+         searchRating: "",
+         searchAddress: "",
+         searchPrice: "",
+         searchCity: "",
+         searchCountry: "",
+         searchType: "",
+         searchMaxPeople: ""
        
        }
      },
@@ -208,23 +340,49 @@
        },
        getImageUrl: function(index){
                if(this.boatsLoaded==true){
-                 return this.boatDtos[index].images[0].url
+                 return this.filteredBoats[index].images[0].url
                }
                return "logoF1.png"
        },
        getFullAddress: function(index){
               if(this.boatsLoaded==true)
-               return this.boatDtos[index].addressDto.streetAndNum + ", " + this.boatDtos[index].addressDto.city + ", "
-               + this.boatDtos[index].addressDto.country
+               return this.filteredBoats[index].addressDto.streetAndNum + ", " + this.filteredBoats[index].addressDto.city + ", "
+               + this.filteredBoats[index].addressDto.country
               return  "logoF1.png"
        },
        seeProfile: function(boatName){
               console.log(boatName)
               this.$router.push('/boatProfile/'+ this.email+'/'+boatName);
+       },
+       resetSearch: function(){
+             this.searchName= ""
+             this.searchRating= ""
+             this.searchAddress= ""
+             this.searchCity= ""
+             this.searchCountry=""
+             this.searchPrice= ""
+             this.searchType=""
+             this.searchMaxPeople=""
        }
        
       
-    }
+    },
+    computed: {
+    filteredBoats: function () {
+      var temp = this.boatDtos.filter((boat) => {
+        return boat.name.toUpperCase().match(this.searchName) && 
+               boat.type.toUpperCase().match(this.searchType) &&
+               boat.addressDto.streetAndNum.toUpperCase().match(this.searchAddress) &&
+               boat.addressDto.city.toUpperCase().match(this.searchCity) &&
+               boat.addressDto.country.toUpperCase().match(this.searchCountry) && 
+               boat.rating.toString().match(this.searchRating) && 
+               boat.price.toString().startsWith(this.searchPrice) &&
+               boat.maxPeople.toString().startsWith(this.searchMaxPeople);
+      });
+
+      return temp;
+    },
+  },
   }
 
 </script> 
