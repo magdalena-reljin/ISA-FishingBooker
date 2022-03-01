@@ -53,6 +53,102 @@
        
      </ul>
 
+      <br>
+     <!-- search-->
+   
+    <div class="header" >
+      <form>
+        <h1 style="text-align: left; color: #0b477b;  padding-left: 7.2%;">Search adventures</h1>
+        <br>
+        <div style="padding-left: 7.2%; width: 100%;" class="row" >
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            id="search-field"
+            placeholder="NAME"
+            :value="searchName" 
+            @input="searchName = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            placeholder="ADDRESS"
+            :value="searchAddress"
+            @input="searchAddress = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            type="text"
+            placeholder="CITY"
+            :value="searchCity"
+            @input="searchCity = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            placeholder="COUNTRY"
+            :value="searchCountry"
+            @input="searchCountry = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            placeholder="PRICE"
+            :value="searchPrice"
+            @input="searchPrice = $event.target.value"
+          />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            id="search-field"
+            placeholder="MAX PEOPLE"
+            :value="searchMaxPeople" 
+            @input="searchMaxPeople = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          
+
+          <div class="col" >
+          <button
+            @click="resetSearch()"
+            style="height: 90%; background-color: #0b477b; color: white;"
+            type="button"
+            class="btn  rounded-pill"
+          >
+            RESET SEARCH
+          </button>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+
+    <!--search-->
+     <hr/>
+
 
     <!-- Carousel wrapper -->
        <div v-if="adventureLoaded==true"
@@ -67,17 +163,17 @@
            <div class="carousel-item active">
              <div class="container">
                <div class="row">
-                 <div   v-for="(adventureDto,index) in adventureDtos" :key="index"   class="col-lg-4">
+                 <div   v-for="(adventureDto,index) in filteredAdventures" :key="index"   class="col-lg-4">
                      <div style="width: 100%; height:95%;" class="card">
                      <img style="width: 100%; height:100%;" :src="require('@/assets/' + getImageUrl(index))"/>
                       
                      <div class="card-body">
                        
                          <div class=row> 
-                            <div class="col-10">
+                            <div class="col">
                             <h2 style="text-align: left;" class="card-title">{{adventureDto.name.toUpperCase()}}</h2>
                             </div>
-                            <div style="vertical-align: bottom;" class="col">
+                            <div style="text-align: right;" class="col">
                             <span  class="badge bg-warning text-light"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
                             </svg> {{fishingInstructorDto.rating}}</span>
@@ -92,7 +188,7 @@
                        
                          <h6 style="text-align: left;">{{adventureDto.description}}</h6>
                             <h6 style="text-align: left;">Free equipment: {{adventureDto.equipment}}</h6>
-                              <h6 style="text-align: left;">{{adventureDto.cancelingCondition}}</h6>
+                              <h6 style="text-align: left;">Canceling condition: {{adventureDto.cancelingCondition}}</h6>
                          <div class="row">
                          <div class="col-sm-2">
                                 <h6 style="text-align: left; color: green;">{{adventureDto.price}} $ </h6>
@@ -190,7 +286,13 @@
             role: '',
           rating: 0.0
          },
-         adventureLoaded: false
+         adventureLoaded: false,
+         searchName: "",
+         searchAddress: "",
+         searchPrice: "",
+         searchCity: "",
+         searchCountry: "",
+         searchMaxPeople: ""
 
        
        }
@@ -241,14 +343,14 @@
       },
         getImageUrl: function(index){
                if(this.adventureLoaded==true){
-                 return this.adventureDtos[index].images[0].url
+                 return this.filteredAdventures[index].images[0].url
                }
                return "logoF1.png"
        },
        getFullAddress: function(index){
               if(this.adventureLoaded==true)
-               return this.adventureDtos[index].address.streetAndNum + ", " + this.adventureDtos[index].address.city + ", "
-               + this.adventureDtos[index].address.country
+               return this.filteredAdventures[index].address.streetAndNum + ", " + this.filteredAdventures[index].address.city + ", "
+               + this.filteredAdventures[index].address.country
               return  "logoF1.png"
        },
        seeProfile: function(adventureName){
@@ -256,11 +358,30 @@
        },
        myAdventure: function(){
              this.$router.push('/fishingInstructorHome/'+ this.email);
+       },
+       resetSearch: function(){
+             this.searchName= ""
+             this.searchAddress= ""
+             this.searchCity= ""
+             this.searchCountry=""
+             this.searchPrice= ""
+             this.searchMaxPeople=""
        }
 
+    },
+    computed: {
+    filteredAdventures: function () {
+      var temp = this.adventureDtos.filter((adventure) => {
+        return adventure.name.toUpperCase().match(this.searchName) && 
+               adventure.address.streetAndNum.toUpperCase().match(this.searchAddress) &&
+               adventure.address.city.toUpperCase().match(this.searchCity) &&
+               adventure.address.country.toUpperCase().match(this.searchCountry) && 
+               adventure.price.toString().startsWith(this.searchPrice) &&
+               adventure.maxPeople.toString().startsWith(this.searchMaxPeople);
+      });
 
-       
-      
+      return temp;
+    },
     }
   }
 
