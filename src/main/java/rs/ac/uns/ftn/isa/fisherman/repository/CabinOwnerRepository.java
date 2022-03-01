@@ -8,12 +8,12 @@ import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import java.util.List;
 
 public interface CabinOwnerRepository extends JpaRepository<CabinOwner,Integer> {
-    @Query(value="SELECT role,id,activation_url,city,country,latitude,longitude,street_and_num,username,enabled,last_name,last_password_reset_date,name,password,phone_num,registration_reason,is_predefined FROM users where role='CABIN OWNER' and enabled=false",nativeQuery = true)
+    @Query(value="SELECT * FROM users where role='CABIN OWNER' and enabled=false",nativeQuery = true)
     List<CabinOwner> getNewCabinOwners();
 
-    @Query(value="SELECT role,id,activation_url,city,country,latitude,longitude,street_and_num,username,enabled,last_name,last_password_reset_date,name,password,phone_num,registration_reason,is_predefined FROM users where role='CABIN OWNER' and enabled=true",nativeQuery = true)
+    @Query(value="SELECT * FROM users where role='CABIN OWNER' and enabled=true",nativeQuery = true)
     List<CabinOwner> getActiveCabinOwners();
 
-    @Query(value="SELECT role,id,activation_url,city,country,latitude,longitude,street_and_num,username,enabled,last_name,last_password_reset_date,name,password,phone_num,registration_reason,is_predefined FROM users where username=:username",nativeQuery = true)
+    @Query(value="SELECT * FROM users where username=:username",nativeQuery = true)
     CabinOwner findByUsername(@Param("username")String username);
 }

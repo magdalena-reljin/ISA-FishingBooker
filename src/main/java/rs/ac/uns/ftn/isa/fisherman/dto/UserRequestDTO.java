@@ -16,7 +16,7 @@ public class UserRequestDTO {
     private AddressDTO address;
     private String registrationReason;
     private String role;
-
+    private String reasonForDeleting;
     public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role) {
         this.id = id;
         this.username = username;
@@ -27,17 +27,39 @@ public class UserRequestDTO {
         this.address = address;
         this.registrationReason = registrationReason;
         this.role=role;
+        this.reasonForDeleting="";
     }
-
+    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role,String reasonForDeleting) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phoneNum = phoneNum;
+        this.address = address;
+        this.registrationReason = registrationReason;
+        this.role=role;
+        this.reasonForDeleting=reasonForDeleting;
+    }
     public UserRequestDTO(String username, String firstname, String lastname, String role, String registrationReason) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
         this.registrationReason=registrationReason;
+        this.reasonForDeleting="";
     }
 
     public UserRequestDTO(){}
+
+    public String getReasonForDeleting() {
+        return reasonForDeleting;
+    }
+
+    public void setReasonForDeleting(String reasonForDeleting) {
+        this.reasonForDeleting = reasonForDeleting;
+    }
+
     public String getPhoneNum() {
         return phoneNum;
     }
