@@ -33,7 +33,7 @@ public class AccountController {
 
     public  AccountController(){}
     private String success= "Success!";
-    private AdminMapper adminMapper = new AdminMapper();
+    private UserMapper userMapper=new UserMapper();
 
 
 
@@ -68,18 +68,6 @@ public class AccountController {
     public ResponseEntity<Boolean> hasAlreadyResetPassword(@RequestBody UserRequestDTO userRequest) {
         Boolean passwordStatus= adminService.hasAlreadyResetPassword(userRequest.getUsername());
         return new ResponseEntity<>(passwordStatus, HttpStatus.OK);
-    }
-
-
-
-
-    @GetMapping("/getAllRequests")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserRequestDTO>> getAllRequestsForDeletingAccount() {
-        List<UserRequestDTO> users= new ArrayList<>();
-       for(User user : userService.getAllRequestsForDeletingAccount())
-            users.add(userMapper.userToDeleteUserRequestDTO(user));
-        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping("/sendDenyReasonForDeletingAccount")

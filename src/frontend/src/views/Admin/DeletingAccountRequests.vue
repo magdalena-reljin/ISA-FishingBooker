@@ -253,7 +253,7 @@ import axios from "axios";
                    })
        },
        getAllRequests: function(){
-              axios.get("http://localhost:8081/account/getAllRequests",{ 
+              axios.get("http://localhost:8081/userc/getAllRequests",{ 
                 headers: {
                 "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 "Authorization": "Bearer " + localStorage.jwt ,
