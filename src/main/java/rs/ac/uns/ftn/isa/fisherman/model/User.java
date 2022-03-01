@@ -50,6 +50,10 @@ public abstract class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;
+
+    @Column(name = "reasonForDeleting")
+    private String reasonForDeleting;
+
     protected User(){}
     protected User(Long id, String name, String lastName, String username, String password, String phoneNum, Address address) {
         this.id = id;
@@ -59,6 +63,15 @@ public abstract class User implements UserDetails {
         this.password = password;
         this.phoneNum = phoneNum;
         this.address = address;
+        this.reasonForDeleting="";
+    }
+
+    public String getReasonForDeleting() {
+        return reasonForDeleting;
+    }
+
+    public void setReasonForDeleting(String reasonForDeleting) {
+        this.reasonForDeleting = reasonForDeleting;
     }
 
     public Long getId() {

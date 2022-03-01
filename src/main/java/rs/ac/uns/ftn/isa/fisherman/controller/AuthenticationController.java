@@ -131,11 +131,15 @@ public class AuthenticationController {
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
-
     @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePassword) {
         userDetailsService.changePassword(changePassword.getOldPassword(),changePassword.getNewPassword());
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
-
+    @PostMapping("/saveDeleteAccountRequest")
+    public ResponseEntity<String> saveDeleteAccountRequest( @RequestBody UserRequestDTO userRequest) {
+        System.out.println("usao u deleteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        userService.saveDeleteAccountRequest(userRequest.getUsername(),userRequest.getReasonForDeleting());
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
 }

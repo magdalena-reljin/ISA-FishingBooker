@@ -20,33 +20,49 @@
 <div class="col-md-6">
 <div class="card card-outline-secondary">
 <div class="card-header">
-    <h3 style="text-align:center;" class="mb-0">Delete account</h3>
+    <h3 style="text-align:center;" class="mb-0">Send request for deleting account</h3>
 </div>
 <div class="card-body">
-    <form  @submit="editData" method='post' class="was-validated">
-        <div class="form-group">
+        <div  style="text-align: left;" class="form-group">
             <label>Reason for deleting account:</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
-          
+                <textarea v-model="userRequestDto.reasonForDeleting" class="form-control" id="exampleFormControlTextarea1" rows="3" ></textarea>
+               <label v-if="userRequestDto.reasonForDeleting===''" style="color: red;">Please enter reason for deleting account.</label>
         </div>
 
 
         <br>
         
              
-             <div class="form-group">
-             <button @click="editData()" type="submit" class="btn btn-outline-dark">Save changes</button>
+             <div class="form-group"  style="text-align: right;">
+             <button data-bs-toggle="modal" data-bs-target="#staticBackdrop"  class="btn btn-outline-dark">Confirm</button>
              </div>
              
         
-    </form>
 </div>
 </div>
 </div>
 </div>
 
 
+<!-- Modal -->
+<div v-if="userRequestDto.reasonForDeleting!=''"  class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete account?</p>
 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button @click="sendRequest()" type="button" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 
       
   </div>
@@ -65,7 +81,6 @@ import axios from "axios";
        return{
            email: '',
            role: '',
-
            userRequestDto: {
             id: 0,
             username:'',
@@ -81,50 +96,39 @@ import axios from "axios";
               streetAndNum: ''
             },
             registrationReason: '',
-            role: ''
-           }
+            role: '',
+            reasonForDeleting: '',
+           },
        
        }
      },
      mounted() {
-          this.role = this.$route.params.role
           this.email = this.$route.params.email
-          this.loadData();
+          this.userRequestDto.username=this.email
       },
      methods: {
-       
-       loadData: function(){
-           console.log(this.role);
-           console.log(this.email);
-           this.userRequestDto.username=this.email
-                 axios.post("http://localhost:8081/auth/findByEmail/",this.userRequestDto,{
-                  headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  "Authorization": "Bearer " + localStorage.jwt ,
-                  }
-                  })
-                 .then(response => {
-                        this.userRequestDto = response.data
-                        this.userRequestDto.role=this.role
-                        return response;
-                   })
-
-       },
-       editData: function(){
-            axios.post("http://localhost:8081/auth/editUser/",this.userRequestDto,{
+       sendRequest: function(){
+            if(this.userRequestDto.reasonForDeleting===""){
+                this.showLabel=true;
+            }else{
+            axios.post("http://localhost:8081/auth/saveDeleteAccountRequest",this.userRequestDto,{
             headers: {
             "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             "Authorization": "Bearer " + localStorage.jwt ,
             }
-             })
-                 .then(response => {
+            })
+            .then(response => {
+                        this.$swal.fire(
+                          'Request sent!',
+                          'Your request for deleting account has been successfully sent to admin! You will be informed via email about the state of your account.',
+                          'success'
+                         )
+                        this.$router.push('/'); 
                         return response;
-                   })
+            })
+            }
 
        },
-       changePassword: function(){
-            this.$router.push('/changedPassword/'+this.email); 
-       }
        
       
     }
