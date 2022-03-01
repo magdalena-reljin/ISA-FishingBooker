@@ -28,9 +28,7 @@
   </div>
 
 </nav>
-   <button @click="prikazi1()">PRIKAZI 1</button>
-   <button @click="prikazi2()">PRIKAZI 2</button>
-   <button @click="prikazi3()">PRIKAZI 3</button>
+  
    
   </div>
 
@@ -55,33 +53,14 @@ export default {
     
   },
   methods: {
-  prikazi1: function(){
-         this.$swal('Hello Vue world!!!');
-      
-     
-    },
-    prikazi2: function(){
-           this.$swal.fire({
-                 position: 'top-end',
-                  icon: 'success',
-                 title: 'Your work has been saved',
-               showConfirmButton: false,
-               timer: 1500
-    })
-    },
-    prikazi3: function(){
-              this.$swal.fire(
-             'Good job!',
-              'You clicked the button!',
-              'success'
-    )
+
 
     }
    
  
-    
+
   
-  }
+  
 };
 </script>
 
