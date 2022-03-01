@@ -1,9 +1,9 @@
- <template>
+<template>
   <div>
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
       <a class="navbar-brand"  href="http://localhost:8080/" >
-      <img src="../assets/logoF1.png" alt="" width="194" height="80" >
+      <img src="../../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
     
     
@@ -25,7 +25,7 @@
       <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
     </svg> USERS</a>
       </li>
-      <li class="nav-item">
+      <li v-if="isPredefined == true" class="nav-item">
       <a style="color: white;" @click="addAdmin()" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -57,116 +57,18 @@
        
      </ul>
     &nbsp;  &nbsp;
-
+<h1>USER REQUESTS </h1>
 &nbsp;  
-
-    
-      <div class="container"  >
-      <div class="row">
-           <div class="col">
-      <div class="container"  >
-      
-      <div class="row justify-content-center"  >
-      <div class="col-md-12" >
-      <div class="card" >
-      <header id="header" class="card-header" >
-          <h4 class="card-title mt-2">ADD NEW ADMIN</h4>
-      </header>
-      <article class="card-body"  >
-      <form @submit="register" method='post' class="was-validated">
-          <div class="form-row">
-              <div class="col form-group">
-                  <label id="label">First name </label>   
-                    <input v-model="user.firstname" type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-              </div> 
-              <div class="col form-group">
-                  <label id="label">Last name</label>
-                    <input   v-model="user.lastname" type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-              </div> 
-          </div>
-          <div class="form-group">
-              <label id="label">Email</label>
-              <input  v-model="user.username" type="email" class="form-control" placeholder="someone@gmail.com"   required>
-              <div class="valid-feedback">Valid.</div>
-              <div class="invalid-feedback">Please fill out this field.</div>
-          </div>
-          <div class="col form-group">
-          <label id="label">Password </label>   
-            <input  v-model="user.password" type="password" class="form-control"   required>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-      </div> 
-          <div class="col form-group">
-          <label id="label">Confirm password </label>   
-            <input type="password" class="form-control"   required>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-      </div> 
-
-       <div class="col form-group">
-                  <label id="label">Street and number </label>   
-                    <input  v-model="user.address.streetAndNum"  type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-        </div> 
-
-        <div class="col form-group">
-                  <label id="label">City </label>   
-                    <input  v-model="user.address.city"  type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-         </div> 
-
-        <div class="col form-group">
-                  <label id="label">Country </label>   
-                    <input   v-model="user.address.country" type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-        </div> 
-
-        <div class="col form-group">
-                  <label id="label">Phone number </label>   
-                    <input v-model="user.phoneNum"  type="text" class="form-control" required>
-                    <div  class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-        </div> 
-          <br>
-          <div class="form-row">
-          <div class="row">
-          <div class="col-12">
- 
-  
-  </div>
-      </div>
-          </div> 
-         
-          <div style="color:red;"></div>
-          <br>
-          <div class="form-group">
-              <button type="submit" class="btn btn-primary"> Add  </button>
-          </div>                                                
-      </form>
-      </article> 
-      </div> 
-       </div> 
-      </div> 
-      
-      
-      </div> 
-     
-           </div>
-           <div class="col">
-<table  class="table">
+<h2 v-if="!userRequestDTO.length"> No requests.</h2>
+<table v-else class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
+      <th scope="col">Role</th>
       <th scope="col">First name</th>
       <th scope="col">Last name</th>
-      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Registration reason</th>
        <th>&nbsp;</th>
       
 
@@ -174,13 +76,19 @@
   </thead>
    
   <tbody>
-    <tr  v-for="(admin,index) in userRequestDTO" :key="index">
+    <tr  v-for="(user,index) in userRequestDTO" :key="index">
        <th scope="row">{{index +1}}</th>
-      <td>{{admin.firstname}}</td>
-      <td>{{admin.lastname}}</td>
-      <td>{{admin.username}}</td>
+      <td>{{user.role}}</td>
+      <td>{{user.firstname}}</td>
+      <td>{{user.lastname}}</td>
+      <td>{{user.username}}</td>
+       <td>{{user.registrationReason}}</td>
       <td>
-                 
+        <tr>
+        <button @click="accept(user)"  type="button" class="btn btn-outline-success" >ACCEPT</button>
+        <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >DENY</button>
+       
+        </tr>          
                           
       
       
@@ -193,9 +101,9 @@
     </tr>
   </tbody>
 </table>
-               </div>
-           </div>
-        </div>
+    
+    
+
   
   </div>
 
@@ -204,34 +112,25 @@
 
 <script>
 
+
 import axios from "axios";
    export default{
      data(){
        return{
            email: '',
-            user: {
-         id: null,
-         username:'',
-         password: '',
-         firstname: '',
-         lastname: '',
-         phoneNum: '',
-         address: {
-              longitude: 0,
-             latitude: 0,
-             country: '',
-             city: '',
-           streetAndNum: ''
-         },
-      
-       },
-         userRequestDTO:
-          [{
+           denyClick: false,
+           isPredefined: false,
+           userRequestDTO:[
+            {
+               
                username: '',
                firstname: '',
                lastname: '',
+               registrationReason: '',
+               role: '',
            }],
-         
+              pomUserRequestDTO:
+            {username: '',}
        
        }
      },
@@ -239,38 +138,74 @@ import axios from "axios";
   // GET request using axios with error handling
           
           this.email = this.$route.params.email
-
+       this.pomUserRequestDTO.username=this.email
           this.loadData();
+            axios
+               .post("http://localhost:8081/account/isPredefined",this.pomUserRequestDTO,{ 
+                headers: {
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                "Authorization": "Bearer " + localStorage.jwt ,
+                }
+                 })
+               .then((response) => {
+                  this.isPredefined=response.data;
+
+                   return response; 
+               });
    
-          
       
 
       },
      methods: {
-        register: function(event) {
-            event.preventDefault();
-                 axios
-               .post("http://localhost:8081/account/signUpAdmin",this.user,{
+       loadData: function(){
+             axios.get("http://localhost:8081/account/getNewUsers",{ 
+                headers: {
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                "Authorization": "Bearer " + localStorage.jwt ,
+                }
+                 })
+            .then(response => {this.userRequestDTO = response.data
+              
+              })
+             .catch(error => {
+                 this.errorMessage = error.message;
+                 console.error("There was an error!", error);
+           });
+       },
+       accept: function(user){
+                  axios.post("http://localhost:8081/account/acceptAccount",user,{ 
+                    headers: {
+                    "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                    "Authorization": "Bearer " + localStorage.jwt ,
+                    }
+                    })
+                  .then(response => {this.userRequestDTO = response.data
+                        this.loadData();
+
+                   })
+                 .catch(error => {
+                  this.errorMessage = error.message;
+                   console.error("There was an error!", error);
+                  });
+       },
+       deny: function(user){
+                  this.denyClick=true;
+                  axios.post("http://localhost:8081/account/denyAccount/"+this.reason,user,{ 
                   headers: {
                   "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                   "Authorization": "Bearer " + localStorage.jwt ,
                   }
-             })
-               .then((response) => {
-
-                    this.$router.go();
-
-                   return response; 
-               });
-        
-        },
+                  })
+                  .then(response => {this.userRequestDTO = response.data
+                        this.loadData();
+                   })
+                 .catch(error => {
+                  this.errorMessage = error.message;
+                   console.error("There was an error!", error);
+                  });
+       },
        redirectDeny: function(user){
-         this.$router.push('/reasonForDenying/'+this.email+"/"+user.email,{
-            headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            "Authorization": "Bearer " + localStorage.jwt ,
-            }
-             });
+         this.$router.push('/reasonForDenying/'+this.email+"/"+user.username);
                   
        },
        users: function(){
@@ -287,21 +222,6 @@ import axios from "axios";
        },
         addAdmin: function(){
           this.$router.push('/addAdmin/'+ this.email);
-       },
-       loadData: function(){
-               axios
-               .get("http://localhost:8081/account/getAllAdmins",{
-                  headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  "Authorization": "Bearer " + localStorage.jwt ,
-                  }
-             })
-               .then((response) => {
-
-                     this.userRequestDTO=response.data
-
-                   
-               });
        }
 
        
@@ -325,7 +245,7 @@ import axios from "axios";
 }
 #logincard{
   width: 47%;
-  background-image:  url("../assets/IMG_3872.jpeg"); 
+  background-image:  url("../../assets/IMG_3872.jpeg"); 
 }
 
 #nav a {

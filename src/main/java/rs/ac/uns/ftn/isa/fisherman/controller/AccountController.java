@@ -149,6 +149,15 @@ public class AccountController {
         return new ResponseEntity<>(passwordStatus, HttpStatus.OK);
     }
 
+    @PostMapping("/deleteUser")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteUser(@RequestBody UserRequestDTO userRequest) {
+        User user= userService.findByUsername(userRequest.getUsername());
+        userService.deleteUser(user);
+        return new ResponseEntity<>(success, HttpStatus.OK);
+    }
+
+
 
 
 }

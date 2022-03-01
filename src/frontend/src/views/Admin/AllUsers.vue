@@ -3,7 +3,7 @@
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
       <a class="navbar-brand"  href="http://localhost:8080/" >
-      <img src="../assets/logoF1.png" alt="" width="194" height="80" >
+      <img src="../../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
     
       
@@ -21,14 +21,14 @@
     </svg> HOME</a>
       </li>
       <li class="nav-item">
-      <a @click="allUsers()" style="color: white;" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+      <a  style="color: white;" @click="allUsers()" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+
       <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
     </svg> USERS</a>
       </li>
       <li v-if="isPredefined == true" class="nav-item">
 
       <a style="color: white;" @click="addAdmin()" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
-
   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 </svg>
@@ -49,6 +49,7 @@
       </li>
       <li class="nav-item">
       <a style="color: white;" @click="deleteAccount()"  class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+
   <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
   <path fill-rule="evenodd" d="M11 7.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
 </svg> DELETING ACCOUNT REQUESTS</a>
@@ -60,13 +61,89 @@
       </li>
        
      </ul>
+
+<br>
+<h1>ALL ACTIVE USERS </h1>
+&nbsp;  
+<h2 v-if="!userRequestDTO.length"> No requests.</h2>
+<table v-else class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Role</th>
+      <th scope="col">First name</th>
+      <th scope="col">Last name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Registration reason</th>
+       <th>&nbsp;</th>
+      
+
+    </tr>
+  </thead>
+   
+  <tbody>
+    <tr  v-for="(user,index) in userRequestDTO" :key="index">
+       <th scope="row">{{index +1}}</th>
+      <td>{{user.role}}</td>
+      <td>{{user.firstname}}</td>
+      <td>{{user.lastname}}</td>
+      <td>{{user.username}}</td>
+       <td>{{user.registrationReason}}</td>
+      <td>
+        <tr>
+         <div class="row">
+            <div class="col "><button @click="setUser(user)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+               type="button" class="btn btn-outline-danger" >DELETE</button></div>
+          <div class="col">   <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >BLOCKED</button></div>
+     
+        </div>
+       
+        </tr>          
+                          
+      
+      
+      
+      
+      
+      </td>
+      
+      
+    </tr>
+  </tbody>
+</table>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete user?</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button @click="deleteUser()" type="button" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
   </div>
+</div>
+
+
+
+  </div>
+
+
  
 
 </template>
  
 <script>
-
 
 import axios from "axios";
    export default{
@@ -74,44 +151,96 @@ import axios from "axios";
        return{
          email: '',
          isPredefined: false,
-          userRequestDTO:
-            {username: '',}
+           userRequestDTO:[
+            {
+               
+               username: '',
+               firstname: '',
+               lastname: '',
+               role: '',
+           }],
+               pomUserRequestDTO:
+            {username: '',},
+                 selectedUser:
+            {
+               
+               username: '',
+               firstname: '',
+               lastname: '',
+               role: '',
+           },
        
        }
      },
      mounted() {
+
        this.email = this.$route.params.email
-         
-      this.userRequestDTO.username=this.email
-                 axios.post("http://localhost:8081/account/isPredefined",this.userRequestDTO,{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
-                  .then(response => {
-                      this.isPredefined=response.data
-                      return response;
-                   })
+    this.pomUserRequestDTO.username=this.email
+         axios.get("http://localhost:8081/account/getAllUsers",{
+            headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            "Authorization": "Bearer " + localStorage.jwt ,
+            }
+             })
+            .then(response => {this.userRequestDTO = response.data
+              
+              })
+             .catch(error => {
+                 this.errorMessage = error.message;
+                 console.error("There was an error!", error);
+           });
+
+          axios
+               .post("http://localhost:8081/account/isPredefined",this.pomUserRequestDTO,{
+              headers: {
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+              "Authorization": "Bearer " + localStorage.jwt ,
+              }
+             })
+               .then((response) => {
+                  this.isPredefined=response.data;
+
+                   return response; 
+               });
+   
    
 
      },
      methods: {
        requests: function(){
+
          this.$router.push('/requests/'+ this.email);
-       },
-       allUsers: function(){
-          this.$router.push('/allUsers/'+ this.email);
        },
        redirectMyAccount: function(){
           this.$router.push('/editProfile/'+'admin/'+ this.email);
        },
-       home: function(){
-          this.$router.push('/profileAdmin/'+ this.email);
-       },
-       addAdmin: function(){
+          addAdmin: function(){
           this.$router.push('/addAdmin/'+ this.email);
+       },
+        home: function(){
+           this.$router.push('/profileAdmin/'+this.email);
+       },
+       users: function(){
+           this.$router.push('/allUsers/'+this.email);
+       },
+       setUser: function(user){
+           this.selectedUser= user;
+       },
+       deleteUser: function(){
+            
+             axios
+               .post("http://localhost:8081/account/deleteUser",this.selectedUser,{
+              headers: {
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+              "Authorization": "Bearer " + localStorage.jwt ,
+              }
+             })
+               .then((response) => {
+                this.$router.go();
+                   return response; 
+               });
        }
+
       
     }
   }
@@ -132,7 +261,7 @@ import axios from "axios";
 }
 #logincard{
   width: 47%;
-  background-image:  url("../assets/IMG_3872.jpeg"); 
+  background-image:  url("../../assets/IMG_3872.jpeg"); 
 }
 
 #nav a {
