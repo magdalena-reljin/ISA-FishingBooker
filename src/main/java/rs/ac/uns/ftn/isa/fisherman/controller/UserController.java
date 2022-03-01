@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
-import rs.ac.uns.ftn.isa.fisherman.mapper.AdminMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.*;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
@@ -45,6 +42,7 @@ public class UserController {
     private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
     private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
     private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
+    private UserMapper userMapper=new UserMapper();
 
     @GetMapping("/getAllUsers")
     @PreAuthorize("hasRole('ADMIN')")
@@ -86,4 +84,13 @@ public class UserController {
         userService.deleteUser(user);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
+    @GetMapping("/getAllRequests")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserRequestDTO>> getAllRequestsForDeletingAccount() {
+        List<UserRequestDTO> users= new ArrayList<>();
+        for(User user : userService.getAllRequestsForDeletingAccount())
+            users.add(userMapper.userToDeleteUserRequestDTO(user));
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
 }
