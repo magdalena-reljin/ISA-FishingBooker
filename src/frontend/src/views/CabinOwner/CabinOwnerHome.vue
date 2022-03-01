@@ -107,7 +107,7 @@
             type="text"
             style="height: 90%; width:110%; padding-left: 5%;"
             id="search-field"
-            placeholder="CABIN NAME"
+            placeholder="NAME"
             :value="searchName"
             @input="searchName = $event.target.value.toUpperCase()"
           />
@@ -346,7 +346,7 @@ export default {
       searchPrice: "",
       searchCity: "",
       searchCountry: "",
-      idx: null,
+      
 
     };
   },
@@ -410,7 +410,6 @@ export default {
   },
   computed: {
     filteredCabins: function () {
-      console.log("usao sam u filter")
       var temp = this.cabinDtos.filter((cabin) => {
         return cabin.name.toUpperCase().match(this.searchName) && 
                cabin.addressDto.streetAndNum.toUpperCase().match(this.searchAddress) &&
