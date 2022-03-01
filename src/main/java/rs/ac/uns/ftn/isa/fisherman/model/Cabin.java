@@ -16,7 +16,7 @@ public class Cabin {
     @Column(name = "id", unique = true)
     protected Long id;
 
-    @Column(name="name")
+    @Column(name="name", unique = true)
     protected String name;
 
     @Column(name="description")

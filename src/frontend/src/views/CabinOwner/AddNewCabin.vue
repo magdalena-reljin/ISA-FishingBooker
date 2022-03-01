@@ -403,23 +403,29 @@
                     let formData = new FormData();
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
-                       axios.post("http://localhost:8081/firebase/uploadCabinImage/"+this.cabinDto.name,formData,{
+                    axios.post("http://localhost:8081/firebase/uploadCabinImage/"+this.cabinDto.name,formData,{
                         headers: {
                         "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                         "Authorization": "Bearer " + localStorage.jwt ,
                         }
-             })
+                    })
                     .then(response => {
                        this.loader.hide();
                        this.loader=null
                        this.$router.push('/cabinOwnerHome/'+ this.email);
-                      return response;
+                       return response;
                     })
+                    
+
+
               
               }                
         }
       
-    }
+    },
+   
+
+
   }
 
 </script> 

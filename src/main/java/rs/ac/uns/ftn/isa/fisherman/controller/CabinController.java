@@ -29,22 +29,23 @@ public class CabinController {
     private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 
     private String success="Success";
+    private String alreadyExistis="Cabin with that name already exists";
 
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody CabinDto cabinDto){
-        Boolean services=false;
-        Cabin cabin=cabinMapper.CabinDtoToCabin(cabinDto);
-        cabin.setCabinOwner(cabinOwnerService.findByUsername(cabinDto.getOwnerUsername()));
-        cabinService.save(cabin);
+            Boolean services = false;
+            Cabin cabin = cabinMapper.CabinDtoToCabin(cabinDto);
+            cabin.setCabinOwner(cabinOwnerService.findByUsername(cabinDto.getOwnerUsername()));
+            cabinService.save(cabin);
 
-        if(cabinDto.getAdditionalServices()!=null) {
-            cabin.setAdditionalServices(additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(cabinDto.getAdditionalServices()));
-            services=true;
-        }
-        if(services)
-        cabinService.save(cabin);
-        return new ResponseEntity<>(success,HttpStatus.CREATED);
+            if (cabinDto.getAdditionalServices() != null) {
+                cabin.setAdditionalServices(additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(cabinDto.getAdditionalServices()));
+                services = true;
+            }
+            if (services)
+                cabinService.save(cabin);
+            return new ResponseEntity<>(success, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('CABINOWNER')")
