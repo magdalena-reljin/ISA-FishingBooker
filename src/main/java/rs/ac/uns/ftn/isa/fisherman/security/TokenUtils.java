@@ -205,6 +205,21 @@ public class TokenUtils {
     public List<Authority> getUserRolesFromToken(String token) {
         return (List<Authority>) getAllClaimsFromToken(token).get("USER_ROLE");
     }
+    public String getRoleFromToken(String token) {
+        String role;
+
+        try {
+            final Claims claims = this.getAllClaimsFromToken(token);
+            role = claims.get("role", String.class);
+            System.out.println("ROLEEEEEEE"+role);
+        } catch (ExpiredJwtException ex) {
+            throw ex;
+        } catch (Exception e) {
+            role = null;
+        }
+
+        return role;
+    }
     /**
      * Funkcija za čitanje svih podataka iz JWT tokena
      *

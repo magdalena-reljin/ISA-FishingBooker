@@ -18,6 +18,14 @@ import 'sweetalert2/dist/sweetalert2.min.css'; // If you don't need the styles, 
 //loading
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import Datepicker from 'vue3-date-time-picker';
+import 'vue3-date-time-picker/dist/main.css';
+
+import VCalendar from 'v-calendar';
+
+
+
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyAwNdI28zKlIT2GG3pRLpH9aMmcbUftl04",
@@ -34,7 +42,7 @@ const app = initializeApp(firebaseConfig);
 axios.defaults.headers['Authorization']=config.requestHeader.headers.Authorization
 getDatabase(app);
 getAuth();
-createApp(App).use(router).use(VueSweetalert2).use(VueLoading).use(OpenLayersMap).mount('#app')
+createApp(App).use(router).use(VueSweetalert2).use(VCalendar).use(VueLoading).use(Datepicker).use(OpenLayersMap).mount('#app');
 
 
 

@@ -37,8 +37,10 @@
                     </svg></span>
                       <input v-model="LogInDto.password" type="password" class="form-control" placeholder="Password">
                     </div>
-                    <div style="color: red;" id="greska"></div>
-                    <br>
+                       <div class="input-group mb-4">
+                    <label v-if="error != ''" style="color: red;">{{error}}</label>
+                       </div>
+                  
                     <div class="row">
                       <div class="col-3">
                         <button @click="logIn()" type="button" class="btn btn-outline-primary  active">Login</button>
@@ -82,7 +84,8 @@ import axios from "axios";
          },
          user:{
            username: ''
-         }
+         },
+         error:''
          
        }
      },
@@ -122,7 +125,15 @@ import axios from "axios";
                      this.$router.push('/fishingInstructorHome/'+this.LogInDto.username);
 
                    return response; 
-               });
+               }) .catch((error) => {
+                    if (error.response) {
+                     
+                        console.log(error.response.data);
+                        if (error.response.data == "Password or username is incorrect") {
+                            this.error=error.response.data;
+                        }
+                    }
+                });
         }
 
       },

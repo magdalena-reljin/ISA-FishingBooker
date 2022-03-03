@@ -8,7 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 
 import java.util.List;
 
-public interface FishingInstructorRepository extends JpaRepository<FishingInstructor,Integer> {
+public interface FishingInstructorRepository extends JpaRepository<FishingInstructor,Long> {
     @Query(value="SELECT * FROM users where role='FISHING INSTRUCTOR' and enabled=false",nativeQuery = true)
     List<FishingInstructor> getNewFishingInstructor();
 
@@ -17,4 +17,7 @@ public interface FishingInstructorRepository extends JpaRepository<FishingInstru
 
     @Query(value="SELECT * FROM users where username=:username",nativeQuery = true)
     FishingInstructor findByUsername(@Param("username")String username );
+
+    @Query(value="SELECT * FROM users where id=:id",nativeQuery = true)
+    FishingInstructor findByID(@Param("id")Long id);
 }
