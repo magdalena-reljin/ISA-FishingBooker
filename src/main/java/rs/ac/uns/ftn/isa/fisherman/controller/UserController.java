@@ -100,6 +100,4 @@ public class UserController {
         return userService.getUsernameFromToken(token.split(" ")[1]);
     }
 
-
-
 }
