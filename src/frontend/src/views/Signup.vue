@@ -107,6 +107,7 @@
           </div> 
          
           <div style="color:red;" v-if="notMatching==true"><label>Passwords are not matching!</label></div>
+           <div style="color:red;" v-if="flag==true"><label>Email already in use.</label></div>
         
           <br>
 
@@ -142,6 +143,8 @@ export default {
        selectedClient: 'CLIENT',
        confirmPassword: '',
        notMatching: false,
+       existEmail:'',
+       flag: false,
        user: {
          id: null,
          username:'',
@@ -174,25 +177,33 @@ export default {
                axios
                .post("http://localhost:8081/auth/signUpCabinOwner",this.user)
                .then((response) => {
-                   this.$router.push('/accountAlert/'+this.user.username);
-                   return response; 
-               });
+                 console.log("RESPONSEE"+response.data)
+                 if(response.data =='Email already in use.'){
+                   console.log("USAOOOOOOOOOOOOOOO")
+                   this.flag= true
+                 }else {
+                      this.$router.push('/accountAlert/'+this.user.username);
+                 }
+                 
+                 return response;
+                
+               })
             
         }else if(this.selectedClient === 'BOAT OWNER'){
                axios
                .post("http://localhost:8081/auth/signUpBoatOwner",this.user)
                .then((response) => {
                    this.$router.push('/accountAlert/'+this.user.username);
-                   return response; 
-               });
+                    return response;
+               })
 
         }else if(this.selectedClient === 'FISHING INSTRUCTOR'){
               axios
                .post("http://localhost:8081/auth/signUpFishingInstructor",this.user)
                .then((response) => {
                    this.$router.push('/accountAlert/'+this.user.username);
-                   return response; 
-               });
+                    return response;
+               })
 
         }
         }else{

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,9 +65,13 @@ public class AuthenticationController {
     private UserMapper userMapper=new UserMapper();
 
     @PostMapping("/login")
-    public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody LogInDto userRequest) {
-        UserTokenState userTokenState = loginService.LogIn(userRequest);
-        return ResponseEntity.ok(userTokenState);
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody LogInDto userRequest) {
+        try{
+            UserTokenState userTokenState = loginService.LogIn(userRequest);
+            return ResponseEntity.ok(userTokenState);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Password or username is incorrect");
+        }
     }
 
 
@@ -90,24 +95,25 @@ public class AuthenticationController {
     }*/
 
 
-
     @PostMapping("/signUpCabinOwner")
-    public ResponseEntity<String> registerCabinOwner(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest) throws MessagingException {
-        User existUser = this.userService.findByUsername(userRequest.getUsername());
-        if (existUser != null) {
-            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
-        }
-        this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest));
-        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    public ResponseEntity<String> registerCabinOwner(@RequestBody UserRequestDTO userRequest) throws Exception {
+
+            User existUser=userService.findByUsername(userRequest.getUsername());
+            if(existUser== null)
+            {
+                this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest));
+                return ResponseEntity.status(201).body("Success");
+            }
+              return ResponseEntity.badRequest().body("Email already in use.");
     }
 
 
     @PostMapping("/findByEmail")
-    public UserRequestDTO findByEmail(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
+    public UserRequestDTO findByEmail(@RequestBody UserRequestDTO userRequest){
         return userMapper.userToUserRequestDTO(userService.findByUsername(userRequest.getUsername()));
     }
     @PostMapping("/editUser")
-    public void editUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDTO userRequest){
+    public void editUser(@RequestBody UserRequestDTO userRequest){
         userService.editUser(userRequest);
     }
 
@@ -138,7 +144,6 @@ public class AuthenticationController {
     }
     @PostMapping("/saveDeleteAccountRequest")
     public ResponseEntity<String> saveDeleteAccountRequest( @RequestBody UserRequestDTO userRequest) {
-        System.out.println("usao u deleteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         userService.saveDeleteAccountRequest(userRequest.getUsername(),userRequest.getReasonForDeleting());
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }

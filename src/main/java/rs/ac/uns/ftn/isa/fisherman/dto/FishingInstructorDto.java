@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class FishingInstructorDto {
 
     private Long id;
@@ -17,6 +20,7 @@ public class FishingInstructorDto {
     private String registrationReason;
     private String role;
     private double rating;
+    private Set<AvailableInstructorPeriodDto> availableInstructorPeriodDtoSet;
 
     public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating) {
         this.id = id;
@@ -29,6 +33,21 @@ public class FishingInstructorDto {
         this.registrationReason = registrationReason;
         this.role = role;
         this.rating = rating;
+        this.availableInstructorPeriodDtoSet = new HashSet<>();
+    }
+
+    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating, Set<AvailableInstructorPeriodDto> availableInstructorPeriodDtoSet) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phoneNum = phoneNum;
+        this.address = address;
+        this.registrationReason = registrationReason;
+        this.role = role;
+        this.rating = rating;
+        this.availableInstructorPeriodDtoSet = availableInstructorPeriodDtoSet;
     }
 
     public FishingInstructorDto() {
@@ -112,5 +131,13 @@ public class FishingInstructorDto {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public Set<AvailableInstructorPeriodDto> getAvailableInstructorPeriodDtoSet() {
+        return availableInstructorPeriodDtoSet;
+    }
+
+    public void setAvailableInstructorPeriodDtoSet(Set<AvailableInstructorPeriodDto> availableInstructorPeriodDtoSet) {
+        this.availableInstructorPeriodDtoSet = availableInstructorPeriodDtoSet;
     }
 }

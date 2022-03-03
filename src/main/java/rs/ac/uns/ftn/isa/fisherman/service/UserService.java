@@ -37,4 +37,7 @@ public interface UserService {
     void sendDenyReason(String response, String recipient) throws MessagingException;
 
     void sendAcceptReason(String response, String recipient) throws MessagingException;
+
+
+    String getUsernameFromToken(String s);
 }

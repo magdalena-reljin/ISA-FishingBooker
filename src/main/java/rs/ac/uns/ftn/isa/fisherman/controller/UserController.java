@@ -93,4 +93,13 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "getUsername")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    public @ResponseBody String getUsernameFromToken(@RequestHeader("Authorization") String token) {
+        return userService.getUsernameFromToken(token.split(" ")[1]);
+    }
+
+
+
 }

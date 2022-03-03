@@ -26,6 +26,7 @@ import AddNewBoat from '../views/BoatOwner/AddNewBoat'
 import BoatProfile from '../views/BoatOwner/BoatProfile'
 import EditBoatProfile from '../views/BoatOwner/EditBoatProfile'
 import DeletingAccountRequests from '../views/Admin/DeletingAccountRequests'
+import MyCalendar from '../views/FishingInstructor/MyCalendar'
 
 const routes = [
   {
@@ -162,6 +163,11 @@ const routes = [
     path: '/deletingAccountRequests/:email',
     name: 'DeletingAccountRequests',
     component: DeletingAccountRequests
+  },
+  {
+    path: '/MyCalendar/:email',
+    name: 'MyCalendar',
+    component: MyCalendar
   },
 
 ]

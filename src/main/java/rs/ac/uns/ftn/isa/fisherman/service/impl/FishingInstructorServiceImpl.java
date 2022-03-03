@@ -2,12 +2,14 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
+import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 
 import java.util.List;
+import java.util.Set;
+
 @Service
 public class FishingInstructorServiceImpl implements FishingInstructorService {
     private FishingInstructorRepository fishingInstructorRepository;
@@ -26,4 +28,13 @@ public class FishingInstructorServiceImpl implements FishingInstructorService {
     public FishingInstructor findByUsername(String fishingInstructorUsername) {
        return  fishingInstructorRepository.findByUsername(fishingInstructorUsername);
     }
+
+    @Override
+    public void setAvailableInstructorPeriod(Long id, Set<AvailableInstructorPeriod> availableInstructorPeriodDtoSet) {
+        FishingInstructor fishingInstructor= fishingInstructorRepository.findByID(id);
+        fishingInstructor.setAvailableInstructorPeriods(availableInstructorPeriodDtoSet);
+        fishingInstructorRepository.save(fishingInstructor);
+    }
+
+
 }

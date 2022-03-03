@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mail.*;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
+import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
@@ -22,12 +23,14 @@ public class UserServiceImpl implements UserService {
     private MailService<String> mailService;
     private  AuthorityService authorityService;
     private PasswordEncoder passwordEncoder;
+    private TokenUtils tokenUtils;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, MailService<String> mailService,AuthorityService authorityService,PasswordEncoder passwordEncoder){
+    public UserServiceImpl(UserRepository userRepository, MailService<String> mailService, AuthorityService authorityService, PasswordEncoder passwordEncoder, TokenUtils tokenUtils){
         this.userRepository=userRepository;
         this.mailService=mailService;
         this.authorityService=authorityService;
         this.passwordEncoder =passwordEncoder;
+        this.tokenUtils= tokenUtils;
     }
 
     @Override
@@ -159,5 +162,11 @@ public class UserServiceImpl implements UserService {
         User user=userRepository.findByUsername(recipient);
         userRepository.delete(user);
     }
+
+    @Override
+    public String getUsernameFromToken(String s) {
+        return tokenUtils.getUsernameFromToken(s);
+    }
+
 
 }
