@@ -85,6 +85,16 @@ public class UserServiceImpl implements UserService {
         fishingInstructor=userRepository.save(fishingInstructor);
         return fishingInstructor;
     }
+
+    @Override
+    public Client registerClient(Client client) throws MessagingException {
+        List<Authority> auth = authorityService.findByname(client.getRoleApp());
+        client.setAuthorities(auth);
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client=userRepository.save(client);
+        return client;
+    }
+
     public User activateAccount(String email, String code) {
         User user = findByUsername(email);
         if (!user.getActivationURL().equals(code)) {

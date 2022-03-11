@@ -16,6 +16,7 @@ public interface UserService {
     List<User> findAll ();
     User registerCabinOwner(CabinOwner cabinOwner) throws MessagingException;
     User registerBoatOwner(BoatOwner boatOwner) throws MessagingException;
+    User registerClient(Client client) throws MessagingException;
 
     User registerAdmin(Admin admin);
     User registerFishingInstructor(FishingInstructor fishingInstructor) throws MessagingException;
