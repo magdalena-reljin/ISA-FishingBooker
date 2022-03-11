@@ -123,6 +123,8 @@ import axios from "axios";
                      this.$router.push('/cabinOwnerHome/'+this.LogInDto.username);
                   else if(response.data.userType==='FISHING INSTRUCTOR')
                      this.$router.push('/fishingInstructorHome/'+this.LogInDto.username);
+                  else if(response.data.userType==='CLIENT')
+                     this.$router.push('/clientHome/'+this.LogInDto.username);
 
                    return response; 
                }) .catch((error) => {
