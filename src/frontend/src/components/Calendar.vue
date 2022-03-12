@@ -221,7 +221,7 @@ export default {
              registrationReason: '',
              role: '',
              rating: '',
-            availableInstructorPeriodDtoSet: [{
+            availablePeriodDtoSet: [{
                  id: null,
                 startDate: null,
                 endDate: null,
@@ -458,7 +458,7 @@ export default {
           console.log("starttt"+this.start)
            console.log("endd"+this.end)
          
-            this.fishingInstructorDtos.availableInstructorPeriodDtoSet[0]=({
+            this.fishingInstructorDtos.availablePeriodDtoSet[0]=({
               startDate:  this.formatDate(this.start),
               endDate:  this.formatDate(this.end),
               instructorUsername: this.fishingInstructorDtos.username})

@@ -89,7 +89,7 @@ import VCalendar from "@/components/Calendar.vue";
              registrationReason: '',
              role: '',
              rating: '',
-            availableInstructorPeriodDtoSet: [{
+            availablePeriodDtoSet: [{
                  id: null,
                 startDate: null,
                 endDate: null,

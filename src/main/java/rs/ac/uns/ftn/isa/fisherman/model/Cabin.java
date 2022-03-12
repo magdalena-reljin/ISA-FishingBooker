@@ -59,6 +59,10 @@ public class Cabin {
     @JoinColumn(name = "users_id")
     protected CabinOwner cabinOwner;
 
+
+    @OneToMany(mappedBy = "cabin", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<AvailableCabinPeriod> availableCabinPeriods;
+
     public Cabin() {}
 
     public CabinOwner getCabinOwner() {
