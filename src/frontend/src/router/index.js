@@ -27,6 +27,7 @@ import BoatProfile from '../views/BoatOwner/BoatProfile'
 import EditBoatProfile from '../views/BoatOwner/EditBoatProfile'
 import DeletingAccountRequests from '../views/Admin/DeletingAccountRequests'
 import MyCalendar from '../views/FishingInstructor/MyCalendar'
+import ClientHome from '../views/Client/ClientHome.vue'
 
 const routes = [
   {
@@ -83,6 +84,11 @@ const routes = [
     path: '/fishingInstructorHome/:email',
     name: 'FishingInstructorHome',
     component: FishingInstructorHome
+  },
+  {
+    path: '/clientHome/:email',
+    name: 'ClientHome',
+    component: ClientHome
   },
   {
     path: '/editProfile/:role/:email',
