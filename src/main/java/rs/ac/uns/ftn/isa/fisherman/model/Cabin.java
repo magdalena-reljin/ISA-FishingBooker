@@ -175,6 +175,7 @@ public class Cabin {
         this.cabinOwner = cabinOwner;
         this.additionalServices = new HashSet<>();
         this.images = new HashSet<>();
+        this.availableCabinPeriods=new HashSet<>();
     }
 
     public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Set<AdditionalServices> additionalServices, Double rating) {
@@ -189,5 +190,7 @@ public class Cabin {
         this.additionalServices = additionalServices;
         this.rating = rating;
         this.cabinOwner = cabinOwner;
+        this.images=new HashSet<>();
+        this.availableCabinPeriods=new HashSet<>();
     }
 }

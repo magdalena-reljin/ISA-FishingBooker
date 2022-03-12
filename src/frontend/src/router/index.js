@@ -28,6 +28,7 @@ import EditBoatProfile from '../views/BoatOwner/EditBoatProfile'
 import DeletingAccountRequests from '../views/Admin/DeletingAccountRequests'
 import MyCalendar from '../views/FishingInstructor/MyCalendar'
 import ClientHome from '../views/Client/ClientHome.vue'
+import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 
 const routes = [
   {
@@ -174,6 +175,11 @@ const routes = [
     path: '/MyCalendar/:email',
     name: 'MyCalendar',
     component: MyCalendar
+  },
+  {
+    path: '/CabinCalendar/:email/:cabinName',
+    name: 'CabinCalendar',
+    component: CabinCalendar
   },
 
 ]

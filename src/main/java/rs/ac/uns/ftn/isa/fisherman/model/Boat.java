@@ -96,6 +96,7 @@ public class Boat {
         this.cancelingCondition = cancelingCondition;
         this.additionalServices=new HashSet<>();
         this.images=new HashSet<>();
+        this.availableBoatPeriods=new HashSet<>();
     }
     @OneToMany(mappedBy = "boat", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<AvailableBoatPeriod> availableBoatPeriods;
@@ -118,6 +119,7 @@ public class Boat {
         this.cancelingCondition = cancelingCondition;
         this.additionalServices=additionalServices;
         this.images=new HashSet<>();
+        this.availableBoatPeriods=new HashSet<>();
     }
 
     public BoatOwner getBoatOwner() {

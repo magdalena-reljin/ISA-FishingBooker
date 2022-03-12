@@ -10,13 +10,17 @@ import java.util.Set;
 public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodService {
     @Autowired
     private AvailableCabinPeriodRepository availableCabinPeriodRepository;
+
     @Override
     public Set<AvailableCabinPeriod> getAvailablePeriod(Long id) {
-        return null;
+        return  availableCabinPeriodRepository.findByCabinId(id);
     }
 
     @Override
-    public void setAvailableCabinPeriod(Long id, Set<AvailableCabinPeriod> availableCabinPeriod) {
+    public void setAvailableCabinPeriod(Set<AvailableCabinPeriod> availableCabinPeriod) {
+        for(AvailableCabinPeriod availablePeriods:availableCabinPeriod ) {
+            availableCabinPeriodRepository.save(availablePeriods);
+        }
 
     }
 }
