@@ -6,5 +6,5 @@ public interface AvailableBoatPeriodService {
 
     Set<AvailableBoatPeriod> getAvailablePeriod(Long id);
 
-    void setAvailableBoatPeriod(Long id, Set<AvailableBoatPeriod> availableBoatPeriod);
+    void setAvailableBoatPeriod(Set<AvailableBoatPeriod> availableBoatPeriods);
 }

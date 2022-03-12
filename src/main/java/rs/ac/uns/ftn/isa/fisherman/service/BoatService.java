@@ -7,6 +7,8 @@ import java.util.Set;
 public interface BoatService {
     void save(Boat boat);
 
+    Boat findById(Long id);
+
     void addNewImage(String boatName, Image image);
 
     Set<Boat> findByOwnersId(Long id);

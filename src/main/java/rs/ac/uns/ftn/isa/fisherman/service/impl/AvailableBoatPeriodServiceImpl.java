@@ -13,11 +13,12 @@ public class AvailableBoatPeriodServiceImpl implements AvailableBoatPeriodServic
     private AvailableBoatPeriodRepository availableBoatPeriodRepository;
     @Override
     public Set<AvailableBoatPeriod> getAvailablePeriod(Long id) {
-        return null;
+        return  availableBoatPeriodRepository.findByBoatId(id);
     }
 
     @Override
-    public void setAvailableBoatPeriod(Long id, Set<AvailableBoatPeriod> availableBoatPeriod) {
-
+    public void setAvailableBoatPeriod(Set<AvailableBoatPeriod> availableBoatPeriods) {
+            for(AvailableBoatPeriod availablePeriod: availableBoatPeriods)
+                availableBoatPeriodRepository.save(availablePeriod);
     }
 }
