@@ -205,6 +205,14 @@ export default {
                     return response;
                })
 
+        }else if(this.selectedClient === 'CLIENT'){
+              axios
+               .post("http://localhost:8081/auth/signUpClient",this.user)
+               .then((response) => {
+                   this.$router.push('/accountAlert/'+this.user.username);
+                    return response;
+               })
+
         }
         }else{
              this.notMatching=true;

@@ -11,10 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
-import rs.ac.uns.ftn.isa.fisherman.mapper.BoatOwnerMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.CabinOwnerMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.UserMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.*;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
@@ -61,6 +58,7 @@ public class AuthenticationController {
     private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
     private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
     private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
+    private ClientMapper clientMapper = new ClientMapper();
 
     private UserMapper userMapper=new UserMapper();
 
@@ -134,6 +132,16 @@ public class AuthenticationController {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
         this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest));
+        return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/signUpClient")
+    public ResponseEntity<String> registerClient( @RequestBody UserRequestDTO userRequest) throws MessagingException {
+        User existUser = this.userService.findByUsername(userRequest.getUsername());
+        if (existUser != null) {
+            return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
+        }
+        this.userService.registerClient(clientMapper.userRequestDtoToClient(userRequest));
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
