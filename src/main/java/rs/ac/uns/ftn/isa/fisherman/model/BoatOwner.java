@@ -10,6 +10,8 @@ public class BoatOwner extends User {
     private String registrationReason;
     @OneToMany(mappedBy = "boatOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Boat> boats;
+    @OneToMany(mappedBy = "boatOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<AvailableBoatPeriod> availableBoatPeriods;
 
     public BoatOwner() {}
 

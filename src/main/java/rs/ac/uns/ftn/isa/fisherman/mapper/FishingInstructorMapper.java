@@ -8,7 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 public class FishingInstructorMapper {
 
     private AddressMapper addressMapper = new AddressMapper();
-    private AvailableInstructorPeriodMapper availableInstructorPeriodMapper = new AvailableInstructorPeriodMapper();
+    private AvailablePeriodMapper availablePeriodMapper = new AvailablePeriodMapper();
     public FishingInstructor userRequestDtoToFishingInstructor(UserRequestDTO userRequest){
         AddressMapper addressMapper=new AddressMapper();
         return new FishingInstructor(userRequest.getId(),userRequest.getFirstname(),userRequest.getLastname(),userRequest.getUsername(),
@@ -23,7 +23,7 @@ public class FishingInstructorMapper {
     public FishingInstructorDto fishingInstructorToFishingInstructorDto(FishingInstructor fishingInstructor){
         return  new FishingInstructorDto(fishingInstructor.getId(),fishingInstructor.getUsername(),fishingInstructor.getPassword(),fishingInstructor.getName(),
                 fishingInstructor.getLastName(),fishingInstructor.getPhoneNum(),addressMapper.adressToDTO(fishingInstructor.getAddress()),
-                fishingInstructor.getRegistrationReason(),fishingInstructor.getRoleApp(),fishingInstructor.getRating(),availableInstructorPeriodMapper.availableInstructorPeriodsDtos(fishingInstructor.getAvailableInstructorPeriods()));
+                fishingInstructor.getRegistrationReason(),fishingInstructor.getRoleApp(),fishingInstructor.getRating(), availablePeriodMapper.availableInstructorPeriodsToDtos(fishingInstructor.getAvailableInstructorPeriods()));
     }
 
 

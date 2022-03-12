@@ -20,7 +20,7 @@ public class FishingInstructorDto {
     private String registrationReason;
     private String role;
     private double rating;
-    private Set<AvailableInstructorPeriodDto> availableInstructorPeriodDtoSet;
+    private Set<AvailablePeriodDto> availablePeriodDtoSet;
 
     public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating) {
         this.id = id;
@@ -33,10 +33,10 @@ public class FishingInstructorDto {
         this.registrationReason = registrationReason;
         this.role = role;
         this.rating = rating;
-        this.availableInstructorPeriodDtoSet = new HashSet<>();
+        this.availablePeriodDtoSet = new HashSet<>();
     }
 
-    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating, Set<AvailableInstructorPeriodDto> availableInstructorPeriodDtoSet) {
+    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating, Set<AvailablePeriodDto> availablePeriodDtoSet) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -47,7 +47,7 @@ public class FishingInstructorDto {
         this.registrationReason = registrationReason;
         this.role = role;
         this.rating = rating;
-        this.availableInstructorPeriodDtoSet = availableInstructorPeriodDtoSet;
+        this.availablePeriodDtoSet = availablePeriodDtoSet;
     }
 
     public FishingInstructorDto() {
@@ -133,11 +133,11 @@ public class FishingInstructorDto {
         this.rating = rating;
     }
 
-    public Set<AvailableInstructorPeriodDto> getAvailableInstructorPeriodDtoSet() {
-        return availableInstructorPeriodDtoSet;
+    public Set<AvailablePeriodDto> getAvailableInstructorPeriodDtoSet() {
+        return availablePeriodDtoSet;
     }
 
-    public void setAvailableInstructorPeriodDtoSet(Set<AvailableInstructorPeriodDto> availableInstructorPeriodDtoSet) {
-        this.availableInstructorPeriodDtoSet = availableInstructorPeriodDtoSet;
+    public void setAvailableInstructorPeriodDtoSet(Set<AvailablePeriodDto> availablePeriodDtoSet) {
+        this.availablePeriodDtoSet = availablePeriodDtoSet;
     }
 }
