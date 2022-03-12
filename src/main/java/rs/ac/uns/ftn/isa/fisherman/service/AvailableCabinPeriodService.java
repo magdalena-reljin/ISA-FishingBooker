@@ -6,5 +6,5 @@ import java.util.Set;
 public interface AvailableCabinPeriodService {
     Set<AvailableCabinPeriod> getAvailablePeriod(Long id);
 
-    void setAvailableCabinPeriod(Long id, Set<AvailableCabinPeriod> availableCabinPeriod);
+    void setAvailableCabinPeriod(Set<AvailableCabinPeriod> availableCabinPeriod);
 }

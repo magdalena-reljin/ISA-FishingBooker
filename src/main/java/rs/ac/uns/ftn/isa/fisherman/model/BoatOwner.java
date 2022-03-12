@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,7 @@ public class BoatOwner extends User {
     public BoatOwner(Long id, String name, String lastName, String username, String password, String phoneNum, Address address,String registrationReason) {
         super(id, name, lastName, username, password, phoneNum, address);
         this.registrationReason=registrationReason;
+        this.availableBoatPeriods = new HashSet<>();
     }
 
     public Set<Boat> getBoats() {
