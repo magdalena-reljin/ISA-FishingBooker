@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AvailablePeriodDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.FishingInstructorDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
-import rs.ac.uns.ftn.isa.fisherman.mapper.AvailablePeriodMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AvailableInstructorPeriodMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
@@ -28,14 +28,14 @@ public class AvailableInstructorPeriodController {
     @Autowired
     private FishingInstructorService fishingInstructorService;
 
-   private AvailablePeriodMapper availablePeriodMapper = new AvailablePeriodMapper();
+   private AvailableInstructorPeriodMapper availableInstructorPeriodMapper = new AvailableInstructorPeriodMapper();
 
     @PostMapping("/getAvailablePeriod")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<Set<AvailablePeriodDto>> getAvailablePeriod (@RequestBody UserRequestDTO userRequestDto) {
         Set<AvailablePeriodDto> periods= new HashSet<>();
         for(AvailableInstructorPeriod availableInstructorPeriod: availableInstructorPeriodService.getAvailablePeriod(userRequestDto.getUsername()))
-                periods.add(availablePeriodMapper.availableInstructorPeriodToAvailablePeriodDto(availableInstructorPeriod));
+                periods.add(availableInstructorPeriodMapper.availableInstructorPeriodToAvailablePeriodDto(availableInstructorPeriod));
         return new ResponseEntity<>(periods, HttpStatus.OK);
     }
 
@@ -44,7 +44,7 @@ public class AvailableInstructorPeriodController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<String> setAvailableInstructorPeriod(@RequestBody FishingInstructorDto instructor){
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(instructor.getUsername());
-        Set<AvailableInstructorPeriod> availableInstructorPeriod= availablePeriodMapper
+        Set<AvailableInstructorPeriod> availableInstructorPeriod= availableInstructorPeriodMapper
                 .availableDtosToAvailableInstructorPeriods(instructor.getAvailableInstructorPeriodDtoSet(),fishingInstructor);
         availableInstructorPeriodService.setAvailableInstructorPeriod(fishingInstructor.getId(),availableInstructorPeriod);
 

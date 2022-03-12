@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.*;
-import rs.ac.uns.ftn.isa.fisherman.mapper.AvailablePeriodMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AvailableInstructorPeriodMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
@@ -23,7 +23,7 @@ public class FishingInstructorController {
 
     private FishingInstructorMapper fishingInstructorMapper=new FishingInstructorMapper();
 
-    private AvailablePeriodMapper availablePeriodMapper =new AvailablePeriodMapper();
+    private AvailableInstructorPeriodMapper availableInstructorPeriodMapper =new AvailableInstructorPeriodMapper();
 
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
