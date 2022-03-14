@@ -59,6 +59,15 @@ public class AdventureController {
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/getAll")
+    public ResponseEntity<Set<AdventureDto>> getAll(){
+        Set<AdventureDto> adventures=new HashSet<>();
+        for(Adventure adventure: adventureService.findAll())
+            adventures.add(adventureMapper.AdventureToAdventureDto(adventure));
+        return new ResponseEntity<>(adventures, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/findByName")
     public ResponseEntity<AdventureDto> findByName(@RequestBody AdventureDto adventureDto){

@@ -2,8 +2,10 @@ package rs.ac.uns.ftn.isa.fisherman.service;
 
 
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
+import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 
+import java.util.List;
 import java.util.Set;
 public interface AdventureService {
 
@@ -19,4 +21,6 @@ public interface AdventureService {
     void delete(Long id);
 
     void edit(Adventure adventure, Long id);
+
+    List<Adventure> findAll();
 }

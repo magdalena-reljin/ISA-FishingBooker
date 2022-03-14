@@ -12,7 +12,7 @@
       </li>
        
        <li class="nav-item">
-      <a style="color: white;"  class="nav-link" @click="changeDisplay('instructors')"> INSTRUCTORS</a>
+      <a style="color: white;"  class="nav-link" @click="changeDisplay('adventures')"> ADVENTURES</a>
       </li>
 
      </ul>
@@ -23,25 +23,30 @@
   <template v-if="boatsShown"> 
      <ClientBoats/>
   </template>
+  <template v-if="adventuresShown"> 
+     <ClientAdventures/>
+  </template>
 </template>
 
 <script>
 import ClientNavbar from './ClientNavbar'
 import ClientCabins from './ClientCabins'
 import ClientBoats from './ClientBoats'
+import ClientAdventures from './ClientAdventures'
 
    export default{
      components:{
        ClientNavbar,
        ClientCabins,
-       ClientBoats
+       ClientBoats,
+       ClientAdventures
      },
      data(){
        return{
          email: '', 
          cabinsShown: true,
          boatsShown: false, 
-         instructorsShown: false,   
+         adventuresShown: false,   
        }
      },
      mounted() {
@@ -53,15 +58,15 @@ import ClientBoats from './ClientBoats'
        if(toDisplay === 'cabins'){
          this.cabinsShown = true;
          this.boatsShown = false;
-         this.instructorsShown = false;
+         this.adventuresShown = false;
        }else if(toDisplay === 'boats'){
          this.cabinsShown = false;
          this.boatsShown = true;
-         this.instructorsShown = false;
+         this.adventuresShown = false;
        }else{
          this.cabinsShown = false;
          this.boatsShown = false;
-         this.instructorsShown = true;
+         this.adventuresShown = true;
        }
      }
     },
