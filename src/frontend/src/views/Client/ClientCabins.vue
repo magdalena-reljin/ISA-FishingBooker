@@ -46,6 +46,13 @@
 
    <hr/>
 
+    <template v-if="!cabinsLoaded">
+      <h3>Loading...</h3>
+    </template>
+
+    <template v-if="sortedCabins.length==0">
+      <h3>No cabins to show.</h3>
+    </template>
 
     <!-- Carousel wrapper -->
     <div
@@ -209,8 +216,7 @@ export default {
           }
         )
         .then((response) => {
-          this.cabinDtos = response.data;
-          this.sortedCabins = response.data;
+          this.cabinDtos = response.data; 
           this.cabinsLoaded = true;
         });
     },
