@@ -29,6 +29,11 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
+    public Boat findById(Long id) {
+       return boatRepository.findById(id);
+    }
+
+    @Override
     public void addNewImage(String boatName, Image image) {
         Boat boat= boatRepository.findByName(boatName);
         Set<Image> currentImages=boat.getImages();

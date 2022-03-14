@@ -47,6 +47,7 @@ import ClientAdventures from './ClientAdventures'
          cabinsShown: true,
          boatsShown: false, 
          adventuresShown: false,   
+
        }
      },
      mounted() {
@@ -69,6 +70,7 @@ import ClientAdventures from './ClientAdventures'
          this.adventuresShown = true;
        }
      }
+
     },
     computed: {
 

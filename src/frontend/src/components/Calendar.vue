@@ -63,18 +63,7 @@
       
       </div>
     </div>
-    
-<!--<shapla-modal :active="modalActive" title="" content-size="medium" @close="closeModal">
-    <h2 style="color: blue;">Define new available period</h2>
-    <div class="row">
-        <div class="col">
-           <button type="button" class="btn btn-secondary" @click="modalActive=false">Close</button>
-        </div>
-        <div class="col">
-           <button type="button" class="btn btn-primary" @click="modalActive=false">Save</button>
-        </div>
-    </div>
-</shapla-modal>-->
+
 
 <vue-modality ref="myRef" title="Edit available period" hide-footer centered>
 
@@ -128,7 +117,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
 import dayjs from 'dayjs';
-//import ShaplaModal from '@shapla/vue-modal';
 import '@shapla/vue-modal/dist/style.css';
 import VueModality from 'vue-modality-v3'
 
@@ -140,9 +128,8 @@ export default {
        role: null,
    },
   components: {
-    FullCalendar, // make the <FullCalendar> tag available
+    FullCalendar,
     Datepicker,
-    //ShaplaModal,
     VueModality
 
   
@@ -183,16 +170,9 @@ export default {
         },
         selectable: true,
         eventClick: (arg)=>{
-         // this.modalActive=true
          this.$refs.myRef.open()
-         
-// or close it by calling:
-        //  this.$refs.myRef.hide()
           this.start=arg.event.start
           this.end=arg.event.end
-          console.log("JAAAAAAS"+arg.event.title)
-           console.log("JAAAAAAS"+arg.event.id)
-          console.log("JAAAAAAS"+arg.event.start)
         },
         selectMirror: true,
         dayMaxEvents: true,
@@ -221,7 +201,7 @@ export default {
              registrationReason: '',
              role: '',
              rating: '',
-            availableInstructorPeriodDtoSet: [{
+            availablePeriodDtoSet: [{
                  id: null,
                 startDate: null,
                 endDate: null,
@@ -276,180 +256,11 @@ export default {
                               this.calendarOptions.events.push({id: newData.id ,title: 'Available', start: newData.startDate , end: newData.endDate })
                               this.state.push( newData.startDate)
                             }
-                                
-                        
-                   
-                      
-              })
-                        
-                   
-                      
+              })   
               })
      }
-
-
-     
-
-            
-   
-
-
-   /* axios
-      .get("/users/getRole", {
-        headers: {
-          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        let loggedInRole = res.data;
-        if (loggedInRole == "ROLE_VACATION_HOME_OWNER") {
-          this.entityType = "cottage";
-          axios
-            .get("/vacationHome/getNamesByUser", {
-              headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            })
-            .then((res) => {
-              this.selectData = res.data;
-              for (let data of this.selectData) {
-                axios
-                  .get(
-                    "/availabilityDate/getByServiceProfile/" +
-                      data.code,
-                    {
-                      headers: {
-                        "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                        Authorization: "Bearer " + localStorage.refreshToken,
-                      },
-                    }
-                  )
-                  .then((res) => {
-                    for (let newData of res.data) {
-                      newData.title = data.label;
-                      newData.url = "dateRange";
-                      newData.defId = newData.id;
-                      newData.startDate = new Date(newData.start);
-                      newData.endDate = new Date(newData.end);
-                      newData.serviceId = data.code;
-                      this.calendarOptions.events.push(newData);
-                    }
-                  });
-                  
-              }
-            });
-        } else if (loggedInRole == "ROLE_BOAT_OWNER") {
-          this.entityType = "boat";
-          axios
-            .get("/boat/getNamesByUser", {
-              headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            })
-            .then((res) => {
-              this.selectData = res.data;
-              for (let data of this.selectData) {
-                axios
-                  .get(
-                    "/availabilityDate/getByServiceProfile/" +
-                      data.code,
-                    {
-                      headers: {
-                        "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                        Authorization: "Bearer " + localStorage.refreshToken,
-                      },
-                    }
-                  )
-                  .then((res) => {
-                    for (let newData of res.data) {
-                      newData.title = data.label;
-                      newData.url = "dateRange";
-                      newData.defId = newData.id;
-                      newData.serviceId = data.code;
-                      newData.startDate = new Date(newData.start);
-                      newData.endDate = new Date(newData.end);
-                      this.calendarOptions.events.push(newData);
-                    }
-                  });
-              }
-            });
-        }else if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
-           this.entityType = "adventure";
-            axios
-              .get("/fishingInstructor/getAllAvailabilitiesForInstructor", {
-                headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              })
-              .then((res) => {
-                                   console.log(res.data)
-                for (let newData of res.data) {
-                      newData.title = "Availability";
-                      newData.url = "dateRange";
-                      newData.defId = newData.id;
-                      newData.serviceId =newData.id;
-                      newData.start = new Date(newData.startDate);
-                      newData.end = new Date(newData.endDate);
-                      this.calendarOptions.events.push(newData);
-                    }
-              });
-        } else {
-          window.location.href = "/";
-        }
-        axios
-          .get(
-            "/reservation/allByAdvertiser/",
-              {
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-              )
-                  .then((res) => {
-                    for (let newData of res.data) {
-                      newData.title = "Reservation: " + newData.name + " by " +  newData.clientName + " " +  newData.clientSurname;
-                      newData.url = "reservation";
-                      newData.defId = "re" + newData.reservationId;
-                      newData.start = new Date(newData.startDate);
-                      newData.end = new Date(newData.endDate);
-                      newData.serviceId = newData.reservationId;
-                      newData.color = "#4B0082";
-                      this.calendarOptions.events.push(newData);
-                    }
-                  });
-        axios
-          .get(
-            "/appointment/getOffersByAdvertiser/",
-              {
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-              )
-                  .then((res) => {
-                    for (let newData of res.data) {
-                      newData.title = "Special offer: " + newData.serviceProfileName + " (" + newData.discount + "%)";
-                      newData.defId = "so" + newData.offerId;
-                      newData.start = new Date(newData.startDate);
-                      newData.end = new Date(newData.endDate);
-                      newData.serviceId = newData.serviceProfileId;
-                      newData.color = "#8B0000";
-                      this.calendarOptions.events.push(newData);
-                    }
-                  });
-      });
-      */
   },
   methods: {
-     handleSelect(e){
-      console.log("AAAAAAAAAAAAAAAAAAA"+e);
-    },
      formatDate(formatDate) {
             console.log("preeformat"+formatDate)
             const date = dayjs(formatDate);
@@ -458,7 +269,7 @@ export default {
           console.log("starttt"+this.start)
            console.log("endd"+this.end)
          
-            this.fishingInstructorDtos.availableInstructorPeriodDtoSet[0]=({
+            this.fishingInstructorDtos.availablePeriodDtoSet[0]=({
               startDate:  this.formatDate(this.start),
               endDate:  this.formatDate(this.end),
               instructorUsername: this.fishingInstructorDtos.username})
@@ -505,233 +316,6 @@ export default {
 
     },
 
-
-  /*  clearAll: function () {
-      this.selectDisabled = false;
-      this.disabledPickers = false;
-      this.startDate = "";
-      this.endDate = "";
-      document.getElementById("saveBtn").style.display = "block";
-      document.getElementById("deleteBtn").style.display = "block";
-      document.getElementById("startPicker").style.display = "block";
-      document.getElementById("endPicker").style.display = "block";
-      document.getElementsByTagName("select")[0].value = "";
-      for (let ev of this.calendarOptions.events) {
-        if (ev.id == this.currentEvent.id) {
-          ev.color = "";
-          break;
-        }
-      }
-      this.currentEvent = "";
-      window.location.reload()
-    },
-    event: function (info) {
-      this.selectDisabled = true;
-      info.jsEvent.preventDefault(); // don't let the browser navigate
-      this.currentEvent = info.event;
-       for (let ev of this.calendarOptions.events) {
-          if (ev.id == this.currentEvent.id) {
-            ev.color = "#434c54";
-          } else if ((typeof ev.id) == "number") {
-            ev.color = "";
-          }
-        }
-      
-      if (info.event.url == "dateRange") {
-        if (this.entityType != "adventure")
-          document.getElementsByTagName("select")[0].value = info.event.title;
-        this.startDate = info.event.start;
-        this.endDate = info.event.end;
-        if (this.endDate < new Date()) {
-          document.getElementById("saveBtn").style.display = "none";
-          document.getElementById("deleteBtn").style.display = "none";
-          document.getElementById("startPicker").style.display = "none";
-          document.getElementById("endPicker").style.display = "none";
-          this.disabledPickers = true;
-        } else {
-          document.getElementById("saveBtn").style.display = "block";
-          document.getElementById("deleteBtn").style.display = "block";
-          document.getElementById("startPicker").style.display = "block";
-          document.getElementById("endPicker").style.display = "block";
-          this.disabledPickers = false;
-        }
-      }
-      else if (info.event.url == "reservation") {
-        this.clearAll();
-      }
-    },
-    saveDate: function () {
-      let newAvailabilityDate;
-      if (this.currentEvent) {
-        if (this.entityType != "adventure") {
-          newAvailabilityDate = {
-            start: this.startDate,
-            end: this.endDate,
-            title: this.currentEvent.title,
-          };
-          let profileId;
-          let profileLabel = document.getElementsByTagName("select")[0].value;
-          for (let data of this.selectData) {
-            if (data.label == profileLabel) {
-              profileId = data.code;
-            }
-          }
-          axios
-            .put(
-              "/availabilityDate/update/" +
-                this.currentEvent.id +
-                "/" +
-                profileId,
-              newAvailabilityDate,
-              {
-                headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-            )
-            .then((res) => {
-              this.copyOldAndSaveNewData(res, profileId, profileLabel);
-              this.clearAll();
-            });
-        } else {
-          newAvailabilityDate = {
-            startDate: this.startDate,
-            endDate: this.endDate,
-            id: this.currentEvent.id,
-          };
-          axios
-            .put(
-              "/fishingInstructor/updateAvailability/", newAvailabilityDate,
-              {
-                headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-            )
-            .then(window.location.reload());
-        }
-      } else {
-        if (this.entityType != "adventure") {
-          newAvailabilityDate = {
-            start: this.startDate,
-            end: this.endDate,
-            title: this.currentEvent.title,
-          };
-          let profileLabel = document.getElementsByTagName("select")[0].value;
-          let profileId;
-          for (let data of this.selectData) {
-            if (data.label == profileLabel) {
-              profileId = data.code;
-            }
-          }
-          axios
-            .post(
-              "/availabilityDate/save/" + profileId,
-              newAvailabilityDate,
-              {
-                headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-            )
-            .then((res) => {
-              this.pushOneData(res.data, profileId, profileLabel);
-              this.clearAll();
-            });
-        } else {
-           newAvailabilityDate = {
-            startDate: this.startDate,
-            endDate: this.endDate,
-            id: -1,
-          };
-          axios
-            .put(
-              "/fishingInstructor/addAvailability/", newAvailabilityDate,
-              {
-                headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-            )
-            .then(window.location.reload());
-        }
-      }
-    },
-    deleteDate: function () {
-      if (this.entityType != "adventure") {
-        let profileLabel = document.getElementsByTagName("select")[0].value;
-        let profileId;
-        for (let data of this.selectData) {
-          if (data.label == profileLabel) {
-            profileId = data.code;
-          }
-        }
-        axios
-          .delete(
-            "/availabilityDate/" +
-              this.currentEvent.extendedProps.defId +
-              "/" +
-              profileId,
-            {
-              headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            }
-          )
-          .then((res) => {
-            this.copyOldAndSaveNewData(res, profileId, profileLabel);
-            this.clearAll();
-            this.$toast.show(
-              "Availability dates that include reserved appointments cannot be deleted.",
-              {
-                duration: 4000,
-              }
-            );
-          });
-      }
-      else {
-         axios
-            .get(
-              "/fishingInstructor/deleteAvailability?id=" + this.currentEvent.id,
-              {
-                headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  Authorization: "Bearer " + localStorage.refreshToken,
-                },
-              }
-            )
-            .then(window.location.reload());
-      }
-    },
-    pushOneData: function (newData, profileId, profileLabel) {
-      newData.title = profileLabel;
-      newData.url = "dateRange";
-      newData.defId = newData.id;
-      newData.serviceId = profileId;
-      newData.startDate = new Date(newData.start);
-      newData.endDate = new Date(newData.end);
-    },
-    copyOldAndSaveNewData: function (res, profileId, profileLabel) {
-      let copyEvents = [];
-      for (let ev of this.calendarOptions.events) {
-        copyEvents.push(ev);
-      }
-      this.calendarOptions.events.length = 0;
-      for (let ev of copyEvents) {
-        if (ev.serviceId != profileId) {
-          this.calendarOptions.events.push(ev);
-        }
-      }
-      for (let newData of res.data) {
-        this.pushOneData(newData, profileId, profileLabel);
-        this.calendarOptions.events.push(newData);
-      }
-    },*/
   },
 
   

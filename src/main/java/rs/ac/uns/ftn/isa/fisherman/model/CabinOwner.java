@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,11 +14,14 @@ public class CabinOwner extends User{
     @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Cabin> cabins;
 
+    @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<AvailableCabinPeriod> availableCabinPeriods;
 
     public CabinOwner(){}
     public CabinOwner(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, String registrationReason) {
         super(id, name, lastName, username, password, phoneNum, address);
         this.registrationReason = registrationReason;
+        this.availableCabinPeriods= new HashSet<>();
     }
     public CabinOwner(String registrationReason) {
         this.registrationReason = registrationReason;

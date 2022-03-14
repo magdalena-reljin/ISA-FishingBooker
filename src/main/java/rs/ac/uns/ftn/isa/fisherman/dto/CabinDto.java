@@ -16,6 +16,7 @@ public class CabinDto {
     private Set<ImageDto> images;
     private String ownerUsername;
 
+
     public Long getId() {
         return id;
     }
