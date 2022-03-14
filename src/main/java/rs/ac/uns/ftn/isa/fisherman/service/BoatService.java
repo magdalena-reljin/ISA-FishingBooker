@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
+import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 
+import java.util.List;
 import java.util.Set;
 
 public interface BoatService {
@@ -20,4 +22,6 @@ public interface BoatService {
     void edit(Boat boat, Boolean deleteOldImages);
 
     void delete(Long id);
+
+    List<Boat> findAll();
 }

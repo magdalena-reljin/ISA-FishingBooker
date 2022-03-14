@@ -82,4 +82,12 @@ public class BoatController {
         boatService.delete(boat.getId());
         return new ResponseEntity<>(success,HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/getAll")
+    public ResponseEntity<Set<BoatDto>> getAll(){
+        Set<BoatDto> boats=new HashSet<>();
+        for(Boat boat: boatService.findAll())
+            boats.add(boatMapper.boatToBoatDto(boat));
+        return new ResponseEntity<>(boats,HttpStatus.OK);
+    }
 }

@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
 import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -91,5 +92,9 @@ public class BoatServiceImpl implements BoatService {
         boatRepository.delete(boat);
         imageService.delete(images);
         additionalServicesService.delete(additionalServices);
+    }
+
+    public List<Boat> findAll(){
+        return boatRepository.findAll();
     }
 }

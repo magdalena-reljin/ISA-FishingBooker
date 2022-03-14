@@ -80,4 +80,12 @@ public class CabinController {
         cabinService.edit(cabin,deleteOldImages);
         return new ResponseEntity<>(success,HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/getAll")
+    public ResponseEntity<Set<CabinDto>> getAll(){
+        Set<CabinDto> cabins=new HashSet<>();
+        for(Cabin cabin: cabinService.findAll())
+            cabins.add(cabinMapper.CabinToCabinDto(cabin));
+        return new ResponseEntity<>(cabins,HttpStatus.OK);
+    }
 }
