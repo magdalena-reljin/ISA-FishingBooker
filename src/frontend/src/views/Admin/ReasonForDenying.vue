@@ -62,8 +62,7 @@
   <path fill-rule="evenodd" d="M11 7.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
 </svg> DELETING ACCOUNT REQUESTS</a>
       </li>
-      
-       
+
      </ul>
     &nbsp;  &nbsp;
 <h1>Enter reason for denying {{this.user.email}}'s request: </h1>
