@@ -16,7 +16,7 @@
     &nbsp;  &nbsp;
 
    
-   <div class="row justify-content-center">
+   <div class="row justify-content-center" style="width: 100%;">
 <div class="col-md-6">
 <div class="card card-outline-secondary">
 <div class="card-header">
@@ -53,12 +53,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete account?</p>
+        <p>Are you sure you want to send this request?</p>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button @click="sendRequest()" type="button" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+        <button @click="sendRequest()" type="button" data-bs-dismiss="modal" class="btn btn-danger">Confirm</button>
       </div>
     </div>
   </div>

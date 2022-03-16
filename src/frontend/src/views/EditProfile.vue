@@ -5,24 +5,18 @@
       <a class="navbar-brand"  href="http://localhost:8080/" >
       <img src="../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
-    
-    
-    
       </div>
-    
     </nav>
-
-    
     &nbsp;  &nbsp;
 
    
-   <div class="row justify-content-center">
-<div class="col-md-6">
-<div class="card card-outline-secondary">
-<div class="card-header">
-    <h3 style="text-align:center;" class="mb-0">Personal info</h3>
-</div>
-<div class="card-body">
+   <div class="row justify-content-center" style="width: 100%;">
+   <div class="col-md-6">
+   <div class="card card-outline-secondary">
+   <div class="card-header">
+               <h3 style="text-align:center;" class="mb-0">Personal info</h3>
+   </div>
+   <div class="card-body">
     <form  @submit="editData" method='post' class="was-validated">
         <div class="form-group">
             <label>First name:</label>
@@ -105,7 +99,7 @@
              <button @click="changePassword()" type="button" class="btn btn-outline-danger">Change password</button>
             </div>
             </div>
-            <div class="col">
+            <div v-if="role !='admin'" class="col">
              <div class="form-group">
              <button  @click="deleteAccount()" type="button" class="btn btn-outline-danger">Delete account</button>
             </div>
@@ -193,8 +187,22 @@ import axios from "axios";
                   }
                   })
                  .then(response => {
+                        this.$swal.fire({
+                           position: 'top-end',
+                           icon: 'success',
+                           title: 'Your work has been saved',
+                           showConfirmButton: false,
+                           timer: 1500
+                         })
+                        if(this.role == 'admin')
+                            this.$router.push('/profileAdmin/'+this.email); 
+                        else if(this.role == 'cabinOwner')
+                            this.$router.push('/cabinOwnerHome/'+this.email); 
+                        else if(this.role == 'boatOwner')
+                            this.$router.push('/boatOwnerHome/'+this.email); 
+                        else if(this.role == 'fishingInstructor')
+                            this.$router.push('/fishingInstructorHome/'+this.email); 
                         
-            this.$router.push('/'); 
                         return response;
                    })
 

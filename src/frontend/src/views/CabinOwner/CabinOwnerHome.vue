@@ -13,7 +13,7 @@
 
     <ul class="nav justify-content-center" style="background-color: #0b477b">
       <li class="nav-item">
-        <a style="color: white" class="nav-link"
+        <a style="color: white" class="nav-link active" href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -35,7 +35,7 @@
         >
       </li>
       <li @click="addNewCabin()" class="nav-item">
-        <a style="color: white" class="nav-link"
+        <a style="color: white" class="nav-link active" href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -56,7 +56,7 @@
       </li>
 
       <li @click="myProfile()" class="nav-item">
-        <a style="color: white" class="nav-link"
+        <a style="color: white" class="nav-link active" href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -75,7 +75,7 @@
      
 
       <li class="nav-item">
-        <a style="color: white" @click="requests()" class="nav-link"
+        <a style="color: white" @click="requests()" class="nav-link active" href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
