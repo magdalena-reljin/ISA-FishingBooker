@@ -2,9 +2,18 @@
   <div>
     <nav  class="navbar navbar-fixed-top navbar-expand" style="background-color: #1d7ac9; list-style: none;">
       <div class="container-fluid" style="background-color: #1d7ac9;">
-      <a class="navbar-brand"  href="http://localhost:8080/" >
+      <a class="navbar-brand"  href="#" >
       <img src="../../assets/logoF1.png" alt="" width="194" height="80" >
       </a>
+      <li class="nav-item dropdown">
+          <a style="color: white;" class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{email}}
+          </a>
+          <ul class="dropdown-menu" style="width: 100%" aria-labelledby="navbarDropdownMenuLink">
+            <li><a @click="myProfile()" class="dropdown-item" href="#">Edit profile</a></li>
+            <li><a @click="logout()" class="dropdown-item" href="#">Log out</a></li>
+          </ul>
+        </li>
     
     
     
@@ -26,11 +35,7 @@
   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 </svg> ADD NEW  BOAT</a>
       </li>
-      <li @click="myAccount()" class="nav-item">
-      <a style="color: white;" class="nav-link active" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-</svg> MY ACCOUNT</a>
-      </li>
+
       <li class="nav-item">
       <a style="color: white;" class="nav-link active" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
   <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
@@ -318,8 +323,11 @@
 
      },
      methods: {
-       myAccount: function(){
+       myProfile: function(){
           this.$router.push('/editProfile/'+'boatOwner/'+ this.email);
+       },
+       logout: function(){
+          this.$router.push('/');
        },
        addNewBoat: function(){
           this.$router.push('/addNewBoat/'+ this.email);
