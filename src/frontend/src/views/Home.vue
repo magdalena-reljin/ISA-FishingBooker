@@ -9,10 +9,10 @@
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
 <li class="nav-item">
-  <a style="color: white;" class="nav-link active" aria-current="page" href="http://localhost:8080/login">LOGIN</a>
+  <a style="color: white;" class="nav-link active" aria-current="page" @click="login()" href="#">LOGIN</a>
 </li>
 <li class="nav-item">
-  <a style="color: white;" class="nav-link active" href="http://localhost:8080/signup">SIGN UP</a>
+  <a style="color: white;" class="nav-link active" @click="signup()" href="#">SIGN UP</a>
 </li>
 </ul>
 
@@ -53,7 +53,12 @@ export default {
     
   },
   methods: {
-
+       login: function(){
+         this.$router.push("/login")
+       },
+       signup: function(){
+         this.$router.push("/signup")
+       }
 
     }
    
