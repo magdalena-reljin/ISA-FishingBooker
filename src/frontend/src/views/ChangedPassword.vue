@@ -63,8 +63,8 @@
       </div>
           </div> 
          
-          <div style="color:red;"></div>
-           <label id="password" v-if="passwordsArentMatching==true" >Passwords are not matching!</label>
+          <div style="color: red;"></div>
+           <label id="password" v-if="changePasswordDto.newPassword != confirmPassword" >Passwords are not matching!</label>
           <br>
            <br>
           <div class="form-group">
@@ -100,7 +100,6 @@ export default {
   data() {
     return {
        email: '',
-       passwordsArentMatching: false,
        confirmPassword: '',
        changePasswordDto:{
            oldPassword: '',
@@ -126,17 +125,20 @@ export default {
                           }
                           })
                          .then((response) => {
+                               this.$swal.fire(
+                               'Password changed!',
+                               'Please log in with new password!',
+                               'success'
+                               )
                               this.$router.push('/login');
                               return response
                           })
-                       }else {
-                          this.passwordsArentMatching=true
-
                        }
                
 
 
     },
+   
   }
 };
 </script>
