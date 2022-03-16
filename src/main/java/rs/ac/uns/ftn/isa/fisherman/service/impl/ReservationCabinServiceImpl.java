@@ -6,10 +6,8 @@ import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableCabinPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
-import javax.swing.plaf.metal.OceanTheme;
 import java.util.HashSet;
 import java.util.Set;
 
