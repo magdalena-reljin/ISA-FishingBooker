@@ -97,17 +97,17 @@
         <div class="row">
              <div class="col">
              <div class="form-group">
-             <button @click="editData()" type="submit" class="btn btn-outline-dark">Save changes</button>
+             <button  type="submit" class="btn btn-outline-dark">Save changes</button>
              </div>
              </div>
              <div class="col">
              <div class="form-group">
-             <button @click="changePassword()" type="submit" class="btn btn-outline-danger">Change password</button>
+             <button @click="changePassword()" type="button" class="btn btn-outline-danger">Change password</button>
             </div>
             </div>
             <div class="col">
              <div class="form-group">
-             <button  @click="deleteAccount()" type="submit" class="btn btn-outline-danger">Delete account</button>
+             <button  @click="deleteAccount()" type="button" class="btn btn-outline-danger">Delete account</button>
             </div>
             </div>
         </div>
@@ -182,7 +182,10 @@ import axios from "axios";
                    })
 
        },
-       editData: function(){
+       editData: function(event){
+      
+            event.preventDefault();
+            console.log("USAOOOOOOO")
             axios.post("http://localhost:8081/auth/editUser/",this.userRequestDto,{
                   headers: {
                   "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
@@ -190,6 +193,8 @@ import axios from "axios";
                   }
                   })
                  .then(response => {
+                        
+            this.$router.push('/'); 
                         return response;
                    })
 

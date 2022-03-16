@@ -241,7 +241,7 @@ import axios from "axios";
            this.$router.go();
        },
        predefinedAdmin: function(){
-              axios.post("http://localhost:8081/account/isPredefined",this.userRequestPom,{ 
+              axios.post("http://localhost:8081/admins/isPredefined",this.userRequestPom,{ 
                 headers: {
                 "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 "Authorization": "Bearer " + localStorage.jwt ,

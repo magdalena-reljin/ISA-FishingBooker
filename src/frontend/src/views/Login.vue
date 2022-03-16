@@ -101,7 +101,7 @@ import axios from "axios";
       }).then((response) => {
                  this.user.username=this.LogInDto.username
                   localStorage.setItem("jwt", response.data.accessToken);
-            
+                
                   if(response.data.userType==='ADMIN'){
                         axios.post("http://localhost:8081/account/passwordStatus",this.user,{
                           headers: {
