@@ -1,4 +1,5 @@
 <template>
+    <template v-if="!bookCabinOpen">
     <!-- sort -->
    
     <div class="header" >
@@ -129,13 +130,24 @@
                     </h6>
                     <div class="row">
                       <div class="col" style="text-align: right">
+                        <template v-if="!reservationProcess">
                         <button
-                          @click="seeProfile(cabinDto.name)"
+                          @click="seeProfile(cabinDto.name)&&showReservationForm(false)"
                           type="button"
                           class="btn btn-outline-dark rounded-pill"
                         >
                           SEE PROFILE
                         </button>
+                        </template>
+                        <template v-if="reservationProcess">
+                        <button
+                          @click="bookCabin(cabinDto.name)"
+                          type="button"
+                          class="btn btn-outline-dark rounded-pill"
+                        >
+                          BOOK
+                        </button>
+                        </template>
                       </div>
                     </div>
                   </div>
@@ -149,12 +161,28 @@
       </div>
     </div>
     <!-- Inner -->
+    </template>
+
+  <template v-if="bookCabinOpen">
+    <BookCabin :cabinName="cabinName" :back="back" :startDate="startDate" :endDate="endDate"></BookCabin>
+  </template>
 </template>
 
 <script>
 import axios from "axios";
+import BookCabin from './BookCabin.vue';
 
 export default {
+  components:{
+       BookCabin,
+     },
+  props: {
+    reservationProcess:Boolean,
+    availableCabins:Array,
+    showReservationForm:Function,
+    startDate:Date,
+    endDate:Date
+  },
   data() {
     return {
       email: "",
@@ -196,6 +224,8 @@ export default {
         username: "",
       },
       cabinsLoaded: false,
+      bookCabinOpen: false,
+      cabinName:'',
     };
   },
   mounted() {
@@ -203,8 +233,16 @@ export default {
     this.getCabins();
   },
   methods: {
+    back(){
+      this.bookCabinOpen=false;
+      this.showReservationForm(true);
+    },
     getCabins: function () {
-      this.user.username = this.email;
+      if(this.reservationProcess){
+        this.cabinDtos = this.availableCabins; 
+        this.cabinsLoaded = true;
+      }else{
+        this.user.username = this.email;
       axios
         .get(
           "http://localhost:8081/cabins/getAll",
@@ -219,6 +257,7 @@ export default {
           this.cabinDtos = response.data; 
           this.cabinsLoaded = true;
         });
+      }
     },
     getImageUrl: function (index) {
       if (this.cabinsLoaded == true) {
@@ -239,6 +278,11 @@ export default {
     },
     seeProfile: function (cabinName) {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
+    },
+    bookCabin: function (cabinName) {
+      this.bookCabinOpen=true;
+      this.cabinName=cabinName;
+      this.showReservationForm(false);
     },
   },
   computed: {

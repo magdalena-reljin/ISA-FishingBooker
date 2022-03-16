@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.isa.fisherman.mapper;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.model.Admin;
-import rs.ac.uns.ftn.isa.fisherman.model.User;
 
 public class AdminMapper {
 

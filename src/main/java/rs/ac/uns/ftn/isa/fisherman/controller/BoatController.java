@@ -6,13 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
 

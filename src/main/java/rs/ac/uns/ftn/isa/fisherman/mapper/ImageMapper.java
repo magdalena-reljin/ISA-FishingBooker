@@ -1,10 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import rs.ac.uns.ftn.isa.fisherman.dto.ImageDto;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 
 import java.util.HashSet;
 import java.util.Set;

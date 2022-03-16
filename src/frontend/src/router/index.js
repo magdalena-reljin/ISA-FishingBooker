@@ -30,6 +30,8 @@ import MyCalendar from '../views/FishingInstructor/MyCalendar'
 import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
+import ClientReservationForm from '../views/Client/ClientReservationForm'
+import ClientCabins from '../views/Client/ClientCabins'
 
 const routes = [
   {
@@ -91,6 +93,17 @@ const routes = [
     path: '/clientHome/:email',
     name: 'ClientHome',
     component: ClientHome
+  },
+  {
+    path: '/reservation/:email',
+    name: 'ClientReservationForm',
+    component: ClientReservationForm
+  },
+  {
+    path: '/availableCabins/:email',
+    name: 'ClientCabins',
+    component: ClientCabins,
+    props: true
   },
   {
     path: '/editProfile/:role/:email',
