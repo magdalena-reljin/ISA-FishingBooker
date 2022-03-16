@@ -1,4 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import org.springframework.cache.annotation.Cacheable;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
@@ -8,7 +9,7 @@ import java.util.Set;
 
 public interface BoatService {
     void save(Boat boat);
-
+    @Cacheable("boat")
     Boat findById(Long id);
 
     void addNewImage(String boatName, Image image);
