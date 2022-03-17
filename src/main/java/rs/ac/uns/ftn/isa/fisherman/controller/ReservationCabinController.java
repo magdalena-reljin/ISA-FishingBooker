@@ -7,9 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
+import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import java.util.HashSet;
@@ -22,16 +26,29 @@ public class ReservationCabinController {
 
     @Autowired
     private ReservationCabinService reservationCabinService;
+    @Autowired
+    private ClientService clientService;
     private CabinMapper cabinMapper = new CabinMapper();
+    private CabinReservationMapper cabinReservationMapper = new CabinReservationMapper();
 
     @PostMapping("/getAvailableCabins")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Set<CabinDto>> getAvailableCabins (@RequestBody SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
-        System.out.println(searchAvailablePeriodsCabinDto.getStartDate() + " " + searchAvailablePeriodsCabinDto.getEndDate() + " " + searchAvailablePeriodsCabinDto.getBedsPerRoom() + " " + searchAvailablePeriodsCabinDto.getNumberOfRooms() + " ");
         Set<CabinDto> cabinsDto= new HashSet<CabinDto>();
         for(Cabin cabin:reservationCabinService.getAvailableCabins(searchAvailablePeriodsCabinDto)){
             cabinsDto.add(cabinMapper.CabinToCabinDto(cabin));
         }
         return new ResponseEntity<>(cabinsDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/makeReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> makeReservation (@RequestBody CabinReservationDto cabinReservationDto) {
+        CabinReservation cabinReservation = cabinReservationMapper.CabinReservationDtoToCabinReservation(cabinReservationDto);
+        cabinReservation.setClient(clientService.findByUsername(cabinReservationDto.getClientUsername()));
+        if(reservationCabinService.makeReservation(cabinReservation))
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessfull reservatioon.", HttpStatus.BAD_REQUEST);
     }
 }

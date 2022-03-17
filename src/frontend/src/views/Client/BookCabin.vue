@@ -160,7 +160,7 @@
           </div>
         </div>
 
-        <hr>
+        <hr />
 
         <p>Additional services:</p>
 
@@ -193,7 +193,7 @@
             </tr>
           </tbody>
         </table>
-        
+
         <p v-show="cabinDto.additionalServices.length == 0">
           No additional services for adding.
         </p>
@@ -232,13 +232,17 @@
         <p v-show="addedAdditionalServices.length == 0">
           No additional services added.
         </p>
-        <hr>
+        <hr />
         <div class="row">
           <div class="col">
             <p>Start date:</p>
           </div>
           <div class="col">
-            <Datepicker @change="calculatePrice()" v-model="start" required></Datepicker>
+            <Datepicker
+              @change="calculatePrice()"
+              v-model="start"
+              required
+            ></Datepicker>
           </div>
         </div>
 
@@ -247,10 +251,14 @@
             <p>End date:</p>
           </div>
           <div class="col">
-            <Datepicker @change="calculatePrice()" v-model="end" required></Datepicker>
+            <Datepicker
+              @change="calculatePrice()"
+              v-model="end"
+              required
+            ></Datepicker>
           </div>
         </div>
-        <hr>
+        <hr />
         <div class="row">
           <div class="col">
             <p>Total price:</p>
@@ -264,10 +272,10 @@
           style="background-color: #1d7ac9; width: 100%"
           type="button"
           class="btn text-light rounded-pill"
+          @click="bookCabin()"
         >
           BOOK
         </button>
-
       </div>
 
       <div class="col" style="margin-top: 3%">
@@ -382,7 +390,7 @@ export default {
   },
   methods: {
     calculatePrice: function () {
-        let numOfDays = this.getNumberOfDays(this.start, this.end)
+      let numOfDays = this.getNumberOfDays(this.start, this.end);
       this.totalPrice = numOfDays * this.cabinDto.price;
       for (let i = 0; i < this.addedAdditionalServices.length; i++) {
         this.totalPrice += this.addedAdditionalServices[i].price;
@@ -475,6 +483,33 @@ export default {
         ", " +
         this.cabinDto.addressDto.country
       );
+    },
+    bookCabin: function () {
+      //event.preventDefault();
+      axios
+        .post(
+          "http://localhost:8081/reservationCabin/makeReservation",
+          {
+            id: null,
+            startDate: this.start,
+            endDate: this.end,
+            price: this.totalPrice,
+            cabinDto: this.cabinDto,
+            addedAdditionalServices: this.addedAdditionalServices,
+            clientUsername: this.email
+          },
+          {
+            headers: {
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+              Authorization: "Bearer " + localStorage.jwt,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          this.availableCabins = response.data;
+          this.display = "CABINS";
+        });
     },
   },
 };
