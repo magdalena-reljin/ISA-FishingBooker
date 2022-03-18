@@ -30,6 +30,7 @@ import MyCalendar from '../views/FishingInstructor/MyCalendar'
 import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
+import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
 
 const routes = [
   {
@@ -395,6 +396,11 @@ const routes = [
       next();
     
     },
+  },
+  {
+    path: '/BoatOwnerCalendar/:email',
+    name: 'BoatOwnerCalendar',
+    component: BoatOwnerCalendar
   },
   
 
