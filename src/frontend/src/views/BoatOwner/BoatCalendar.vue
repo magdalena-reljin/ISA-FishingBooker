@@ -319,12 +319,7 @@ import VueModality from 'vue-modality-v3'
        getBoat: function(){
                   this.boatDto.name=this.boatName
                   this.boatDto.ownersUsername=this.email
-            axios.post("http://localhost:8081/boats/findByName",this.boatDto,{
-                  headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  "Authorization": "Bearer " + localStorage.jwt ,
-                  }
-                  })
+            axios.post("http://localhost:8081/boats/findByName",this.boatDto)
                   .then(response => {
                         this.boatDto=response.data
                         this.boatId = this.boatDto.id
@@ -333,12 +328,7 @@ import VueModality from 'vue-modality-v3'
 
        },
          getBoatsAvailablePeriod: function(){
-               axios.post("http://localhost:8081/boatsPeriod/getAvailablePeriod",this.boatDto,{
-            headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            "Authorization": "Bearer " + localStorage.jwt ,
-            }
-             })
+               axios.post("http://localhost:8081/boatsPeriod/getAvailablePeriod",this.boatDto)
                .then(response => {
                   this.availableBoatPeriod=response.data
                      for( let newData of response.data ){
@@ -368,12 +358,7 @@ import VueModality from 'vue-modality-v3'
               this.start='',
               this.end=''
     
-          axios.post("http://localhost:8081/boatsPeriod/setAvailableBoatsPeriod",this.availableBoatPeriod,{
-            headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            "Authorization": "Bearer " + localStorage.jwt ,
-            }
-             })
+          axios.post("http://localhost:8081/boatsPeriod/setAvailableBoatsPeriod",this.availableBoatPeriod)
                .then(response => {
                        this.$swal.fire({
                  position: 'top-end',
@@ -397,11 +382,6 @@ import VueModality from 'vue-modality-v3'
       var date= new Date()
           var splits =newDate.toString().split(",")
           date.setDate( splits[1],splits[2], splits[0])
-          console.log("0-"+splits[0])
-          console.log("1-"+splits[1])
-          console.log("2-"+splits[2])
-          console.log("3-"+splits[3])
-          console.log("4-"+splits[4])
     return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
 
     },
