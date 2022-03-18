@@ -4,6 +4,7 @@ import router from './router'
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import {getAuth} from "firebase/auth"
+import axios from 'axios'
 //mape
 import OpenLayersMap from 'vue3-openlayers'
 import 'vue3-openlayers/dist/vue3-openlayers.css'
@@ -36,9 +37,10 @@ const firebaseConfig = {
   // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
+axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
 getDatabase(app);
 getAuth();
-createApp(App).use(router).use(VueSweetalert2).use(VCalendar).use(VueLoading).use(Datepicker).use(store).use(OpenLayersMap).mount('#app');
+createApp(App).use(App).use(router).use(VueSweetalert2).use(VCalendar).use(VueLoading).use(Datepicker).use(store).use(OpenLayersMap).mount('#app');
 
 
 

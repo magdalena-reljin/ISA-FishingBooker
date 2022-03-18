@@ -28,7 +28,7 @@ public class TokenUtils {
     public String SECRET;
 
     // Period vazenja tokena - 30 minuta
-    @Value("18000000")
+    @Value("1800000")
     private int EXPIRES_IN;
 
     // Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
@@ -109,6 +109,11 @@ public class TokenUtils {
      * @param request HTTP zahtev koji klijent šalje.
      * @return JWT token ili null ukoliko se token ne nalazi u odgovarajućem zaglavlju HTTP zahteva.
      */
+
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = this.getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
     public String getToken(HttpServletRequest request) {
         String authHeader = getAuthHeaderFromHeader(request);
 
@@ -242,18 +247,7 @@ public class TokenUtils {
         // Preuzimanje proizvoljnih podataka je moguce pozivom funkcije claims.get(key)
         return claims;
     }
-    public  Claims refreshToken(String token){
-        Claims claims;
-        try {
-            claims = Jwts.parser()
-                    .setSigningKey(SECRET)
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            claims = null;
-        }
-        return  claims;
-    }
+
 
     // =================================================================
 
