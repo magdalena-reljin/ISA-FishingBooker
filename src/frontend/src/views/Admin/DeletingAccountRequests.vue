@@ -248,24 +248,14 @@ import axios from "axios";
            this.$router.go();
        },
        predefinedAdmin: function(){
-              axios.post("http://localhost:8081/admins/isPredefined",this.userRequestPom,{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
+              axios.post("http://localhost:8081/admins/isPredefined",this.userRequestPom)
                   .then(response => {
                       this.isPredefined=response.data
                       return response;
                    })
        },
        getAllRequests: function(){
-              axios.get("http://localhost:8081/userc/getAllRequests",{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
+              axios.get("http://localhost:8081/userc/getAllRequests")
                   .then(response => {
                       this.userRequestDTO=response.data
                      
@@ -275,12 +265,7 @@ import axios from "axios";
 
            this.mailDto.response= this.reasonDeny;
            this.mailDto.recipient= this.userRequest.username;
-             axios.post("http://localhost:8081/account/sendDenyReasonForDeletingAccount",this.mailDto,{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
+             axios.post("http://localhost:8081/account/sendDenyReasonForDeletingAccount",this.mailDto)
                   .then(response => {
                     this.$router.go();
                     return response;
@@ -299,12 +284,7 @@ import axios from "axios";
            
            this.mailDto.response= this.reasonAccept;
            this.mailDto.recipient= this.userRequest.username;
-            axios.post("http://localhost:8081/account/sendAcceptReasonForDeletingAccount",this.mailDto,{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
+            axios.post("http://localhost:8081/account/sendAcceptReasonForDeletingAccount",this.mailDto)
                   .then(response => {
                         this.$swal('User has been deleted');
                          this.$swal.fire(

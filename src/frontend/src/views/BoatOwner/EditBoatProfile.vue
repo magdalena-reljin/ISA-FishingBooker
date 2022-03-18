@@ -395,12 +395,7 @@
          this.$router.push('/boatOwnerHome/'+ this.email);
        },
        getBoat: function(){
-             axios.post("http://localhost:8081/boats/findByName",this.boatDto,{
-                  headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  "Authorization": "Bearer " + localStorage.jwt ,
-                  }
-             })
+             axios.post("http://localhost:8081/boats/findByName",this.boatDto)
                .then(response => {
                         this.boatDto=response.data
                         this.idx=this.boatDto.additionalServices.length
@@ -430,12 +425,7 @@
               this.idx--;
        },
        deleteBoat: function(){
-           axios.post("http://localhost:8081/boats/delete",this.boatDto,{
-              headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              "Authorization": "Bearer " + localStorage.jwt ,
-              }
-             })
+           axios.post("http://localhost:8081/boats/delete",this.boatDto)
                .then(response => {
                     this.$router.push('/boatOwnerHome/'+ this.email);
                     return response;
@@ -447,12 +437,7 @@
            if(this.imagesSelected==true)
                this.boatDto.images=null
            
-           axios.post("http://localhost:8081/boats/edit",this.boatDto,{
-              headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              "Authorization": "Bearer " + localStorage.jwt ,
-              }
-             })
+           axios.post("http://localhost:8081/boats/edit",this.boatDto)
                .then(response => {
                     if(this.imagesSelected==true){
                         this.saveImages()
@@ -483,13 +468,7 @@
                     let formData = new FormData();
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
-                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name,formData,{
-                      headers: {
-                      "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                      "Authorization": "Bearer " + localStorage.jwt ,
-                      }
-             }
-                    )
+                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name,formData)
                     .then(response => {
                         
                        this.$swal.fire({

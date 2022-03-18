@@ -235,7 +235,10 @@ import axios from "axios";
                firstname: '',
                lastname: '',
            }],
-           loader: null
+           loader: null,
+            pomUserRequestDTO:
+            {username: '',},
+            isPredefined: false,
          
        
        }
@@ -244,15 +247,10 @@ import axios from "axios";
   // GET request using axios with error handling
           
           this.email = this.$route.params.email
-
+          this.pomUserRequestDTO.username=this.email
           this.loadData();
                axios
-               .post("http://localhost:8081/admins/isPredefined",this.pomUserRequestDTO,{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
+               .post("http://localhost:8081/admins/isPredefined",this.pomUserRequestDTO)
                .then((response) => {
                   this.isPredefined=response.data;
 
@@ -274,12 +272,7 @@ import axios from "axios";
                 });
 
                  axios
-               .post("http://localhost:8081/admins/signUpAdmin",this.user,{
-                  headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  "Authorization": "Bearer " + localStorage.jwt ,
-                  }
-             })
+               .post("http://localhost:8081/admins/signUpAdmin",this.user)
                .then((response) => {
                     this.loader.hide()
                     this.$router.go();
@@ -289,12 +282,7 @@ import axios from "axios";
         
         },
        redirectDeny: function(user){
-         this.$router.push('/reasonForDenying/'+this.email+"/"+user.email,{
-            headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            "Authorization": "Bearer " + localStorage.jwt ,
-            }
-             });
+         this.$router.push('/reasonForDenying/'+this.email+"/"+user.email);
                   
        },
        users: function(){
@@ -320,12 +308,7 @@ import axios from "axios";
        },
        loadData: function(){
                axios
-               .get("http://localhost:8081/admins/getAllAdmins",{
-                  headers: {
-                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                  "Authorization": "Bearer " + localStorage.jwt ,
-                  }
-             })
+               .get("http://localhost:8081/admins/getAllAdmins")
                .then((response) => {
 
                      this.userRequestDTO=response.data
