@@ -103,12 +103,6 @@ public class TokenUtils {
 
     // ============= Funkcije za citanje informacija iz JWT tokena =============
 
-    /**
-     * Funkcija za preuzimanje JWT tokena iz zahteva.
-     *
-     * @param request HTTP zahtev koji klijent šalje.
-     * @return JWT token ili null ukoliko se token ne nalazi u odgovarajućem zaglavlju HTTP zahteva.
-     */
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = this.getExpirationDateFromToken(token);

@@ -164,13 +164,7 @@ import axios from "axios";
        this.getAllRequests();
      },
      methods: {
-       predefinedAdmin: function(){
-              axios.post("http://localhost:8081/admins/isPredefined",this.userRequestPom)
-                  .then(response => {
-                      this.isPredefined=response.data
-                      return response;
-                   })
-       },
+     
        getAllRequests: function(){
               axios.get("http://localhost:8081/userc/getAllRequests")
                   .then(response => {

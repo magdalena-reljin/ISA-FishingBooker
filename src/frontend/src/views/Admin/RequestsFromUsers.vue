@@ -89,14 +89,7 @@ import axios from "axios";
           this.email = this.$route.params.email
        this.pomUserRequestDTO.username=this.email
           this.loadData();
-            axios
-               .post("http://localhost:8081/admins/isPredefined",this.pomUserRequestDTO)
-               .then((response) => {
-                  this.isPredefined=response.data;
-
-                   return response; 
-               });
-   
+        
       
 
       },
