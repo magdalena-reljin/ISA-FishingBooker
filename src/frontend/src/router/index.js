@@ -30,7 +30,7 @@ import MyCalendar from '../views/FishingInstructor/MyCalendar'
 import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
-
+import store from '../store'
 const routes = [
   {
     path: '/',
@@ -63,11 +63,11 @@ const routes = [
     component: ProfileAdmin,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='ADMIN'){
+        next('/')
+      }else{
+        next();
       }
-      next();
-    
     },
     
   },
@@ -77,8 +77,8 @@ const routes = [
     component: RequestsFromUsers,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='ADMIN'){
+        next('/')
       }
       next();
     
@@ -90,8 +90,8 @@ const routes = [
     component: ReasonForDenying,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='ADMIN'){
+        next('/')
       }
       next();
     
@@ -103,8 +103,8 @@ const routes = [
     component: CabinOwnerHome,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='CABIN OWNER'){
+        next('/')
       }
       next();
     
@@ -116,8 +116,8 @@ const routes = [
     component: BoatOwnerHome,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
+        next('/')
       }
       next();
     
@@ -129,8 +129,8 @@ const routes = [
     component: FishingInstructorHome,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='FISHING INSTRUCTOR'){
+        next('/')
       }
       next();
     
@@ -142,8 +142,8 @@ const routes = [
     component: ClientHome,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='CLIENT'){
+        next('/')
       }
       next();
     
@@ -156,7 +156,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+        next('/')
       }
       next();
     
@@ -168,8 +168,8 @@ const routes = [
     component: AllUsers,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='ADMIN'){
+        next('/')
       }
       next();
     
@@ -181,8 +181,8 @@ const routes = [
     component: AddAdmin,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='ADMIN'){
+        next('/')
       }
       next();
     
@@ -195,7 +195,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+        next('/')
       }
       next();
     
@@ -208,7 +208,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+        next('/')
       }
       next();
     
@@ -221,7 +221,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+        next('/')
       }
       next();
     
@@ -233,8 +233,8 @@ const routes = [
     component: AddNewCabin,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='CABIN OWNER'){
+        next('/')
       }
       next();
     
@@ -246,8 +246,8 @@ const routes = [
     component: CabinProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='CABIN OWNER'){
+        next('/')
       }
       next();
     
@@ -259,8 +259,8 @@ const routes = [
     component: EditCabinProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='CABIN OWNER'){
+        next('/')
       }
       next();
     
@@ -272,8 +272,8 @@ const routes = [
     component: AddNewAdventure,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='FISHING INSTRUCTOR'){
+        next('/')
       }
       next();
     
@@ -285,8 +285,8 @@ const routes = [
     component: AdventureProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='FISHING INSTRUCTOR'){
+        next('/')
       }
       next();
     
@@ -298,8 +298,8 @@ const routes = [
     component: EditAdventure,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='FISHING INSTRUCTOR'){
+        next('/')
       }
       next();
     
@@ -311,8 +311,8 @@ const routes = [
     component: AddNewBoat,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: '' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
+        next('/')
       }
       next();
     
@@ -324,8 +324,8 @@ const routes = [
     component: BoatProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
+        next('/')
       }
       next();
     
@@ -337,8 +337,8 @@ const routes = [
     component: EditBoatProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
+        next('/')
       }
       next();
     
@@ -350,8 +350,8 @@ const routes = [
     component: DeletingAccountRequests,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='ADMIN'){
+        next('/')
       }
       next();
     
@@ -363,8 +363,8 @@ const routes = [
     component: MyCalendar,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='FISHING INSTRUCTOR'){
+        next('/')
       }
       next();
     
@@ -376,8 +376,8 @@ const routes = [
     component: CabinCalendar,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='CABIN OWNER'){
+        next('/')
       }
       next();
     
@@ -389,8 +389,8 @@ const routes = [
     component: BoatCalendar,
     beforeEnter: (to, from,next) => {
       // reject the navigation
-      if(localStorage.token == 'empty'){
-        next({ name: 'empty' })
+      if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
+        next('/')
       }
       next();
     
