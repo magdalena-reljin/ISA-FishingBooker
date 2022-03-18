@@ -1,24 +1,23 @@
-
 import { createStore } from 'vuex'
 import axios from 'axios'
 // Create a new store instance.
 const store = createStore({
     state: {
         token: null,
-        expiredIn : null
+        expiredIn : null,
+        role: null
     },
     getters:{
-        authenticated(state ){
-            return state.token
-        }
+        getToken : (state) => state.token,
+        getRole : (state) => state.role,
     },
     mutations: {
         SET_TOKEN (state,token){
-            state.token = token
+            state.token = token.accessToken
         },
-        REFRESH_TOKEN (state,token){
-            state.token = token
-        }
+        SET_ROLE (state,token){
+            state.role = token.userType
+        },
     },
     actions: {
 
@@ -35,7 +34,8 @@ const store = createStore({
                 axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
                 
 
-               dispatch('attempt',response.data.accessToken)
+               dispatch('attempt',response.data)
+
                return  response
            } catch (error) {
 
@@ -48,6 +48,7 @@ const store = createStore({
         async attempt ({commit},token){
             try {
                 commit('SET_TOKEN',token)
+                commit('SET_ROLE',token)
             } catch (error) {
                 commit('SET_TOKEN',null)
             }
@@ -66,6 +67,3 @@ const store = createStore({
   
 })
 export default store;
-
-
-

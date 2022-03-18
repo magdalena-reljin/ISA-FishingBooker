@@ -72,6 +72,9 @@
 
 import axios from "axios";
    export default{
+    props: {
+    username: String,
+    },
      data(){
        return{
          email: '',
@@ -84,12 +87,8 @@ import axios from "axios";
      mounted() {
       this.email = this.$props.username 
       this.userRequestDTO.username=this.email
-                 axios.post("http://localhost:8081/admins/isPredefined",this.userRequestDTO,{ 
-                headers: {
-                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                "Authorization": "Bearer " + localStorage.jwt ,
-                }
-                 })
+      console.log("AAAAAAAAAAAAAAAAAAAA"+this.email)
+      axios.post("http://localhost:8081/admins/isPredefined",this.userRequestDTO)
                   .then(response => {
                       this.isPredefined=response.data
                       return response;
@@ -97,9 +96,6 @@ import axios from "axios";
    
 
      },
-     props: {
-      username: String,
-      },
      methods: {
        requests: function(){
          this.$router.push('/requests/'+ this.$props.username );

@@ -10,29 +10,22 @@
 <script>
 
 import AdminNavbar from './AdminNav.vue'
-import axios from "axios";
+
    export default{
-     components: {
+    components: {
     AdminNavbar 
     },
      data(){
        return{
          email: '',
          isPredefined: false,
-          userRequestDTO:
-            {username: '',}
+      
        
        }
      },
      mounted() {
        this.email = this.$route.params.email
-         
-      this.userRequestDTO.username=this.email
-                 axios.post("http://localhost:8081/admins/isPredefined",this.userRequestDTO)
-                  .then(response => {
-                      this.isPredefined=response.data
-                      return response;
-                   })
+       console.log("AAAAAAAAAAAAAAAA"+this.email)
    
 
      },
