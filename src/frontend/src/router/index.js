@@ -31,6 +31,9 @@ import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
 import store from '../store'
+
+import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
+
 const routes = [
   {
     path: '/',
@@ -388,6 +391,19 @@ const routes = [
     name: 'BoatCalendar',
     component: BoatCalendar,
     beforeEnter: (to, from,next) => {
+      // reject the navigation
+      if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
+        next('/')
+      }
+      next();
+    
+    },
+  },
+  {
+    path: '/BoatOwnerCalendar/:email',
+    name: 'BoatOwnerCalendar',
+    component: BoatOwnerCalendar
+       beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty' || store.getters.getRole !='BOAT OWNER'){
         next('/')

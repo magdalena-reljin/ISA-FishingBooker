@@ -110,18 +110,8 @@
 </div>
 </div>
 </div>
-
-
-
-
-      
-  </div>
-    
-  
-
-
+</div>
 </template>
-
 <script>
 
 
@@ -172,8 +162,8 @@ import axios from "axios";
 
        },
        editData: function(event){
-      
             event.preventDefault();
+
             axios.post("http://localhost:8081/auth/editUser/",this.userRequestDto)
                  .then(response => {
                         this.$swal.fire({

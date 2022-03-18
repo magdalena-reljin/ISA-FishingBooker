@@ -19,7 +19,6 @@ const store = createStore({
         SET_ROLE (state,token){
             state.role = token.userType
         },
-       
     },
     actions: {
 
@@ -37,6 +36,7 @@ const store = createStore({
                 
 
                dispatch('attempt',response.data)
+
                return  response
            } catch (error) {
 
