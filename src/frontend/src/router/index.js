@@ -30,6 +30,8 @@ import MyCalendar from '../views/FishingInstructor/MyCalendar'
 import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
+import store from '../store'
+
 import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
 
 const routes = [
@@ -105,6 +107,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty' || localStorage.role !='CABIN OWNER'){
+
         next('/')
       }
       next();
@@ -144,6 +147,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty' || localStorage.role !='CLIENT'){
+
         next('/')
       }
       next();
@@ -313,6 +317,7 @@ const routes = [
     beforeEnter: (to, from,next) => {
       // reject the navigation
       if(localStorage.token == 'empty' || localStorage.role !='BOAT OWNER'){
+
         next('/')
       }
       next();
@@ -418,7 +423,6 @@ const router = createRouter({
   history: createWebHistory(process.env.VUE_APP_URL),
   routes,
 })
-
 
 export default router
 

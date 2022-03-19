@@ -18,13 +18,12 @@ import AdminNavbar from './AdminNav.vue'
     },
      data(){
        return{
-         email: '',
+         email: ''
        
        }
      },
      mounted() {
        this.email = this.$route.params.email
-
      },
       
     
