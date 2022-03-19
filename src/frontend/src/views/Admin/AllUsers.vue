@@ -123,14 +123,7 @@ import axios from "axios";
                  console.error("There was an error!", error);
            });
 
-          axios
-               .post("http://localhost:8081/admins/isPredefined",this.pomUserRequestDTO)
-               .then((response) => {
-                  this.isPredefined=response.data;
-
-                   return response; 
-               });
-   
+       
    
 
      },

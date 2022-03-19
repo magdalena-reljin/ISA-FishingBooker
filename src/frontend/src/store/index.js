@@ -4,7 +4,6 @@ import axios from 'axios'
 const store = createStore({
     state: {
         token: null,
-        expiredIn : null,
         role: null
     },
     getters:{
@@ -24,13 +23,9 @@ const store = createStore({
        async logIn ({dispatch},credentials){
            try {
             let response =  await axios.post("http://localhost:8081/auth/login",credentials)
-               localStorage.setItem('token',null)
+                localStorage.clear();
                 localStorage.setItem('token',response.data.accessToken)
-                this.state.expiredIn=response.data.expiresIn;
-                console.log("AAAAAAAAAAAAAA"+response.data.expiresIn)
-                const date = new Date()
-               //date.setMilliseconds(date.getMilliseconds+response.data.expiresIn)
-                console.log("saddddddddddddddddddd"+date.getMilliseconds)
+                localStorage.setItem('role',response.data.userType)
                 axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
                 
 
@@ -54,10 +49,10 @@ const store = createStore({
             }
          
         },
-        async logOut ({commit}){
-            commit('SET_TOKEN',null)
+        async logOut (){
             localStorage.setItem('token','empty')
-        }
+            localStorage.removeItem('role');
+        },
        
       
     },

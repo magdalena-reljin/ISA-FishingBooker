@@ -8,6 +8,7 @@
 </template>
  
 <script>
+//import axios from "axios";
 
 import AdminNavbar from './AdminNav.vue'
 
@@ -18,15 +19,11 @@ import AdminNavbar from './AdminNav.vue'
      data(){
        return{
          email: '',
-         isPredefined: false,
-      
        
        }
      },
      mounted() {
        this.email = this.$route.params.email
-       console.log("AAAAAAAAAAAAAAAA"+this.email)
-   
 
      },
       

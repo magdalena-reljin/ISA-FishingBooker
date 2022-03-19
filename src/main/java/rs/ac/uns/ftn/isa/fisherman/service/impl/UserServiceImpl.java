@@ -178,5 +178,10 @@ public class UserServiceImpl implements UserService {
         return tokenUtils.getUsernameFromToken(s);
     }
 
+    @Override
+    public String getRoleFromToken(String s) {
+        return tokenUtils.getRoleFromToken(s);
+    }
+
 
 }
