@@ -47,11 +47,9 @@ public class AdminController {
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 
-
-    @PostMapping("/isPredefined")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Boolean> isPredefined(@RequestBody UserRequestDTO userRequest) {
-        Boolean status= adminService.isPredefined(userRequest.getUsername());
+    @RequestMapping(value= "/isPredefined/{email:.+}/", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> isPredefined(@PathVariable ("email") String email) {
+        Boolean status= adminService.isPredefined(email);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 

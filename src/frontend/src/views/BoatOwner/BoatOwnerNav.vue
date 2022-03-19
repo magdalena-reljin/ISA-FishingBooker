@@ -73,7 +73,8 @@ export default ({
           this.$router.push('/BoatOwnerCalendar/'+this.$props.username);
        },
        logout: function(){
-          this.$router.push('/');
+          
+          this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
        },
        addNewBoat: function(){
           this.$router.push('/addNewBoat/'+ this.$props.username);

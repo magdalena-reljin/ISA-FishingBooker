@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
@@ -154,5 +155,13 @@ public class AuthenticationController {
     public ResponseEntity<String> saveDeleteAccountRequest( @RequestBody UserRequestDTO userRequest) {
         userService.saveDeleteAccountRequest(userRequest.getUsername(),userRequest.getReasonForDeleting());
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/getRole")
+    public ResponseEntity<String>  getRoleFromToken(@RequestHeader("Authorization") String token) {
+        String username = userService.getUsernameFromToken(token.split(" ")[1]);
+        String role = userService.findByUsername(username).getRoleApp();
+        System.out.println("VRATIOOOO"+ role);
+        return new ResponseEntity<>(role, HttpStatus.CREATED);
     }
 }

@@ -43,4 +43,6 @@ public interface UserService {
 
 
     String getUsernameFromToken(String s);
+
+    String getRoleFromToken(String s);
 }

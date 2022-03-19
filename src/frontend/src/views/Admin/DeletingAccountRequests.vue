@@ -159,8 +159,6 @@ import axios from "axios";
      },
      mounted() {
        this.email = this.$route.params.email
-       this.userRequestPom.username=this.email
-       this.predefinedAdmin();
        this.getAllRequests();
      },
      methods: {

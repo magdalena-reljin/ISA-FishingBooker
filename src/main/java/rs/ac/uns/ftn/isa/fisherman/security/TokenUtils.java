@@ -144,6 +144,8 @@ public class TokenUtils {
         return username;
     }
 
+
+
     /**
      * Funkcija za preuzimanje datuma kreiranja tokena.
      * @param token JWT token.
@@ -209,7 +211,7 @@ public class TokenUtils {
 
         try {
             final Claims claims = this.getAllClaimsFromToken(token);
-            role = claims.get("role", String.class);
+            role = claims.get("ROLE_", String.class);
         } catch (ExpiredJwtException ex) {
             throw ex;
         } catch (Exception e) {
