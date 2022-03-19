@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.AvailableCabinPeriod;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableCabinPeriodRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
 
+import java.util.List;
 import java.util.Set;
 @Service
 public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodService {
@@ -22,5 +23,10 @@ public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodServ
             availableCabinPeriodRepository.save(availablePeriods);
         }
 
+    }
+
+    @Override
+    public List<AvailableCabinPeriod> findAll() {
+        return availableCabinPeriodRepository.findAll();
     }
 }

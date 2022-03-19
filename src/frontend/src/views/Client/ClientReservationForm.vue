@@ -1,0 +1,194 @@
+<template>
+  <ClientNavbar />
+  <template v-if="!hideForm">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card">
+          <header id="header" class="card-header">
+            <h4 class="card-title mt-2">Reservation</h4>
+          </header>
+          <article class="card-body">
+            <form
+              class="was-validated"
+            >
+              <div class="row">
+                <div class="col">
+                  <div class="row">
+                    <div class="form-row">
+                      <div class="col form-group">
+                        <label id="label">Choose entity</label>
+                        <select
+                          v-model="selectedEntity"
+                          class="form-select form-select-sm"
+                          aria-label=".form-select-sm example"
+                          required
+                          @change="valueChanged"
+                        >
+                          <option>CABINS</option>
+                          <option>BOATS</option>
+                          <option>ADVENTURES</option>
+                        </select>
+                      </div>
+                      <div class="col form-group">
+                        <label id="label">Start</label>
+                        <Datepicker v-model="start" required></Datepicker>
+                      </div>
+                      <div class="col form-group">
+                        <label id="label">End</label>
+                        <Datepicker v-model="end" required></Datepicker>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="row">
+                    <template v-if="selectedEntity === 'CABINS'">
+                      <div class="col form-group">
+                        <label id="label">Price per night ($)</label>
+                        <input
+                          v-model="price"
+                          type="text"
+                          pattern="[0-9]+\.?[0-9]*"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="col form-group">
+                        <label id="label">Number of rooms </label>
+                        <input
+                          min="1"
+                          v-model="numOfRooms"
+                          type="number"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="col form-group">
+                        <label id="label">Beds per room </label>
+                        <input
+                          min="1"
+                          v-model="bedsPerRoom"
+                          type="number"
+                          class="form-control"
+                        />
+                      </div>
+                    </template>
+                    <template v-if="selectedEntity !== 'CABINS'">
+                      <div class="col form-group">
+                        <label id="label">Price ($)</label>
+                        <input
+                          v-model="price"
+                          type="text"
+                          pattern="[0-9]+\.?[0-9]*"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="col form-group">
+                        <label id="label">Max people</label>
+                        <input
+                          v-model="maxPeople"
+                          type="number"
+                          class="form-control"
+                        />
+                      </div>
+                    </template>
+                  </div>
+
+                  <div id="ConfirmButton" class="form-group">
+                    <br />
+                    <button @click="submitReservationParams" class="btn btn-lg btn-success">
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+  </template>
+   <template v-if="display==='CABINS'"> 
+    <ClientCabins :reservationProcess="true" :availableCabins="availableCabins" :showReservationForm="showReservationForm" :startDate="start" :endDate="end"/>
+  </template>
+
+</template>
+
+<script>
+import axios from "axios";
+import ClientNavbar from "./ClientNavbar";
+import Datepicker from "vue3-date-time-picker";
+import ClientCabins from "./ClientCabins.vue";
+
+export default {
+  components: {
+    ClientNavbar,
+    Datepicker,
+    ClientCabins
+  },
+  data() {
+    return {
+      email: "",
+      start: null,
+      end: null,
+      selectedEntity: "CABINS",
+      display: '',
+      price: 0.0,
+      maxPeople: 0,
+      numOfRooms: 1,
+      bedsPerRoom: 1,
+      availableCabins: [],
+      availableBoats: [],
+      availableAdventures:[],
+      hideForm: false,
+    };
+  },
+  mounted() {
+    this.email = this.$route.params.email;
+  },
+  methods: {
+    valueChanged: function() {
+      this.display='';
+    },
+    showReservationForm(state){
+      this.hideForm=!state;
+    },
+    submitReservationParams: function (event) {
+      event.preventDefault();
+
+      if (this.selectedEntity === "CABINS"){
+        axios
+        .post("http://localhost:8081/reservationCabin/getAvailableCabins", {
+          startDate: this.start,
+          endDate: this.end,
+          price: this.price,
+          numberOfRooms: this.numOfRooms,
+          bedsPerRoom: this.bedsPerRoom
+        }, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.jwt,
+          },
+        })
+        .then((response) => {
+            console.log(response);
+            this.availableCabins=response.data;
+            this.display='CABINS';
+        });
+      }else if (this.selectedEntity === "BOATS"){
+        console.log("Boats");
+      }else{
+        console.log("adventures");
+      }
+    },
+  },
+  computed: {},
+};
+</script> 
+
+<style>
+</style>

@@ -33,6 +33,8 @@ import BoatCalendar from '../views/BoatOwner/BoatCalendar'
 import store from '../store'
 
 import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
+import ClientReservationForm from '../views/Client/ClientReservationForm'
+import ClientCabins from '../views/Client/ClientCabins'
 
 const routes = [
   
@@ -153,6 +155,17 @@ const routes = [
       next();
     
     },
+  },
+  {
+    path: '/reservation/:email',
+    name: 'ClientReservationForm',
+    component: ClientReservationForm
+  },
+  {
+    path: '/availableCabins/:email',
+    name: 'ClientCabins',
+    component: ClientCabins,
+    props: true
   },
   {
     path: '/editProfile/:role/:email',

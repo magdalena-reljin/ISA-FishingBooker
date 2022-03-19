@@ -18,7 +18,7 @@
      </ul>
 
   <template v-if="cabinsShown"> 
-    <ClientCabins/>
+    <ClientCabins :reservationProcess="false" :availableCabins="[]"/>
   </template>
   <template v-if="boatsShown"> 
      <ClientBoats/>

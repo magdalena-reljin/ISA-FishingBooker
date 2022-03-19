@@ -3,7 +3,6 @@ package rs.ac.uns.ftn.isa.fisherman.service;
 
 import org.springframework.cache.annotation.Cacheable;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 
 import java.util.List;

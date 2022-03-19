@@ -1,7 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.mapper;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.AvailablePeriodDto;
-import rs.ac.uns.ftn.isa.fisherman.model.*;
+import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
+import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 
 import java.util.HashSet;
 import java.util.Set;

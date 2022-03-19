@@ -2,13 +2,11 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class FishingInstructorServiceImpl implements FishingInstructorService {

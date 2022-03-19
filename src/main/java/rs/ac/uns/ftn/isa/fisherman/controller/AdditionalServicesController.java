@@ -10,7 +10,6 @@ import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/services", produces = MediaType.APPLICATION_JSON_VALUE)

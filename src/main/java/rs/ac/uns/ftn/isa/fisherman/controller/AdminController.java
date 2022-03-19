@@ -13,7 +13,6 @@ import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.service.AdminService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 

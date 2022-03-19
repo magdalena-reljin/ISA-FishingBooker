@@ -1,11 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
-import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 
 public class CabinMapper {
     private AddressMapper addressMapper=new AddressMapper();
