@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-// DTO koji enkapsulira generisani JWT i njegovo trajanje koji se vracaju klijentu
 public class UserTokenStateDTO {
 
     private String accessToken;
@@ -16,9 +15,6 @@ public class UserTokenStateDTO {
         this.expiresIn = expiresIn;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;

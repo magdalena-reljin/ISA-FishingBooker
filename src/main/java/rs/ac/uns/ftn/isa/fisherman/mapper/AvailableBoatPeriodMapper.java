@@ -12,7 +12,7 @@ public class AvailableBoatPeriodMapper {
         return new AvailablePeriodDto(availableBoatPeriod.getId(),availableBoatPeriod.getStartDate(),
                 availableBoatPeriod.getEndDate(),availableBoatPeriod.getBoatOwner().getUsername(),availableBoatPeriod.getBoat().getId());
     }
-    public Set<AvailablePeriodDto> availableBoatPeriodsToDtos(Set<AvailableBoatPeriod> availableBoatPeriods){
+    public Set<AvailablePeriodDto> availableBoatPeriodsToDto(Set<AvailableBoatPeriod> availableBoatPeriods){
         Set<AvailablePeriodDto> periods = new HashSet<>();
         for(AvailableBoatPeriod availableBoatPeriod: availableBoatPeriods){
             periods.add(availableBoatPeriodToAvailablePeriodDto(availableBoatPeriod));
@@ -22,9 +22,9 @@ public class AvailableBoatPeriodMapper {
     public  AvailableBoatPeriod availablePeriodDtoToAvailableBoatPeriod(AvailablePeriodDto availablePeriodDto, BoatOwner boatOwner, Boat boat){
         return  new AvailableBoatPeriod(availablePeriodDto.getId(), availablePeriodDto.getStartDate(), availablePeriodDto.getEndDate(),boatOwner,boat);
     }
-    public Set<AvailableBoatPeriod> availableDtosToAvailableBoatPeriods(Set<AvailablePeriodDto> availablePeriodDtos, BoatOwner boatOwner,Boat boat){
+    public Set<AvailableBoatPeriod> availableDtoSToAvailableBoatPeriods(Set<AvailablePeriodDto> availablePeriodDtoS, BoatOwner boatOwner, Boat boat){
         Set<AvailableBoatPeriod> availableBoatPeriods = new HashSet<>();
-        for(AvailablePeriodDto availablePeriodDto : availablePeriodDtos){
+        for(AvailablePeriodDto availablePeriodDto : availablePeriodDtoS){
             availableBoatPeriods.add(availablePeriodDtoToAvailableBoatPeriod(availablePeriodDto,boatOwner,boat));
         }
         return availableBoatPeriods;

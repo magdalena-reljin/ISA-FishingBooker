@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;

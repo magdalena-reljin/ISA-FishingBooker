@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,29 +11,20 @@ import rs.ac.uns.ftn.isa.fisherman.model.Admin;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.service.AdminService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
 @RequestMapping(value = "/admins", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class AdminController {
-
-
 
     @Autowired
     private UserService userService;
-
-
     @Autowired
     private AdminService adminService;
 
-
-    private String success= "Success!";
-    private AdminMapper adminMapper = new AdminMapper();
+    private final AdminMapper adminMapper = new AdminMapper();
 
     @PostMapping("/signUpAdmin")
     @PreAuthorize("hasRole('ADMIN')")

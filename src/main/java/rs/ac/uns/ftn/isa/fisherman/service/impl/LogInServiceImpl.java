@@ -6,11 +6,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
-
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 
@@ -29,11 +27,9 @@ public class LogInServiceImpl implements LoginService {
         this.userRepository = userRepository;
 
     }
-    public UserTokenState LogIn(LogInDto authenticationRequest) {
+    public UserTokenState LogIn(String username,String password) {
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-                        authenticationRequest.getPassword()));
-
+                .authenticate(new UsernamePasswordAuthenticationToken(username,password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
         String userType= userRepository.findRoleById(user.getId());

@@ -9,7 +9,7 @@ public class BoatOwnerMapper {
     public BoatOwner userRequestDtoToBoatOwner(UserRequestDTO userRequest){
         AddressMapper addressMapper=new AddressMapper();
         return new BoatOwner(userRequest.getId(),userRequest.getFirstname(),userRequest.getLastname(),userRequest.getUsername(),
-                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtotoaddress(userRequest.getAddress()),userRequest.getRegistrationReason());
+                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtoToAddress(userRequest.getAddress()),userRequest.getRegistrationReason());
     }
 
     public UserRequestDTO boatOwnerToUserRequestDto(BoatOwner boatOwner){

@@ -1,6 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,16 +15,13 @@ import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
-
 import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/userc", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class UserController {
-
     @Autowired
     private CabinOwnerService cabinOwnerService;
 
@@ -38,11 +33,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    private String success= "Success!";
-    private CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
-    private BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
-    private FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
-    private UserMapper userMapper=new UserMapper();
+
+    private final CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
+    private final BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
+    private final FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
+    private final UserMapper userMapper=new UserMapper();
 
     @GetMapping("/getAllUsers")
     @PreAuthorize("hasRole('ADMIN')")
@@ -82,7 +77,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@RequestBody UserRequestDTO userRequest) {
         User user= userService.findByUsername(userRequest.getUsername());
         userService.deleteUser(user);
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
     @GetMapping("/getAllRequests")
     @PreAuthorize("hasRole('ADMIN')")

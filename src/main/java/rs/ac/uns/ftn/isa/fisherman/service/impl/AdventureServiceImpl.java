@@ -3,13 +3,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

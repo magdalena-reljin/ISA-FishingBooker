@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
-import java.util.List;
 import java.util.Objects;
 
 public class UserTokenState {

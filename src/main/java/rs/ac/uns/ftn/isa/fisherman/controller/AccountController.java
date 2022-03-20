@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,33 +8,21 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.MailDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
-import rs.ac.uns.ftn.isa.fisherman.mapper.*;
-import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
-
-
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AccountController {
 
+    private final String success= "Success!";
 
     @Autowired
     private UserService userService;
-
-
     @Autowired
     private AdminService adminService;
 
     public  AccountController(){}
-    private String success= "Success!";
-    private UserMapper userMapper=new UserMapper();
-
-
 
     @PostMapping("/acceptAccount")
     @PreAuthorize("hasRole('ADMIN')")

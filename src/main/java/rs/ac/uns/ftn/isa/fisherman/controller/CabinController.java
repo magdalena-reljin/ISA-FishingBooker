@@ -18,23 +18,22 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/cabins", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class CabinController {
+
+    private final String success="Success";
+
     @Autowired
     private CabinService cabinService;
     @Autowired
     private CabinOwnerService cabinOwnerService;
 
-    private CabinMapper cabinMapper=new CabinMapper();
-    private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
-
-    private String success="Success";
-    private String alreadyExistis="Cabin with that name already exists";
+    private final CabinMapper cabinMapper=new CabinMapper();
+    private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody CabinDto cabinDto){
-            Boolean services = false;
+            boolean services = false;
             Cabin cabin = cabinMapper.CabinDtoToCabin(cabinDto);
             cabin.setCabinOwner(cabinOwnerService.findByUsername(cabinDto.getOwnerUsername()));
             cabinService.save(cabin);
@@ -74,9 +73,7 @@ public class CabinController {
     @PostMapping("/edit")
     public ResponseEntity<String> edit(@RequestBody CabinDto cabinDto){
         Cabin cabin=cabinMapper.CabinDtoEditToCabin(cabinDto);
-        Boolean deleteOldImages=false;
-        if(cabinDto.getImages()==null)
-            deleteOldImages=true;
+        boolean deleteOldImages= cabinDto.getImages() == null;
         cabinService.edit(cabin,deleteOldImages);
         return new ResponseEntity<>(success,HttpStatus.OK);
     }

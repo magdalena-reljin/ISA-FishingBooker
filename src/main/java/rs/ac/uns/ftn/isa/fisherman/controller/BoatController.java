@@ -6,13 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
 
@@ -21,21 +19,21 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/boats", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class BoatController {
+    private final String success="Success";
+
     @Autowired
     private BoatService boatService;
     @Autowired
     private BoatOwnerService boatOwnerService;
 
-    private BoatMapper boatMapper=new BoatMapper();
-    private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
+    private final BoatMapper boatMapper=new BoatMapper();
+    private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 
-    private String success="Success";
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody BoatDto boatDto){
-        Boolean services=false;
+        boolean services=false;
         Boat boat=boatMapper.boatDtoToBoat(boatDto);
         boat.setBoatOwner(boatOwnerService.findByUsername(boatDto.getOwnersUsername()));
         boatService.save(boat);
@@ -69,9 +67,7 @@ public class BoatController {
         BoatOwner owner=boatOwnerService.findByUsername(boatDto.getOwnersUsername());
         Boat boat=boatMapper.boatDtoToBoatEdit(boatDto);
         boat.setBoatOwner(owner);
-        Boolean deleteOldImages=false;
-        if(boatDto.getImages()==null)
-            deleteOldImages=true;
+        boolean deleteOldImages= boatDto.getImages() == null;
         boatService.edit(boat,deleteOldImages);
         return new ResponseEntity<>(success,HttpStatus.OK);
     }

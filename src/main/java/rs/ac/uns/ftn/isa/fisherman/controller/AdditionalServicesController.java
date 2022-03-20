@@ -10,15 +10,13 @@ import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/services", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class AdditionalServicesController {
     @Autowired
     private AdditionalServicesService additionalServicesService;
-    private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
+    private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
 
     @PostMapping("/findById")
     public ResponseEntity<AdditionalServicesDto> findById(@RequestBody AdditionalServicesDto additionalServicesDto){

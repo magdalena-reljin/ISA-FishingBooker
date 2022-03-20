@@ -36,10 +36,9 @@ const firebaseConfig = {
   
   // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-if(store.getters.getRole != null){
-  console.log("ROLEEEE"+store.getters.getRole);
-  axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
-}
+
+axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
+
 
 getDatabase(app);
 getAuth();
