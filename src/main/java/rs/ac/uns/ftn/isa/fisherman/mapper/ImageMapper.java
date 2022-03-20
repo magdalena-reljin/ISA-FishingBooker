@@ -12,7 +12,7 @@ public class ImageMapper {
 
     public ImageDto imageToImageDto(Image image) { return new ImageDto(image.getId(),image.getUrl());}
 
-    public Set<Image> ImageDtoSToImages(Set<ImageDto> imageDtoS){
+    public Set<Image> imageDtoSToImages(Set<ImageDto> imageDtoS){
         Set<Image> images = new HashSet<>();
         for(ImageDto imageDto: imageDtoS)
             images.add(imageDtoToImage(imageDto));
