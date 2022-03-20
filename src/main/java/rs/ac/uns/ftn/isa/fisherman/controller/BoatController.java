@@ -38,7 +38,7 @@ public class BoatController {
         boat.setBoatOwner(boatOwnerService.findByUsername(boatDto.getOwnersUsername()));
         boatService.save(boat);
         if(boatDto.getAdditionalServices()!=null) {
-            boat.setAdditionalServices(additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(boatDto.getAdditionalServices()));
+            boat.setAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatDto.getAdditionalServices()));
             services=true;
         }
         if(services)

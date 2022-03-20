@@ -22,14 +22,14 @@ public class AdditionalServicesController {
     public ResponseEntity<AdditionalServicesDto> findById(@RequestBody AdditionalServicesDto additionalServicesDto){
 
         AdditionalServices additionalServices=additionalServicesService.findById(additionalServicesDto.getId());
-        AdditionalServicesDto additionalServicesDto1=additionalServiceMapper.AdditionalServiceToAdditionalServiceDto(additionalServices);
+        AdditionalServicesDto additionalServicesDto1=additionalServiceMapper.additionalServiceToAdditionalServiceDto(additionalServices);
         return new ResponseEntity<>(additionalServicesDto1,HttpStatus.OK);
     }
     @GetMapping("/findAll")
     public ResponseEntity<List<AdditionalServicesDto>> findAll(){
         List<AdditionalServicesDto> additionalServices=new ArrayList<>();
         for(AdditionalServices additionalServices1: additionalServicesService.getAll())
-            additionalServices.add(additionalServiceMapper.AdditionalServiceToAdditionalServiceDto(additionalServices1));
+            additionalServices.add(additionalServiceMapper.additionalServiceToAdditionalServiceDto(additionalServices1));
         return new ResponseEntity<>(additionalServices,HttpStatus.OK);
     }
 }

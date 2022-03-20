@@ -15,14 +15,14 @@ public class BoatMapper {
     public Boat boatDtoToBoatEdit(BoatDto boat){
         return new Boat(boat.getId(),boat.getName(),boat.getType(),boat.getLength(), boat.getEngineCode(), boat.getEnginePower(),
                 boat.getMaxSpeed(), boat.getNavigationEquipment(), addressMapper.dtoToAddress(boat.getAddressDto()),boat.getDescription(),
-                boat.getMaxPeople(), boat.getRules(), boat.getFishingEquipment(), boat.getPrice(), boat.getRating(), boat.getCancelingCondition(),additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(boat.getAdditionalServices()));
+                boat.getMaxPeople(), boat.getRules(), boat.getFishingEquipment(), boat.getPrice(), boat.getRating(), boat.getCancelingCondition(),additionalServiceMapper.additionalServicesDtoToAdditionalServices(boat.getAdditionalServices()));
     }
 
     public BoatDto boatToBoatDto(Boat boat) {
         return new BoatDto(boat.getId(),boat.getBoatOwner().getUsername(),boat.getName(), boat.getType(), boat.getLength(), boat.getEngineCode(),
                 boat.getEnginePower(),boat.getMaxSpeed(),boat.getNavigationEquipment(),addressMapper.addressToDTO(boat.getAddress()),
-                boat.getDescription(),imageMapper.ImageToImageDtoS(boat.getImages()),boat.getMaxPeople(),boat.getRules(),
-                boat.getFishingEquipment(),boat.getPrice(),additionalServiceMapper.AdditionalServicesToAdditionalServiceDtos(boat.getAdditionalServices()),
+                boat.getDescription(),imageMapper.imageToImageDtoS(boat.getImages()),boat.getMaxPeople(),boat.getRules(),
+                boat.getFishingEquipment(),boat.getPrice(),additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(boat.getAdditionalServices()),
                 boat.getCancelingCondition(), boat.getRating());
     }
 }

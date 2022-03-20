@@ -33,12 +33,12 @@ public class AdventureController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody AdventureDto adventureDto){
         boolean services=false;
-        Adventure adventure=adventureMapper.AdventureDtoToAdventure(adventureDto);
+        Adventure adventure=adventureMapper.adventureDtoToAdventure(adventureDto);
         adventure.setFishingInstructor(fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername()));
         adventureService.save(adventure);
 
        if(adventureDto.getAdditionalServices()!=null) {
-            adventure.setAdditionalServices(additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices()));
+            adventure.setAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices()));
             services=true;
         }
         if(services)
@@ -51,7 +51,7 @@ public class AdventureController {
     public ResponseEntity<Set<AdventureDto>> findAdventuresByInstructorUsername(@RequestBody FishingInstructorDto instructor){
         Set<AdventureDto> adventures=new HashSet<>();
         for(Adventure adventure: adventureService.findAdventuresByInstructorId(fishingInstructorService.findByUsername(instructor.getUsername()).getId()))
-            adventures.add(adventureMapper.AdventureToAdventureDto(adventure));
+            adventures.add(adventureMapper.adventureToAdventureDto(adventure));
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
 
@@ -60,7 +60,7 @@ public class AdventureController {
     public ResponseEntity<Set<AdventureDto>> getAll(){
         Set<AdventureDto> adventures=new HashSet<>();
         for(Adventure adventure: adventureService.findAll())
-            adventures.add(adventureMapper.AdventureToAdventureDto(adventure));
+            adventures.add(adventureMapper.adventureToAdventureDto(adventure));
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
 
@@ -70,7 +70,7 @@ public class AdventureController {
         Long fishingInstructorId= fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername()).getId();
         String adventureName= adventureDto.getName();
         Adventure adventure= adventureService.findAdventureByName(adventureName,fishingInstructorId);
-        return new ResponseEntity<>(adventureMapper.AdventureToAdventureDto(adventure), HttpStatus.OK);
+        return new ResponseEntity<>(adventureMapper.adventureToAdventureDto(adventure), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -84,7 +84,7 @@ public class AdventureController {
     @PostMapping("/edit")
     public ResponseEntity<String> editAdventure(@RequestBody AdventureDto adventureDto){
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername());
-        Adventure adventure = adventureMapper.AdventureDtoToEditAdventure(adventureDto);
+        Adventure adventure = adventureMapper.adventureDtoToEditAdventure(adventureDto);
         adventureService.edit(adventure,fishingInstructor.getId());
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }

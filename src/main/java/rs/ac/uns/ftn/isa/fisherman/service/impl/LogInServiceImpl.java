@@ -27,7 +27,7 @@ public class LogInServiceImpl implements LoginService {
         this.userRepository = userRepository;
 
     }
-    public UserTokenState LogIn(String username,String password) {
+    public UserTokenState logIn(String username, String password) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(username,password));
         SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -40,7 +40,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LogInDto userRequest) {
         try{
-            UserTokenState userTokenState = loginService.LogIn(userRequest.getUsername(),userRequest.getPassword());
+            UserTokenState userTokenState = loginService.logIn(userRequest.getUsername(),userRequest.getPassword());
             return ResponseEntity.ok(userTokenState);
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Incorrect credentials.");

@@ -45,7 +45,7 @@ public class UserController {
         List<UserRequestDTO> allUsers=new ArrayList<>();
         for(CabinOwner cabinOwner: cabinOwnerService.getActiveCabinOwners()) {
             if(cabinOwner.isEnabled())
-                allUsers.add(cabinOwnerMapper.CabinOwnerToUserRequestDto(cabinOwner));
+                allUsers.add(cabinOwnerMapper.cabinOwnerToUserRequestDto(cabinOwner));
         }
         for(BoatOwner boatOwner: boatOwnerService.getActiveBoatOwners()) {
             if(boatOwner.isEnabled())
@@ -62,7 +62,7 @@ public class UserController {
     public List<UserRequestDTO> getNewUsers() throws MessagingException {
         List<UserRequestDTO> newUsers=new ArrayList<>();
         for(CabinOwner cabinOwner: cabinOwnerService.getNewCabinOwners()) {
-            newUsers.add(cabinOwnerMapper.CabinOwnerToUserRequestDto(cabinOwner));
+            newUsers.add(cabinOwnerMapper.cabinOwnerToUserRequestDto(cabinOwner));
         }
         for(BoatOwner boatOwner: boatOwnerService.getNewBoatOwners()) {
             newUsers.add(boatOwnerMapper.boatOwnerToUserRequestDto(boatOwner));
