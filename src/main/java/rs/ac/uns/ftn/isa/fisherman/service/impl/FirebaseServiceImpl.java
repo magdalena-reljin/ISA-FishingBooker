@@ -44,7 +44,8 @@ public class FirebaseServiceImpl implements FirebaseService {
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
         return String.format(downloadUrl, URLEncoder.encode(fileName, StandardCharsets.UTF_8));
     }
-    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
+    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException  //NOSONAR
+    {
         File tempFile = new File(fileName);
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(multipartFile.getBytes());
