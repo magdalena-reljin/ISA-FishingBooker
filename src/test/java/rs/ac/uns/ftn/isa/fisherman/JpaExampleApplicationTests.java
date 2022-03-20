@@ -11,7 +11,8 @@ public class JpaExampleApplicationTests //NOSONAR
 {
 
 	@Test
-	public void contextLoads() {
+	public void contextLoads() //NOSONAR
+	{
 	}
 
 }
