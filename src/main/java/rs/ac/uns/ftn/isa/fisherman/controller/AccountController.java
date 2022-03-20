@@ -15,7 +15,7 @@ import javax.mail.MessagingException;
 @RequestMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AccountController {
 
-    private static final String success= "Success!";
+    private static final String SUCCESS = "Success!";
 
     @Autowired
     private UserService userService;
@@ -46,7 +46,7 @@ public class AccountController {
         String code = verificationDTO.getActivationCode();
 
         if(this.userService.activateAccount(email, code) != null){
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
         return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
     }
@@ -61,14 +61,14 @@ public class AccountController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> sendDenyReasonForDeletingAccount(@RequestBody MailDto mailDto) throws MessagingException {
         userService.sendDenyReason(mailDto.getResponse(),mailDto.getRecipient());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
     @PostMapping("/sendAcceptReasonForDeletingAccount")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> sendAcceptReasonForDeletingAccount(@RequestBody MailDto mailDto) throws MessagingException {
         userService.sendAcceptReason(mailDto.getResponse(),mailDto.getRecipient());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
 

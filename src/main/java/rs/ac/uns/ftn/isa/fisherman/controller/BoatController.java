@@ -20,7 +20,7 @@ import java.util.Set;
 @RestController
 @RequestMapping(value = "/boats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BoatController {
-    private static final String success="Success";
+    private static final String SUCCESS ="Success";
 
     @Autowired
     private BoatService boatService;
@@ -43,7 +43,7 @@ public class BoatController {
         }
         if(services)
             boatService.save(boat);
-        return new ResponseEntity<>(success, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/findBoatsByOwnersUsername")
@@ -69,14 +69,14 @@ public class BoatController {
         boat.setBoatOwner(owner);
         boolean deleteOldImages= boatDto.getImages() == null;
         boatService.edit(boat,deleteOldImages);
-        return new ResponseEntity<>(success,HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody BoatDto boatDto){
         Boat boat=boatMapper.boatDtoToBoat(boatDto);
         boatService.delete(boat.getId());
-        return new ResponseEntity<>(success,HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/getAll")

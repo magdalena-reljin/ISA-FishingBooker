@@ -20,7 +20,7 @@ import java.util.Set;
 @RequestMapping(value = "/cabins", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CabinController {
 
-    private static final String success="Success";
+    private static final String SUCCESS ="Success";
 
     @Autowired
     private CabinService cabinService;
@@ -44,7 +44,7 @@ public class CabinController {
             }
             if (services)
                 cabinService.save(cabin);
-            return new ResponseEntity<>(success, HttpStatus.CREATED);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('CABINOWNER')")
@@ -67,7 +67,7 @@ public class CabinController {
     public ResponseEntity<String> delete(@RequestBody CabinDto cabinDto){
         Cabin cabin=cabinMapper.CabinDtoToCabin(cabinDto);
         cabinService.delete(cabin.getId());
-        return new ResponseEntity<>(success,HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/edit")
@@ -75,7 +75,7 @@ public class CabinController {
         Cabin cabin=cabinMapper.CabinDtoEditToCabin(cabinDto);
         boolean deleteOldImages= cabinDto.getImages() == null;
         cabinService.edit(cabin,deleteOldImages);
-        return new ResponseEntity<>(success,HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/getAll")

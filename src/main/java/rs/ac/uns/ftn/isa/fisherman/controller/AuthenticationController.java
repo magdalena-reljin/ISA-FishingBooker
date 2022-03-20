@@ -17,8 +17,8 @@ import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
-    private static final String success = "Success.";
-    private static final String emailAlreadyInUse = "Email already in use.";
+    private static final String SUCCESS = "Success.";
+    private static final String EMAIL_ALREADY_IN_USE = "Email already in use.";
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -54,9 +54,9 @@ public class AuthenticationController {
             if(existUser== null)
             {
                 this.userService.registerCabinOwner(cabinOwnerMapper.userRequestDTOToCabinOwner(userRequest));
-                return ResponseEntity.status(201).body(success);
+                return ResponseEntity.status(201).body(SUCCESS);
             }
-              return ResponseEntity.badRequest().body(emailAlreadyInUse);
+              return ResponseEntity.badRequest().body(EMAIL_ALREADY_IN_USE);
     }
 
 
@@ -73,40 +73,40 @@ public class AuthenticationController {
     public ResponseEntity<String> registerBoatOwner(@RequestBody UserRequestDTO userRequest) throws MessagingException {
         User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
-            return new ResponseEntity<>(emailAlreadyInUse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(EMAIL_ALREADY_IN_USE, HttpStatus.BAD_REQUEST);
         }
         this.userService.registerBoatOwner(boatOwnerMapper.userRequestDtoToBoatOwner(userRequest));
-        return new ResponseEntity<>(success, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 
     @PostMapping("/signUpFishingInstructor")
     public ResponseEntity<String> registerFishingInstructor( @RequestBody UserRequestDTO userRequest) throws MessagingException {
         User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
-            return new ResponseEntity<>(emailAlreadyInUse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(EMAIL_ALREADY_IN_USE, HttpStatus.BAD_REQUEST);
         }
         this.userService.registerFishingInstructor(fishingInstructorMapper.userRequestDtoToFishingInstructor(userRequest));
-        return new ResponseEntity<>(success, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 
     @PostMapping("/signUpClient")
     public ResponseEntity<String> registerClient( @RequestBody UserRequestDTO userRequest) throws MessagingException {
         User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
-            return new ResponseEntity<>(emailAlreadyInUse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(EMAIL_ALREADY_IN_USE, HttpStatus.BAD_REQUEST);
         }
         this.userService.registerClient(clientMapper.userRequestDtoToClient(userRequest));
-        return new ResponseEntity<>(success, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 
     @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePassword) {
         userDetailsService.changePassword(changePassword.getOldPassword(),changePassword.getNewPassword());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
     @PostMapping("/saveDeleteAccountRequest")
     public ResponseEntity<String> saveDeleteAccountRequest( @RequestBody UserRequestDTO userRequest) {
         userService.saveDeleteAccountRequest(userRequest.getUsername(),userRequest.getReasonForDeleting());
-        return new ResponseEntity<>(success, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 }

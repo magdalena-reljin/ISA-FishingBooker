@@ -20,7 +20,7 @@ import java.util.Set;
 @RequestMapping(value = "/adventures", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdventureController {
 
-    private static final String success= "Success.";
+    private static final String SUCCESS = "Success.";
     @Autowired
     private FishingInstructorService fishingInstructorService;
     @Autowired
@@ -43,7 +43,7 @@ public class AdventureController {
         }
         if(services)
             adventureService.save(adventure);
-        return new ResponseEntity<>(success, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -77,7 +77,7 @@ public class AdventureController {
     @PostMapping("/deleteAdventure")
     public ResponseEntity<String> deleteAdventure(@RequestBody AdventureDto adventureDto){
         adventureService.delete(adventureDto.getId());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -86,6 +86,6 @@ public class AdventureController {
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername());
         Adventure adventure = adventureMapper.AdventureDtoToEditAdventure(adventureDto);
         adventureService.edit(adventure,fishingInstructor.getId());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 }
