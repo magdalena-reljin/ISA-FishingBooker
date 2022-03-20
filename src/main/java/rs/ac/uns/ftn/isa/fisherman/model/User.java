@@ -14,7 +14,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public abstract class User implements UserDetails {
 
-    private static String roleApp = "";
+    private final static String ROLE_APP = "";
     @Id
     @SequenceGenerator(name = "account_sequence_generator", sequenceName = "account_sequence", initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence_generator")
@@ -25,9 +25,9 @@ public abstract class User implements UserDetails {
     protected String name;
     @Column(name="lastName")
     protected String lastName;
-    @Column(name="username")
+    @Column(name="username", unique = true)
     protected String username;
-    @Column(name="password")
+    @Column(name="password", nullable = false)
     protected String password;
     @Column(name="phoneNum")
     protected String phoneNum;
@@ -106,11 +106,7 @@ public abstract class User implements UserDetails {
     }
 
     public String getRoleApp() {
-        return roleApp;
-    }
-
-    public void setRoleApp(String roleApp) {
-        this.roleApp = roleApp;
+        return ROLE_APP;
     }
 
     public void setAuthorities(List<Authority> authorities) {
