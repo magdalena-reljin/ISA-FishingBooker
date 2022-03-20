@@ -6,14 +6,11 @@ import com.google.cloud.storage.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import rs.ac.uns.ftn.isa.fisherman.dto.ImageDto;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.FirebaseService;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,8 +19,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 @Service
 public class FirebaseServiceImpl implements FirebaseService {
@@ -44,7 +39,8 @@ public class FirebaseServiceImpl implements FirebaseService {
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
         return String.format(downloadUrl, URLEncoder.encode(fileName, StandardCharsets.UTF_8));
     }
-    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
+    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException  //NOSONAR
+    {
         File tempFile = new File(fileName);
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(multipartFile.getBytes());

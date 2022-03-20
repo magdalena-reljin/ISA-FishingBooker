@@ -8,6 +8,6 @@ public class ClientMapper {
     public Client userRequestDtoToClient(UserRequestDTO userRequest){
         AddressMapper addressMapper=new AddressMapper();
         return new Client(userRequest.getId(),userRequest.getFirstname(),userRequest.getLastname(),userRequest.getUsername(),
-                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtotoaddress(userRequest.getAddress()));
+                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtoToAddress(userRequest.getAddress()));
     }
 }

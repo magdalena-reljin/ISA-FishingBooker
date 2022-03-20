@@ -8,23 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.*;
-import rs.ac.uns.ftn.isa.fisherman.mapper.AvailableInstructorPeriodMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 
 @RestController
 @RequestMapping(value = "/instructors", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class FishingInstructorController {
 
     @Autowired
     private FishingInstructorService fishingInstructorService;
 
-    private FishingInstructorMapper fishingInstructorMapper=new FishingInstructorMapper();
-
-    private AvailableInstructorPeriodMapper availableInstructorPeriodMapper =new AvailableInstructorPeriodMapper();
-
+    private final FishingInstructorMapper fishingInstructorMapper=new FishingInstructorMapper();
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/findInstructorRatingByUsername")

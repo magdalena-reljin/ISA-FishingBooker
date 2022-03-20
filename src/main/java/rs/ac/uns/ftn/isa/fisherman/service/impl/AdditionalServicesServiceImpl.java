@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdditionalServicesRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

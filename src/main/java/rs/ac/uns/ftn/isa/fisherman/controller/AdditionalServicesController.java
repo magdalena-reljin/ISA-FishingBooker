@@ -10,28 +10,26 @@ import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/services", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class AdditionalServicesController {
     @Autowired
     private AdditionalServicesService additionalServicesService;
-    private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
+    private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
 
     @PostMapping("/findById")
     public ResponseEntity<AdditionalServicesDto> findById(@RequestBody AdditionalServicesDto additionalServicesDto){
 
         AdditionalServices additionalServices=additionalServicesService.findById(additionalServicesDto.getId());
-        AdditionalServicesDto additionalServicesDto1=additionalServiceMapper.AdditionalServiceToAdditionalServiceDto(additionalServices);
+        AdditionalServicesDto additionalServicesDto1=additionalServiceMapper.additionalServiceToAdditionalServiceDto(additionalServices);
         return new ResponseEntity<>(additionalServicesDto1,HttpStatus.OK);
     }
     @GetMapping("/findAll")
     public ResponseEntity<List<AdditionalServicesDto>> findAll(){
         List<AdditionalServicesDto> additionalServices=new ArrayList<>();
         for(AdditionalServices additionalServices1: additionalServicesService.getAll())
-            additionalServices.add(additionalServiceMapper.AdditionalServiceToAdditionalServiceDto(additionalServices1));
+            additionalServices.add(additionalServiceMapper.additionalServiceToAdditionalServiceDto(additionalServices1));
         return new ResponseEntity<>(additionalServices,HttpStatus.OK);
     }
 }

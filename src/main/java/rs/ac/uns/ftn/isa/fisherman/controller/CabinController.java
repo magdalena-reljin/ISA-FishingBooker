@@ -18,34 +18,33 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/cabins", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class CabinController {
+
+    private static final String SUCCESS ="Success";
+
     @Autowired
     private CabinService cabinService;
     @Autowired
     private CabinOwnerService cabinOwnerService;
 
-    private CabinMapper cabinMapper=new CabinMapper();
-    private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
-
-    private String success="Success";
-    private String alreadyExistis="Cabin with that name already exists";
+    private final CabinMapper cabinMapper=new CabinMapper();
+    private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody CabinDto cabinDto){
-            Boolean services = false;
-            Cabin cabin = cabinMapper.CabinDtoToCabin(cabinDto);
+            boolean services = false;
+            Cabin cabin = cabinMapper.cabinDtoToCabin(cabinDto);
             cabin.setCabinOwner(cabinOwnerService.findByUsername(cabinDto.getOwnerUsername()));
             cabinService.save(cabin);
 
             if (cabinDto.getAdditionalServices() != null) {
-                cabin.setAdditionalServices(additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(cabinDto.getAdditionalServices()));
+                cabin.setAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinDto.getAdditionalServices()));
                 services = true;
             }
             if (services)
                 cabinService.save(cabin);
-            return new ResponseEntity<>(success, HttpStatus.CREATED);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('CABINOWNER')")
@@ -53,39 +52,37 @@ public class CabinController {
     public ResponseEntity<Set<CabinDto>> getByOwnerId(@RequestBody UserRequestDTO owner){
         Set<CabinDto> cabins=new HashSet<>();
         for(Cabin cabin: cabinService.findByOwnersId(cabinOwnerService.findByUsername(owner.getUsername()).getId()))
-            cabins.add(cabinMapper.CabinToCabinDto(cabin));
+            cabins.add(cabinMapper.cabinToCabinDto(cabin));
         return new ResponseEntity<>(cabins,HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/findByName")
     public ResponseEntity<CabinDto> findByName(@RequestBody CabinDto cabinDto){
-        CabinDto cabin= cabinMapper.CabinToCabinDto(cabinService.findByName(cabinDto.getName()));
+        CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
         return new ResponseEntity<>(cabin,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody CabinDto cabinDto){
-        Cabin cabin=cabinMapper.CabinDtoToCabin(cabinDto);
+        Cabin cabin=cabinMapper.cabinDtoToCabin(cabinDto);
         cabinService.delete(cabin.getId());
-        return new ResponseEntity<>(success,HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/edit")
     public ResponseEntity<String> edit(@RequestBody CabinDto cabinDto){
-        Cabin cabin=cabinMapper.CabinDtoEditToCabin(cabinDto);
-        Boolean deleteOldImages=false;
-        if(cabinDto.getImages()==null)
-            deleteOldImages=true;
+        Cabin cabin=cabinMapper.cabinDtoEditToCabin(cabinDto);
+        boolean deleteOldImages= cabinDto.getImages() == null;
         cabinService.edit(cabin,deleteOldImages);
-        return new ResponseEntity<>(success,HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/getAll")
     public ResponseEntity<Set<CabinDto>> getAll(){
         Set<CabinDto> cabins=new HashSet<>();
         for(Cabin cabin: cabinService.findAll())
-            cabins.add(cabinMapper.CabinToCabinDto(cabin));
+            cabins.add(cabinMapper.cabinToCabinDto(cabin));
         return new ResponseEntity<>(cabins,HttpStatus.OK);
     }
 }

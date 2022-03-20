@@ -8,12 +8,12 @@ public class UserMapper {
     public UserRequestDTO userToUserRequestDTO(User user){
         AddressMapper addressMapper=new AddressMapper();
         return new UserRequestDTO(user.getId(),user.getUsername(),user.getPassword(),user.getName(),
-                user.getLastName(), user.getPhoneNum(),addressMapper.adressToDTO(user.getAddress()),"","");
+                user.getLastName(), user.getPhoneNum(),addressMapper.addressToDTO(user.getAddress()),"","");
     }
     public UserRequestDTO userToDeleteUserRequestDTO(User user){
         AddressMapper addressMapper=new AddressMapper();
         return new UserRequestDTO(user.getId(),user.getUsername(),user.getPassword(),user.getName(),
-                user.getLastName(), user.getPhoneNum(),addressMapper.adressToDTO(user.getAddress()),"",user.getRoleApp(),user.getReasonForDeleting());
+                user.getLastName(), user.getPhoneNum(),addressMapper.addressToDTO(user.getAddress()),"",user.getRoleApp(),user.getReasonForDeleting());
     }
 
 }

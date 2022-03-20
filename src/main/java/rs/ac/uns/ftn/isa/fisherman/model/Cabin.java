@@ -1,10 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity

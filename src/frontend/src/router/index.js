@@ -30,8 +30,6 @@ import MyCalendar from '../views/FishingInstructor/MyCalendar'
 import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
-import store from '../store'
-
 import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
 
 const routes = [

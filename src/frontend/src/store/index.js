@@ -26,6 +26,7 @@ const store = createStore({
                 localStorage.clear();
                 localStorage.setItem('token',response.data.accessToken)
                 localStorage.setItem('role',response.data.userType)
+                console.log("AAAAAAAAAA"+localStorage.token)
                 axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
                 
 
@@ -35,7 +36,7 @@ const store = createStore({
            } catch (error) {
 
             
-                console.log("AAAAAAAAAA"+error)
+                console.log(error)
            }
         
 

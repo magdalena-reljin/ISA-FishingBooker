@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,33 +8,21 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.MailDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
-import rs.ac.uns.ftn.isa.fisherman.mapper.*;
-import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
-
-
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AccountController {
 
+    private static final String SUCCESS = "Success!";
 
     @Autowired
     private UserService userService;
-
-
     @Autowired
     private AdminService adminService;
 
     public  AccountController(){}
-    private String success= "Success!";
-    private UserMapper userMapper=new UserMapper();
-
-
 
     @PostMapping("/acceptAccount")
     @PreAuthorize("hasRole('ADMIN')")
@@ -59,7 +46,7 @@ public class AccountController {
         String code = verificationDTO.getActivationCode();
 
         if(this.userService.activateAccount(email, code) != null){
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
         return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
     }
@@ -74,14 +61,14 @@ public class AccountController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> sendDenyReasonForDeletingAccount(@RequestBody MailDto mailDto) throws MessagingException {
         userService.sendDenyReason(mailDto.getResponse(),mailDto.getRecipient());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
     @PostMapping("/sendAcceptReasonForDeletingAccount")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> sendAcceptReasonForDeletingAccount(@RequestBody MailDto mailDto) throws MessagingException {
         userService.sendAcceptReason(mailDto.getResponse(),mailDto.getRecipient());
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
 

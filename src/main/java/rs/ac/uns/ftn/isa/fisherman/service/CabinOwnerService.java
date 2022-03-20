@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
-import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
-
 import java.util.List;
 
 public interface CabinOwnerService {

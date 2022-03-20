@@ -7,7 +7,7 @@ import java.util.Set;
 @Entity
 @DiscriminatorValue("BOAT OWNER")
 public class BoatOwner extends User {
-    private static String roleApp = "ROLE_BOATOWNER";
+    private static final String ROLE_APP = "ROLE_BOATOWNER";
     private String registrationReason;
     @OneToMany(mappedBy = "boatOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Boat> boats;
@@ -38,7 +38,7 @@ public class BoatOwner extends User {
     }
     @Override
     public String getRoleApp() {
-        return roleApp;
+        return ROLE_APP;
     }
 
 }

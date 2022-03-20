@@ -1,32 +1,27 @@
 package rs.ac.uns.ftn.isa.fisherman.mapper;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import rs.ac.uns.ftn.isa.fisherman.dto.ImageDto;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
-
 import java.util.HashSet;
 import java.util.Set;
 
 public class ImageMapper {
 
-    public Image ImageDtoToImage(ImageDto image){
+    public Image imageDtoToImage(ImageDto image){
         return new Image(image.getId(),image.getUrl());
     }
 
-    public ImageDto ImageToImageDto(Image image) { return new ImageDto(image.getId(),image.getUrl());}
+    public ImageDto imageToImageDto(Image image) { return new ImageDto(image.getId(),image.getUrl());}
 
-    public Set<Image> ImageDtosToImages(Set<ImageDto> imageDtos){
+    public Set<Image> imageDtoSToImages(Set<ImageDto> imageDtoS){
         Set<Image> images = new HashSet<>();
-        for(ImageDto imageDto: imageDtos)
-            images.add(ImageDtoToImage(imageDto));
+        for(ImageDto imageDto: imageDtoS)
+            images.add(imageDtoToImage(imageDto));
         return images;
     }
-    public Set<ImageDto> ImageToImageDtos(Set<Image> images){
-        Set<ImageDto> imagesDtos = new HashSet<>();
+    public Set<ImageDto> imageToImageDtoS(Set<Image> images){
+        Set<ImageDto> imagesDtoS = new HashSet<>();
         for(Image image: images)
-            imagesDtos.add(ImageToImageDto(image));
-        return imagesDtos;
+            imagesDtoS.add(imageToImageDto(image));
+        return imagesDtoS;
     }
 }
