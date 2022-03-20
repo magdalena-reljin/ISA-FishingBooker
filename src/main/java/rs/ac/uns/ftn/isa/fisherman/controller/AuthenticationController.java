@@ -17,8 +17,8 @@ import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
-    private final String success = "Success.";
-    private final String emailAlreadyInUse = "Email already in use.";
+    private static final String success = "Success.";
+    private static final String emailAlreadyInUse = "Email already in use.";
 
     @Autowired
     private CustomUserDetailsService userDetailsService;

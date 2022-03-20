@@ -15,7 +15,7 @@ import javax.mail.MessagingException;
 @RequestMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AccountController {
 
-    private final String success= "Success!";
+    private static final String success= "Success!";
 
     @Autowired
     private UserService userService;

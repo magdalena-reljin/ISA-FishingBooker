@@ -20,7 +20,7 @@ import java.util.Set;
 @RequestMapping(value = "/cabins", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CabinController {
 
-    private final String success="Success";
+    private static final String success="Success";
 
     @Autowired
     private CabinService cabinService;

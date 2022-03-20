@@ -20,7 +20,7 @@ import java.util.Set;
 @RestController
 @RequestMapping(value = "/boats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BoatController {
-    private final String success="Success";
+    private static final String success="Success";
 
     @Autowired
     private BoatService boatService;
