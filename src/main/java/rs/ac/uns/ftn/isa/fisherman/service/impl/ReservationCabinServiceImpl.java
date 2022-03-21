@@ -47,7 +47,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 continue;
             if(searchAvailablePeriodsCabinDto.getNumberOfRooms()>cabinPeriod.getCabin().getNumOfRooms())
                 continue;
-            availableCabins.add(cabinPeriod.getCabin());
+            if(cabinNotReservedInPeriod(cabinPeriod.getCabin().getId(), searchAvailablePeriodsCabinDto.getStartDate(), searchAvailablePeriodsCabinDto.getEndDate()))
+                availableCabins.add(cabinPeriod.getCabin());
         }
         return availableCabins;
     }
@@ -70,11 +71,25 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         for(AvailableCabinPeriod cabinPeriod:availableCabinPeriodService.findAll()){
             if(cabinPeriod.getCabin().getId().equals(cabinReservation.getCabin().getId())){
                 if(cabinReservation.getStartDate().isAfter(cabinPeriod.getStartDate())
-                        &&cabinReservation.getEndDate().isBefore(cabinPeriod.getEndDate())) {
+                        &&cabinReservation.getEndDate().isBefore(cabinPeriod.getEndDate())
+                        &&cabinNotReservedInPeriod(cabinReservation.getCabin().getId(), cabinReservation.getStartDate(),
+                        cabinReservation.getEndDate())) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private boolean cabinNotReservedInPeriod(Long id, LocalDateTime start, LocalDateTime end) {
+        for(CabinReservation cabinReservation:cabinReservationRepository.findAll()){
+            if(cabinReservation.getCabin().getId().equals(id)){
+                if((cabinReservation.getStartDate().isBefore(end)||cabinReservation.getStartDate().isEqual(end))
+                        &&(cabinReservation.getEndDate().isAfter(start)||cabinReservation.getEndDate().isEqual(start))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

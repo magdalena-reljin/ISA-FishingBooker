@@ -482,13 +482,29 @@ export default {
         this.cabinDto.addressDto.country
       );
     },
+    dataIsValid(){
+      const date1 = new Date(this.start);
+      const date2 = new Date(this.end);
+      const currentDate = new Date();
+      if((date1.getTime() - date2.getTime()) > 0){
+        alert("Start date must be before end date!");
+        return false;
+      }
+      if((date1.getTime() - currentDate.getTime()) < 0){
+        alert("Start date can't be before today!");
+        return false;
+      }
+      return true;
+    },
     bookCabin: function () {
-      console.log(this.addedAdditionalServices);
+      if(!this.dataIsValid()){
+        return;
+      }
        if(this.addedAdditionalServices==null)
         this.addedAdditionalServices=null;
        else
         if(this.addedAdditionalServices.length==0)
-                  this.addedAdditionalServices=null;
+          this.addedAdditionalServices=null;
       //event.preventDefault();
       axios
         .post(
@@ -506,7 +522,6 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
           this.availableCabins = response.data;
           this.display = "CABINS";
         });
