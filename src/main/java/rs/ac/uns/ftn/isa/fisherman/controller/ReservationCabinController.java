@@ -26,10 +26,7 @@ public class ReservationCabinController {
 
     @Autowired
     private ReservationCabinService reservationCabinService;
-    @Autowired
-    private ClientService clientService;
     private CabinMapper cabinMapper = new CabinMapper();
-    private CabinReservationMapper cabinReservationMapper = new CabinReservationMapper();
 
     @PostMapping("/getAvailableCabins")
     @PreAuthorize("hasRole('CLIENT')")
@@ -44,9 +41,7 @@ public class ReservationCabinController {
     @PostMapping("/makeReservation")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> makeReservation (@RequestBody CabinReservationDto cabinReservationDto) {
-        CabinReservation cabinReservation = cabinReservationMapper.CabinReservationDtoToCabinReservation(cabinReservationDto);
-        cabinReservation.setClient(clientService.findByUsername(cabinReservationDto.getClientUsername()));
-        if(reservationCabinService.makeReservation(cabinReservation))
+        if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
             return new ResponseEntity<>("Unsuccessfull reservatioon.", HttpStatus.BAD_REQUEST);

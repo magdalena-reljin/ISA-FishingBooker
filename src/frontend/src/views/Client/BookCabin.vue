@@ -418,10 +418,12 @@ export default {
       return false;
     },
     addService: function (service) {
+      if(this.addedAdditionalServices==null)
+        this.addedAdditionalServices = [];
       this.addedAdditionalServices.push(service);
       let newList = [];
       for (let i = 0; i < this.cabinDto.additionalServices.length; i++) {
-        if (this.cabinDto.additionalServices[i].name === service.name) {
+        if (this.cabinDto.additionalServices[i].id === service.id) {
           continue;
         }
         newList.push(this.cabinDto.additionalServices[i]);
@@ -433,7 +435,7 @@ export default {
       this.cabinDto.additionalServices.push(service);
       let newList = [];
       for (let i = 0; i < this.addedAdditionalServices.length; i++) {
-        if (this.addedAdditionalServices[i].name === service.name) {
+        if (this.addedAdditionalServices[i].id === service.id) {
           continue;
         }
         newList.push(this.addedAdditionalServices[i]);
@@ -445,10 +447,6 @@ export default {
       this.cabinDto.name = this.cabinName;
       axios
         .post("http://localhost:8081/cabins/findByName", this.cabinDto, {
-          headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            Authorization: "Bearer " + localStorage.jwt,
-          },
         })
         .then((response) => {
           this.addedAdditionalServices = [];
@@ -485,6 +483,12 @@ export default {
       );
     },
     bookCabin: function () {
+      console.log(this.addedAdditionalServices);
+       if(this.addedAdditionalServices==null)
+        this.addedAdditionalServices=null;
+       else
+        if(this.addedAdditionalServices.length==0)
+                  this.addedAdditionalServices=null;
       //event.preventDefault();
       axios
         .post(
@@ -499,10 +503,6 @@ export default {
             clientUsername: this.email
           },
           {
-            headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              Authorization: "Bearer " + localStorage.jwt,
-            },
           }
         )
         .then((response) => {

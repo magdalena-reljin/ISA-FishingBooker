@@ -159,7 +159,7 @@ export default {
     },
     submitReservationParams: function (event) {
       event.preventDefault();
-
+      this.display = "";
       if (this.selectedEntity === "CABINS"){
         axios
         .post("http://localhost:8081/reservationCabin/getAvailableCabins", {
@@ -169,10 +169,7 @@ export default {
           numberOfRooms: this.numOfRooms,
           bedsPerRoom: this.bedsPerRoom
         }, {
-          headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            Authorization: "Bearer " + localStorage.jwt,
-          },
+
         })
         .then((response) => {
             console.log(response);

@@ -12,8 +12,8 @@ public class CabinReservation extends Reservation{
     protected Cabin cabin;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
-    @JoinTable(name = "cabin_services",
-            joinColumns = @JoinColumn(name = "cabin_id", referencedColumnName = "id"),
+    @JoinTable(name = "cabin_reservation_services",
+            joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     protected Set<AdditionalServices> addedAdditionalServices;
 
