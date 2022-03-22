@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("CABIN OWNER")
+@DiscriminatorValue("CABINOWNER")
 public class CabinOwner extends User{
     private String registrationReason;
     private static final String ROLE_APP = "ROLE_CABINOWNER";

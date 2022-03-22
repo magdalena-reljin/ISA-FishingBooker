@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.*;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.CustomUserDetailsService;
 
@@ -24,6 +27,8 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
     @Autowired
+    private TokenUtils tokenUtils;
+
     private LoginService loginService;
     @Autowired
     public  AuthenticationController(LoginService logInService){
@@ -43,6 +48,24 @@ public class AuthenticationController {
             return ResponseEntity.ok(userTokenState);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/refresh")
+    public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String username = this.tokenUtils.getUsernameFromToken(token);
+        User user = (User) this.userDetailsService.loadUserByUsername(username);
+        String userType = user.getClass().getSimpleName();
+        try{
+            this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordResetDate());
+            String refreshedToken = tokenUtils.refreshToken(token);
+            int expiresIn = tokenUtils.getExpiredIn();
+            return ResponseEntity.ok(new UserTokenState(userType, refreshedToken, expiresIn));
+        } catch (Exception e){
+            System.out.println("AAAAAAAAAAAAAAAAAAAAa");
+            UserTokenState userTokenState = new UserTokenState();
+            return ResponseEntity.badRequest().body(userTokenState);
         }
     }
 

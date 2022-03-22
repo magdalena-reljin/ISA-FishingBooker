@@ -25,7 +25,8 @@ public class TokenUtils {
     public String secret;
 
     // Period vazenja tokena - 30 minuta
-    @Value("1800000")
+
+    @Value("30000000")
     private int expiresIn;
 
     // Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
@@ -34,6 +35,8 @@ public class TokenUtils {
 
 
     private static final String AUDIENCE_WEB = "web";
+    private static final String AUDIENCE_MOBILE = "mobile";
+    private static final String AUDIENCE_TABLET = "tablet";
 
     // Algoritam za potpisivanje JWT
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
@@ -167,8 +170,8 @@ public class TokenUtils {
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException ex) {
-            throw ex;
+    } catch (ExpiredJwtException ex) {
+            claims =null;
         } catch (Exception e) {
             claims = null;
         }
@@ -176,7 +179,6 @@ public class TokenUtils {
         // Preuzimanje proizvoljnih podataka je moguce pozivom funkcije claims.get(key)
         return claims;
     }
-
 
     // =================================================================
 
@@ -210,6 +212,49 @@ public class TokenUtils {
      */
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
+    }
+
+
+    public String refreshToken(String token) {
+        String refreshedToken;
+        try {
+            final Claims claims = this.getAllClaimsFromToken(token);
+            claims.setIssuedAt(new Date());
+            refreshedToken = Jwts.builder()
+                    .setClaims(claims)
+                    .setExpiration(generateExpirationDate())
+                    .signWith(SIGNATURE_ALGORITHM, secret).compact();
+        } catch (Exception e) {
+            refreshedToken = null;
+        }
+        return refreshedToken;
+    }
+
+    public boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
+        final Date created = this.getIssuedAtDateFromToken(token);
+        return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
+                && (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
+    }
+
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = this.getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    private Boolean ignoreTokenExpiration(String token) {
+        String audience = this.getAudienceFromToken(token);
+        return (audience.equals(AUDIENCE_TABLET) || audience.equals(AUDIENCE_MOBILE));
+    }
+
+    public String getAudienceFromToken(String token) {
+        String audience;
+        try {
+            final Claims claims = this.getAllClaimsFromToken(token);
+            audience = claims.getAudience();
+        } catch (Exception e) {
+            audience = null;
+        }
+        return audience;
     }
 
     // =================================================================

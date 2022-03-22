@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.threeten.bp.LocalDateTime;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
@@ -34,6 +35,7 @@ public class LogInServiceImpl implements LoginService {
         User user = (User) authentication.getPrincipal();
         String userType= userRepository.findRoleById(user.getId());
         String accessToken = tokenUtils.generateToken(user.getUsername());
+        System.out.println("DATUUUM"+ tokenUtils.generateExpirationDate());
         int accessExpiresIn = tokenUtils.getExpiredIn();
         return new UserTokenState(userType,accessToken, accessExpiresIn);
 
