@@ -37,7 +37,8 @@ const firebaseConfig = {
   // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
-axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
+  axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
+
 
 
 getDatabase(app);

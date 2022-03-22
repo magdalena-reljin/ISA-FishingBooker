@@ -103,6 +103,7 @@ import axios from "axios";
                  this.errorMessage = error.message;
                  console.error("There was an error!", error);
            });
+         
        },
        accept: function(user){
                   axios.post("http://localhost:8081/account/acceptAccount",user)
