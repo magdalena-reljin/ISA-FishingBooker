@@ -21,18 +21,15 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/boatsPeriod", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class AvailableBoatPeriodController {
     @Autowired
     private AvailableBoatPeriodService availableBoatPeriodService;
-
     @Autowired
     private BoatOwnerService boatOwnerService;
-
     @Autowired
     private BoatService boatService;
+    private final AvailableBoatPeriodMapper availableBoatPeriodMapper= new AvailableBoatPeriodMapper();
 
-    private AvailableBoatPeriodMapper availableBoatPeriodMapper= new AvailableBoatPeriodMapper();
     @PostMapping("/getAvailablePeriod")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<Set<AvailablePeriodDto>> getAvailablePeriod (@RequestBody BoatDto boatDto) {
@@ -49,7 +46,7 @@ public class AvailableBoatPeriodController {
         BoatOwner boatOwner= boatOwnerService.findByUsername(availablePeriodDto.get(0).getUsername());
         Boat boat = boatService.findById(availablePeriodDto.get(0).getPropertyId());
         Set<AvailableBoatPeriod> availableBoatPeriods = availableBoatPeriodMapper
-                .availableDtosToAvailableBoatPeriods(new HashSet<>(availablePeriodDto),boatOwner,boat);
+                .availableDtoSToAvailableBoatPeriods(new HashSet<>(availablePeriodDto),boatOwner,boat);
         availableBoatPeriodService.setAvailableBoatPeriod(availableBoatPeriods);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }

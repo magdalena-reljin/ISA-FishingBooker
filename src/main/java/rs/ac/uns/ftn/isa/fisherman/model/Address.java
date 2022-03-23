@@ -5,8 +5,6 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Address {
-    private static final long serialVersionUID = 2405172041950251807L;
-
     @Column(name ="longitude")
     private double longitude;
     @Column(name ="latitude")

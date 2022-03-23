@@ -8,7 +8,6 @@ import rs.ac.uns.ftn.isa.fisherman.repository.AdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

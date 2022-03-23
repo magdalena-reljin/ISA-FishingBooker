@@ -109,11 +109,11 @@ import axios from "axios";
                         }
                    })   
                   }
-                  else if(response.data.userType==='BOAT OWNER')
+                  else if(response.data.userType==='BOATOWNER')
                      this.$router.push('/boatOwnerHome/'+this.LogInDto.username);
-                  else if(response.data.userType==='CABIN OWNER')
+                  else if(response.data.userType==='CABINOWNER')
                      this.$router.push('/cabinOwnerHome/'+this.LogInDto.username);
-                  else if(response.data.userType==='FISHING INSTRUCTOR')
+                  else if(response.data.userType==='FISHINGINSTRUCTOR')
                      this.$router.push('/fishingInstructorHome/'+this.LogInDto.username);
                   else if(response.data.userType==='CLIENT')
                      this.$router.push('/clientHome/'+this.LogInDto.username);
@@ -121,13 +121,12 @@ import axios from "axios";
                    return response; 
 
       }) .catch((error) => {
-                    if (error.response) {
-                     
-                        console.log(error.response.data);
-                        if (error.response.data == "Password or username is incorrect") {
-                            this.error=error.response.data;
+                   
+                        if (error.response == undefined) {
+                           console.log("usao")
+                            this.error="Incorrect credentials.";
                         }
-                    }
+                    
                 })
         }
 

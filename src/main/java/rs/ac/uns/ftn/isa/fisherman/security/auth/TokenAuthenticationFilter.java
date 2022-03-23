@@ -1,21 +1,15 @@
 package rs.ac.uns.ftn.isa.fisherman.security.auth;
 import java.io.IOException;
-import java.util.Date;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
 
@@ -30,7 +24,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private UserDetailsService userDetailsService;
 
-    protected final Log LOGGER = LogFactory.getLog(getClass());
+    private static final Log LOGGER = LogFactory.getLog(TokenAuthenticationFilter.class);
 
     public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
         this.tokenUtils = tokenHelper;
@@ -61,7 +55,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 
                     // 4. Provera da li je prosledjeni token validan
-                    if (tokenUtils.validateToken(authToken, userDetails)) {
+
+                    if (Boolean.TRUE.equals(tokenUtils.validateToken(authToken, userDetails))) {
 
                         // 5. Kreiraj autentifikaciju
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);

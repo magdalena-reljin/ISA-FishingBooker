@@ -4,29 +4,27 @@ import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 
 public class CabinMapper {
-    private AddressMapper addressMapper=new AddressMapper();
-    private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
+    private final AddressMapper addressMapper=new AddressMapper();
+    private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 
-
-    public Cabin CabinDtoToCabin(CabinDto cabin){
+    public Cabin cabinDtoToCabin(CabinDto cabin){
         return new Cabin(cabin.getId(),cabin.getName(),cabin.getDescription(),cabin.getNumOfRooms(),cabin.getBedsPerRoom(),
-                cabin.getRules(),cabin.getPrice(),addressMapper.dtotoaddress(cabin.getAddressDto()),
+                cabin.getRules(),cabin.getPrice(),addressMapper.dtoToAddress(cabin.getAddressDto()),
                 cabin.getRating());
 
     }
-    public Cabin CabinDtoEditToCabin(CabinDto cabin){
+    public Cabin cabinDtoEditToCabin(CabinDto cabin){
         return new Cabin(cabin.getId(), cabin.getName(), cabin.getDescription(), cabin.getNumOfRooms(),
                 cabin.getBedsPerRoom(), cabin.getRules(), cabin.getPrice(),
-                addressMapper.dtotoaddress(cabin.getAddressDto()),
-                additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(cabin.getAdditionalServices()),
+                addressMapper.dtoToAddress(cabin.getAddressDto()),
+                additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabin.getAdditionalServices()),
                 cabin.getRating());
     }
-    public CabinDto CabinToCabinDto(Cabin cabin){
+    public CabinDto cabinToCabinDto(Cabin cabin){
         ImageMapper imageMapper=new ImageMapper();
-        AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
         return new CabinDto(cabin.getId(),cabin.getName(),cabin.getDescription(),cabin.getNumOfRooms(),cabin.getBedsPerRoom(),
-                cabin.getRules(),cabin.getPrice(),addressMapper.adressToDTO(cabin.getAddress()),
-                additionalServiceMapper.AdditionalServicesToAdditionalServiceDtos(cabin.getAdditionalServices()),
-                cabin.getRating(),imageMapper.ImageToImageDtos(cabin.getImages()),cabin.getCabinOwner().getUsername());
+                cabin.getRules(),cabin.getPrice(),addressMapper.addressToDTO(cabin.getAddress()),
+                additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(cabin.getAdditionalServices()),
+                cabin.getRating(),imageMapper.imageToImageDtoS(cabin.getImages()),cabin.getCabinOwner().getUsername());
     }
 }

@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
 import rs.ac.uns.ftn.isa.fisherman.model.Authority;
-
 import java.util.List;
 
 

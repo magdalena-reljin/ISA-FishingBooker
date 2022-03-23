@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-// Create a new store instance.
+import router from '../router'
 const store = createStore({
     state: {
         token: null,
@@ -26,6 +26,8 @@ const store = createStore({
                 localStorage.clear();
                 localStorage.setItem('token',response.data.accessToken)
                 localStorage.setItem('role',response.data.userType)
+                localStorage.setItem('logged',true)
+                console.log("AAAAAAAAAA"+localStorage.token)
                 axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
                 
 
@@ -35,7 +37,7 @@ const store = createStore({
            } catch (error) {
 
             
-                console.log("AAAAAAAAAA"+error)
+                console.log(error)
            }
         
 
@@ -52,8 +54,35 @@ const store = createStore({
         async logOut (){
             localStorage.setItem('token','empty')
             localStorage.removeItem('role');
+            localStorage.setItem('logged',false)
         },
-       
+        
+       async refreshToken (){
+           try{
+                
+            let response = await axios.post("http://localhost:8081/auth/refresh")
+            console.log("OVO JE REFRESH TOOOOKEN  uradiooo"+ response.data.accessToken)
+            localStorage.clear()
+            localStorage.setItem('token',response.data.accessToken)
+            localStorage.setItem('logged',true)
+            localStorage.setItem('role',response.data.userType.toUpperCase())
+            console.log("OVO JE REFRESH TOOOOKEN  "+ localStorage.token)
+            console.log("OVO JE REFRESH TOOOOKEN hhahahahhahaha "+ response.data.expiresIn)
+            axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
+                
+           }
+           catch{
+            console.log("ISTEKAOOO TI TOKEEEN")
+            localStorage.setItem('logged',false)
+            localStorage.setItem('token','empty')
+            localStorage.removeItem('role')
+            router.push("/")
+
+           }
+          
+          
+            
+        },
       
     },
     modules: {

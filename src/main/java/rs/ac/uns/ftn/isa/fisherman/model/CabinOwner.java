@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("CABIN OWNER")
+@DiscriminatorValue("CABINOWNER")
 public class CabinOwner extends User{
     private String registrationReason;
-    private  static String roleApp = "ROLE_CABINOWNER";
+    private static final String ROLE_APP = "ROLE_CABINOWNER";
 
     @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Cabin> cabins;
@@ -34,7 +34,7 @@ public class CabinOwner extends User{
     }
     @Override
     public String getRoleApp() {
-        return roleApp;
+        return ROLE_APP;
     }
 
     public Set<Cabin> getCabins() {

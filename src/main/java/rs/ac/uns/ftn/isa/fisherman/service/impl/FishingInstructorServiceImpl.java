@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
-
 import java.util.List;
 
 @Service

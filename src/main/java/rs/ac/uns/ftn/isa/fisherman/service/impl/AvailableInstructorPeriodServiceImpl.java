@@ -7,7 +7,6 @@ import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableInstructorPeriodRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
-
 import java.util.Set;
 
 @Service

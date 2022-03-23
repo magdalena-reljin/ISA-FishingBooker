@@ -21,14 +21,13 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/instructorsPeriod", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class AvailableInstructorPeriodController {
     @Autowired
     private AvailableInstructorPeriodService availableInstructorPeriodService;
     @Autowired
     private FishingInstructorService fishingInstructorService;
 
-   private AvailableInstructorPeriodMapper availableInstructorPeriodMapper = new AvailableInstructorPeriodMapper();
+    private final AvailableInstructorPeriodMapper availableInstructorPeriodMapper = new AvailableInstructorPeriodMapper();
 
     @PostMapping("/getAvailablePeriod")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -45,7 +44,7 @@ public class AvailableInstructorPeriodController {
     public ResponseEntity<String> setAvailableInstructorPeriod(@RequestBody FishingInstructorDto instructor){
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(instructor.getUsername());
         Set<AvailableInstructorPeriod> availableInstructorPeriod= availableInstructorPeriodMapper
-                .availableDtosToAvailableInstructorPeriods(instructor.getAvailableInstructorPeriodDtoSet(),fishingInstructor);
+                .availableDtoSToAvailableInstructorPeriods(instructor.getAvailableInstructorPeriodDtoSet(),fishingInstructor);
         availableInstructorPeriodService.setAvailableInstructorPeriod(fishingInstructor.getId(),availableInstructorPeriod);
 
         return new ResponseEntity<>("Success", HttpStatus.OK);

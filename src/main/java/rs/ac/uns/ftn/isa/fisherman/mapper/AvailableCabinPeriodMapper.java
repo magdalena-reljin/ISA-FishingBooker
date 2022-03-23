@@ -11,7 +11,7 @@ public class AvailableCabinPeriodMapper {
         return new AvailablePeriodDto(availableCabinPeriod.getId(),availableCabinPeriod.getStartDate(),
                 availableCabinPeriod.getEndDate(),availableCabinPeriod.getCabinOwner().getUsername(),availableCabinPeriod.getCabin().getId());
     }
-    public Set<AvailablePeriodDto> availableCabinPeriodsToDtos(Set<AvailableCabinPeriod> availableCabinPeriods){
+    public Set<AvailablePeriodDto> availableCabinPeriodsToDtoS(Set<AvailableCabinPeriod> availableCabinPeriods){
         Set<AvailablePeriodDto> periods = new HashSet<>();
         for(AvailableCabinPeriod availableCabinPeriod: availableCabinPeriods){
             periods.add(availableCabinPeriodToAvailablePeriodDto(availableCabinPeriod));
@@ -21,9 +21,9 @@ public class AvailableCabinPeriodMapper {
     public  AvailableCabinPeriod availablePeriodDtoToAvailableCabinPeriod(AvailablePeriodDto availablePeriodDto, CabinOwner cabinOwner, Cabin cabin){
         return  new AvailableCabinPeriod(availablePeriodDto.getId(), availablePeriodDto.getStartDate(), availablePeriodDto.getEndDate(),cabinOwner,cabin);
     }
-    public Set<AvailableCabinPeriod> availableDtosToAvailableCabinPeriods(Set<AvailablePeriodDto> availablePeriodDtos, CabinOwner cabinOwner,Cabin cabin){
+    public Set<AvailableCabinPeriod> availableDtoSToAvailableCabinPeriods(Set<AvailablePeriodDto> availablePeriodDtoS, CabinOwner cabinOwner, Cabin cabin){
         Set<AvailableCabinPeriod> availableCabinPeriods = new HashSet<>();
-        for(AvailablePeriodDto availablePeriodDto : availablePeriodDtos){
+        for(AvailablePeriodDto availablePeriodDto : availablePeriodDtoS){
             availableCabinPeriods.add(availablePeriodDtoToAvailableCabinPeriod(availablePeriodDto,cabinOwner,cabin));
         }
         return availableCabinPeriods;

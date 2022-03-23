@@ -1,7 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import java.util.List;
-import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,23 +20,17 @@ import javax.mail.MessagingException;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
     private MailService<String> mailService;
     private  AuthorityService authorityService;
     private PasswordEncoder passwordEncoder;
-    private TokenUtils tokenUtils;
     @Autowired
     public UserServiceImpl(UserRepository userRepository, MailService<String> mailService, AuthorityService authorityService, PasswordEncoder passwordEncoder, TokenUtils tokenUtils){
         this.userRepository=userRepository;
         this.mailService=mailService;
         this.authorityService=authorityService;
         this.passwordEncoder =passwordEncoder;
-        this.tokenUtils= tokenUtils;
-    }
-
-    @Override
-    public Optional<User> findById(Long id) {
-        return null;
     }
 
     @Override
@@ -50,7 +45,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findRoleById(id);
     }
     @Override
-    public CabinOwner registerCabinOwner(CabinOwner cabinOwner) throws MessagingException {
+    public CabinOwner registerCabinOwner(CabinOwner cabinOwner) {
         List<Authority> auth = authorityService.findByname(cabinOwner.getRoleApp());
         cabinOwner.setAuthorities(auth);
         cabinOwner.setPassword(passwordEncoder.encode(cabinOwner.getPassword()));
@@ -58,7 +53,7 @@ public class UserServiceImpl implements UserService {
         return cabinOwner;
     }
     @Override
-    public BoatOwner registerBoatOwner(BoatOwner boatOwner) throws MessagingException {
+    public BoatOwner registerBoatOwner(BoatOwner boatOwner) {
 
         List<Authority> auth = authorityService.findByname(boatOwner.getRoleApp());
         boatOwner.setAuthorities(auth);
@@ -78,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public FishingInstructor registerFishingInstructor(FishingInstructor fishingInstructor) throws MessagingException {
+    public FishingInstructor registerFishingInstructor(FishingInstructor fishingInstructor){
         List<Authority> auth = authorityService.findByname(fishingInstructor.getRoleApp());
         fishingInstructor.setAuthorities(auth);
         fishingInstructor.setPassword(passwordEncoder.encode(fishingInstructor.getPassword()));
@@ -87,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Client registerClient(Client client) throws MessagingException {
+    public Client registerClient(Client client){
         List<Authority> auth = authorityService.findByname(client.getRoleApp());
         client.setAuthorities(auth);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
@@ -105,17 +100,13 @@ public class UserServiceImpl implements UserService {
         user = this.userRepository.save(user);
         return user;
     }
-    private void sendActivationURL(CabinOwner cabinOwner, String sourceURL) throws MessagingException {
-        String verificationURL= sourceURL + "/activation/" + cabinOwner.getActivationURL() + "/" + cabinOwner.getUsername();
-        mailService.sendMail(cabinOwner.getUsername(),verificationURL,new AccountAcceptedInfo());
-    }
     public void acceptAccount(User user){
         user.setEnabled(true);
         userRepository.save(user);
         try {
             mailService.sendMail(user.getUsername(),user.getUsername(),new AccountAcceptedInfo());
         } catch (MessagingException e) {
-            e.printStackTrace();
+             logger.error(e.toString());
         }
     }
     public void denyAccount(User user,String reason){
@@ -125,7 +116,7 @@ public class UserServiceImpl implements UserService {
         try {
             mailService.sendMail(email,reason,new AccountDeniedInfo());
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 
@@ -172,16 +163,5 @@ public class UserServiceImpl implements UserService {
         User user=userRepository.findByUsername(recipient);
         userRepository.delete(user);
     }
-
-    @Override
-    public String getUsernameFromToken(String s) {
-        return tokenUtils.getUsernameFromToken(s);
-    }
-
-    @Override
-    public String getRoleFromToken(String s) {
-        return tokenUtils.getRoleFromToken(s);
-    }
-
 
 }

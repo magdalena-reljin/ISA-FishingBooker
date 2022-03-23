@@ -16,7 +16,7 @@ public interface AdventureRepository extends JpaRepository<Adventure, Long> {
     Set<Adventure> findAdventuresByInstructorId(@Param("users_id")Long id);
 
     @Query(value = "SELECT * FROM adventure WHERE users_id=:users_id and name=:name",nativeQuery = true)
-    Adventure findAdventureByName(@Param("name")String name, @Param("users_id")Long users_id);
+    Adventure findAdventureByName(@Param("name")String name, @Param("users_id")Long usersId);
 
     @Query(value = "SELECT * FROM adventure WHERE id=:id",nativeQuery = true)
     Adventure findByID(@Param("id")Long id);

@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -169,7 +168,6 @@ public class Cabin {
         this.price = price;
         this.address = address;
         this.rating = rating;
-        this.cabinOwner = cabinOwner;
         this.additionalServices = new HashSet<>();
         this.images = new HashSet<>();
         this.availableCabinPeriods=new HashSet<>();
@@ -186,7 +184,6 @@ public class Cabin {
         this.address = address;
         this.additionalServices = additionalServices;
         this.rating = rating;
-        this.cabinOwner = cabinOwner;
         this.images=new HashSet<>();
         this.availableCabinPeriods=new HashSet<>();
     }

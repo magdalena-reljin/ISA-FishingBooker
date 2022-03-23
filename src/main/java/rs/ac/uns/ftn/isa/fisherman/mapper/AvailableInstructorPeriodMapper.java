@@ -13,7 +13,7 @@ public class AvailableInstructorPeriodMapper {
         return new AvailablePeriodDto(availableInstructorPeriod.getId(),availableInstructorPeriod.getStartDate(),
                 availableInstructorPeriod.getEndDate(),availableInstructorPeriod.getFishingInstructor().getUsername());
     }
-    public Set<AvailablePeriodDto> availableInstructorPeriodsToDtos(Set<AvailableInstructorPeriod> availableInstructorPeriods){
+    public Set<AvailablePeriodDto> availableInstructorPeriodsToDtoS(Set<AvailableInstructorPeriod> availableInstructorPeriods){
         Set<AvailablePeriodDto> periods = new HashSet<>();
         for(AvailableInstructorPeriod availableInstructorPeriod: availableInstructorPeriods){
             periods.add(availableInstructorPeriodToAvailablePeriodDto(availableInstructorPeriod));
@@ -23,7 +23,7 @@ public class AvailableInstructorPeriodMapper {
     public  AvailableInstructorPeriod availablePeriodDtoToAvailableInstructorPeriod(AvailablePeriodDto availablePeriodDto, FishingInstructor fishingInstructor){
         return  new AvailableInstructorPeriod(availablePeriodDto.getId(), availablePeriodDto.getStartDate(), availablePeriodDto.getEndDate(),fishingInstructor);
     }
-    public Set<AvailableInstructorPeriod> availableDtosToAvailableInstructorPeriods(Set<AvailablePeriodDto> availablePeriodDtoSet, FishingInstructor fishingInstructor){
+    public Set<AvailableInstructorPeriod> availableDtoSToAvailableInstructorPeriods(Set<AvailablePeriodDto> availablePeriodDtoSet, FishingInstructor fishingInstructor){
         Set<AvailableInstructorPeriod> availableInstructorPeriods = new HashSet<>();
         for(AvailablePeriodDto availablePeriodDto : availablePeriodDtoSet){
             availableInstructorPeriods.add(availablePeriodDtoToAvailableInstructorPeriod(availablePeriodDto,fishingInstructor));
