@@ -56,7 +56,7 @@ public class CabinController {
         return new ResponseEntity<>(cabins,HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CABINOWNER')")
+    @PreAuthorize("hasRole('CABINOWNER')"+"|| hasRole('CLIENT')")
     @PostMapping("/findByName")
     public ResponseEntity<CabinDto> findByName(@RequestBody CabinDto cabinDto){
         CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
