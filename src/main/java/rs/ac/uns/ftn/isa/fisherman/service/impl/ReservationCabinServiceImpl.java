@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.mail.AccountAcceptedInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
@@ -15,7 +18,9 @@ import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,12 +29,16 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private MailService<String> mailService;
     private CabinReservationMapper cabinReservationMapper = new CabinReservationMapper();
     AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     @Autowired
     private AvailableCabinPeriodService availableCabinPeriodService;
     @Autowired
     private CabinReservationRepository cabinReservationRepository;
+
+
 
     @Override
     public Set<Cabin> getAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
@@ -62,6 +71,13 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
             if(cabinReservationDto.getAddedAdditionalServices()!=null)
                 cabinReservation.setAddedAdditionalServices(additionalServiceMapper.AdditionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
                 cabinReservationRepository.save(cabinReservation);
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+                String message = cabinReservationDto.getCabinDto().getName() + " is booked from " + cabinReservationDto.getStartDate().format(formatter) + " to " + cabinReservationDto.getEndDate().format(formatter) + " .";
+                mailService.sendMail("aleksastojicns@gmail.com", message, new CabinReservationSuccessfulInfo());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;
