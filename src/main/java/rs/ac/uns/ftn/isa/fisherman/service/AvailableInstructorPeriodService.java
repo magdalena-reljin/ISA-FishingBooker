@@ -9,5 +9,5 @@ public interface AvailableInstructorPeriodService {
 
     Set<AvailableInstructorPeriod> getAvailablePeriod(String username);
 
-    void setAvailableInstructorPeriod(Long id, Set<AvailableInstructorPeriod> availableInstructorPeriod);
+    void setAvailableInstructorPeriod(String username, Set<AvailableInstructorPeriod> availableInstructorPeriod);
 }

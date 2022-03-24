@@ -7,9 +7,6 @@ import java.time.LocalDateTime;
 
 @Entity
 public class AvailableBoatPeriod extends AvailablePeriod {
-    @ManyToOne
-    @JoinColumn(name="users_id")
-    protected BoatOwner boatOwner;
 
     @ManyToOne
     @JoinColumn(name="boat_id")
@@ -17,19 +14,11 @@ public class AvailableBoatPeriod extends AvailablePeriod {
 
     public AvailableBoatPeriod(){}
 
-    public AvailableBoatPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate, BoatOwner boatOwner, Boat boat) {
+    public AvailableBoatPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate, Boat boat) {
         super(id, startDate, endDate);
-        this.boatOwner = boatOwner;
         this.boat = boat;
     }
 
-    public BoatOwner getBoatOwner() {
-        return boatOwner;
-    }
-
-    public void setBoatOwner(BoatOwner boatOwner) {
-        this.boatOwner = boatOwner;
-    }
 
     public Boat getBoat() {
         return boat;

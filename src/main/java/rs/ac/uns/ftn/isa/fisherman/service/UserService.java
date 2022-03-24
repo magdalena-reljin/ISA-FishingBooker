@@ -34,4 +34,5 @@ public interface UserService {
 
     void sendAcceptReason(String response, String recipient) throws MessagingException;
 
+    String getUsernameFromToken(String s);
 }

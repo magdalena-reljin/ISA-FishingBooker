@@ -70,7 +70,7 @@ export default ({
           this.$router.push('/editProfile/'+'boatOwner/'+ this.$props.username);
        },
        myCalendar: function(){
-          this.$router.push('/BoatOwnerCalendar/'+this.$props.username);
+          this.$router.push('/personalCalendar/'+this.$props.username);
        },
        logout: function(){
           

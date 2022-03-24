@@ -9,4 +9,6 @@ public interface BoatOwnerService {
     List<BoatOwner> getActiveBoatOwners();
 
     BoatOwner findByUsername(String ownersUsername);
+
+    void save(BoatOwner boatOwner);
 }

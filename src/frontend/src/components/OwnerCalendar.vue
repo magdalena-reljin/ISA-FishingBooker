@@ -15,11 +15,9 @@
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
              <Datepicker   
-           
-           v-model="start" 
-                
-         >
-          </Datepicker>
+                v-model="start" 
+                >
+             </Datepicker>
           </div>
         </div>
         <div class="row">
@@ -58,15 +56,9 @@
            <div class="col" style="text-align: right; width: 100%; padding-top: 1%;">
            <button type="button" class="btn btn-light">Save</button>
           </div>
-
-
-      
       </div>
     </div>
-
-
 <vue-modality ref="myRef" title="Edit available period" hide-footer centered>
-
    <br>
         <div class="row">
           <div class="col" style="padding-top: 2%; text-align: left;" >
@@ -90,7 +82,6 @@
              <Datepicker   :minDate="start" :maxDate="end" v-model="end"></Datepicker>
           </div>
         </div>
-
   <br>
    <div class="row">
         <div class="col">
@@ -104,9 +95,9 @@
         </div>
     </div>
 </vue-modality>
-
-  </div>
+</div>
 </template>
+
 <script>
 import { ref} from "vue";
 import "@fullcalendar/core/vdom"; // solves problem with Vite
@@ -121,13 +112,13 @@ import '@shapla/vue-modal/dist/style.css';
 import VueModality from 'vue-modality-v3'
 
 import axios from "axios";
-
-axios.defaults.baseURL = process.env.VUE_APP_URL;
-export default {
-   props: {
-       role: null,
+   
+   export default{
+     props: {
+       email: null,
    },
-  components: {
+     components: {
+    
     FullCalendar,
     Datepicker,
     VueModality
@@ -151,9 +142,8 @@ export default {
     
     };
   },
-  data() {
-      
-    return {
+     data(){
+       return{
       closeModal: false,
       disabledPickers: false,
       selectDisabled: false,
@@ -179,99 +169,53 @@ export default {
         initialView: "dayGridMonth",
         events: [],
       },
-        userRequestDto: {
-            username: ''
-        },
-        start: null,
-        end: null,
-         fishingInstructorDtos: {
-               id: null,
-              username: '',
-              password: '',
-              firstname: '',
-             lastname: '',
-              phoneNum: '',
-             address: {
-                longitude: 0,
-                latitude: 0,
-                country: '',
-                city: '',
-                streetAndNum: ''
-             },
-             registrationReason: '',
-             role: '',
-             rating: '',
-            availablePeriodDtoSet: [{
+         availableInstructorPeriod: [{
                  id: null,
                 startDate: null,
                 endDate: null,
-                username: '',
-                propertyId: null
-            }]
-
-          },
-           availableInstructorPeriod: [{
+                username: ''
+            }],
+             availableInstructorPeriodShow: [{
                  id: null,
                 startDate: null,
                 endDate: null,
                 username: ''
             }],
             state: [],
-            modalActive: false
-         
-           
+        start: null,
+        end: null,
+         modalActive: false,
+          availablePeriodDto: [{
+                id: null,
+                startDate: null,
+                endDate: null,
+                username: ''
+         }],
+       }
+     },
+     mounted() {
+       this.getDates()
       
-     
-    };
-  },
- 
-  mounted() {
+     },
+     methods: {
+        
 
-
-               
-     if(this.$props.role ==='instructor'){
-             axios.get("http://localhost:8081/userc/getUsername")
-               .then(response => {
-                       this.userRequestDto.username= response.data
-                       this.fishingInstructorDtos.username=response.data
-                       console.log("stigao   " +this.userRequestDto.username)
-                       axios.post("http://localhost:8081/instructorsPeriod/getAvailablePeriod",this.userRequestDto)
-                        .then(response => {
-                          this.availableInstructorPeriod=response.data
-                           
-                            for( let newData of response.data ){
-                                var start=newData.startDate
-                                var end=newData.endDate
-                                newData.startDate=this.setDate(start)
-                                newData.endDate=this.setDate(end)
-                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', start: newData.startDate , end: newData.endDate })
-                              this.state.push( newData.startDate)
-                            }
-              })   
-              })
-     }
-  },
-  methods: {
-     formatDate(formatDate) {
+          formatDate(formatDate) {
             const date = dayjs(formatDate);
            return date.format('YYYY-MM-DDTHH:mm:ss');
         },
      setPeriod: function(){
 
-            this.fishingInstructorDtos.availablePeriodDtoSet[0]=({
+            this.availablePeriodDto[0]=({
             startDate:  this.formatDate(this.start),
             endDate:  this.formatDate(this.end),
-            username: this.fishingInstructorDtos.username,
-            propertyId: null
+            username: this.$props.email,
             })
 
             this.start='',
             this.end=''
-    
-          console.log("pre zahtevA    "+this.fishingInstructorDtos.availablePeriodDtoSet.length)
-          console.log("pre zahtevA    "+this.fishingInstructorDtos.availablePeriodDtoSet[0].startDate)
                axios
-               .post("http://localhost:8081/instructorsPeriod/setAvailableInstructorPeriod",this.fishingInstructorDtos)
+               .post("http://localhost:8081/boatsPeriod/setAvailableBoatOwnersPeriod",this.availablePeriodDto)
                .then(response => {
                        
                        this.$swal.fire({
@@ -281,7 +225,7 @@ export default {
                        showConfirmButton: false,
                        timer: 1500
                       })
-                 this.$router.go()
+               //  this.$router.go()
                  return response;
               })
 
@@ -298,31 +242,29 @@ export default {
        return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
 
     },
+    getDates: function(){
+            console.log("AAAAAAAAAAAAAAAAAAAAAAaa"+this.$props.email)
+           axios.get("http://localhost:8081/boatsPeriod/getAvailablePeriodOwner/bo@gmail.com/")
+                        .then(response => {
+                          this.availableInstructorPeriodShow=response.data
+                           
+                            for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', start: newData.startDate , end: newData.endDate })
+                              this.state.push( newData.startDate)
+                            }
+              })   
 
-  },
+    }
+      
+       
+      
+    },
+  }
 
-  
-};
-</script>
-<style scoped>
-.element {
-  margin-bottom: 2rem;
-}
-.content {
-  display: flex;
-  justify-content: space-between;
-}
-.calendar {
-  width: 70%;
-  color: #1a252f;
-  
-  
-}
-.info {
-  background: #1a252f;
-  width: 28%;
-  border-radius: 5px;
-  border: 1px solid white;
-  padding: 1rem;
-}
-</style>
+</script> 
+
+

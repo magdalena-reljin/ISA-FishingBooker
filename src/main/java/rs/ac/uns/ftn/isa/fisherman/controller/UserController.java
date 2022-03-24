@@ -79,6 +79,11 @@ public class UserController {
         userService.deleteUser(user);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
+    @GetMapping(value = "getUsername")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    public @ResponseBody String getUsernameFromToken(@RequestHeader("Authorization") String token) {
+        return userService.getUsernameFromToken(token.split(" ")[1]);
+    }
     @GetMapping("/getAllRequests")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserRequestDTO>> getAllRequestsForDeletingAccount() {
