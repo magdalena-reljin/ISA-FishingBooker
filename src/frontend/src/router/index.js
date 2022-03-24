@@ -31,8 +31,11 @@ import ClientHome from '../views/Client/ClientHome.vue'
 import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
 import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
+import ClientReservationForm from '../views/Client/ClientReservationForm'
+import ClientCabins from '../views/Client/ClientCabins'
 import store from '../store/index'
 import PersonalCalendar from '../views/BoatOwner/PersonalCalendar.vue'
+
 
 const routes = [
   
@@ -160,6 +163,17 @@ const routes = [
          }
        }                                                          
  
+  },
+  {
+    path: '/reservation/:email',
+    name: 'ClientReservationForm',
+    component: ClientReservationForm
+  },
+  {
+    path: '/availableCabins/:email',
+    name: 'ClientCabins',
+    component: ClientCabins,
+    props: true
   },
   {
     path: '/editProfile/:role/:email',
