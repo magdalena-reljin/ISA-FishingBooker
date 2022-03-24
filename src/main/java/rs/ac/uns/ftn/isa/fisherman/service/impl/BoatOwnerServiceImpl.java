@@ -25,5 +25,10 @@ public class BoatOwnerServiceImpl implements BoatOwnerService {
         return boatOwnerRepository.findByUsername(ownersUsername);
     }
 
+    @Override
+    public void save(BoatOwner boatOwner) {
+        boatOwnerRepository.save(boatOwner);
+    }
+
 
 }

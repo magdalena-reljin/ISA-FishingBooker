@@ -45,8 +45,7 @@ public class AvailableInstructorPeriodController {
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(instructor.getUsername());
         Set<AvailableInstructorPeriod> availableInstructorPeriod= availableInstructorPeriodMapper
                 .availableDtoSToAvailableInstructorPeriods(instructor.getAvailableInstructorPeriodDtoSet(),fishingInstructor);
-        availableInstructorPeriodService.setAvailableInstructorPeriod(fishingInstructor.getId(),availableInstructorPeriod);
-
+        availableInstructorPeriodService.setAvailableInstructorPeriod(fishingInstructor.getUsername(),availableInstructorPeriod);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

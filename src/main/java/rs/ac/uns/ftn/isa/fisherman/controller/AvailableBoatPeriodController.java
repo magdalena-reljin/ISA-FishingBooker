@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.*;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AvailableBoatOwnerPeriodMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AvailableBoatPeriodMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
+import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatOwnersPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
@@ -23,10 +25,25 @@ public class AvailableBoatPeriodController {
     @Autowired
     private AvailableBoatPeriodService availableBoatPeriodService;
     @Autowired
+    private AvailableBoatOwnersPeriodService availableBoatOwnersPeriodService;
+    @Autowired
     private BoatOwnerService boatOwnerService;
     @Autowired
     private BoatService boatService;
     private final AvailableBoatPeriodMapper availableBoatPeriodMapper= new AvailableBoatPeriodMapper();
+    private final AvailableBoatOwnerPeriodMapper availableBoatOwnerPeriodMapper=new AvailableBoatOwnerPeriodMapper();
+
+
+    @GetMapping("/getAvailablePeriodOwner/{username:.+}/")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<Set<AvailablePeriodDto>> getAvailablePeriodBoatOwner (@PathVariable("username") String username) {
+        System.out.println("--------------------------------------------------------  "+username);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  GEEEEEEEEEEEEEEEEEEEEEEEEEt");
+        Set<AvailablePeriodDto> availablePeriods=availableBoatOwnerPeriodMapper
+                .availableBoatOwnerPeriodsToDtoS(availableBoatOwnersPeriodService
+                        .getAvailablePeriodByOwnersUsername(username));
+        return new ResponseEntity<>(availablePeriods, HttpStatus.OK);
+    }
 
     @PostMapping("/getAvailablePeriod")
     @PreAuthorize("hasRole('BOATOWNER')")
@@ -48,4 +65,15 @@ public class AvailableBoatPeriodController {
         availableBoatPeriodService.setAvailableBoatPeriod(availableBoatPeriods);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+    @PostMapping("/setAvailableBoatOwnersPeriod")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<String> setAvailableBoatOwnersPeriod (@RequestBody List<AvailablePeriodDto> availablePeriodDto) {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA POSTTT");
+        BoatOwner boatOwner= boatOwnerService.findByUsername(availablePeriodDto.get(0).getUsername());
+        Set<AvailableBoatOwnerPeriod> availableBoatOwnerPeriods = availableBoatOwnerPeriodMapper
+                .availableDtoSToAvailableBoatOwnerPeriods(new HashSet<>(availablePeriodDto),boatOwner);
+        availableBoatOwnersPeriodService.setAvailableBoatOwnersPeriod(availableBoatOwnerPeriods,boatOwner);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
 }

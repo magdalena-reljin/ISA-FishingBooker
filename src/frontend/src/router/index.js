@@ -32,7 +32,7 @@ import CabinCalendar from '../views/CabinOwner/CabinCalendar'
 import BoatCalendar from '../views/BoatOwner/BoatCalendar'
 import BoatOwnerCalendar from '../views/BoatOwner/BoatOwnerCalendar'
 import store from '../store/index'
-
+import PersonalCalendar from '../views/BoatOwner/PersonalCalendar.vue'
 
 const routes = [
   
@@ -253,7 +253,6 @@ const routes = [
       // reject the navigation
       store.dispatch('refreshToken')
       if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
-        console.log("USAOOOO SAM OVDE  "+ localStorage.role + " ---"+localStorage.logged)
            next('/')
          }else {
            next()
@@ -334,6 +333,22 @@ const routes = [
     path: '/addNewBoat/:email',
     name: 'AddNewBoat',
     component: AddNewBoat,
+    beforeEnter: (to, from,next) => {
+  
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='BOATOWNER' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }
+
+    
+  },
+  {
+    path: '/personalCalendar/:email',
+    name: 'PersonalCalendar',
+    component: PersonalCalendar,
     beforeEnter: (to, from,next) => {
   
       store.dispatch('refreshToken')
