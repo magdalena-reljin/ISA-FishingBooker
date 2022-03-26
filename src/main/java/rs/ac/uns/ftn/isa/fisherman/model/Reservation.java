@@ -17,7 +17,7 @@ public class Reservation {
     private LocalDateTime endDate;
     @Column(name= "price", nullable = false)
     private Double price;
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name="users_id")
     protected Client client;
 

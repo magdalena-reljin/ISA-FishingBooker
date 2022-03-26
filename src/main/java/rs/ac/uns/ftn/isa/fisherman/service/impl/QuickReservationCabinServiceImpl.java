@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 public class QuickReservationCabinServiceImpl implements QuickReservationCabinService {
@@ -36,6 +37,16 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         //TO DO: poslati mejl onima koji su pretplaceni na akcije od tog cabina
 
         return true;
+    }
+
+    @Override
+    public Set<QuickReservationCabin> getByCabinId(Long cabinId) {
+        return quickReservationCabinRepository.getByCabinId(cabinId);
+    }
+
+    @Override
+    public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationCabinRepository.quickReservationExists(id,startDate,endDate);
     }
 
     private boolean validateForReservation(CabinReservation cabinReservation){

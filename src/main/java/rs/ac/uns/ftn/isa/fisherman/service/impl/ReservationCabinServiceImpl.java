@@ -15,14 +15,12 @@ import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
-
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -38,6 +36,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     private AvailableCabinPeriodService availableCabinPeriodService;
     @Autowired
     private CabinReservationRepository cabinReservationRepository;
+    @Autowired
+    private QuickReservationCabinService quickReservationCabinService;
 
 
 
@@ -143,6 +143,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
         if(cabinReservationRepository.reservationExists(cabinReservation.getCabin()
                 .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
+        if(quickReservationCabinService.quickReservationExists(cabinReservation.getCabin().getId(),
+                cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
         return true;
     }
     public boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate){

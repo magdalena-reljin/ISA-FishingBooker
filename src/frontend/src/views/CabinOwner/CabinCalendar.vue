@@ -177,6 +177,61 @@
   <hr>
 </vue-modality>
 
+<vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered>
+
+   <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startQuickInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endQuickInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameQuickInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientQuickFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceQuickInfo}}$</b></p>
+                
+          </div>
+        </div>
+
+  
+  <hr>
+</vue-modality>
+
 
 <div id="makeReservation" class="modal" tabindex="-1" >
   <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -468,11 +523,16 @@ import axios from "axios";
         priceInfo: 0,
         usernameInfo: '',
         clientFullNameInfo: '',
+        startQuickInfo: null,
+        endQuickInfo: null,
+        priceQuickInfo: null,
+        usernameQuickInfo: null,
+        clientQuickFullNameInfo: null,
         eventClick: (arg)=>{
            if(arg.event.title=='Available'){
-          this.$refs.myRef.open()
-          this.startEdit=arg.event.start
-          this.endEdit=arg.event.end
+                  this.$refs.myRef.open()
+                  this.startEdit=arg.event.start
+                  this.endEdit=arg.event.end
            }else if(arg.event.title=='Reservation'){
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
@@ -480,6 +540,20 @@ import axios from "axios";
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
+           }else if(arg.event.title=='QuickReservation'){
+                  this.$refs.quickReservationInfo.open()
+                  this.startQuickInfo=arg.event.start
+                  this.endQuickInfo=arg.event.end
+                  this.priceQuickInfo=arg.event.extendedProps.price
+                  if(arg.event.extendedProps.email==null){
+                       this.usernameQuickInfo="Not reservated yet."
+                       this.clientQuickFullNameInfo="Not reservated yet."
+
+                  }else{
+                  this.usernameQuickInfo=arg.event.extendedProps.email
+                  this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
+                 
+                  }
            }
         },
         selectMirror: true,
@@ -546,7 +620,7 @@ import axios from "axios";
        this.cabinName= this.$route.params.cabinName
        this.availableCabinPeriod.username=this.email
        this.getCabin()
-       this.getCabinReservations()
+      
        this.newPrice = this.cabinDto.price
        
      },
@@ -560,13 +634,13 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', content: 'sdfsd', start: newData.startDate , end: newData.endDate , color: '#6f9681' })
+                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', start: newData.startDate , end: newData.endDate , color: '#6f9681' })
                             }   
               })
 
          },
          getCabinReservations: function(){
-               axios.get("http://localhost:8081/reservationCabin/getByCabinId/100")
+               axios.get("http://localhost:8081/reservationCabin/getByCabinId/"+this.cabinId)
                .then(response => {
                      for( let newData of response.data ){
                                 var start=newData.startDate
@@ -578,12 +652,25 @@ import axios from "axios";
               })
 
          },
+         getQuickReservations: function(){
+               axios.get("http://localhost:8081/quickReservationCabin/getByCabinId/"+this.cabinId)
+               .then(response => {
+                     for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                      }   
+              })
+
+         },
          getCabin: function(){
              this.cabinDto.name=this.cabinName
             
              axios.post("http://localhost:8081/cabins/findByName",this.cabinDto)
                .then(response => {
-                        this.cabinDto=response.data
+                         this.cabinDto=response.data
                          this.cabinId=this.cabinDto.id
                          for(let i =0; i< this.cabinDto.additionalServices.length; i++){
                                this.options.push({ 
@@ -592,6 +679,8 @@ import axios from "axios";
                                 })
                          }
                          this.getCabinsAvailablePeriod();
+                         this.getCabinReservations();
+                         this.getQuickReservations();
 
              })
           },
