@@ -145,6 +145,9 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
         return true;
     }
+    public boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate){
+        return cabinReservationRepository.reservationExists(cabinId,startDate,endDate);
+    }
 
     private void sendMailNotification(CabinReservation cabinReservation,String email){
         try {
