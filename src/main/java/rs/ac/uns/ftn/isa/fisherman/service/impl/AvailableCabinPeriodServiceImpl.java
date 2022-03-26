@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.AvailableCabinPeriod;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableCabinPeriodRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 @Service
@@ -28,5 +29,10 @@ public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodServ
     @Override
     public List<AvailableCabinPeriod> findAll() {
         return availableCabinPeriodRepository.findAll();
+    }
+
+    @Override
+    public boolean cabinIsAvailable(Long cabinId, LocalDateTime start, LocalDateTime end) {
+        return availableCabinPeriodRepository.cabinIsAvailable(cabinId,start,end);
     }
 }

@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-import rs.ac.uns.ftn.isa.fisherman.model.Client;
 
 import java.time.LocalDateTime;
 

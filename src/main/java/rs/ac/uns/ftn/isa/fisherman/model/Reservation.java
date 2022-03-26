@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+@MappedSuperclass
 public class Reservation {
 
     @Id

@@ -13,7 +13,6 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
-import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import java.util.HashSet;
@@ -26,14 +25,15 @@ public class ReservationCabinController {
 
     @Autowired
     private ReservationCabinService reservationCabinService;
-    private CabinMapper cabinMapper = new CabinMapper();
+    private final CabinMapper cabinMapper = new CabinMapper();
+    private final CabinReservationMapper cabinReservationMapper=new CabinReservationMapper();
 
     @PostMapping("/getAvailableCabins")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Set<CabinDto>> getAvailableCabins (@RequestBody SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
         Set<CabinDto> cabinsDto= new HashSet<CabinDto>();
         for(Cabin cabin:reservationCabinService.getAvailableCabins(searchAvailablePeriodsCabinDto)){
-            cabinsDto.add(cabinMapper.CabinToCabinDto(cabin));
+            cabinsDto.add(cabinMapper.cabinToCabinDto(cabin));
         }
         return new ResponseEntity<>(cabinsDto, HttpStatus.OK);
     }
@@ -44,6 +44,17 @@ public class ReservationCabinController {
         if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Unsuccessfull reservatioon.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
+    }
+    @PostMapping("/ownerCreates")
+    @PreAuthorize("hasRole('CABINOWNER')")
+    public ResponseEntity<String> ownerCreates (@RequestBody CabinReservationDto cabinReservationDto) {
+        CabinReservation cabinReservation= cabinReservationMapper.cabinOwnerReservationDtoToCabinReservation(cabinReservationDto);
+        if(reservationCabinService.ownerCreates(cabinReservation,cabinReservationDto.getClientUsername())) {
+
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
+        }
     }
 }
