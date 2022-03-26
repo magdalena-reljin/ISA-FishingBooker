@@ -13,4 +13,6 @@ public interface ReservationCabinService {
     boolean makeReservation(CabinReservationDto cabinReservationDto);
 
     boolean ownerCreates(CabinReservation cabinReservation, String clientUsername);
+
+    Set<CabinReservation> getPresentByCabinId(Long cabinId);
 }

@@ -64,7 +64,6 @@ public class AuthenticationController {
             int expiresIn = tokenUtils.getExpiredIn();
             return ResponseEntity.ok(new UserTokenState(userType, refreshedToken, expiresIn));
         } catch (Exception e){
-            System.out.println("AAAAAAAAAAAAAAAAAAAAa");
             UserTokenState userTokenState = new UserTokenState();
             return ResponseEntity.badRequest().body(userTokenState);
         }

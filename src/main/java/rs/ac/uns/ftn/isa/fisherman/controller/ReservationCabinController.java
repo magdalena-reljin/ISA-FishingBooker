@@ -57,4 +57,13 @@ public class ReservationCabinController {
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value= "/getByCabinId/{cabinId}")
+    public ResponseEntity<Set<CabinReservationDto>> getPresentByCabinId(@PathVariable ("cabinId") Long cabinId) {
+        Set<CabinReservationDto> cabinReservationDtos= new HashSet<>();
+        for(CabinReservation cabinReservation: reservationCabinService.getPresentByCabinId(cabinId))
+            cabinReservationDtos.add(cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation));
+        return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
+    }
+
 }

@@ -125,6 +125,13 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         sendMailNotification(successfullReservation,client.getUsername());
         return true;
     }
+
+    @Override
+    public Set<CabinReservation> getPresentByCabinId(Long cabinId) {
+        LocalDateTime currentDate= LocalDateTime.now();
+        return cabinReservationRepository.getPresentByCabinId(cabinId,currentDate);
+    }
+
     private boolean validateForReservation(CabinReservation cabinReservation,Client client){
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;

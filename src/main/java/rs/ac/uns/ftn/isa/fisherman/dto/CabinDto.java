@@ -131,5 +131,6 @@ public class CabinDto {
         this.rating = rating;
         this.images = images;
         this.ownerUsername = ownerUsername;
+
     }
 }

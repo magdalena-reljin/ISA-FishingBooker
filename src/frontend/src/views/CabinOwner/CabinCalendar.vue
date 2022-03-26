@@ -122,7 +122,60 @@
     </div>
 </vue-modality>
 
+<vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
 
+   <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceInfo}}$</b></p>
+                
+          </div>
+        </div>
+
+  
+  <hr>
+</vue-modality>
 
 
 <div id="makeReservation" class="modal" tabindex="-1" >
@@ -284,6 +337,8 @@ import axios from "axios";
        return{
          startReservation: null,
          endReservation: null,
+         startInfo: null,
+         endInfo: null,
          startEdit: null,
          endEdit: null,
          value: null,
@@ -307,10 +362,24 @@ import axios from "axios";
           right: "dayGridMonth,timeGridWeek,timeGridDay"
         },
         selectable: true,
+        priceInfo: 0,
+        usernameInfo: '',
+        clientFullNameInfo: '',
         eventClick: (arg)=>{
-         this.$refs.myRef.open()
+           if(arg.event.title=='Available'){
+          this.$refs.myRef.open()
           this.startEdit=arg.event.start
           this.endEdit=arg.event.end
+           }else if(arg.event.title=='Reservation'){
+                  this.$refs.reservationInfo.open()
+                  this.startInfo=arg.event.start
+                  this.endInfo=arg.event.end
+                  this.priceInfo=arg.event.extendedProps.price
+                  this.usernameInfo=arg.event.extendedProps.email
+                  this.clientFullNameInfo=arg.event.extendedProps.clientFullName
+                 console.log("aaaaaaaaaaaaaaaaaaaaa    "+arg.event.extendedProps.clientFullName)
+                 console.log("aaaaaaaaaaaaaaaaaaaaa    "+  this.priceInfo)
+           }
         },
         selectMirror: true,
         dayMaxEvents: true,
@@ -359,6 +428,7 @@ import axios from "axios";
                 username: '',
                 propertyId: null
             }],
+            
             start: null,
             end: null,
             cabinId: null,
@@ -374,6 +444,7 @@ import axios from "axios";
        this.cabinName= this.$route.params.cabinName
        this.availableCabinPeriod.username=this.email
        this.getCabin()
+       this.getCabinReservations()
        
      },
      methods: {
@@ -386,8 +457,21 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', start: newData.startDate , end: newData.endDate })
+                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', content: 'sdfsd', start: newData.startDate , end: newData.endDate , color: '#6f9681' })
                             }   
+              })
+
+         },
+         getCabinReservations: function(){
+               axios.get("http://localhost:8081/reservationCabin/getByCabinId/100")
+               .then(response => {
+                     for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                      }   
               })
 
          },

@@ -25,4 +25,11 @@ public class CabinReservationMapper {
                 new Client(), cabin, additionalServicesMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
         return cabinReservation;
     }
+
+    public CabinReservationDto cabinReservationToCabinReservationDto(CabinReservation cabinReservation){
+        String fullName=cabinReservation.getClient().getName()+" "+cabinReservation.getClient().getLastName();
+        return new CabinReservationDto(cabinReservation.getId(),cabinReservation.getStartDate(),
+                cabinReservation.getEndDate(),cabinReservation.getPrice(),cabinReservation.getClient().getUsername(),
+                fullName,null,null);
+    }
 }
