@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-import rs.ac.uns.ftn.isa.fisherman.model.Client;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +10,15 @@ public class ReservationDto {
     protected LocalDateTime endDate;
     protected Double price;
     protected String clientUsername;
+    protected String clientFullName;
 
-    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, String clientUsername) {
+    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, String clientUsername, String clientFullName) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.price = price;
         this.clientUsername = clientUsername;
+        this.clientFullName = clientFullName;
     }
 
     public ReservationDto(){}
@@ -60,5 +61,13 @@ public class ReservationDto {
 
     public void setClientUsername(String clientUsername) {
         this.clientUsername = clientUsername;
+    }
+
+    public String getClientFullName() {
+        return clientFullName;
+    }
+
+    public void setClientFullName(String clientFullName) {
+        this.clientFullName = clientFullName;
     }
 }
