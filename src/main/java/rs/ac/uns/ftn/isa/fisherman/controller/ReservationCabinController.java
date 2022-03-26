@@ -20,7 +20,6 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/reservationCabin", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
 public class ReservationCabinController {
 
     @Autowired

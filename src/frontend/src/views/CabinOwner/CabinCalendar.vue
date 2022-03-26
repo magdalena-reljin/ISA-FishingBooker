@@ -45,7 +45,7 @@
        </div>
        
        <div style="padding: 5%;">
-       <button style="width: 80%;" type="button" class="btn btn-primary btn-lg">Create quick action</button>
+       <button style="width: 80%;" type="button" data-bs-toggle="modal" data-bs-target="#createQuickAction" class="btn btn-primary btn-lg">Create quick action</button>
       </div>
       </div>
     </div>
@@ -177,6 +177,61 @@
   <hr>
 </vue-modality>
 
+<vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered>
+
+   <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startQuickInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endQuickInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameQuickInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientQuickFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceQuickInfo}}$</b></p>
+                
+          </div>
+        </div>
+
+  
+  <hr>
+</vue-modality>
+
 
 <div id="makeReservation" class="modal" tabindex="-1" >
   <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -276,7 +331,7 @@
       </div>
       <div class="modal-footer">
         <button @click="clearModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit"  class="btn btn-success" data-bs-dismiss="modal">Create</button>
+        <button type="submit"  class="btn btn-success" >Create</button>
       </div>
        </form>
     </div>
@@ -285,7 +340,106 @@
 
 
 
+
+<div id="createQuickAction" class="modal" tabindex="-1" >
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: gray; ">Create quick reservation</h5>
+      </div>
+       <form @submit="createQuickReservation" method="post" class="was-validated">
+      <div class="modal-body">
+        
+             <div class="row">
+           <div class=col>
+             <div class="row">
+               <div class="col-sm-3" style="color: gray; text-align: left;">Cabin</div>
+               <div class="col-sm-10" style=" width: 100%; text-align: left;" > 
+                  <input class="form-control"  v-model="cabinName" readonly>
+               </div>
+          </div>
+            
+            <br>
+            
+              <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">From</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="startQuickReservation" ></Datepicker>
+          </div>
+        </div>
+               <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">To</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="endQuickReservation"></Datepicker>
+          </div>
+        </div>
+
+ 
+  
+        </div>
+        <div class="col">
+                
+          
+          <div class="row">
+              <div class="col form-group">
+              <label style="color: gray;  " id="label">Price per night ($)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+          </div>
+
+          <div class="col form-group">
+                    <label style="color: gray;" id="label">Number of rooms </label>   
+                    <input v-model="cabinDto.numOfRooms"  class="form-control" disabled>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                    </div> 
+
+          <div class="col form-group">
+                    <label style="color: gray; " id="label">Beds per room </label>   
+                    <input v-model="cabinDto.bedsPerRoom"   class="form-control" disabled>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+          </div> 
+
+          
+
+          </div> 
+          <br>
+          <div class="col">
+                    <label style="color: gray;  padding-top: 1%; " id="label">Additional services </label>  
+                     <Multiselect   style="color: gray; padding-bottom: 5%; " 
+                           v-model="value"
+                          mode="tags"
+                          :close-on-select="false"
+                          :searchable="true"
+                          :create-option="false"
+                          :options="options"
+                          
+                        />
+          </div> 
+
+              
+     
+        </div>
+</div>
+      <div  style="text-align: left;">
+      <label style="color: red;" v-if="startQuickReservation==null || endQuickReservation==null || dateIsNotValidQuick==true">Please enter valid dates.</label>
+         </div>
+      </div>
+      <div class="modal-footer">
+        <button @click="clearModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-success" >Create</button>
+      </div>
+       </form>
     </div>
+  </div>
+</div>
+    </div>
+
+
 
 
   </div>
@@ -335,6 +489,10 @@ import axios from "axios";
 
      data(){
        return{
+         newPrice: 0,
+         totalPriceQuickReservation: 0,
+         startQuickReservation: null,
+         endQuickReservation: null,
          startReservation: null,
          endReservation: null,
          startInfo: null,
@@ -365,11 +523,16 @@ import axios from "axios";
         priceInfo: 0,
         usernameInfo: '',
         clientFullNameInfo: '',
+        startQuickInfo: null,
+        endQuickInfo: null,
+        priceQuickInfo: null,
+        usernameQuickInfo: null,
+        clientQuickFullNameInfo: null,
         eventClick: (arg)=>{
            if(arg.event.title=='Available'){
-          this.$refs.myRef.open()
-          this.startEdit=arg.event.start
-          this.endEdit=arg.event.end
+                  this.$refs.myRef.open()
+                  this.startEdit=arg.event.start
+                  this.endEdit=arg.event.end
            }else if(arg.event.title=='Reservation'){
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
@@ -377,6 +540,20 @@ import axios from "axios";
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
+           }else if(arg.event.title=='QuickReservation'){
+                  this.$refs.quickReservationInfo.open()
+                  this.startQuickInfo=arg.event.start
+                  this.endQuickInfo=arg.event.end
+                  this.priceQuickInfo=arg.event.extendedProps.price
+                  if(arg.event.extendedProps.email==null){
+                       this.usernameQuickInfo="Not reservated yet."
+                       this.clientQuickFullNameInfo="Not reservated yet."
+
+                  }else{
+                  this.usernameQuickInfo=arg.event.extendedProps.email
+                  this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
+                 
+                  }
            }
         },
         selectMirror: true,
@@ -435,6 +612,7 @@ import axios from "axios";
             client: '',
             dateIsNotValid: false,
             editDataIsNotValid: false,
+            dateIsNotValidQuick: false,
        }
      },
      mounted() {
@@ -442,7 +620,8 @@ import axios from "axios";
        this.cabinName= this.$route.params.cabinName
        this.availableCabinPeriod.username=this.email
        this.getCabin()
-       this.getCabinReservations()
+      
+       this.newPrice = this.cabinDto.price
        
      },
      methods: {
@@ -455,13 +634,13 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', content: 'sdfsd', start: newData.startDate , end: newData.endDate , color: '#6f9681' })
+                              this.calendarOptions.events.push({id: newData.id ,title: 'Available', start: newData.startDate , end: newData.endDate , color: '#6f9681' })
                             }   
               })
 
          },
          getCabinReservations: function(){
-               axios.get("http://localhost:8081/reservationCabin/getByCabinId/100")
+               axios.get("http://localhost:8081/reservationCabin/getByCabinId/"+this.cabinId)
                .then(response => {
                      for( let newData of response.data ){
                                 var start=newData.startDate
@@ -473,12 +652,25 @@ import axios from "axios";
               })
 
          },
+         getQuickReservations: function(){
+               axios.get("http://localhost:8081/quickReservationCabin/getByCabinId/"+this.cabinId)
+               .then(response => {
+                     for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                      }   
+              })
+
+         },
          getCabin: function(){
              this.cabinDto.name=this.cabinName
             
              axios.post("http://localhost:8081/cabins/findByName",this.cabinDto)
                .then(response => {
-                        this.cabinDto=response.data
+                         this.cabinDto=response.data
                          this.cabinId=this.cabinDto.id
                          for(let i =0; i< this.cabinDto.additionalServices.length; i++){
                                this.options.push({ 
@@ -487,6 +679,8 @@ import axios from "axios";
                                 })
                          }
                          this.getCabinsAvailablePeriod();
+                         this.getCabinReservations();
+                         this.getQuickReservations();
 
              })
           },
@@ -535,6 +729,7 @@ import axios from "axios";
            },
            createReservation: function(event){
                     event.preventDefault()
+                    
           
                     if(!this.dataIsValid(this.startReservation,this.endReservation)){
                       this.dateIsNotValid=true
@@ -544,7 +739,7 @@ import axios from "axios";
 
                     if(this.startReservation != null && this.endReservation!=null){
                                  this.additionalServicesAdded()
-                                 this.calculatePrice()
+                                 this.calculatePrice(this.startReservation,this.endReservation,this.cabinDto.price)
                                 axios
                                 .post(
                                 "http://localhost:8081/reservationCabin/ownerCreates",
@@ -566,7 +761,8 @@ import axios from "axios";
                                           showConfirmButton: false,
                                            timer: 1500
                                        })
-                                      this.clearModal()
+                                       
+                                     this.$router.go();
                                 })
                               .catch((err) =>{
                                      console.log(err)
@@ -577,6 +773,49 @@ import axios from "axios";
                                })
                                     this.clearModal()
                               })
+                              
+                                 
+                    }
+           },
+           createQuickReservation: function(event){
+                    event.preventDefault()
+          
+                    if(!this.dataIsValid(this.startQuickReservation,this.endQuickReservation)){
+                      this.dateIsNotValidQuick=true
+                      return;
+                    }
+
+
+                    if(this.startQuickReservation != null && this.startQuickReservation!=null){
+                                 this.additionalServicesAdded()
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                axios
+                                .post(
+                                "http://localhost:8081/quickReservationCabin/ownerCreates",
+                                {
+                                id: null,
+                                startDate: this.formatDate(this.startQuickReservation),
+                                endDate: this.formatDate(this.endQuickReservation),
+                                price: this.totalPrice,
+                                cabinDto: this.cabinDto,
+                                addedAdditionalServices: this.additionalServicesToSend,
+                                clientUsername: this.client
+                                })
+                              .then((response) => {
+                                      console.log(response)
+                                       
+                                     this.$router.go();
+                                })
+                              .catch((err) =>{
+                                     console.log(err)
+                                       this.$swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Something went wrong!',
+                               })
+                                    this.clearModalQuick()
+                              })
+                              
                                  
                     }
            },
@@ -595,16 +834,16 @@ import axios from "axios";
                     }
 
            },
-           calculatePrice: function() {
-              let numOfDays = this.getNumberOfDays(this.start, this.end);
-              this.totalPrice = numOfDays * this.cabinDto.price;
+           calculatePrice: function(start,end,pricePerNight) {
+              let numOfDays = this.getNumberOfDays(start, end);
+              this.totalPrice = numOfDays * pricePerNight;
               for (let i = 0; i < this.additionalServicesToSend.length; i++) {
                 this.totalPrice += this.additionalServicesToSend[i].price;
               }
             },
-            getNumberOfDays: function() {
-               const date1 = new Date(this.startReservation);
-               const date2 = new Date(this.endReservation);
+            getNumberOfDays: function(start,end) {
+               const date1 = new Date(start);
+               const date2 = new Date(end);
                const oneDay = 1000 * 60 * 60 * 24;
                const diffInTime = date2.getTime() - date1.getTime();
                const diffInDays = Math.round(diffInTime / oneDay);
@@ -627,6 +866,12 @@ import axios from "axios";
                  this.endReservation=null
                  this.dateIsNotValid=false
                  this.client=''
+                 this.value=[]
+            },
+            clearModalQuick: function(){
+                 this.startQuickReservation=null
+                 this.endQuickReservation=null
+                 this.dateIsNotValidQuick=false
                  this.value=[]
             },
             editAvailablePeiod: function(){
