@@ -377,8 +377,6 @@ import axios from "axios";
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
-                 console.log("aaaaaaaaaaaaaaaaaaaaa    "+arg.event.extendedProps.clientFullName)
-                 console.log("aaaaaaaaaaaaaaaaaaaaa    "+  this.priceInfo)
            }
         },
         selectMirror: true,
