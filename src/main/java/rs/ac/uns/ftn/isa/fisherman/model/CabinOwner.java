@@ -14,7 +14,7 @@ public class CabinOwner extends User{
     @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Cabin> cabins;
 
-    @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.EAGER, cascade = CascadeType.DETACH, orphanRemoval = true)
     private Set<AvailableCabinPeriod> availableCabinPeriods;
 
     public CabinOwner(){}

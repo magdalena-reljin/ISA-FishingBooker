@@ -8,9 +8,11 @@ import java.util.Set;
 public interface AvailableCabinPeriodService {
     Set<AvailableCabinPeriod> getAvailablePeriod(Long id);
 
-    void setAvailableCabinPeriod(Set<AvailableCabinPeriod> availableCabinPeriod);
+    boolean setAvailableCabinPeriod(AvailableCabinPeriod availableCabinPeriod);
 
     List<AvailableCabinPeriod> findAll();
 
     boolean cabinIsAvailable(Long cabinId, LocalDateTime start, LocalDateTime end);
+
+    boolean deleteAvailableCabinsPeriod(AvailableCabinPeriod availablePeriod);
 }

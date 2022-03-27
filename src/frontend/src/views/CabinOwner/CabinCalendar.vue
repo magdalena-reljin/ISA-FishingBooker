@@ -41,18 +41,19 @@
         <br>
       
        <div style="padding: 5%;">
-       <button style="width: 80%; " type="button" data-bs-toggle="modal" data-bs-target="#makeReservation" class="btn btn-primary btn-lg">Make reservation</button>
+       <button style="width: 80%; " type="button" @click="this.$refs.makeReservation.open()" class="btn btn-primary btn-lg">Make reservation</button>
        </div>
        
        <div style="padding: 5%;">
-       <button style="width: 80%;" type="button" data-bs-toggle="modal" data-bs-target="#createQuickAction" class="btn btn-primary btn-lg">Create quick action</button>
+       <button style="width: 80%;" type="button" @click="this.$refs.makeQuickReservation.open()" class="btn btn-primary btn-lg">Create quick action</button>
       </div>
       </div>
     </div>
 
 
-<vue-modality ref="myRef" title="Edit available period" hide-footer centered>
-
+<vue-modality ref="myRef" title="Edit available period" hide-footer hide-header centered no-close-on-esc=true no-close-on-backdrop=true>
+  <h4><b>Edit available period</b></h4>
+  <hr>
    <br>
         <div class="row">
           <div class="col" style="padding-top: 2%; text-align: left;" >
@@ -62,7 +63,7 @@
              <Datepicker   
            v-model="startEdit" 
                 
-         >
+         disabled >
           </Datepicker>
           </div>
         </div>
@@ -71,7 +72,7 @@
             <h6>To</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker  v-model="endEdit"></Datepicker>
+             <Datepicker  v-model="endEdit" disabled ></Datepicker>
           </div>
         </div>
 
@@ -106,7 +107,7 @@
         <div class="row">
                   <label v-if="reservationExists==true" style="color: red;">Reservation in this period already exists!</label>
         </div>
-        <button type="button" class="btn btn-outline-dark">Add</button>
+        
   <br>
   <hr>
    <div class="row">
@@ -114,10 +115,10 @@
            <button type="button" @click="clearModalEdit()" class="btn btn-secondary">Close</button>
         </div>
         <div class="col">
-           <button type="button" class="btn btn-danger">Delete</button>
+           <button type="button" @click="deleteAvailablePeriod()" class="btn btn-danger">Delete</button>
         </div>
         <div class="col">
-           <button type="button" @click="editAvailablePeiod" class="btn btn-primary" >Save</button>
+           <button type="button" @click="save()" class="btn btn-primary" >Save</button>
         </div>
     </div>
 </vue-modality>
@@ -177,7 +178,7 @@
   <hr>
 </vue-modality>
 
-<vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered>
+<vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered width="900px">
 
    <br>
         <div class="row">
@@ -232,15 +233,115 @@
   <hr>
 </vue-modality>
 
+<vue-modality ref="makeQuickReservation" title="Create quick reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
-<div id="makeReservation" class="modal" tabindex="-1" >
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="color: gray; ">Make reservation</h5>
-      </div>
-       <form @submit="createReservation" method="post" class="was-validated">
-      <div class="modal-body">
+   <br>
+         <div style="text-align: left;">
+         <h4><b>Create quick reservation</b></h4>
+         </div>
+         <hr>
+         <form @submit="createQuickReservation" method="post" class="was-validated">
+ 
+        
+             <div class="row">
+           <div class=col>
+             <div class="row">
+               <div class="col-sm-3" style="color: gray; text-align: left;">Cabin</div>
+               <div class="col-sm-10" style=" width: 100%; text-align: left;" > 
+                  <input class="form-control"  v-model="cabinName" readonly>
+               </div>
+          </div>
+            
+            <br>
+            
+              <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">From</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="startQuickReservation" ></Datepicker>
+          </div>
+        </div>
+               <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">To</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="endQuickReservation"></Datepicker>
+          </div>
+        </div>
+
+ 
+  
+        </div>
+        <div class="col">
+                
+          
+          <div class="row">
+              <div class="col form-group">
+              <label style="color: gray;  " id="label">Price per night ($)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+          </div>
+
+          <div class="col form-group">
+                    <label style="color: gray;" id="label">Number of rooms </label>   
+                    <input v-model="cabinDto.numOfRooms"  class="form-control" disabled>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                    </div> 
+
+          <div class="col form-group">
+                    <label style="color: gray; " id="label">Beds per room </label>   
+                    <input v-model="cabinDto.bedsPerRoom"   class="form-control" disabled>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+          </div> 
+
+          
+
+          </div> 
+          <br>
+          <div class="col">
+                    <label style="color: gray;  padding-top: 1%; " id="label">Additional services </label>  
+                     <Multiselect   style="color: gray; padding-bottom: 5%; " 
+                           v-model="value"
+                          mode="tags"
+                          :close-on-select="false"
+                          :searchable="true"
+                          :create-option="false"
+                          :options="options"
+                          
+                        />
+          </div> 
+
+              
+     
+        </div>
+</div>
+      <div  style="text-align: left;">
+      <label style="color: red;" v-if="startQuickReservation==null || endQuickReservation==null || dateIsNotValidQuick==true">Please enter valid dates.</label>
+         </div>
+        <hr>
+        
+        <button @click="clearModalQuick()" type="button" class="btn btn-secondary" style="margin-right: 1%; width: 10%;">Close</button>
+      
+        <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
+
+       </form>
+  
+ 
+</vue-modality>
+
+<vue-modality ref="makeReservation" title="Create reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
+
+   <br>
+         <div style="text-align: left;">
+         <h4><b>Create reservation</b></h4>
+         </div>
+         <hr>
+
+          <form @submit="createReservation" method="post" class="was-validated">
+    
         
              <div class="row">
            <div class=col>
@@ -328,121 +429,28 @@
       <div  style="text-align: left;">
       <label style="color: red;" v-if="startReservation==null || endReservation==null || dateIsNotValid==true">Please enter valid dates.</label>
          </div>
-      </div>
-      <div class="modal-footer">
-        <button @click="clearModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit"  class="btn btn-success" >Create</button>
-      </div>
-       </form>
-    </div>
-  </div>
-</div>
-
-
-
-
-<div id="createQuickAction" class="modal" tabindex="-1" >
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="color: gray; ">Create quick reservation</h5>
-      </div>
-       <form @submit="createQuickReservation" method="post" class="was-validated">
-      <div class="modal-body">
-        
-             <div class="row">
-           <div class=col>
-             <div class="row">
-               <div class="col-sm-3" style="color: gray; text-align: left;">Cabin</div>
-               <div class="col-sm-10" style=" width: 100%; text-align: left;" > 
-                  <input class="form-control"  v-model="cabinName" readonly>
-               </div>
-          </div>
-            
-            <br>
-            
-              <div class="row">
-          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
-            <h6 style="color: gray;">From</h6>
-          </div>
-          <div class="col-sm-9"  style="padding: 2.5%;">
-             <Datepicker  v-model="startQuickReservation" ></Datepicker>
-          </div>
-        </div>
-               <div class="row">
-          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
-            <h6 style="color: gray;">To</h6>
-          </div>
-          <div class="col-sm-9"  style="padding: 2.5%;">
-             <Datepicker  v-model="endQuickReservation"></Datepicker>
-          </div>
-        </div>
-
- 
-  
-        </div>
-        <div class="col">
-                
-          
-          <div class="row">
-              <div class="col form-group">
-              <label style="color: gray;  " id="label">Price per night ($)</label>
-              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
-          </div>
-
-          <div class="col form-group">
-                    <label style="color: gray;" id="label">Number of rooms </label>   
-                    <input v-model="cabinDto.numOfRooms"  class="form-control" disabled>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                    </div> 
-
-          <div class="col form-group">
-                    <label style="color: gray; " id="label">Beds per room </label>   
-                    <input v-model="cabinDto.bedsPerRoom"   class="form-control" disabled>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-          </div> 
-
-          
-
-          </div> 
-          <br>
-          <div class="col">
-                    <label style="color: gray;  padding-top: 1%; " id="label">Additional services </label>  
-                     <Multiselect   style="color: gray; padding-bottom: 5%; " 
-                           v-model="value"
-                          mode="tags"
-                          :close-on-select="false"
-                          :searchable="true"
-                          :create-option="false"
-                          :options="options"
-                          
-                        />
-          </div> 
-
-              
      
-        </div>
-</div>
-      <div  style="text-align: left;">
-      <label style="color: red;" v-if="startQuickReservation==null || endQuickReservation==null || dateIsNotValidQuick==true">Please enter valid dates.</label>
-         </div>
-      </div>
-      <div class="modal-footer">
-        <button @click="clearModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit"  class="btn btn-success" >Create</button>
-      </div>
+       <hr>
+        <button @click="clearModalReservation()" type="button" class="btn btn-secondary" style="margin-right: 1%; width: 10%;">Close</button>
+        <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
+    
        </form>
+        
+  
+ 
+</vue-modality>
+
+
+
+
+
+
+
+
+
+
+   </div>
     </div>
-  </div>
-</div>
-    </div>
-
-
-
-
-  </div>
 
 </template>
 
@@ -533,6 +541,7 @@ import axios from "axios";
                   this.$refs.myRef.open()
                   this.startEdit=arg.event.start
                   this.endEdit=arg.event.end
+                  this.argEventDeleting=arg.event
            }else if(arg.event.title=='Reservation'){
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
@@ -596,13 +605,13 @@ import axios from "axios";
              }],
              ownerUsername: ''
          },
-       availableCabinPeriod: [{
+       availableCabinPeriod: {
                  id: null,
                 startDate: null,
                 endDate: null,
                 username: '',
                 propertyId: null
-            }],
+            },
             
             start: null,
             end: null,
@@ -613,6 +622,7 @@ import axios from "axios";
             dateIsNotValid: false,
             editDataIsNotValid: false,
             dateIsNotValidQuick: false,
+            argEventDeleting: null,
        }
      },
      mounted() {
@@ -699,27 +709,38 @@ import axios from "axios";
                 })
               return;
             }
-            this.availableCabinPeriod[0]=({
+            this.availableCabinPeriod={
               startDate:  this.formatDate(this.start),
               endDate:  this.formatDate(this.end),
               username: this.email,
               propertyId: this.cabinId
-             })
-              this.start='',
-              this.end=''
+             
+             }
               axios.post("http://localhost:8081/cabinsPeriod/setAvailableCabinsPeriod",this.availableCabinPeriod)
-                .then(response => {
-                       this.$swal.fire({
-                 position: 'top-end',
-                  icon: 'success',
-                 title: 'Your work has been saved',
-               showConfirmButton: false,
-               timer: 1500
-                })
-                this.$router.go()
+              .then(response => {
+                   this.calendarOptions.events.push({id: this.cabinId ,title: 'Available', start: this.start , end: this.end , color: '#6f9681' })
+                   this.start='',
+                   this.end=''
+                   this.$swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Available period successfully added!',
+                    showConfirmButton: false,
+                    timer: 2500
+                   })
                  return response;
-                      
               })
+              .catch(err => {
+                   console.log("usao u catch")
+                   console.log(err)
+                   this.$swal.fire({
+                   position: 'top-end',
+                   icon: 'error',
+                   title: 'Available period overlaps with existing period',
+                   showConfirmButton: false,
+                   timer: 2500
+                   })
+                })
             },
            setDate: function(newDate){
                     var date= new Date()
@@ -754,6 +775,8 @@ import axios from "axios";
                                 })
                               .then((response) => {
                                       console.log(response)
+                                      this.calendarOptions.events.push({extendedProps: {email: this.client, price: this.totalPrice, clientFullName: ''} ,title: 'Reservation', start: this.startReservation , end: this.endReservation})
+                                      this.clearModalReservation()
                                        this.$swal.fire({
                                           position: 'top-end',
                                           icon: 'success',
@@ -762,7 +785,7 @@ import axios from "axios";
                                            timer: 1500
                                        })
                                        
-                                     this.$router.go();
+                                     
                                 })
                               .catch((err) =>{
                                      console.log(err)
@@ -802,17 +825,26 @@ import axios from "axios";
                                 clientUsername: this.client
                                 })
                               .then((response) => {
-                                      console.log(response)
-                                       
-                                     this.$router.go();
+                                    console.log(response)
+                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null} ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
+                                    
+                                     this.$swal.fire({
+                                          position: 'top-end',
+                                          icon: 'success',
+                                          title: 'Successfully created quick reservation!',
+                                          showConfirmButton: false,
+                                           timer: 1500
+                                       })
+                                         this.clearModalQuick()
                                 })
                               .catch((err) =>{
+                                      this.$refs.makeQuickReservation.hide()
                                      console.log(err)
                                        this.$swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
                                         text: 'Something went wrong!',
-                               })
+                                      })
                                     this.clearModalQuick()
                               })
                               
@@ -824,13 +856,11 @@ import axios from "axios";
                     this.additionalServicesToSend=[]
                     if(this.value != null){
                     for(let i=0; i < this.value.length ; i++){
-                          console.log("selected "+this.value[i])
                           for(let j=0; j < this.cabinDto.additionalServices.length ; j++){
                             if(this.value[i] == this.cabinDto.additionalServices[j].id )
                                this.additionalServicesToSend.push(this.cabinDto.additionalServices[j])
                           }
                     }
-                    console.log("len od nove liste  "+  this.cabinDto.additionalServices)
                     }
 
            },
@@ -861,18 +891,22 @@ import axios from "axios";
               }
               return true;
             },
-            clearModal: function(){
+            clearModalReservation: function(){
+                 this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
                  this.dateIsNotValid=false
                  this.client=''
                  this.value=[]
+                 this.totalPrice=0
             },
             clearModalQuick: function(){
+                 this.$refs.makeQuickReservation.hide()
                  this.startQuickReservation=null
                  this.endQuickReservation=null
                  this.dateIsNotValidQuick=false
                  this.value=[]
+                 this.totalPrice=0
             },
             editAvailablePeiod: function(){
                  if(!this.dataIsValid(this.startEdit,this.endEdit)){
@@ -883,10 +917,57 @@ import axios from "axios";
                  this.clearModalEdit()
             },
             clearModalEdit: function(){
+                 this.$refs.myRef.hide()
                  this.unavailableStart=null
                  this.unavailableEnd=null
                  this.editDataIsNotValid=false
+                this.argEventDeleting=null
 
+            },
+            save: function(){
+                 this.$refs.myRef.hide()
+            },
+            openQuickReservationModal: function(){
+                 this.$refs.makeQuickReservation.open()
+            },
+            deleteAvailablePeriod: function(){
+              axios.post("http://localhost:8081/cabinsPeriod/deleteAvailableCabinsPeriod",
+               {
+                 id: null,
+                startDate: this.formatDate(this.startEdit),
+                endDate: this.formatDate(this.endEdit),
+                username: this.email,
+                propertyId: this.cabinId
+                }
+              )
+              .then(response => {
+                 //  this.calendarOptions.events.delete({id: this.cabinId ,title: 'Available', start: this.startEdit , end: this.endEdit , color: '#6f9681' })
+                   this.argEventDeleting.remove()
+                   this.$swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Available period successfully deleted!',
+                    showConfirmButton: false,
+                    timer: 2500
+                   })
+                    this.clearModalEdit()
+                 return response;
+              })
+              .catch(err => {
+                   console.log("usao u catch")
+                   console.log(err)
+                   this.$swal.fire({
+                   position: 'top-end',
+                   icon: 'error',
+                   title: 'Available period can not be deleted',
+                   showConfirmButton: false,
+                   timer: 2500
+                   })
+                   this.clearModalEdit()
+                })
+
+
+             
             }
            
 

@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class AvailablePeriod {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class AvailablePeriod {
     @Id
     @SequenceGenerator(name = "period_sequence_generator", sequenceName = "period_sequence", initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "period_sequence_generator")

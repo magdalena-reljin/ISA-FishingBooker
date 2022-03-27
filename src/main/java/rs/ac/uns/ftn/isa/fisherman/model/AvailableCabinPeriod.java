@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
