@@ -67,4 +67,18 @@ public class AvailableCabinPeriodController {
             return new ResponseEntity<>("Already exists", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/editAvailableCabinsPeriod")
+    @PreAuthorize("hasRole('CABINOWNER')")
+    public ResponseEntity<String> editAvailableCabinsPeriod (@RequestBody List<AvailablePeriodDto> periods) {
+        System.out.println("jooooooooooooooooooooooooooooooooooooooooooooj   "+periods.get(1).getStartDate());
+        CabinOwner cabinOwner= cabinOwnerService.findByUsername(periods.get(0).getUsername());
+        Cabin cabin = cabinService.findById(periods.get(0).getPropertyId());
+        if(availableCabinPeriodService.editAvailableCabinsPeriod
+                (availableCabinPeriodMapper.availablePeriodDtoToAvailableCabinPeriod(periods.get(0),cabinOwner,cabin),
+                  availableCabinPeriodMapper.availablePeriodDtoToAvailableCabinPeriod(periods.get(1),cabinOwner,cabin)))
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Already exists", HttpStatus.BAD_REQUEST);
+    }
+
 }

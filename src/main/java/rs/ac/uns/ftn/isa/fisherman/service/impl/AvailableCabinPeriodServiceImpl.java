@@ -50,38 +50,54 @@ public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodServ
 
     @Override
     public boolean deleteAvailableCabinsPeriod(AvailableCabinPeriod availablePeriod) {
-        System.out.println("----------------------------------------------------------------------------------------------------usao sam u delete");
         AvailableCabinPeriod availableCabinPeriodToDelete= availableCabinPeriodRepository.findId(availablePeriod.getCabin().getId(),
                 availablePeriod.getStartDate(),availablePeriod.getEndDate());
-        if(availableCabinPeriodToDelete == null){
-            System.out.println("*************************************************************************************nisam nasao period");
-            return false;
-        }
+        if(availableCabinPeriodToDelete == null) return false;
 
-        if(!reservationsDontExistInPeriod(availableCabinPeriodToDelete)) {
-            System.out.println("*************************************************************************************iam neke rez");
-
-            return false;
-        }
-        System.out.println("*************************************************************************************stigao sam do DELETE"+availableCabinPeriodToDelete.getId() );
+        if(!reservationsDontExistInPeriod(availableCabinPeriodToDelete)) return false;
 
         availablePeriodService.deleteAvailablePeriod(availableCabinPeriodToDelete.getId());
         return true;
     }
 
-    private boolean reservationsDontExistInPeriod(AvailableCabinPeriod availablePeriod){
-        if(reservationCabinService.reservationExists(availablePeriod.getCabin().getId()
-                ,availablePeriod.getStartDate(),availablePeriod.getEndDate())){
-            System.out.println("----------------------------------------------------------------ja sam nasla prva");
-            return false;
-            }
-
-        if(quickReservationCabinService.quickReservationExists(availablePeriod.getCabin().getId(),
-                availablePeriod.getStartDate(),availablePeriod.getEndDate())) {
-            System.out.println("----------------------------------------------------------------ja sam nasla druga");
-
+    @Override
+    public boolean editAvailableCabinsPeriod(AvailableCabinPeriod oldPeriod, AvailableCabinPeriod newPeriod) {
+        AvailableCabinPeriod availableCabinPeriodToEdit= availableCabinPeriodRepository.findId(oldPeriod.getCabin().getId(),
+                oldPeriod.getStartDate(),oldPeriod.getEndDate());
+        if(availableCabinPeriodToEdit == null) return false;
+        if(!reservationsDontExistInPeriod(newPeriod)) return false;
+        if (!availableCabinPeriodRepository.availablePeriodIncludesUnavailable(availableCabinPeriodToEdit.getId(),
+                newPeriod.getStartDate(),newPeriod.getEndDate())){
             return false;
         }
+        LocalDateTime startOld=oldPeriod.getStartDate();
+        LocalDateTime endOld=oldPeriod.getEndDate();
+
+        LocalDateTime startNew=newPeriod.getStartDate();
+        LocalDateTime endNew=newPeriod.getEndDate();
+
+        if(startOld.equals(startNew)){
+            availableCabinPeriodToEdit.setStartDate(endNew.plusMinutes(1));
+        }else if(endOld.equals(endNew)){
+            availableCabinPeriodToEdit.setEndDate(startNew.minusMinutes(1));
+        }else {
+            availableCabinPeriodToEdit.setEndDate(startNew.minusMinutes(1));
+            newPeriod.setEndDate(endOld);
+            newPeriod.setStartDate(endNew.plusMinutes(1));
+            availableCabinPeriodRepository.save(newPeriod);
+        }
+        availableCabinPeriodRepository.save(availableCabinPeriodToEdit);
+        return true;
+    }
+
+    private boolean reservationsDontExistInPeriod(AvailableCabinPeriod availablePeriod){
+        if(reservationCabinService.reservationExists(availablePeriod.getCabin().getId()
+                ,availablePeriod.getStartDate(),availablePeriod.getEndDate())) return false;
+
+
+        if(quickReservationCabinService.quickReservationExists(availablePeriod.getCabin().getId(),
+                availablePeriod.getStartDate(),availablePeriod.getEndDate())) return false;
+
         return true;
     }
 }

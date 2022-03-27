@@ -15,4 +15,6 @@ public interface AvailableCabinPeriodService {
     boolean cabinIsAvailable(Long cabinId, LocalDateTime start, LocalDateTime end);
 
     boolean deleteAvailableCabinsPeriod(AvailableCabinPeriod availablePeriod);
+
+    boolean editAvailableCabinsPeriod(AvailableCabinPeriod oldPeriod, AvailableCabinPeriod newPeriod);
 }
