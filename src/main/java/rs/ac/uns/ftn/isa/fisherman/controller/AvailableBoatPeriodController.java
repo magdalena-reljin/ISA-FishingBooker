@@ -39,8 +39,6 @@ public class AvailableBoatPeriodController {
     @GetMapping("/getAvailablePeriodOwner/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<Set<AvailablePeriodDto>> getAvailablePeriodBoatOwner (@PathVariable("username") String username) {
-        System.out.println("--------------------------------------------------------  "+username);
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  GEEEEEEEEEEEEEEEEEEEEEEEEEt");
         Set<AvailablePeriodDto> availablePeriods=availableBoatOwnerPeriodMapper
                 .availableBoatOwnerPeriodsToDtoS(availableBoatOwnersPeriodService
                         .getAvailablePeriodByOwnersUsername(username));
@@ -70,7 +68,6 @@ public class AvailableBoatPeriodController {
     @PostMapping("/setAvailableBoatOwnersPeriod")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<String> setAvailableBoatOwnersPeriod (@RequestBody List<AvailablePeriodDto> availablePeriodDto) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA POSTTT");
         BoatOwner boatOwner= boatOwnerService.findByUsername(availablePeriodDto.get(0).getUsername());
         Set<AvailableBoatOwnerPeriod> availableBoatOwnerPeriods = availableBoatOwnerPeriodMapper
                 .availableDtoSToAvailableBoatOwnerPeriods(new HashSet<>(availablePeriodDto),boatOwner);

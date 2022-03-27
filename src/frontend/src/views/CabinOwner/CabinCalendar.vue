@@ -77,7 +77,7 @@
         </div>
 
   <br>
-  <label style="color: red;" v-if="editDataIsNotValid==true">Please enter valid dates</label>
+  
   <hr>
   <div style="text-align: left;">
   <h6>Add unavailable days</h6>
@@ -109,6 +109,7 @@
         </div>
         
   <br>
+  <label style="color: red;" v-if="editDataIsNotValid==true">Please enter valid dates</label>
   <hr>
    <div class="row">
         <div class="col">
@@ -118,7 +119,7 @@
            <button type="button" @click="deleteAvailablePeriod()" class="btn btn-danger">Delete</button>
         </div>
         <div class="col">
-           <button type="button" @click="save()" class="btn btn-primary" >Save</button>
+           <button type="button" @click="editAvailablePeriod()" class="btn btn-primary" >Save</button>
         </div>
     </div>
 </vue-modality>
@@ -908,13 +909,61 @@ import axios from "axios";
                  this.value=[]
                  this.totalPrice=0
             },
-            editAvailablePeiod: function(){
-                 if(!this.dataIsValid(this.startEdit,this.endEdit)){
+            editAvailablePeriod: function(){
+                 if(!this.dataIsValid(this.unavailableStart,this.unavailableEnd)){
                     this.editDataIsNotValid=true
                     return
                  }
 
-                 this.clearModalEdit()
+                 console.log("un start    "+this.unavailableStart)
+                 console.log("un start   f "+this.formatDate(this.unavailableStart))
+                  console.log("un start    "+this.unavailableEnd)
+                 console.log("un start   f "+this.formatDate(this.unavailableEnd))
+                  axios.post("http://localhost:8081/cabinsPeriod/editAvailableCabinsPeriod",[
+               {
+                 id: null,
+                startDate: this.formatDate(this.startEdit),
+                endDate: this.formatDate(this.endEdit),
+                username: this.email,
+                propertyId: this.cabinId
+                },
+                {
+                 id: null,
+                startDate: this.formatDate(this.unavailableStart),
+                endDate: this.formatDate(this.unavailableEnd),
+                username: this.email,
+                propertyId: this.cabinId
+                }]
+
+              )
+              .then(response => {
+                   this.calendarOptions.events=[]
+                   this.getCabinsAvailablePeriod()
+                   this.getQuickReservations()
+                   this.getCabinReservations()
+                   this.$swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Available period successfully edited!',
+                    showConfirmButton: false,
+                    timer: 2500
+                   })
+                    this.clearModalEdit()
+                 return response;
+              })
+              .catch(err => {
+                   console.log("usao u catch")
+                   console.log(err)
+                   this.$swal.fire({
+                   position: 'top-end',
+                   icon: 'error',
+                   title: 'Available period can not be edited',
+                   showConfirmButton: false,
+                   timer: 2500
+                   })
+                   this.clearModalEdit()
+                })
+
             },
             clearModalEdit: function(){
                  this.$refs.myRef.hide()
