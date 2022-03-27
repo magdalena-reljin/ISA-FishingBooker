@@ -30,7 +30,7 @@ public class FishingInstructor extends  User {
     @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Adventure> adventures;
 
-    @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AvailableInstructorPeriod> availableInstructorPeriods;
 
     public String getRegistrationReason() {

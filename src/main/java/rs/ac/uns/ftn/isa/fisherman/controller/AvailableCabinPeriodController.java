@@ -45,13 +45,26 @@ public class AvailableCabinPeriodController {
 
     @PostMapping("/setAvailableCabinsPeriod")
     @PreAuthorize("hasRole('CABINOWNER')")
-    public ResponseEntity<String> setAvailableCabinsPeriod (@RequestBody List<AvailablePeriodDto> availablePeriodDto) {
-        CabinOwner cabinOwner= cabinOwnerService.findByUsername(availablePeriodDto.get(0).getUsername());
-        Cabin cabin = cabinService.findById(availablePeriodDto.get(0).getPropertyId());
-        Set<AvailableCabinPeriod> availableCabinPeriods = availableCabinPeriodMapper
-                .availableDtoSToAvailableCabinPeriods(new HashSet<>(availablePeriodDto),cabinOwner,cabin);
-        availableCabinPeriodService.setAvailableCabinPeriod(availableCabinPeriods);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+    public ResponseEntity<String> setAvailableCabinsPeriod (@RequestBody AvailablePeriodDto availablePeriodDto) {
+        CabinOwner cabinOwner= cabinOwnerService.findByUsername(availablePeriodDto.getUsername());
+        Cabin cabin = cabinService.findById(availablePeriodDto.getPropertyId());
+        if(availableCabinPeriodService.setAvailableCabinPeriod
+                (availableCabinPeriodMapper.availablePeriodDtoToAvailableCabinPeriod(availablePeriodDto,cabinOwner,cabin)))
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Already exists", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/deleteAvailableCabinsPeriod")
+    @PreAuthorize("hasRole('CABINOWNER')")
+    public ResponseEntity<String> deleteAvailableCabinsPeriod (@RequestBody AvailablePeriodDto availablePeriodDto) {
+        CabinOwner cabinOwner= cabinOwnerService.findByUsername(availablePeriodDto.getUsername());
+        Cabin cabin = cabinService.findById(availablePeriodDto.getPropertyId());
+        if(availableCabinPeriodService.deleteAvailableCabinsPeriod
+                (availableCabinPeriodMapper.availablePeriodDtoToAvailableCabinPeriod(availablePeriodDto,cabinOwner,cabin)))
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Already exists", HttpStatus.BAD_REQUEST);
     }
 
 }

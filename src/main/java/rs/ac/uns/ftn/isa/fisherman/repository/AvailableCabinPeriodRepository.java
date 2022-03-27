@@ -13,4 +13,11 @@ public interface AvailableCabinPeriodRepository extends JpaRepository<AvailableC
 
     @Query(value="SELECT CASE WHEN  COUNT(ap) > 0 THEN true ELSE false END FROM available_period ap where cabin_id=:cabin_id and ((:start between start_date and end_date)) and ((:end between start_date and end_date))",nativeQuery = true)
     boolean cabinIsAvailable(@Param("cabin_id")Long cabinId,@Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+
+    @Query(value="SELECT CASE WHEN  COUNT(ap) > 0 THEN true ELSE false END FROM available_period ap where cabin_id=:cabin_id and ((:start between start_date and end_date) or (:end between start_date and end_date) or (start_date between :start and :end) or (end_date between :start and :end))",nativeQuery = true)
+    boolean availablePeriodAlreadyExists(@Param("cabin_id")Long cabinId,@Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+
+
+    @Query(value="SELECT * FROM available_period where cabin_id=:cabin_id and start_date=:startDate and end_date=:endDate",nativeQuery = true)
+    AvailableCabinPeriod findId(@Param("cabin_id")Long id, @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
 }
