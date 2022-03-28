@@ -74,7 +74,7 @@
 
             <div class="row"> 
                  <div class="col">
-                 <p>Price per night:</p>
+                 <p>Price per day:</p>
                  </div>
                  <div class="col" style="color: green">
                  <p><b>{{cabinDto.price}}$</b></p>
@@ -105,7 +105,7 @@
             <div v-for="(service,index) in cabinDto.additionalServices" :key="index" class="group" role="group" aria-label="Basic outlined example">
 
                 <span v-if="service.price==0" style="background-color: #59d47a;" class="badge rounded-pill text-light">{{service.name}} - Free</span>
-                <span v-else style="background-color: #703636;" class="badge rounded-pill text-light">{{service.name}} - {{service.price}}$ per night</span>
+                <span v-else style="background-color: #703636;" class="badge rounded-pill text-light">{{service.name}} - {{service.price}}$ per day</span>
             </div>
 
 

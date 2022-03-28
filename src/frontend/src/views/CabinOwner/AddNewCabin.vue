@@ -76,7 +76,7 @@
    <div class="col">
        <div class="row">
         <div class="col form-group">
-              <label id="label">Price per night ($)</label>
+              <label id="label">Price per day ($)</label>
               <input v-model="cabinDto.price" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" >
               <div class="valid-feedback">Valid.</div>
               <div class="invalid-feedback">Please fill out this field.</div>
@@ -125,7 +125,7 @@
           </div>
 
           <div class="col form-group">
-                    <label id="label">Price per night ($)</label>   
+                    <label id="label">Price per day ($)</label>   
                     <input v-model="prices"  type="text" pattern="[0-9]+\.?[0-9]*" class="form-control" >
                   
           </div> 
