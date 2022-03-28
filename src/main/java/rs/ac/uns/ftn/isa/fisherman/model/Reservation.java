@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+@MappedSuperclass
 public class Reservation {
 
     @Id
@@ -17,7 +17,7 @@ public class Reservation {
     private LocalDateTime endDate;
     @Column(name= "price", nullable = false)
     private Double price;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name="users_id")
     protected Client client;
 
@@ -27,6 +27,13 @@ public class Reservation {
         this.endDate = endDate;
         this.price = price;
         this.client = client;
+    }
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price) {
+        this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.price = price;
+        this.client = new Client();
     }
 
     public Reservation(){}

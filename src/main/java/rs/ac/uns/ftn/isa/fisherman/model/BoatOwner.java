@@ -11,15 +11,25 @@ public class BoatOwner extends User {
     private String registrationReason;
     @OneToMany(mappedBy = "boatOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Boat> boats;
+
+
     @OneToMany(mappedBy = "boatOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<AvailableBoatPeriod> availableBoatPeriods;
+    private Set<AvailableBoatOwnerPeriod> availableBoatOwnerPeriods;
+
+    public Set<AvailableBoatOwnerPeriod> getAvailableBoatOwnerPeriods() {
+        return availableBoatOwnerPeriods;
+    }
+
+    public void setAvailableBoatOwnerPeriods(Set<AvailableBoatOwnerPeriod> availableBoatOwnerPeriods) {
+        this.availableBoatOwnerPeriods = availableBoatOwnerPeriods;
+    }
 
     public BoatOwner() {}
 
     public BoatOwner(Long id, String name, String lastName, String username, String password, String phoneNum, Address address,String registrationReason) {
         super(id, name, lastName, username, password, phoneNum, address);
         this.registrationReason=registrationReason;
-        this.availableBoatPeriods = new HashSet<>();
+        this.availableBoatOwnerPeriods=new HashSet<>();
     }
 
     public Set<Boat> getBoats() {
@@ -40,5 +50,8 @@ public class BoatOwner extends User {
     public String getRoleApp() {
         return ROLE_APP;
     }
+
+
+
 
 }

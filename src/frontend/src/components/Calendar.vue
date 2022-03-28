@@ -205,7 +205,8 @@ export default {
                  id: null,
                 startDate: null,
                 endDate: null,
-                instructorUsername: ''
+                username: '',
+                propertyId: null
             }]
 
           },
@@ -213,7 +214,7 @@ export default {
                  id: null,
                 startDate: null,
                 endDate: null,
-                instructorUsername: ''
+                username: ''
             }],
             state: [],
             modalActive: false
@@ -229,25 +230,15 @@ export default {
 
                
      if(this.$props.role ==='instructor'){
-             axios.get("http://localhost:8081/userc/getUsername",{
-            headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            "Authorization": "Bearer " + localStorage.jwt ,
-            }
-             })
+             axios.get("http://localhost:8081/userc/getUsername")
                .then(response => {
                        this.userRequestDto.username= response.data
                        this.fishingInstructorDtos.username=response.data
-                       axios.post("http://localhost:8081/instructorsPeriod/getAvailablePeriod",this.userRequestDto,{
-                        headers: {
-                        "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-                        "Authorization": "Bearer " + localStorage.jwt ,
-                        }
-                    
-                        })
+                       console.log("stigao   " +this.userRequestDto.username)
+                       axios.post("http://localhost:8081/instructorsPeriod/getAvailablePeriod",this.userRequestDto)
                         .then(response => {
                           this.availableInstructorPeriod=response.data
-                        
+                           
                             for( let newData of response.data ){
                                 var start=newData.startDate
                                 var end=newData.endDate
@@ -262,38 +253,36 @@ export default {
   },
   methods: {
      formatDate(formatDate) {
-            console.log("preeformat"+formatDate)
             const date = dayjs(formatDate);
            return date.format('YYYY-MM-DDTHH:mm:ss');
-        },setPeriod: function(){
-          console.log("starttt"+this.start)
-           console.log("endd"+this.end)
-         
+        },
+     setPeriod: function(){
+
             this.fishingInstructorDtos.availablePeriodDtoSet[0]=({
-              startDate:  this.formatDate(this.start),
-              endDate:  this.formatDate(this.end),
-              instructorUsername: this.fishingInstructorDtos.username})
-              this.start='',
-              this.end=''
+            startDate:  this.formatDate(this.start),
+            endDate:  this.formatDate(this.end),
+            username: this.fishingInstructorDtos.username,
+            propertyId: null
+            })
+
+            this.start='',
+            this.end=''
     
-          
-          axios.post("http://localhost:8081/instructorsPeriod/setAvailableInstructorPeriod",this.fishingInstructorDtos,{
-            headers: {
-            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-            "Authorization": "Bearer " + localStorage.jwt ,
-            }
-             })
+          console.log("pre zahtevA    "+this.fishingInstructorDtos.availablePeriodDtoSet.length)
+          console.log("pre zahtevA    "+this.fishingInstructorDtos.availablePeriodDtoSet[0].startDate)
+               axios
+               .post("http://localhost:8081/instructorsPeriod/setAvailableInstructorPeriod",this.fishingInstructorDtos)
                .then(response => {
+                       
                        this.$swal.fire({
-                 position: 'top-end',
-                  icon: 'success',
-                 title: 'Your work has been saved',
-               showConfirmButton: false,
-               timer: 1500
-                })
-                this.$router.go()
+                       position: 'top-end',
+                       icon: 'success',
+                       title: 'Your work has been saved',
+                       showConfirmButton: false,
+                       timer: 1500
+                      })
+                 this.$router.go()
                  return response;
-                      
               })
 
 
@@ -302,17 +291,11 @@ export default {
         
 
     setDate: function(newDate){
-      
       var date= new Date()
       console.log("VREDNOSTII"+newDate.toString())
           var splits =newDate.toString().split(",")
           date.setDate( splits[1],splits[2], splits[0])
-          console.log("0-"+splits[0])
-          console.log("1-"+splits[1])
-          console.log("2-"+splits[2])
-          console.log("3-"+splits[3])
-          console.log("4-"+splits[4])
-    return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
+       return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
 
     },
 

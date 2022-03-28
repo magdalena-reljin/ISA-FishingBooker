@@ -25,6 +25,7 @@ public class AvailableInstructorPeriodMapper {
     }
     public Set<AvailableInstructorPeriod> availableDtoSToAvailableInstructorPeriods(Set<AvailablePeriodDto> availablePeriodDtoSet, FishingInstructor fishingInstructor){
         Set<AvailableInstructorPeriod> availableInstructorPeriods = new HashSet<>();
+
         for(AvailablePeriodDto availablePeriodDto : availablePeriodDtoSet){
             availableInstructorPeriods.add(availablePeriodDtoToAvailableInstructorPeriod(availablePeriodDto,fishingInstructor));
         }

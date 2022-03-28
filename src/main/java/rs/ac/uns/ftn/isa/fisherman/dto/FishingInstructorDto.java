@@ -137,4 +137,7 @@ public class FishingInstructorDto {
         return availablePeriodDtoSet;
     }
 
+    public void setAvailablePeriodDtoSet(Set<AvailablePeriodDto> availablePeriodDtoSet) {
+        this.availablePeriodDtoSet = availablePeriodDtoSet;
+    }
 }

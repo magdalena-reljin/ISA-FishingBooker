@@ -25,12 +25,14 @@ public class UserServiceImpl implements UserService {
     private MailService<String> mailService;
     private  AuthorityService authorityService;
     private PasswordEncoder passwordEncoder;
+    private TokenUtils tokenUtils;
     @Autowired
     public UserServiceImpl(UserRepository userRepository, MailService<String> mailService, AuthorityService authorityService, PasswordEncoder passwordEncoder, TokenUtils tokenUtils){
         this.userRepository=userRepository;
         this.mailService=mailService;
         this.authorityService=authorityService;
         this.passwordEncoder =passwordEncoder;
+        this.tokenUtils=tokenUtils;
     }
 
     @Override
@@ -162,6 +164,11 @@ public class UserServiceImpl implements UserService {
         mailService.sendMail(recipient,response,new AccountDeletingAccepted());
         User user=userRepository.findByUsername(recipient);
         userRepository.delete(user);
+    }
+
+    @Override
+    public String getUsernameFromToken(String s) {
+        return tokenUtils.getUsernameFromToken(s);
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 public class AvailableBoatPeriodMapper {
     public AvailablePeriodDto availableBoatPeriodToAvailablePeriodDto(AvailableBoatPeriod availableBoatPeriod){
         return new AvailablePeriodDto(availableBoatPeriod.getId(),availableBoatPeriod.getStartDate(),
-                availableBoatPeriod.getEndDate(),availableBoatPeriod.getBoatOwner().getUsername(),availableBoatPeriod.getBoat().getId());
+                availableBoatPeriod.getEndDate(),null,availableBoatPeriod.getBoat().getId());
     }
     public Set<AvailablePeriodDto> availableBoatPeriodsToDto(Set<AvailableBoatPeriod> availableBoatPeriods){
         Set<AvailablePeriodDto> periods = new HashSet<>();
@@ -19,13 +19,13 @@ public class AvailableBoatPeriodMapper {
         }
         return periods;
     }
-    public  AvailableBoatPeriod availablePeriodDtoToAvailableBoatPeriod(AvailablePeriodDto availablePeriodDto, BoatOwner boatOwner, Boat boat){
-        return  new AvailableBoatPeriod(availablePeriodDto.getId(), availablePeriodDto.getStartDate(), availablePeriodDto.getEndDate(),boatOwner,boat);
+    public  AvailableBoatPeriod availablePeriodDtoToAvailableBoatPeriod(AvailablePeriodDto availablePeriodDto, Boat boat){
+        return  new AvailableBoatPeriod(availablePeriodDto.getId(), availablePeriodDto.getStartDate(), availablePeriodDto.getEndDate(),boat);
     }
     public Set<AvailableBoatPeriod> availableDtoSToAvailableBoatPeriods(Set<AvailablePeriodDto> availablePeriodDtoS, BoatOwner boatOwner, Boat boat){
         Set<AvailableBoatPeriod> availableBoatPeriods = new HashSet<>();
         for(AvailablePeriodDto availablePeriodDto : availablePeriodDtoS){
-            availableBoatPeriods.add(availablePeriodDtoToAvailableBoatPeriod(availablePeriodDto,boatOwner,boat));
+            availableBoatPeriods.add(availablePeriodDtoToAvailableBoatPeriod(availablePeriodDto,boat));
         }
         return availableBoatPeriods;
     }

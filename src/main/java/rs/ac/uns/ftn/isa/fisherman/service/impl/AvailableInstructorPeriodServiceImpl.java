@@ -25,12 +25,10 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
     }
 
     @Override
-    public void setAvailableInstructorPeriod(Long id, Set<AvailableInstructorPeriod> availableInstructorPeriod) {
-        FishingInstructor fishingInstructor = fishingInstructorService.findByID(id);
+    public void setAvailableInstructorPeriod(String username, Set<AvailableInstructorPeriod> availableInstructorPeriod) {
+
+        FishingInstructor fishingInstructor = fishingInstructorService.findByUsername(username);
         fishingInstructor.setAvailableInstructorPeriods(availableInstructorPeriod);
         fishingInstructorService.save(fishingInstructor);
     }
-
-
-
 }

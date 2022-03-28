@@ -56,7 +56,7 @@ public class Cabin {
     protected CabinOwner cabinOwner;
 
 
-    @OneToMany(mappedBy = "cabin", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cabin", fetch = FetchType.EAGER, cascade = CascadeType.DETACH, orphanRemoval = true)
     private Set<AvailableCabinPeriod> availableCabinPeriods;
 
     public Cabin() {}
