@@ -21,6 +21,7 @@ import java.util.Set;
 @RequestMapping(value = "/boats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BoatController {
     private static final String SUCCESS ="Success";
+    private static final String BAD_REQUEST ="Bad request";
 
     @Autowired
     private BoatService boatService;
@@ -33,17 +34,15 @@ public class BoatController {
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody BoatDto boatDto){
-        boolean services=false;
         Boat boat=boatMapper.boatDtoToBoat(boatDto);
         boat.setBoatOwner(boatOwnerService.findByUsername(boatDto.getOwnersUsername()));
-        boatService.save(boat);
-        if(boatDto.getAdditionalServices()!=null) {
-            boat.setAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatDto.getAdditionalServices()));
-            services=true;
+        if(boatService.addNewBoat(boat,additionalServiceMapper
+                .additionalServicesDtoToAdditionalServices(boatDto.getAdditionalServices()))) {
+            return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
+        }else{
+            return new ResponseEntity<>("Boat with that name already exists.", HttpStatus.BAD_REQUEST);
         }
-        if(services)
-            boatService.save(boat);
-        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
+
     }
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/findBoatsByOwnersUsername")
@@ -54,29 +53,34 @@ public class BoatController {
         return new ResponseEntity<>(boats,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('BOATOWNER')")
-    @PostMapping("/findByName")
-    public ResponseEntity<BoatDto> findByName(@RequestBody BoatDto boatDto){
-        Long boatOwner= boatOwnerService.findByUsername(boatDto.getOwnersUsername()).getId();
-        String boatName= boatDto.getName();
-        Boat boat= boatService.findByNameAndOwner(boatName,boatOwner);
-        return new ResponseEntity<>(boatMapper.boatToBoatDto(boat), HttpStatus.OK);
-    }
-    @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/edit")
     public ResponseEntity<String> edit(@RequestBody BoatDto boatDto){
         BoatOwner owner=boatOwnerService.findByUsername(boatDto.getOwnersUsername());
         Boat boat=boatMapper.boatDtoToBoatEdit(boatDto);
         boat.setBoatOwner(owner);
         boolean deleteOldImages= boatDto.getImages() == null;
-        boatService.edit(boat,deleteOldImages);
-        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        if(boatService.edit(boat,deleteOldImages))
+            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        else
+            return new ResponseEntity<>(BAD_REQUEST,HttpStatus.BAD_REQUEST);
     }
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody BoatDto boatDto){
         Boat boat=boatMapper.boatDtoToBoat(boatDto);
-        boatService.delete(boat.getId());
-        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        if(boatService.delete(boat.getId()))
+            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        else
+            return new ResponseEntity<>(BAD_REQUEST,HttpStatus.BAD_REQUEST);
+    }
+    @PreAuthorize("hasRole('BOATOWNER')")
+    @PostMapping("/findByNameAndOwnersUsername/{boatName}/{username:.+}/")
+    public ResponseEntity<BoatDto> findByNameAndOwnersId(@PathVariable ("boatName") String boatName,@PathVariable ("username")String username){
+        Boat boat=boatService.findByNameAndOwner(boatName, boatOwnerService.findByUsername(username).getId());
+        if(boat != null)
+            return new ResponseEntity<>(boatMapper.boatToBoatDto(boat),HttpStatus.OK);
+        else
+            return new ResponseEntity<>(boatMapper.boatToBoatDto(boat),HttpStatus.BAD_REQUEST);
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/getAll")

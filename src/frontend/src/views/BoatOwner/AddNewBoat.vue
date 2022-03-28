@@ -111,15 +111,21 @@
    <div class="col">
        <div class="row">
         <div class="col form-group">
-              <label id="label">Price ($)</label>
-              <input v-model="boatDto.price" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" >
+              <label id="label">Price per hour($)</label>
+              <input v-model="boatDto.price" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" required>
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+          </div>
+          <div class="col form-group">
+              <label id="label">Hour captain service ($)</label>
+              <input  v-model="captainServicePrice" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" required >
               <div class="valid-feedback">Valid.</div>
               <div class="invalid-feedback">Please fill out this field.</div>
           </div>
 
            <div class="col form-group">
               <label id="label">Max people</label>
-              <input min="1" v-model="boatDto.maxPeople" type="number" class="form-control" >
+              <input min="1" v-model="boatDto.maxPeople" type="number" class="form-control" required>
               <div class="valid-feedback">Valid.</div>
               <div class="invalid-feedback">Please fill out this field.</div>
           </div>
@@ -171,7 +177,7 @@
           </div>
 
           <div class="col form-group">
-                    <label id="label">Price($)</label>   
+                    <label id="label">Price per hour($)</label>   
                     <input v-model="prices"  type="text" pattern="[0-9]+\.?[0-9]*" class="form-control" >
                   
           </div> 
@@ -242,6 +248,7 @@
      data(){
        return{
          email: '',
+         captainServicePrice: 1,
          boatDto: {
 
          id: null,
@@ -270,11 +277,7 @@
          rules: '',
          fishingEquipment: '',
          price: 1.0,
-         additionalServices: [{
-                  id: null,
-                  name: '',
-                  price: 0.0  
-         }],
+         additionalServices: [],
          cancelingCondition: '',
          rating: '', 
          },
@@ -286,15 +289,25 @@
            imagesSelected: false,
            imagesSelectedEvent: null,
            additionalServicesAdded: false,
-           loader: null
-
+           loader: null,
+           ownerId: 0,
+           
+       userRequestDto: {
+          username: '',
+       }
        }
 
      },
      mounted() {
        this.email = this.$route.params.email
        this.boatDto.ownersUsername= this.email
-
+       this.userRequestDto.username=this.email
+       axios.post("http://localhost:8081/auth/findByEmail", this.userRequestDto)
+               .then(response => {
+                        
+                        this.ownerId=response.data.id 
+              })
+              
      },
      methods: {
        addService: function(){   
@@ -368,25 +381,41 @@
         },
         addNewBoat: function(event){
                event.preventDefault();
-               if(this.additionalServicesAdded==false)
-                  this.boatDto.additionalServices=null   
-
+               console.log('ja sam duzinaliste '+this.boatDto.additionalServices.length)
+            
+                  this.boatDto.additionalServices.push({
+                        id: null,
+                        name: "Captain service",
+                        price:  this.captainServicePrice
+                  })
                    this.loader = this.$loading.show({
                     container: this.fullPage ? null : this.$refs.formContainer,
                     canCancel: true,
                     onCancel: this.onCancel,
-                });
-               axios.post("http://localhost:8081/boats/save",this.boatDto)
-               .then(response => {
-                        
-                        if(this.imagesSelected==true)
-                        this.saveImages()
-                        else{
-                        this.loader.hide();
-                        this.$router.push('/boatOwnerHome/'+ this.email);
-                        }
-                        return response;   
-              })
+                   });
+                          axios.post("http://localhost:8081/boats/save",this.boatDto)
+                          .then(response => {
+                                  
+                                    this.saveImages()
+                                    this.loader.hide();
+                                    this.loader=null
+                                    this.$router.push('/boatOwnerHome/'+ this.email);
+                                    return response;   
+                          })
+                          .catch(err => {
+                                this.loader.hide();
+                                this.loader=null
+                                this.$swal.fire({
+                                      position: 'top-end',
+                                      icon: 'error',
+                                      title: "Boat with that name already exists.",
+                                      showConfirmButton: false,
+                                      timer: 1500
+                                })
+                                this.resetForm()
+                            console.log('ja sam greska  '+err)
+                          }
+                          )
         },
         saveImages: function(){
             
@@ -394,7 +423,7 @@
                     let formData = new FormData();
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
-                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name,formData)
+                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name+"/"+this.ownerId,formData)
                     .then(response => {
                        this.loader.hide();
                        this.loader=null
@@ -403,6 +432,41 @@
                     })
               
               }                
+        },
+        resetForm: function(){
+          this.captainServicePrice=1
+           this.boatDto={
+
+         id: null,
+         ownersUsername: '',
+         name: '',
+         type: '',
+         length: '',
+         engineCode: '',
+         enginePower: '',
+         maxSpeed: '',
+         navigationEquipment: '',
+         addressDto: {
+                  longitude: 0.0,
+                  latitude: 0.0,
+                  country: '',
+                  city: '',    
+                  streetAndNum: ''
+         },
+         description: '',
+         images:[{
+                  id: null,
+                  url: '',
+                  cabin: ''
+         }],
+         maxPeople: 1, 
+         rules: '',
+         fishingEquipment: '',
+         price: 1.0,
+         additionalServices: [],
+         cancelingCondition: '',
+         rating: '', 
+         }
         }
        
       

@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.isa.fisherman.dto.ImageDto;
+import rs.ac.uns.ftn.isa.fisherman.model.Boat;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
 import rs.ac.uns.ftn.isa.fisherman.service.FirebaseService;
 import java.io.IOException;
 
@@ -16,6 +18,9 @@ public class FirebaseController {
     @Autowired
     private FirebaseService firebaseService;
     private final Logger logger= LoggerFactory.getLogger(FirebaseController.class);
+
+    @Autowired
+    private BoatService boatService;
 
     @PostMapping(value="/uploadCabinImage/{cabin}")
     public void uploadCabinImage(@PathVariable("cabin") String cabin,@RequestParam("file") MultipartFile multipartFile) {
@@ -39,9 +44,10 @@ public class FirebaseController {
         }
     }
 
-    @PostMapping(value="/uploadBoatImage/{boat}")
-    public void uploadBoatImage(@PathVariable("boat") String boat,@RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping(value="/uploadBoatImage/{boatName}/{owner}")
+    public void uploadBoatImage(@PathVariable("boatName") String boatName,@PathVariable("owner") Long owner,@RequestParam("file") MultipartFile multipartFile) {
         try {
+            Boat boat=boatService.findByNameAndOwner(boatName,owner);
             firebaseService.uploadBoatImage(multipartFile,boat);
         } catch (IOException e) {
             logger.error(e.toString());

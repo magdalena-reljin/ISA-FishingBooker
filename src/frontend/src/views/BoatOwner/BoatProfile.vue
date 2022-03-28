@@ -78,7 +78,7 @@
 
             <div class="row"> 
                  <div class="col">
-                 <p>Price:</p>
+                 <p>Price per hour:</p>
                  </div>
                  <div class="col" style="color: green">
                  <p><b>{{boatDto.price}}$</b></p>
@@ -109,7 +109,7 @@
             <div v-for="(service,index) in boatDto.additionalServices" :key="index" class="group" role="group" aria-label="Basic outlined example">
 
                 <span v-if="service.price==0" style="background-color: #59d47a;" class="badge rounded-pill text-light">{{service.name}} - Free</span>
-                <span v-else style="background-color: #703636;" class="badge rounded-pill text-light">{{service.name}} - {{service.price}}$ per night</span>
+                <span v-else style="background-color: #703636;" class="badge rounded-pill text-light">{{service.name}} - {{service.price}}$ per hour</span>
             </div>
 
 
@@ -218,7 +218,7 @@
        getBoat: function(){
                   this.boatDto.name=this.boatName
                   this.boatDto.ownersUsername=this.email
-            axios.post("http://localhost:8081/boats/findByName",this.boatDto)
+            axios.post("http://localhost:8081/boats/findByNameAndOwnersUsername"+"/"+this.boatDto.name+"/"+this.email+"/")
                   .then(response => {
                         this.boatDto=response.data
                         this.boatLoaded=true;

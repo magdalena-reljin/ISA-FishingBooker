@@ -110,12 +110,17 @@
    <div class="col">
        <div class="row">
         <div class="col form-group">
-              <label id="label">Price ($)</label>
+              <label id="label">Price per hour($)</label>
               <input v-model="boatDto.price" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" >
               <div class="valid-feedback">Valid.</div>
               <div class="invalid-feedback">Please fill out this field.</div>
           </div>
-
+          <div class="col form-group">
+              <label id="label">Hour captain service ($)</label>
+              <input  v-model="captainServicePrice" type="text" pattern="[1-9]+\.?[0-9]*" class="form-control" required >
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+          </div>
            <div class="col form-group">
               <label id="label">Max people</label>
               <input min="1" v-model="boatDto.maxPeople" type="number" class="form-control" >
@@ -193,13 +198,13 @@
                  </thead>
    
                 <tbody>
-                <tr  v-for="(service,index) in boatDto.additionalServices" :key="index" >
+                <tr v-for="(service,index) in boatDto.additionalServices" :key="index" >
                 <th scope="row">{{index +1}}</th>
                 <td>{{service.name}}</td>
                 <td>{{service.price}}</td>
                 <td>
 
-                  <input @click="removeService(index)" type="button" value="remove" class="btn btn-outline-danger" >
+                  <input  v-if="service.name!='Captain service'"   @click="removeService(index)" type="button" value="remove" class="btn btn-outline-danger" >
                 </td>
                 </tr>          
                 </tbody>
@@ -268,6 +273,8 @@
     },
      data(){
        return{
+         captainServicePrice: 1,
+         oldCaptainServicePrice: 1,
          email: '',
          boatDto: {
 
@@ -297,11 +304,7 @@
          rules: '',
          fishingEquipment: '',
          price: 1.0,
-         additionalServices: [{
-                  id: null,
-                  name: '',
-                  price: 0.0  
-         }],
+         additionalServices: [],
          cancelingCondition: '',
          rating: '', 
          },
@@ -316,7 +319,10 @@
          additionalServicesAdded: false,
          names: '',
          prices: '',
-
+         ownerId: 0,
+         userRequestDto: {
+          username: '',
+       }
        }
 
      },
@@ -326,19 +332,30 @@
         this.boatName= this.$route.params.boatName
         this.boatDto.name=this.boatName
         this.boatDto.ownersUsername=this.email
-        
+        this.userRequestDto.username=this.email
         this.getBoat()
+        axios.post("http://localhost:8081/auth/findByEmail", this.userRequestDto)
+               .then(response => {
+                        
+                        this.ownerId=response.data.id 
+              })
 
      },
      methods: {
        getBoat: function(){
-             axios.post("http://localhost:8081/boats/findByName",this.boatDto)
+             axios.post("http://localhost:8081/boats/findByNameAndOwnersUsername"+"/"+this.boatDto.name+"/"+this.email+"/")
                .then(response => {
                         this.boatDto=response.data
                         this.idx=this.boatDto.additionalServices.length
                         if(this.boatDto.additionalServices.length>0){
                             this.tableHidden=false;
                             this.additionalServicesAdded=true
+                            for(let i=0; i<this.boatDto.additionalServices.length;i++){
+                                if(this.boatDto.additionalServices[i].name=="Captain service"){
+                                    this.captainServicePrice=this.boatDto.additionalServices[i].price
+                                    this.oldCaptainServicePrice=this.boatDto.additionalServices[i].price
+                                }
+                            }
                         }
 
                     
@@ -346,6 +363,8 @@
 
        },
        addService: function(){   
+              if(this.names=='Captain service')
+                 return;
               if(this.names!='' && this.prices!=''){
               this.additionalServicesAdded=true
               this.tableHidden=false  
@@ -373,6 +392,18 @@
 
            if(this.imagesSelected==true)
                this.boatDto.images=null
+
+           if(this.oldCaptainServicePrice!=this.captainServicePrice){
+
+              for(let i=0; i<this.boatDto.additionalServices.length;i++){
+                                if(this.boatDto.additionalServices[i].name=="Captain service")
+                                    this.boatDto.additionalServices[i].price=this.captainServicePrice
+                                
+              }
+
+           }
+             
+          
            
            axios.post("http://localhost:8081/boats/edit",this.boatDto)
                .then(response => {
@@ -405,7 +436,7 @@
                     let formData = new FormData();
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
-                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name,formData)
+                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name+"/"+this.ownerId,formData)
                     .then(response => {
                         
                        this.$swal.fire({
@@ -420,7 +451,54 @@
                     })
               
               }                
-        }
+        },
+         updateLocation: function(latitude,longitude){
+
+           console.log("POGODIO");
+                 axios.get("https://nominatim.openstreetmap.org/reverse", {
+                           params: {
+                           lat: longitude,
+                           lon: latitude,
+                           format: "json",
+                 },
+                 })
+                 .then((response) => {
+                       const { address } = response.data;
+                       var flag = false;
+            var street
+            var number
+                if (address) {
+    
+                if (address.road) {
+                    street = address.road;
+      
+                    flag = true;
+                } else if (address.street) {
+                    street = address.street;
+                    flag = true;
+                }
+                if (flag && address["house-number"]) {
+                    number = address["house-number"];
+                }
+                else if (flag && address["house_number"]) {
+                    number = address["house_number"];
+                }
+                if (flag && address.town) {
+                    this.boatDto.addressDto.city = address.town;
+                }
+                else if (flag && address.city) {
+                    this.boatDto.addressDto.city = address.city;
+                }
+                else if (address.country) {
+                    this.boatDto.addressDto.country = address.country;
+                }
+                this.boatDto.addressDto.streetAndNum= street + ' ' +number
+                this.boatDto.addressDto.longitude=longitude
+                this.boatDto.addressDto.latitude=latitude
+                }
+               })
+             
+        },
        
     }  
     

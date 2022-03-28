@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
@@ -101,11 +102,11 @@ public class FirebaseServiceImpl implements FirebaseService {
     }
 
     @Override
-    public void uploadBoatImage(MultipartFile newImage,String boatName) throws IOException {
+    public void uploadBoatImage(MultipartFile newImage, Boat boat) throws IOException {
         String newFileName= upload(newImage);
         download(newFileName);
         Image image = new Image(null,newFileName);
-        boatService.addNewImage(boatName,image);
+        boatService.addNewImage(boat,image);
     }
 
 

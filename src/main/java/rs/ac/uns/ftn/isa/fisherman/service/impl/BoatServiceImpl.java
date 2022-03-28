@@ -1,8 +1,11 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
+import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
@@ -31,13 +34,26 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
+    public boolean addNewBoat(Boat boat, Set<AdditionalServices> additionalServices) {
+        boolean services=false;
+        if(boatRepository.findByNameAndOwner(boat.getName(),boat.getBoatOwner().getId())!=null)  return false;
+
+        boatRepository.save(boat);
+            if (additionalServices != null) {
+                boat.setAdditionalServices(additionalServices);
+                services = true;
+            }
+            if (services) boatRepository.save(boat);
+       return true;
+    }
+
+    @Override
     public Boat findById(Long id) {
        return boatRepository.findById(id);
     }
 
     @Override
-    public void addNewImage(String boatName, Image image) {
-        Boat boat= boatRepository.findByName(boatName);
+    public void addNewImage(Boat boat, Image image) {
         Set<Image> currentImages=boat.getImages();
         currentImages.add(image);
         boatRepository.save(boat);
@@ -61,7 +77,7 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
-    public void edit(Boat newBoat, Boolean deleteOldImages) {
+    public boolean edit(Boat newBoat, Boolean deleteOldImages) {
         Boat oldBoat=this.boatRepository.findByNameAndOwner(newBoat.getName(),newBoat.getBoatOwner().getId());
         oldBoat.setType(newBoat.getType());
         oldBoat.setLength(newBoat.getLength());
@@ -84,16 +100,18 @@ public class BoatServiceImpl implements BoatService {
         Set<AdditionalServices> savedServices= boatRepository.findByName(oldBoat.getName()).getAdditionalServices();
         if(Boolean.TRUE.equals(deleteOldImages))   imageService.delete(oldImages);
         additionalServicesService.delete(additionalServicesService.findDeletedAdditionalServices(oldAdditionalServices,savedServices));
+        return true;
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         Boat boat=boatRepository.findById(id);
         Set<AdditionalServices> additionalServices=boat.getAdditionalServices();
         Set<Image> images=boat.getImages();
         boatRepository.delete(boat);
         imageService.delete(images);
         additionalServicesService.delete(additionalServices);
+        return true;
     }
 
     public List<Boat> findAll(){

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import org.springframework.cache.annotation.Cacheable;
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import java.util.List;
@@ -7,10 +8,12 @@ import java.util.Set;
 
 public interface BoatService {
     void save(Boat boat);
+
+    boolean addNewBoat(Boat boat,Set<AdditionalServices> services);
     @Cacheable("boat")
     Boat findById(Long id);
 
-    void addNewImage(String boatName, Image image);
+    void addNewImage(Boat boat, Image image);
 
     Set<Boat> findByOwnersId(Long id);
 
@@ -18,9 +21,9 @@ public interface BoatService {
 
     Boat findByNameAndOwner(String boatName, Long boatOwner);
 
-    void edit(Boat boat, Boolean deleteOldImages);
+    boolean edit(Boat boat, Boolean deleteOldImages);
 
-    void delete(Long id);
+    boolean delete(Long id);
 
     List<Boat> findAll();
 }
