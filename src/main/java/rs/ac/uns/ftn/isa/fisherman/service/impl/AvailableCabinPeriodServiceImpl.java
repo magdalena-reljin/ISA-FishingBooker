@@ -101,8 +101,4 @@ public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodServ
         return true;
     }
 
-    @Override
-    public List<AvailableCabinPeriod> findAll() {
-        return availableCabinPeriodRepository.findAll();
-    }
 }

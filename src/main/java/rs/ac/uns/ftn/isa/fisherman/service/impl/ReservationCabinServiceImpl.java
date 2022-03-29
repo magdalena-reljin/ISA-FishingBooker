@@ -70,12 +70,14 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         if(periodStillAvailable(cabinReservation)){
             cabinReservationRepository.save(cabinReservation);
             if(cabinReservationDto.getAddedAdditionalServices()!=null)
+            {
                 cabinReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
                 cabinReservationRepository.save(cabinReservation);
+            }
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
                 String message = cabinReservationDto.getCabinDto().getName() + " is booked from " + cabinReservationDto.getStartDate().format(formatter) + " to " + cabinReservationDto.getEndDate().format(formatter) + " .";
-                mailService.sendMail("aleksastojicns@gmail.com", message, new CabinReservationSuccessfulInfo());
+                mailService.sendMail(cabinReservationDto.getClientUsername(), message, new CabinReservationSuccessfulInfo());
             } catch (MessagingException e) {
                 e.printStackTrace();
             }

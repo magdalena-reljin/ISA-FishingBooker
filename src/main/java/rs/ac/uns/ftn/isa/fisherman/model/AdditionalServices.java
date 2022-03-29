@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
 import javax.persistence.*;
+import java.util.Set;
+
 @Entity
 @Table(name="services")
 public class AdditionalServices {
