@@ -176,7 +176,7 @@
 
           <tbody>
             <tr
-              v-for="(service, index) in cabinDto.additionalServices"
+              v-for="(service, index) in availableAdditionalServices"
               :key="index"
             >
               <th scope="row">{{ index + 1 }}</th>
@@ -194,7 +194,7 @@
           </tbody>
         </table>
 
-        <p v-show="cabinDto.additionalServices.length == 0">
+        <p v-show="availableAdditionalServices.length == 0">
           No additional services for adding.
         </p>
 
@@ -315,6 +315,7 @@
 import axios from "axios";
 import OpenLayersMap from "../../components/OpenLayersMap.vue";
 import Datepicker from "vue3-date-time-picker";
+import dayjs from "dayjs";
 
 export default {
   props: {
@@ -363,6 +364,13 @@ export default {
         ownerUsername: "",
       },
       addedAdditionalServices: [
+        {
+          id: null,
+          name: "",
+          price: 0.0,
+        },
+      ],
+      availableAdditionalServices: [
         {
           id: null,
           name: "",
@@ -418,21 +426,21 @@ export default {
       return false;
     },
     addService: function (service) {
-      if(this.addedAdditionalServices==null)
+      if (this.addedAdditionalServices == null)
         this.addedAdditionalServices = [];
       this.addedAdditionalServices.push(service);
       let newList = [];
-      for (let i = 0; i < this.cabinDto.additionalServices.length; i++) {
-        if (this.cabinDto.additionalServices[i].id === service.id) {
+      for (let i = 0; i < this.availableAdditionalServices.length; i++) {
+        if (this.availableAdditionalServices[i].id === service.id) {
           continue;
         }
-        newList.push(this.cabinDto.additionalServices[i]);
+        newList.push(this.availableAdditionalServices[i]);
       }
-      this.cabinDto.additionalServices = newList;
+      this.availableAdditionalServices = newList;
       this.calculatePrice();
     },
     removeService: function (service) {
-      this.cabinDto.additionalServices.push(service);
+      this.availableAdditionalServices.push(service);
       let newList = [];
       for (let i = 0; i < this.addedAdditionalServices.length; i++) {
         if (this.addedAdditionalServices[i].id === service.id) {
@@ -446,14 +454,14 @@ export default {
     getCabin: function () {
       this.cabinDto.name = this.cabinName;
       axios
-        .post("http://localhost:8081/cabins/findByName", this.cabinDto, {
-        })
+        .post("http://localhost:8081/cabins/findByName", this.cabinDto, {})
         .then((response) => {
           this.addedAdditionalServices = [];
           this.cabinDto = response.data;
           this.cabinLoaded = true;
           this.currentImageUrl = this.cabinDto.images[0].url;
           this.maxImageIndex = this.cabinDto.images.length - 1;
+          this.availableAdditionalServices = this.cabinDto.additionalServices;
           this.calculatePrice();
         });
     },
@@ -482,48 +490,86 @@ export default {
         this.cabinDto.addressDto.country
       );
     },
-    dataIsValid(){
+    dataIsValid() {
       const date1 = new Date(this.start);
       const date2 = new Date(this.end);
       const currentDate = new Date();
-      if((date1.getTime() - date2.getTime()) > 0){
-        alert("Start date must be before end date!");
+      if (date1.getTime() - date2.getTime() > 0) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Start date must be before end date!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         return false;
       }
-      if((date1.getTime() - currentDate.getTime()) < 0){
-        alert("Start date can't be before today!");
+      if (date1.getTime() - currentDate.getTime() < 0) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Start date can't be before today!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         return false;
       }
       return true;
     },
+    formatDate: function (formatDate) {
+      const date = dayjs(formatDate);
+      return date.format("YYYY-MM-DDTHH:mm:ss");
+    },
     bookCabin: function () {
-      if(!this.dataIsValid()){
+      if (!this.dataIsValid()) {
         return;
       }
-       if(this.addedAdditionalServices==null)
-        this.addedAdditionalServices=null;
-       else
-        if(this.addedAdditionalServices.length==0)
-          this.addedAdditionalServices=null;
-      //event.preventDefault();
+      if (this.addedAdditionalServices == null)
+        this.addedAdditionalServices = null;
+      else if (this.addedAdditionalServices.length == 0)
+        this.addedAdditionalServices = null;
+
+      this.loader = this.$loading.show({
+        // Optional parameters
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
+      });
+
       axios
         .post(
           "http://localhost:8081/reservationCabin/makeReservation",
           {
             id: null,
-            startDate: this.start,
-            endDate: this.end,
+            startDate: this.formatDate(this.start),
+            endDate: this.formatDate(this.end),
             price: this.totalPrice,
             cabinDto: this.cabinDto,
             addedAdditionalServices: this.addedAdditionalServices,
-            clientUsername: this.email
+            clientUsername: this.email,
           },
-          {
-          }
+          {}
         )
         .then((response) => {
           this.availableCabins = response.data;
           this.display = "CABINS";
+          this.loader.hide();
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Available period successfully added!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.$router.push("/clientHome/" + this.email);
+        })
+        .catch(() => {
+          this.loader.hide();
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Unsuccessful reservation! Period already taken.",
+          });
         });
     },
   },

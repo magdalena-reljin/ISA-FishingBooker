@@ -36,7 +36,6 @@ import ClientCabins from '../views/Client/ClientCabins'
 import store from '../store/index'
 import PersonalCalendar from '../views/BoatOwner/PersonalCalendar.vue'
 
-
 const routes = [
   
   {

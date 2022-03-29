@@ -100,4 +100,5 @@ public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodServ
 
         return true;
     }
+
 }

@@ -11,7 +11,7 @@ public class CabinReservation extends Reservation{
     @JoinColumn(name="cabin_id")
     protected Cabin cabin;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "cabin_reservation_services",
             joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))

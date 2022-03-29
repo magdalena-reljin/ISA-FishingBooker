@@ -123,6 +123,7 @@ import axios from "axios";
 import ClientNavbar from "./ClientNavbar";
 import Datepicker from "vue3-date-time-picker";
 import ClientCabins from "./ClientCabins.vue";
+import dayjs from 'dayjs';
 
 export default {
   components: {
@@ -162,14 +163,30 @@ export default {
       const date2 = new Date(this.end);
       const currentDate = new Date();
       if((date1.getTime() - date2.getTime()) > 0){
-        alert("Start date must be before end date!");
+        this.$swal.fire({
+                 position: 'top-end',
+                  icon: 'error',
+                 title: "Start date must be before end date!",
+                 showConfirmButton: false,
+                 timer: 1500
+                })
         return false;
       }
       if((date1.getTime() - currentDate.getTime()) < 0){
-        alert("Start date can't be before today!");
+        this.$swal.fire({
+                 position: 'top-end',
+                  icon: 'error',
+                 title: "Start date can't be before today!",
+                 showConfirmButton: false,
+                 timer: 1500
+                })
         return false;
       }
       return true;
+    },
+    formatDate: function(formatDate) {
+      const date = dayjs(formatDate);
+      return date.format("YYYY-MM-DDTHH:mm:ss");
     },
     submitReservationParams: function (event) {
       event.preventDefault();
@@ -180,8 +197,8 @@ export default {
       if (this.selectedEntity === "CABINS"){
         axios
         .post("http://localhost:8081/reservationCabin/getAvailableCabins", {
-          startDate: this.start,
-          endDate: this.end,
+          startDate: this.formatDate(this.start),
+          endDate: this.formatDate(this.end),
           price: this.price,
           numberOfRooms: this.numOfRooms,
           bedsPerRoom: this.bedsPerRoom
