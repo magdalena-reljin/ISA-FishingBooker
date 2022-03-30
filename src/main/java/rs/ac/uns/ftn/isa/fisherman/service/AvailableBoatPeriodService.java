@@ -1,14 +1,16 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
-import rs.ac.uns.ftn.isa.fisherman.model.AvailableBoatOwnerPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableBoatPeriod;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface AvailableBoatPeriodService {
 
     Set<AvailableBoatPeriod> getAvailablePeriod(Long id);
 
-    void setAvailableBoatPeriod(Set<AvailableBoatPeriod> availableBoatPeriods);
+    boolean setAvailableBoatPeriod(AvailableBoatPeriod availableBoatPeriods);
 
+    boolean boatIsAvailable(Long boatId, LocalDateTime start, LocalDateTime end);
 
+    boolean editAvailableBoatsPeriod(AvailableBoatPeriod oldAvailablePeriod, AvailableBoatPeriod newAvailablePeriod);
 }
