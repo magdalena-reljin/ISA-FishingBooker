@@ -6,14 +6,24 @@ public class SearchAvailablePeriodsDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private double price;
+    private String username;
 
-    public SearchAvailablePeriodsDto(LocalDateTime startDate, LocalDateTime endDate, double price) {
+    public SearchAvailablePeriodsDto(LocalDateTime startDate, LocalDateTime endDate, double price, String username) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.price = price;
+        this.username = username;
     }
 
     public SearchAvailablePeriodsDto() {}
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public LocalDateTime getStartDate() {
         return startDate;

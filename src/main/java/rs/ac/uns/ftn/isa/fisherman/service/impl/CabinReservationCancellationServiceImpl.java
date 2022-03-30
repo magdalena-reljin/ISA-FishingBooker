@@ -25,7 +25,8 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
 
     @Override
     public boolean addCancellation(CabinReservationDto cabinReservationDto) {
-        if(cabinReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now()))
+        if(cabinReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now())||
+                (cabinReservationCancellationRepository.findById(cabinReservationDto.getId()).isPresent()))
             return false;
         CabinReservationCancellation cabinReservationCancellation = new CabinReservationCancellation();
         CabinReservation cabinReservation = cabinReservationRepository.getById(cabinReservationDto.getId());

@@ -297,7 +297,6 @@ export default {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
     cancelReservation: function (cabinReservationDto) {
-      console.log(cabinReservationDto);
       this.loader = this.$loading.show({
         // Optional parameters
         container: this.fullPage ? null : this.$refs.formContainer,
@@ -319,20 +318,18 @@ export default {
             icon: "success",
             title: "Cabin reservation cancellation successful!",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 2500,
           });
-          console.log(response);
-          //this.getCabinReservations();
+          this.getCabinReservations();
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           this.loader.hide();
           this.$swal.fire({
             icon: "error",
             title: "Something went wrong!",
             text: "Unsuccessful cancellation! Less then 3 days left to start date.",
           });
-           //this.getCabinReservations();
+           this.getCabinReservations();
         });
     },
   },

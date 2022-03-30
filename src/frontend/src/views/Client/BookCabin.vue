@@ -561,7 +561,7 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           });
-          this.$router.push("/clientHome/" + this.email);
+          this.$router.push("/reservations/" + this.email);
         })
         .catch(() => {
           this.loader.hide();
