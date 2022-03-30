@@ -90,4 +90,9 @@ public class BoatController {
             boats.add(boatMapper.boatToBoatDto(boat));
         return new ResponseEntity<>(boats,HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('BOATOWNER')")
+    @PostMapping("/canBeEditedOrDeleted/{id}")
+    public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
+            return new ResponseEntity<>(boatService.canBeEditedOrDeleted(id),HttpStatus.OK);
+    }
 }

@@ -381,11 +381,26 @@
               this.idx--;
        },
        deleteBoat: function(){
-           axios.post("http://localhost:8081/boats/delete",this.boatDto)
+             axios.post("http://localhost:8081/boats/canBeEditedOrDeleted/"+this.boatDto.id)
                .then(response => {
-                    this.$router.push('/boatOwnerHome/'+ this.email);
-                    return response;
+                     if(response.data == true){
+                     axios.post("http://localhost:8081/boats/delete",this.boatDto)
+                      .then(response => {
+                            this.$router.push('/boatOwnerHome/'+ this.email);
+                            return response;
+                      })
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This boat has future reservations and can not be deleted!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
               })
+          
        },
        editBoat: function(event){
            event.preventDefault()
@@ -403,26 +418,41 @@
 
            }
              
-          
-           
-           axios.post("http://localhost:8081/boats/edit",this.boatDto)
+          axios.post("http://localhost:8081/boats/canBeEditedOrDeleted/"+this.boatDto.id)
                .then(response => {
-                    if(this.imagesSelected==true){
-                        this.saveImages()
-                    }
-                    else{
-                        
-                       this.$swal.fire({
-                       position: 'top-end',
-                       icon: 'success',
-                       title: 'Changes saved',
-                       showConfirmButton: false,
-                       timer: 1500
-                       })
-                       this.$router.push('/boatProfile/'+ this.email+'/'+this.boatName);
-                    }
-                    return response;
+                     if(response.data == true){
+                         axios.post("http://localhost:8081/boats/edit",this.boatDto)
+                        .then(response => {
+                              if(this.imagesSelected==true){
+                                  this.saveImages()
+                              }
+                              else{
+                                  
+                                this.$swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Changes saved',
+                                showConfirmButton: false,
+                                timer: 1500
+                                })
+                                this.$router.push('/boatProfile/'+ this.email+'/'+this.boatName);
+                              }
+                              return response;
+                        })
+
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This boat has future reservations and can not be edited!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
               })
+           
+           
 
        },
        onFileSelected: function(event){

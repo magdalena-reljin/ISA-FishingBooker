@@ -8,11 +8,9 @@ import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
-import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +24,9 @@ public class BoatServiceImpl implements BoatService {
     @Autowired
     private AdditionalServicesService additionalServicesService;
     @Autowired
-    private BoatOwnerService boatOwnerService;
+    private QuickReservationBoatService quickReservationBoatService;
+    @Autowired
+    private BoatReservationService boatReservationService;
 
     @Override
     public void save(Boat boat) {
@@ -116,5 +116,13 @@ public class BoatServiceImpl implements BoatService {
 
     public List<Boat> findAll(){
         return boatRepository.findAll();
+    }
+
+    @Override
+    public boolean canBeEditedOrDeleted(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        if(boatReservationService.futureReservationsExist(currentDate,id)) return false;
+        if(quickReservationBoatService.futureQuickReservationsExist(currentDate,id)) return false;
+        return true;
     }
 }

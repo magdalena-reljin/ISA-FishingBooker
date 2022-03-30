@@ -89,6 +89,16 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return boatReservationRepository.ownerIsNotAvailable(ownerId, start, end);
     }
 
+    @Override
+    public Set<BoatReservation> findReservationsByOwnerId(Long id) {
+        return boatReservationRepository.findReservationsByOwnerId(id);
+    }
+
+    @Override
+    public boolean futureReservationsExist(LocalDateTime currentDate,Long boatId) {
+        return boatReservationRepository.futureReservationsExist(currentDate,boatId);
+    }
+
     private void sendMailNotification(BoatReservation boatReservation,String email){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
