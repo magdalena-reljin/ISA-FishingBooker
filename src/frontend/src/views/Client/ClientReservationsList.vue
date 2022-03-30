@@ -6,10 +6,10 @@
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           <template v-if="upcomingCabinReservations">
-          Upcoming reservations
+            Upcoming reservations
           </template>
           <template v-if="!upcomingCabinReservations">
-          Reservation history
+            Reservation history
           </template>
         </h1>
       </form>
@@ -25,7 +25,11 @@
 
     <template v-if="sortedCabinReservations">
       <template v-if="sortedCabinReservations.length == 0">
-        <h3>No <template v-if="upcomingCabinReservations">upcoming</template> cabin reservations to show.</h3>
+        <h3>
+          No
+          <template v-if="upcomingCabinReservations">upcoming</template> cabin
+          reservations to show.
+        </h3>
       </template>
     </template>
     <!-- Carousel wrapper -->
@@ -115,20 +119,16 @@
                     <div class="row">
                       <div class="col" style="text-align: right">
                         <template v-if="!reservationProcess"> </template>
-                        <template
-                          v-if="
-                            upcomingCabinReservations
-                          "
-                        >
+                        <template v-if="upcomingCabinReservations">
                           <button
-                            @click="
-                              cancelReservation(
-                                cabinReservationDto.cabinDto.name
-                              )
-                            "
+                            @click="cancelReservation(cabinReservationDto)"
                             type="button"
                             class="btn btn-outline-dark rounded-pill"
-                            :disabled="!possibleCancellation(cabinReservationDto.startDate)"
+                            :disabled="
+                              !possibleCancellation(
+                                cabinReservationDto.startDate
+                              )
+                            "
                           >
                             CANCEL
                           </button>
@@ -156,7 +156,7 @@ import dayjs from "dayjs";
 export default {
   components: {},
   props: {
-    upcomingCabinReservations: Boolean
+    upcomingCabinReservations: Boolean,
   },
   data() {
     return {
@@ -225,7 +225,8 @@ export default {
     },
     possibleCancellation: function (date) {
       const currentDate = new Date();
-      if (this.getNumberOfDays(currentDate, this.setDate(date)) < 3) return false;
+      if (this.getNumberOfDays(currentDate, this.setDate(date)) < 3)
+        return false;
       return true;
     },
     getCabinReservations: function () {
@@ -295,8 +296,44 @@ export default {
     seeProfile: function (cabinName) {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
-    cancelReservation: function (cabinName) {
-      console.log(cabinName);
+    cancelReservation: function (cabinReservationDto) {
+      console.log(cabinReservationDto);
+      this.loader = this.$loading.show({
+        // Optional parameters
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
+      });
+      axios
+        .post(
+          "http://localhost:8081/reservationCabin/cancelReservation",
+          cabinReservationDto,
+          {}
+        )
+        .then((response) => {
+          this.availableCabins = response.data;
+          this.display = "CABINS";
+          this.loader.hide();
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Cabin reservation cancellation successful!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          console.log(response);
+          //this.getCabinReservations();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loader.hide();
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Unsuccessful cancellation! Less then 3 days left to start date.",
+          });
+           //this.getCabinReservations();
+        });
     },
   },
   computed: {

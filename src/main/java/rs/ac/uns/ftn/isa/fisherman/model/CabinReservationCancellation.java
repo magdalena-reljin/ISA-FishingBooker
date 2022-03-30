@@ -10,6 +10,20 @@ public class CabinReservationCancellation extends ReservationCancellation{
 
     @ManyToOne(cascade= CascadeType.MERGE)
     @JoinColumn(name="cabin_reservation_id")
-    protected CabinReservation cabinReservation;
+    private CabinReservation cabinReservation;
 
+    public CabinReservationCancellation(Long id, Client client, CabinReservation cabinReservation) {
+        super(id, client);
+        this.cabinReservation = cabinReservation;
+    }
+
+    public CabinReservationCancellation() {}
+
+    public CabinReservation getCabinReservation() {
+        return cabinReservation;
+    }
+
+    public void setCabinReservation(CabinReservation cabinReservation) {
+        this.cabinReservation = cabinReservation;
+    }
 }
