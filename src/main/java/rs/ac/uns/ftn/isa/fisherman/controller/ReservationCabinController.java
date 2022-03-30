@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
+import rs.ac.uns.ftn.isa.fisherman.service.CabinReservationCancellationService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import java.util.HashSet;
@@ -24,6 +26,8 @@ public class ReservationCabinController {
 
     @Autowired
     private ReservationCabinService reservationCabinService;
+    @Autowired
+    private CabinReservationCancellationService cabinReservationCancellationService;
     private final CabinMapper cabinMapper = new CabinMapper();
     private final CabinReservationMapper cabinReservationMapper=new CabinReservationMapper();
 
@@ -43,7 +47,7 @@ public class ReservationCabinController {
         if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
     }
     @PostMapping("/ownerCreates")
     @PreAuthorize("hasRole('CABINOWNER')")
@@ -53,7 +57,7 @@ public class ReservationCabinController {
 
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         }else {
-            return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,4 +69,30 @@ public class ReservationCabinController {
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
     }
 
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<CabinReservationDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<CabinReservationDto> cabinReservationDtos= new HashSet<>();
+        for(CabinReservation cabinReservation: reservationCabinService.getUpcomingClientReservationsByUsername(userRequestDTO.getUsername()))
+            cabinReservationDtos.add(cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation));
+        return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<CabinReservationDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<CabinReservationDto> cabinReservationDtos= new HashSet<>();
+        for(CabinReservation cabinReservation: reservationCabinService.getClientReservationHistoryByUsername(userRequestDTO.getUsername()))
+            cabinReservationDtos.add(cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation));
+        return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation (@RequestBody CabinReservationDto cabinReservationDto) {
+        if(cabinReservationCancellationService.addCancellation(cabinReservationDto))
+            return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
+    }
 }

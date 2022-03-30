@@ -26,7 +26,7 @@ public class CabinReservationMapper {
         String fullName=cabinReservation.getClient().getName()+" "+cabinReservation.getClient().getLastName();
         return new CabinReservationDto(cabinReservation.getId(),cabinReservation.getStartDate(),
                 cabinReservation.getEndDate(),cabinReservation.getPrice(),cabinReservation.getClient().getUsername(),
-                fullName,null,null);
+                fullName,cabinMapper.cabinToCabinDto(cabinReservation.getCabin()),null);
     }
 
     public CabinReservationDto quickCabinReservationToCabinReservationDto(QuickReservationCabin quickReservationCabin) {

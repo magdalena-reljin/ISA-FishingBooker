@@ -8,10 +8,8 @@ import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
-import rs.ac.uns.ftn.isa.fisherman.model.AvailableCabinPeriod;
-import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.Client;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
+import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
@@ -21,6 +19,7 @@ import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -38,13 +37,17 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     private CabinReservationRepository cabinReservationRepository;
     @Autowired
     private QuickReservationCabinService quickReservationCabinService;
-
-
+    @Autowired
+    private CabinReservationCancellationRepository cabinReservationCancellationRepository;
 
     @Override
     public Set<Cabin> getAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
         Set<Cabin> availableCabins = new HashSet<>();
+        Client client = clientService.findByUsername(searchAvailablePeriodsCabinDto.getUsername());
+        List<CabinReservationCancellation> cabinReservationCancellations = cabinReservationCancellationRepository.getByUsersId(client.getId());
         for(AvailableCabinPeriod cabinPeriod:availableCabinPeriodService.findAll()){
+            if(periodWasAlreadyReserved(cabinPeriod, cabinReservationCancellations))
+                continue;
             if(searchAvailablePeriodsCabinDto.getStartDate().isBefore(cabinPeriod.getStartDate())
                     ||searchAvailablePeriodsCabinDto.getEndDate().isAfter(cabinPeriod.getEndDate())) {
                 continue;
@@ -61,6 +64,17 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 availableCabins.add(cabinPeriod.getCabin());
         }
         return availableCabins;
+    }
+
+    private boolean periodWasAlreadyReserved(AvailableCabinPeriod cabinPeriod, List<CabinReservationCancellation> cabinReservationCancellations) {
+        for(CabinReservationCancellation cabinReservationCancellation:cabinReservationCancellations) {
+            if (cabinReservationCancellation.getCabinReservation().getCabin().getId().equals(cabinPeriod.getCabin().getId()))
+                continue;
+            if (cabinReservationCancellation.getCabinReservation().getStartDate().isBefore(cabinPeriod.getStartDate())
+                    || cabinReservationCancellation.getCabinReservation().getEndDate().isAfter(cabinPeriod.getEndDate()))
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -163,5 +177,24 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         }
     }
 
+    public Set<CabinReservation> getUpcomingClientReservationsByUsername(String clientUsername){
+        List<CabinReservationCancellation> cabinReservationCancellations = cabinReservationCancellationRepository.getByUsersId(clientService.findByUsername(clientUsername).getId());
+        Set<CabinReservation> cabinReservations = new HashSet<>();
+        for(CabinReservation cabinReservation:cabinReservationRepository.getUpcomingClientReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now())){
+            if(!reservationCancelled(cabinReservation.getId(),cabinReservationCancellations))
+                cabinReservations.add(cabinReservation);
+        }
+        return cabinReservations;
+    }
 
+    private boolean reservationCancelled(Long id, List<CabinReservationCancellation> cabinReservationCancellations){
+        for(CabinReservationCancellation cabinReservationCancellation:cabinReservationCancellations){
+            if(cabinReservationCancellation.getCabinReservation().getId().equals(id)) return true;
+        }
+        return false;
+    }
+
+    public Set<CabinReservation> getClientReservationHistoryByUsername(String clientUsername){
+        return cabinReservationRepository.getClientReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
 }

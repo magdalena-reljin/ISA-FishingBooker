@@ -16,4 +16,13 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
 
     @Query(value="SELECT * FROM cabin_reservation where cabin_id=:cabin_id and (:currentDate <= end_date) ",nativeQuery = true)
     Set<CabinReservation> getPresentByCabinId(@Param("cabin_id")Long cabinId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT * FROM cabin_reservation where users_id=:user_id and (:currentDate <= start_date) ",nativeQuery = true)
+    Set<CabinReservation> getUpcomingClientReservations(@Param("user_id")Long user_id,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT * FROM cabin_reservation where users_id=:user_id and (:currentDate > start_date) ",nativeQuery = true)
+    Set<CabinReservation> getClientReservationsHistory(@Param("user_id")Long user_id,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT * FROM cabin_reservation where id=:id",nativeQuery = true)
+    CabinReservation getById(@Param("id")Long id);
 }

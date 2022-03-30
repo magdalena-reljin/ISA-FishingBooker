@@ -557,11 +557,11 @@ export default {
           this.$swal.fire({
             position: "top-end",
             icon: "success",
-            title: "Available period successfully added!",
+            title: "Cabin reservation successful!",
             showConfirmButton: false,
-            timer: 2500,
+            timer: 2000,
           });
-          this.$router.push("/clientHome/" + this.email);
+          this.$router.push("/reservations/" + this.email);
         })
         .catch(() => {
           this.loader.hide();

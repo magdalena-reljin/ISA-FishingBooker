@@ -201,7 +201,8 @@ export default {
           endDate: this.formatDate(this.end),
           price: this.price,
           numberOfRooms: this.numOfRooms,
-          bedsPerRoom: this.bedsPerRoom
+          bedsPerRoom: this.bedsPerRoom,
+          username: this.email
         }, {
 
         })

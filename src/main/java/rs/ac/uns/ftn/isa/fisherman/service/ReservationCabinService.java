@@ -17,4 +17,7 @@ public interface ReservationCabinService {
 
     Set<CabinReservation> getPresentByCabinId(Long cabinId);
     boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
+
+    Set<CabinReservation> getUpcomingClientReservationsByUsername(String clientUsername);
+    Set<CabinReservation> getClientReservationHistoryByUsername(String clientUsername);
 }
