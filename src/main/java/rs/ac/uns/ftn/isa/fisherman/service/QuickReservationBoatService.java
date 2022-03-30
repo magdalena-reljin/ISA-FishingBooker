@@ -11,4 +11,7 @@ public interface QuickReservationBoatService {
     Set<QuickReservationBoat> getByBoatId(Long cabinId);
     boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate);
     boolean ownerIsNotAvailableQuickResrvation(Long ownerId, LocalDateTime start, LocalDateTime end);
+
+    Set<QuickReservationBoat> findReservationsByOwnerId(Long id);
+    boolean futureQuickReservationsExist(LocalDateTime currentDate,Long boatId);
 }

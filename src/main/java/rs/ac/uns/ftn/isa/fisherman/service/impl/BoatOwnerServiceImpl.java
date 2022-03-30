@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.isa.fisherman.repository.BoatOwnerRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 
 import java.util.List;
+
 @Service
 public class BoatOwnerServiceImpl implements BoatOwnerService {
     private BoatOwnerRepository boatOwnerRepository;
@@ -29,6 +30,8 @@ public class BoatOwnerServiceImpl implements BoatOwnerService {
     public void save(BoatOwner boatOwner) {
         boatOwnerRepository.save(boatOwner);
     }
+
+
 
 
 }

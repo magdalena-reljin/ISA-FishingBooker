@@ -333,12 +333,8 @@
                axios.post("http://localhost:8081/cabins/save",this.cabinDto)
                .then(response => {
                         
-                        if(this.imagesSelected==true)
                         this.saveImages()
-                        else{
-                        this.loader.hide();
-                        this.$router.push('/cabinOwnerHome/'+ this.email);
-                        }
+                        
                         return response;   
               })
         },

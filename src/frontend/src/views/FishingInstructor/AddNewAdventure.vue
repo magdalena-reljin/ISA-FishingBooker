@@ -346,12 +346,8 @@
                axios.post("http://localhost:8081/adventures/save",this.adventureDto)
                .then(response => {
                         
-                        if(this.imagesSelected==true)
                         this.saveImages()
-                        else{
-                        this.loader.hide();
-                        this.$router.push('/fishingInstructorHome/'+ this.email);
-                        }
+                        
                         return response;   
               })
         },
@@ -362,11 +358,11 @@
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
                        axios.post("http://localhost:8081/firebase/uploadAdventureImage/"+this.adventureDto.name,formData)
-                    .then(response => {
-                    this.loader.hide();
-
-                       this.$router.push('/fishingInstructorHome/'+ this.email);
-                      return response;
+                      .then(response => {
+                          this.loader.hide();
+                          this.loader=null;
+                          this.$router.push('/fishingInstructorHome/'+ this.email);
+                       return response;
                     })
               
               }                
