@@ -5,7 +5,7 @@
       <FullCalendar :options="calendarOptions"    @select="handleSelect" class="calendar"  />
       <div class="info">
         <h5>{{email}}'s timetable</h5>
-       
+
       </div>
     </div>
    </div>
@@ -22,7 +22,6 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-
 import 'vue3-date-time-picker/dist/main.css';
 //import dayjs from 'dayjs';
 import '@shapla/vue-modal/dist/style.css';
@@ -32,16 +31,13 @@ import '@shapla/vue-modal/dist/style.css';
     
      components: {
          BoatOwnerNav,
-          FullCalendar,
-
-   // VueModality,
-
+         FullCalendar
   
      },
      data(){
        return{
        email: '',
-        calendarOptions: {
+       calendarOptions: {
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
         initialDate: new Date(),
         headerToolbar: {
@@ -71,7 +67,6 @@ import '@shapla/vue-modal/dist/style.css';
                   if(arg.event.extendedProps.email==null){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
-
                   }else{
                   this.usernameQuickInfo=arg.event.extendedProps.email
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName

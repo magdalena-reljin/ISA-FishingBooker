@@ -1,8 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.mapper;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.model.Boat;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 
 public class BoatReservationMapper {
     private  BoatMapper boatMapper=new BoatMapper();
@@ -20,6 +19,17 @@ public class BoatReservationMapper {
         return new BoatReservationDto(boatReservation.getId(),boatReservation.getStartDate(),
                 boatReservation.getEndDate(),boatReservation.getPrice(),boatReservation.getClient().getUsername(),
                 fullName,null,null,boatReservation.getNeedsCaptainService());
+    }
+    public BoatReservationDto quickBoatReservationToBoatReservationDto(QuickReservationBoat quickReservationBoat) {
+        Client client=new Client();
+        String fullName=null;
+        if(quickReservationBoat.getClient() !=null){
+            client.setUsername(quickReservationBoat.getClient().getUsername());
+            fullName=quickReservationBoat.getClient().getName()+" "+quickReservationBoat.getClient().getLastName();
+        }
+        return new BoatReservationDto(quickReservationBoat.getId(),quickReservationBoat.getStartDate(),
+                quickReservationBoat.getEndDate(),quickReservationBoat.getPrice(),client.getUsername(),
+                fullName,null,null,quickReservationBoat.getNeedsCaptainServices());
     }
 
 }
