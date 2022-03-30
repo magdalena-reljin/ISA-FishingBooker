@@ -35,6 +35,7 @@ import ClientReservationForm from '../views/Client/ClientReservationForm'
 import ClientCabins from '../views/Client/ClientCabins'
 import store from '../store/index'
 import PersonalCalendar from '../views/BoatOwner/PersonalCalendar.vue'
+import ClientReservations from '../views/Client/ClientReservations'
 
 const routes = [
   
@@ -172,6 +173,12 @@ const routes = [
     path: '/availableCabins/:email',
     name: 'ClientCabins',
     component: ClientCabins,
+    props: true
+  },
+  {
+    path: '/reservations/:email',
+    name: 'ClientReservations',
+    component: ClientReservations,
     props: true
   },
   {

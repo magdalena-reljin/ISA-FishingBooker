@@ -163,5 +163,11 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         }
     }
 
+    public Set<CabinReservation> getUpcomingClientReservationsByUsername(String clientUsername){
+        return cabinReservationRepository.getUpcomingClientReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
 
+    public Set<CabinReservation> getClientReservationHistoryByUsername(String clientUsername){
+        return cabinReservationRepository.getClientReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
 }
