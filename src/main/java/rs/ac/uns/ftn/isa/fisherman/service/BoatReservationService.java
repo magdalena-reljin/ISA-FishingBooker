@@ -14,4 +14,5 @@ public interface BoatReservationService {
 
     boolean reservationExists(Long boatId, LocalDateTime startDate,LocalDateTime endDate);
 
+    boolean ownerIsNotAvailableReservation(Long ownerId, LocalDateTime start, LocalDateTime end);
 }

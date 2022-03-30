@@ -124,6 +124,97 @@
     </div>
 </vue-modality>
 
+
+<vue-modality ref="makeQuickReservation" title="Create quick reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
+
+   <br>
+         <div style="text-align: left;">
+         <h4><b>Create quick reservation</b></h4>
+         </div>
+         <hr>
+         <form @submit="createQuickReservation" method="post" class="was-validated">
+ 
+        
+             <div class="row">
+           <div class=col>
+             <div class="row">
+               <div class="col-sm-3" style="color: gray; text-align: left;">Boat</div>
+               <div class="col-sm-10" style=" width: 100%; text-align: left;" > 
+                  <input class="form-control"  v-model="boatName" readonly>
+               </div>
+          </div>
+            
+            <br>
+            
+              <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">From</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="startQuickReservation" ></Datepicker>
+          </div>
+        </div>
+               <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">To</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="endQuickReservation"></Datepicker>
+          </div>
+        </div>
+
+ 
+  
+        </div>
+        <div class="col">
+                
+          
+          <div class="row">
+              <div class="col form-group">
+              <label style="color: gray;  " id="label">Price per hour ($)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+          </div>
+
+          <div class="col form-group">
+              <label style="color: gray;" id="label">Max people</label>
+              <input v-model="boatDto.maxPeople" class="form-control" disabled>
+          </div>
+
+          
+
+          </div> 
+          <br>
+          <div class="col">
+                    <label style="color: gray;  padding-top: 1%; " id="label">Additional services </label>  
+                     <Multiselect   style="color: gray; padding-bottom: 5%; " 
+                           v-model="value"
+                          mode="tags"
+                          :close-on-select="false"
+                          :searchable="true"
+                          :create-option="false"
+                          :options="options"
+                          
+                        />
+          </div> 
+
+              
+     
+        </div>
+</div>
+      <div  style="text-align: left;">
+      <label style="color: red;" v-if="startQuickReservation==null || endQuickReservation==null || dateIsNotValidQuick==true">Please enter valid dates.</label>
+         </div>
+        <hr>
+        
+        <button @click="clearModalQuick()" type="button" class="btn btn-secondary" style="margin-right: 1%; width: 10%;">Close</button>
+      
+        <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
+
+       </form>
+  
+ 
+</vue-modality>
+
 <vue-modality ref="makeReservation" title="Create reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
    <br>
@@ -389,7 +480,11 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
             additionalServicesToSend: [],
             client: '',
             totalPrice: 0,
-            needsCaptainServices: false
+            needsCaptainServices: false,
+            startQuickReservation: null,
+            endQuickReservation: null,
+            dateIsNotValidQuick: false,
+            newPrice: 0,
        }
 
      },
@@ -410,10 +505,10 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   label: this.boatDto.additionalServices[i].name+"-"+this.boatDto.additionalServices[i].price+"$ per hour",
                                 })
                          }
+                         this.newPrice=this.boatDto.price
                          this.getBoatsAvailablePeriod();
-                         this.getCabinReservations();
-                        /*
-                         this.getQuickReservations();*/
+                         this.getBoatReservations();
+                         this.getQuickReservations();
                        
                   })
 
@@ -435,7 +530,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
 
 
          },
-        getCabinReservations: function(){
+        getBoatReservations: function(){
                 axios.get("http://localhost:8081/reservationBoat/getByBoatId/"+this.boatId)
                 .then(response => {
                       for( let newData of response.data ){
@@ -448,6 +543,19 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                 })
 
         },
+        getQuickReservations: function(){
+               axios.get("http://localhost:8081/quickReservationBoat/getByBoatId/"+this.boatId)
+               .then(response => {
+                     for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                      }   
+              })
+
+         },
         formatDate(formatDate) {
             const date = dayjs(formatDate);
            return date.format('YYYY-MM-DDTHH:mm:ss');
@@ -546,9 +654,9 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
               .then(response => {
                    this.calendarOptions.events=[]
                    this.getBoatsAvailablePeriod()
-                   this.getCabinReservations()
-                  /* this.getQuickReservations()
-                   */
+                   this.getBoatReservations()
+                   this.getQuickReservations()
+                   
                    this.$swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -634,6 +742,58 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                  
                     }
            },
+           createQuickReservation: function(event){
+                    event.preventDefault()
+          
+                    if(!this.dataIsValid(this.startQuickReservation,this.endQuickReservation)){
+                      this.dateIsNotValidQuick=true
+                      return;
+                    }
+
+
+                    if(this.startQuickReservation != null && this.startQuickReservation!=null){
+                                 this.additionalServicesAdded()
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                axios
+                                .post(
+                                "http://localhost:8081/quickReservationBoat/ownerCreates/"+this.email+"/",
+                                {
+                                id: null,
+                                startDate: this.formatDate(this.startQuickReservation),
+                                endDate: this.formatDate(this.endQuickReservation),
+                                price: this.totalPrice,
+                                boatDto: this.boatDto,
+                                addedAdditionalServices: this.additionalServicesToSend,
+                                clientUsername: this.client,
+                                needsCaptainServices:  this.needsCaptainServices
+                                })
+                              .then((response) => {
+                                    console.log(response)
+                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null} ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
+                                    
+                                     this.$swal.fire({
+                                          position: 'top-end',
+                                          icon: 'success',
+                                          title: 'Successfully created quick reservation!',
+                                          showConfirmButton: false,
+                                           timer: 1500
+                                       })
+                                         this.clearModalQuick()
+                                })
+                              .catch((err) =>{
+                                      this.$refs.makeQuickReservation.hide()
+                                     console.log(err)
+                                       this.$swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Something went wrong!',
+                                      })
+                                    this.clearModalQuick()
+                              })
+                              
+                                 
+                    }
+           },
            additionalServicesAdded: function(){
                   
                     this.additionalServicesToSend=[]
@@ -654,7 +814,6 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
               for (let i = 0; i < this.additionalServicesToSend.length; i++) {
                 if(this.additionalServicesToSend[i].name=='Captain service'){
                   this.needsCaptainServices=true
-                  console.log("upisaoooooooooooooooooooooooooooooooo   "+this.needsCaptainServices)
                 }
                 this.totalPrice += this.additionalServicesToSend[i].price;
               }
@@ -666,7 +825,6 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                return diffInHours;
            },
            clearModalReservation: function(){
-             console.log("upisaoooooooooooooooooooooooooooooooo   "+this.needsCaptainServices)
                  this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
@@ -675,7 +833,15 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                  this.value=[]
                  this.totalPrice=0
                  this.needsCaptainServices=false
-                 console.log("upisaoooooooooooooooooooooooooooooooo   "+this.needsCaptainServices)
+            },
+            clearModalQuick: function(){
+                 this.$refs.makeQuickReservation.hide()
+                 this.startQuickReservation=null
+                 this.endQuickReservation=null
+                 this.dateIsNotValidQuick=false
+                 this.value=[]
+                 this.totalPrice=0
+                  this.needsCaptainServices=false
             },
 
     
