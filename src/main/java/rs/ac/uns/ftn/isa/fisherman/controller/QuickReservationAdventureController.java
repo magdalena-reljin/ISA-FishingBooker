@@ -7,47 +7,44 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/reservationAdventure", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AdventureReservationController {
- @Autowired
- private AdventureReservationService adventureReservationService;
- @Autowired
- private FishingInstructorService fishingInstructorService;
- private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
- private AdventureMapper adventureMapper = new AdventureMapper();
-
+@RequestMapping(value = "/quickReservationAdventure", produces = MediaType.APPLICATION_JSON_VALUE)
+public class QuickReservationAdventureController {
+    @Autowired
+    private QuickReservationAdventureService quickReservationAdventureService;
+    @Autowired
+    private FishingInstructorService fishingInstructorService;
+    private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
+    private AdventureMapper adventureMapper = new AdventureMapper();
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<String> instructorCreates (@RequestBody AdventureReservationDto adventureReservationDto) {
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
         AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
-
-        if(adventureReservationService.instructorCreates(adventureReservation,adventureReservationDto.getClientUsername())) {
-
+        if(quickReservationAdventureService.instructorCreates(adventureReservation)) {
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         }else {
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
         }
     }
-
-    @GetMapping(value= "/getByInstructorUsername/{username:.+}/")
+    @GetMapping(value= "/getByInstructorId/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
-    public ResponseEntity<Set<AdventureReservationDto>> getPresentByInstructorId(@PathVariable("username")String username) {
+    public ResponseEntity<Set<AdventureReservationDto>> getPresentByCabinId(@PathVariable ("username")String username) {
         Long instructorId= fishingInstructorService.findByUsername(username).getId();
-        Set<AdventureReservationDto> adventureReservations= new HashSet<>();
-        for(AdventureReservation adventureReservation: adventureReservationService.getPresentByInstructorId(instructorId))
-        adventureReservations.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
-        return new ResponseEntity<>(adventureReservations,HttpStatus.OK);
+        Set<AdventureReservationDto> reservationDtos= new HashSet<>();
+        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getByInstructorId(instructorId))
+            reservationDtos.add(adventureReservationMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
+        return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
     }
+
 }

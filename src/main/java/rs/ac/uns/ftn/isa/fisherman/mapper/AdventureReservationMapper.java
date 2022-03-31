@@ -6,10 +6,11 @@ import rs.ac.uns.ftn.isa.fisherman.model.*;
 public class AdventureReservationMapper {
     private AdventureMapper adventureMapper= new AdventureMapper();
     private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
-    public AdventureReservation adventureReservationDtoToAdventureReservation(AdventureReservationDto adventureReservationDto){
+
+    public AdventureReservation adventureReservationDtoToAdventureReservation(AdventureReservationDto adventureReservationDto,FishingInstructor fishingInstructor){
        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         return new AdventureReservation(adventureReservationDto.getId(),adventureReservationDto.getStartDate(),
-                adventureReservationDto.getEndDate(),adventureReservationDto.getPrice(),null,adventure,null,
+                adventureReservationDto.getEndDate(),adventureReservationDto.getPrice(),null,adventure,fishingInstructor,
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
     }
     public AdventureReservationDto adventureReservationToAdventureReservationDto(AdventureReservation adventureReservation){
@@ -20,18 +21,19 @@ public class AdventureReservationMapper {
                 adventureMapper.adventureToAdventureDto(adventureReservation.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()));
     }
-   /* public BoatReservationDto quickBoatReservationToBoatReservationDto(QuickReservationBoat quickReservationBoat) {
+
+    public AdventureReservationDto quickAdventureReservationToQuickAdventureReservationDto(QuickReservationAdventure quickReservationAdventure) {
         Client client=new Client();
         String fullName=null;
-        if(quickReservationBoat.getClient() !=null){
-            client.setUsername(quickReservationBoat.getClient().getUsername());
-            fullName=quickReservationBoat.getClient().getName()+" "+quickReservationBoat.getClient().getLastName();
+        if(quickReservationAdventure.getClient() !=null){
+            client.setUsername(quickReservationAdventure.getClient().getUsername());
+            fullName=quickReservationAdventure.getClient().getName()+" "+quickReservationAdventure.getClient().getLastName();
         }
 
-        return new BoatReservationDto(quickReservationBoat.getId(),quickReservationBoat.getStartDate(),
-                quickReservationBoat.getEndDate(),quickReservationBoat.getPrice(),client.getUsername(),
-                fullName,boatMapper.boatToBoatDto(quickReservationBoat.getBoat()),
-                additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(quickReservationBoat.getAddedAdditionalServices()),
-                quickReservationBoat.getNeedsCaptainServices());
-    }*/
+        return new AdventureReservationDto(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
+                quickReservationAdventure.getEndDate(),quickReservationAdventure.getPrice(),client.getUsername(),
+                fullName,adventureMapper.adventureToAdventureDto(quickReservationAdventure.getAdventure()),
+                additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(quickReservationAdventure.getAddedAdditionalServices()));
+    }
+
 }

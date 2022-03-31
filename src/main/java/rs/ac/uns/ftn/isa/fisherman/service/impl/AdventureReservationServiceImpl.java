@@ -12,6 +12,9 @@ import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
+
+
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +24,8 @@ import java.util.Set;
 public class AdventureReservationServiceImpl implements AdventureReservationService {
     @Autowired
     private AdventureReservationRepository adventureReservationRepository;
+    @Autowired
+    private QuickReservationAdventureService quickReservationAdventureService;
     @Autowired
     private ClientService clientService;
     @Autowired
@@ -49,10 +54,10 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return adventureReservationRepository.getPresentByInstructorId(id,currentDate);
     }
 
-
     @Override
-    public boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate) {
-        return false;
+    public boolean reservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return adventureReservationRepository.reservationExists(id,startDate,endDate);
+
     }
     private boolean validateForReservation(AdventureReservation adventureReservation, Client client){
         LocalDateTime currentDate= LocalDateTime.now();
@@ -65,8 +70,10 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
         if(adventureReservationRepository.reservationExists(adventureReservation.getFishingInstructor().getId()
                 ,adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
-        /*if(quickReservationCabinService.quickReservationExists(cabinReservation.getCabin().getId(),
-                cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;*/
+
+        if(quickReservationAdventureService.quickReservationExists(adventureReservation.getFishingInstructor().getId(),
+                adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
+
         return true;
     }
     private void sendMailNotification(AdventureReservation adventureReservation,String email){
