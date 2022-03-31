@@ -32,6 +32,7 @@ public class AdventureReservationController {
     public ResponseEntity<String> instructorCreates (@RequestBody AdventureReservationDto adventureReservationDto) {
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
         AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
+
         if(adventureReservationService.instructorCreates(adventureReservation,adventureReservationDto.getClientUsername())) {
 
             return new ResponseEntity<>("Success.", HttpStatus.OK);

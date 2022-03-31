@@ -59,6 +59,7 @@
              <p><b>{{adventureNameInfo}}</b></p>
           </div>
         </div>
+
         <div class="row">
           <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
             <p>Start</p>
@@ -126,7 +127,6 @@
   
   <hr>
 </vue-modality>
-
 
 <vue-modality ref="makeQuickReservation" title="Create quick reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
@@ -226,7 +226,6 @@
   
  
 </vue-modality>
-
 
   <vue-modality ref="makeReservation" title="Create reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
@@ -428,7 +427,6 @@ import VueModality from 'vue-modality-v3'
 import Multiselect from '@vueform/multiselect'
 import FishingInstructorNavbar from './FishingInstructorNav.vue'
 import axios from "axios";
-
 axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
    props: {
@@ -523,6 +521,7 @@ export default {
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
                   }
                   this.adServicesQuick=arg.event.extendedProps.adServices
+
            }
         },
         selectMirror: true,
@@ -619,6 +618,7 @@ export default {
                         
                         this.getInstructorsReservation()
                         this.getInstructorsQuickReservation()
+
                          }
                         this.getAvailableInstructorsPeriod();
                        
@@ -636,6 +636,7 @@ export default {
                                   label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
                                 })
                                 this.newPrice=this.adventureDto[idx].price
+
               }
        },
         getAvailableInstructorsPeriod: function(){
@@ -662,6 +663,7 @@ export default {
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
+
                               this.calendarOptions.events.push({id: newData.id , extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
                             }
@@ -680,6 +682,7 @@ export default {
                                      temp.push(newData.addedAdditionalServices[i].name)
                               this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
+
                             }
               })   
           }  , 
@@ -757,8 +760,6 @@ export default {
                       this.dateIsNotValid=true
                       return;
                     }
-
-
                     if(this.startReservation != null && this.endReservation!=null){
                                  this.additionalServicesAdded()
                                  this.calculatePrice(this.startReservation,this.endReservation,this.adventureDto[this.selected].price)
@@ -851,6 +852,7 @@ export default {
                               
                                  
                     }
+
            },
                additionalServicesAdded: function(){
                   
@@ -891,6 +893,7 @@ export default {
                  this.selected= 0
                      let idx=0
                  for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+
                                this.options.push({ 
                                   value: this.adventureDto[idx].additionalServices[i].id,
                                   label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",

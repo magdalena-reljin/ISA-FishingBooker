@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.*;
 public class AdventureReservationMapper {
     private AdventureMapper adventureMapper= new AdventureMapper();
     private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
+
     public AdventureReservation adventureReservationDtoToAdventureReservation(AdventureReservationDto adventureReservationDto,FishingInstructor fishingInstructor){
        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         return new AdventureReservation(adventureReservationDto.getId(),adventureReservationDto.getStartDate(),
@@ -13,7 +14,6 @@ public class AdventureReservationMapper {
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
     }
     public AdventureReservationDto adventureReservationToAdventureReservationDto(AdventureReservation adventureReservation){
-
         String fullName=adventureReservation.getClient().getName()+" "+adventureReservation.getClient().getLastName();
         return new AdventureReservationDto(adventureReservation.getId(),
                 adventureReservation.getStartDate(),adventureReservation.getEndDate(),
@@ -21,6 +21,7 @@ public class AdventureReservationMapper {
                 adventureMapper.adventureToAdventureDto(adventureReservation.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()));
     }
+
     public AdventureReservationDto quickAdventureReservationToQuickAdventureReservationDto(QuickReservationAdventure quickReservationAdventure) {
         Client client=new Client();
         String fullName=null;
@@ -34,4 +35,5 @@ public class AdventureReservationMapper {
                 fullName,adventureMapper.adventureToAdventureDto(quickReservationAdventure.getAdventure()),
                 additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(quickReservationAdventure.getAddedAdditionalServices()));
     }
+
 }
