@@ -7,6 +7,8 @@ import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableInstructorPeriodRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Service
@@ -31,6 +33,11 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
                 availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate())) return false;
         availableInstructorPeriodRepository.save(availableInstructorPeriod);
         return true;
+    }
+
+    @Override
+    public boolean instructorIsAvailable(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return availableInstructorPeriodRepository.instructorIsAvailable(id,startDate,endDate);
     }
 
 }

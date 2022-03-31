@@ -280,14 +280,14 @@ export default {
              fishingInstructorUsername: ''
          }],
          
-         selected:0,
+         selected: 0,
          startReservation: null,
         endReservation: null,
         dateIsNotValid: false,
         adventureName: '',
         client: '',
         value: null,
-        options: [ ],
+        options: [ ], 
         additionalServicesToSend: [],
         newPrice: 0,
        totalPrice: 0,
@@ -304,7 +304,6 @@ export default {
      mounted() {
        this.email = this.$route.params.email;
          this.getAdventure()
-     //  this.getAvailableInstructorsPeriod();
     
      },
      methods: {
@@ -427,19 +426,18 @@ export default {
 
                     if(this.startReservation != null && this.endReservation!=null){
                                  this.additionalServicesAdded()
-                                 this.calculatePrice(this.startReservation,this.endReservation,this.adventureDto.price)
+                                 this.calculatePrice(this.startReservation,this.endReservation,this.adventureDto[this.selected].price)
                                 axios
                                 .post(
-                                "http://localhost:8081/reservationBoat/ownerCreates/"+ this.email +"/",
+                                "http://localhost:8081/reservationAdventure/instructorCreates",
                                 {
                                 id: null,
                                 startDate: this.formatDate(this.startReservation),
                                 endDate: this.formatDate(this.endReservation),
                                 price: this.totalPrice,
-                                adventureDto: this.adventureDto,
+                                adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
-                                instructorsUsername: this.email
                                 })
                               .then((response) => {
                                       console.log(response)
@@ -473,22 +471,19 @@ export default {
                     this.additionalServicesToSend=[]
                     if(this.value != null){
                     for(let i=0; i < this.value.length ; i++){
-                          for(let j=0; j < this.boatDto.additionalServices.length ; j++){
-                            if(this.value[i] == this.boatDto.additionalServices[j].id ){
-                               this.additionalServicesToSend.push(this.boatDto.additionalServices[j])
+                          for(let j=0; j < this.adventureDto[this.selected].additionalServices.length ; j++){
+                            if(this.value[i] == this.adventureDto[this.selected].additionalServices[j].id ){
+                               this.additionalServicesToSend.push(this.adventureDto[this.selected].additionalServices[j])
                             }
                           }
                     }
                     }
 
            },
-           calculatePrice: function(start,end,pricePerNight) {
+           calculatePrice: function(start,end,pricePerHour) {
               let numOfDays = this.getNumberOfHours(start, end);
-              this.totalPrice = numOfDays * pricePerNight;
+              this.totalPrice = numOfDays * pricePerHour;
               for (let i = 0; i < this.additionalServicesToSend.length; i++) {
-                if(this.additionalServicesToSend[i].name=='Captain service'){
-                  this.needsCaptainServices=true
-                }
                 this.totalPrice += this.additionalServicesToSend[i].price;
               }
             },
@@ -505,8 +500,16 @@ export default {
                  this.dateIsNotValid=false
                  this.client=''
                  this.value=[]
+                 this.options =[]
                  this.totalPrice=0
-                 this.options=[]
+                 this.selected= 0
+                     let idx=0
+             for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+                               this.options.push({ 
+                                  value: this.adventureDto[idx].additionalServices[i].id,
+                                  label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
+                                })
+              }
             },
      }
     
