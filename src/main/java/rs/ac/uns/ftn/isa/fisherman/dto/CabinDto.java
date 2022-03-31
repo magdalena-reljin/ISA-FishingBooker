@@ -15,7 +15,15 @@ public class CabinDto {
     private Double rating;
     private Set<ImageDto> images;
     private String ownerUsername;
+    private Boolean subscription;
 
+    public Boolean getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Boolean subscription) {
+        this.subscription = subscription;
+    }
 
     public Long getId() {
         return id;
