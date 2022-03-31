@@ -9,6 +9,9 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
 
@@ -31,7 +34,17 @@ public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
     }
 
     @Override
-    public void removeSubscription(Long id) {
-        cabinSubscriptionRepository.deleteById(id);
+    public void removeSubscription(String username, Long cabinId) {
+        Client client = clientService.findByUsername(username);
+        CabinSubscription cabinSubscription = cabinSubscriptionRepository.getSubscriptionOnCabin(cabinId, client.getId());
+        cabinSubscriptionRepository.deleteById(cabinSubscription.getId());
+    }
+
+    @Override
+    public boolean checkIfUserIsSubscribed(String username, Long cabinId) {
+        Client client = clientService.findByUsername(username);
+        if(cabinSubscriptionRepository.subscriptionExists(cabinId, client.getId()))
+            return true;
+        return false;
     }
 }

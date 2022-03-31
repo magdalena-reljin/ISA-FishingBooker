@@ -24,13 +24,13 @@ public class CabinSubscriptionController {
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> addSubscription (@RequestBody CabinSubscriptionDto cabinSubscriptionDto) {
         cabinSubscriptionService.addSubscription(cabinSubscriptionDto.getClientUsername(), cabinSubscriptionDto.getCabinDto().getId());
-        return new ResponseEntity<>("Success.", HttpStatus.OK);
+        return new ResponseEntity<>("Successful subscription!", HttpStatus.OK);
     }
 
     @PostMapping("/removeSubscription")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> removeSubscription (@RequestBody CabinSubscriptionDto cabinSubscriptionDto) {
-        cabinSubscriptionService.removeSubscription(cabinSubscriptionDto.getId());
-        return new ResponseEntity<>("Success.", HttpStatus.OK);
+        cabinSubscriptionService.removeSubscription(cabinSubscriptionDto.getClientUsername(), cabinSubscriptionDto.getCabinDto().getId());
+        return new ResponseEntity<>("Subscription successfully removed!", HttpStatus.OK);
     }
 }
