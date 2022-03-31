@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import java.util.List;
@@ -20,4 +21,5 @@ public interface AdventureService {
     void edit(Adventure adventure, Long id);
 
     List<Adventure> findAll();
+    boolean addNewAdventure(Adventure adventure, String username,Set<AdditionalServices>additionalServices);
 }

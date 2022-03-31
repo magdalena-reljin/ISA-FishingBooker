@@ -34,76 +34,11 @@
            <div class="col" style="text-align: right; width: 100%; padding-top: 1%;">
            <button type="button" @click="setPeriod()" class="btn btn-light">Save</button>
           </div>
-        <br>
-        <br>
-        <h5 style=" text-align: left;">SET UNAVAILABLE PERIOD</h5>
-        <br>
-        <div class="row">
-          <div class="col" style="padding-top: 2%; text-align: left;" >
-            <h5>From</h5>
-          </div>
-          <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker></Datepicker>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col" style="padding-top: 2%; text-align: left;">
-            <h5>To</h5>
-          </div>
-          <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker></Datepicker>
-          </div>
-        </div>
-           &nbsp;
-           <div class="col" style="text-align: right; width: 100%; padding-top: 1%;">
-           <button type="button" class="btn btn-light">Save</button>
-          </div>
-
-
-      
+       
       </div>
     </div>
 
 
-<vue-modality ref="myRef" title="Edit available period" hide-footer centered>
-
-   <br>
-        <div class="row">
-          <div class="col" style="padding-top: 2%; text-align: left;" >
-            <h6>From</h6>
-          </div>
-          <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
-           :minDate="start"
-           :maxDate="end"
-           v-model="start" 
-                
-         >
-          </Datepicker>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col" style="padding-top: 2%; text-align: left;">
-            <h6>To</h6>
-          </div>
-          <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker   :minDate="start" :maxDate="end" v-model="end"></Datepicker>
-          </div>
-        </div>
-
-  <br>
-   <div class="row">
-        <div class="col">
-           <button type="button" class="btn btn-secondary">Close</button>
-        </div>
-        <div class="col">
-           <button type="button" class="btn btn-danger">Delete</button>
-        </div>
-        <div class="col">
-           <button type="button" class="btn btn-primary" >Save</button>
-        </div>
-    </div>
-</vue-modality>
 
   </div>
 </template>
@@ -118,7 +53,7 @@ import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
 import dayjs from 'dayjs';
 import '@shapla/vue-modal/dist/style.css';
-import VueModality from 'vue-modality-v3'
+//import VueModality from 'vue-modality-v3'
 
 import axios from "axios";
 
@@ -130,7 +65,7 @@ export default {
   components: {
     FullCalendar,
     Datepicker,
-    VueModality
+   // VueModality
 
   
   },
@@ -210,12 +145,12 @@ export default {
             }]
 
           },
-           availableInstructorPeriod: [{
+           availableInstructorPeriod:{
                  id: null,
                 startDate: null,
                 endDate: null,
                 username: ''
-            }],
+            },
             state: [],
             modalActive: false
          

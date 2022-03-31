@@ -250,8 +250,6 @@ import VueModality from 'vue-modality-v3'
                   this.captainIsRequired=arg.event.extendedProps.captainIsRequired
                   this.boatName=arg.event.extendedProps.boatName
                   this.adServices=arg.event.extendedProps.adServices
-                  console.log("JA SAM DUZINA LISTE"+ this.adServices.length)
-                  console.log("JA SAM DUZINA LISTE ARG"+ arg.event.extendedProps.adServices.length)
            }else if(arg.event.title=='QuickReservation'  || arg.event.title=='QuickReservation - CAPTAIN'){
                   this.$refs.quickReservationInfo.open()
                   this.startQuickInfo=arg.event.start

@@ -426,7 +426,6 @@ const routes = [
     name: 'MyCalendar',
     component: MyCalendar,
     beforeEnter: (to, from,next) => {
-
       store.dispatch('refreshToken')
       if(localStorage.token == 'empty' || localStorage.role !='FISHINGINSTRUCTOR' || localStorage.logged == false){
            next('/')
@@ -435,6 +434,7 @@ const routes = [
          }
        }
   },
+ 
   {
     path: '/CabinCalendar/:email/:cabinName',
     name: 'CabinCalendar',
