@@ -349,7 +349,20 @@
                         this.saveImages()
                         
                         return response;   
-              })
+              }).catch(err =>{
+                    this.loader.hide();
+                    this.loader=null;
+                    this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'error',
+                      title: 'Adventure name must be unique!',
+                      showConfirmButton: false,
+                      timer: 2500
+                   })
+                      return err
+              });
+
+              
         },
         saveImages: function(){
             

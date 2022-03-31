@@ -3,10 +3,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
+import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
+import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +21,9 @@ public class AdventureServiceImpl implements AdventureService {
     private AdventureRepository adventureRepository;
 
     @Autowired
+    private FishingInstructorService fishingInstructorService;
+
+    @Autowired
     private ImageService imageService;
     @Autowired
     private AdditionalServicesService additionalServicesService;
@@ -29,6 +34,20 @@ public class AdventureServiceImpl implements AdventureService {
 
     public List<Adventure> findAll(){
         return adventureRepository.findAll();
+    }
+
+    @Override
+    public boolean addNewAdventure(Adventure adventure, String username,Set<AdditionalServices>additionalServices) {
+      FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(username);
+      if(adventureRepository.findAdventureByName(adventure.getName(),fishingInstructor.getId())!= null)
+          return false;
+      adventure.setFishingInstructor(fishingInstructor);
+      adventureRepository.save(adventure);
+        if(additionalServices!=null) {
+            adventure.setAdditionalServices(additionalServices);
+            adventureRepository.save(adventure);
+        }
+      return true;
     }
 
     @Override
