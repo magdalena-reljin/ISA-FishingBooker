@@ -30,11 +30,8 @@ public class AdventureReservationController {
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<String> instructorCreates (@RequestBody AdventureReservationDto adventureReservationDto) {
-        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
-        AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto);
-        adventureReservation.setAdventure(adventure);
-        adventureReservation.setFishingInstructor(fishingInstructor);
+        AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
         if(adventureReservationService.instructorCreates(adventureReservation,adventureReservationDto.getClientUsername())) {
 
             return new ResponseEntity<>("Success.", HttpStatus.OK);

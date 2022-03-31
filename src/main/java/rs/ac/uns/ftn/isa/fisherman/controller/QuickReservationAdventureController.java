@@ -29,13 +29,9 @@ public class QuickReservationAdventureController {
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<String> instructorCreates (@RequestBody AdventureReservationDto adventureReservationDto) {
-        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
-        AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto);
-        adventureReservation.setAdventure(adventure);
-        adventureReservation.setFishingInstructor(fishingInstructor);
+        AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
         if(quickReservationAdventureService.instructorCreates(adventureReservation)) {
-
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         }else {
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);

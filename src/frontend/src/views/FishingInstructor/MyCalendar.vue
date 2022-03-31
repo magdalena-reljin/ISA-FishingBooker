@@ -51,6 +51,14 @@
 <vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
 
    <br>
+    <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Adventure</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{adventureNameInfo}}</b></p>
+          </div>
+        </div>
         <div class="row">
           <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
             <p>Start</p>
@@ -321,7 +329,85 @@
         <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
     
        </form>
+</vue-modality>
+
+
+<vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered >
+
+   <br>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Adventure</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                  <p ><b>{{adventureNameQuick}}</b></p>
+                
+          </div>
+        </div>
         
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startQuickInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endQuickInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameQuickInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientQuickFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceQuickInfo}}$</b></p>
+                
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div  class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesQuick" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                </ul>
+                
+          </div>
+        </div>
+         <hr>
   
  
 </vue-modality>
@@ -383,6 +469,13 @@ export default {
       startQuickReservation: null,
       endQuickReservation:null,
       dateIsNotValidQuick: false,
+      clientQuickFullNameInfo: '',
+      adventureNameInfo: '',
+      priceQuickInfo: 0,
+      usernameQuickInfo: '',
+      startQuickInfo: null,
+      endQuickInfo: null,
+      adventureNameQuick: '',
       startInfo:null,
       endInfo:null,
       clientFullNameInfo: '',
@@ -413,13 +506,14 @@ export default {
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.adServices=arg.event.extendedProps.adServices
+                  this.adventureNameInfo=arg.event.extendedProps.adventureName
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
-        /*   }else if(arg.event.title=='QuickReservation'){
+           }else if(arg.event.title=='QuickReservation'){
                   this.$refs.quickReservationInfo.open()
+                  this.adventureNameQuick=arg.event.extendedProps.adventureName
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
                   this.priceQuickInfo=arg.event.extendedProps.price
-                  this.captainIsRequiredQuick=arg.event.extendedProps.captainIsRequired
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
@@ -427,8 +521,8 @@ export default {
                   }else{
                   this.usernameQuickInfo=arg.event.extendedProps.email
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
-                 
-                  }*/
+                  }
+                  this.adServicesQuick=arg.event.extendedProps.adServices
            }
         },
         selectMirror: true,
@@ -524,6 +618,7 @@ export default {
                         }
                         
                         this.getInstructorsReservation()
+                        this.getInstructorsQuickReservation()
                          }
                         this.getAvailableInstructorsPeriod();
                        
@@ -567,9 +662,24 @@ export default {
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
-                              this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                              this.calendarOptions.events.push({id: newData.id , extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
-                              console.log("len od liste"+temp.length)
+                            }
+              })   
+          }  , 
+           getInstructorsQuickReservation: function(){
+                axios.get("http://localhost:8081/quickReservationAdventure/getByInstructorId/"+this.email+"/")
+                        .then(response => {
+                            for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                              this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                              this.state.push( newData.startDate)
                             }
               })   
           }  , 
