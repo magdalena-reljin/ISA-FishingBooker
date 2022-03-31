@@ -47,7 +47,77 @@
       </div>
     </div>
   </div>
+  
+<vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
 
+   <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceInfo}}$</b></p>
+                
+          </div>
+        </div>
+           <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServices" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
+        
+
+  
+  <hr>
+</vue-modality>
   <vue-modality ref="makeReservation" title="Create reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
    <br>
@@ -208,7 +278,12 @@ export default {
       closeModal: false,
       disabledPickers: false,
       selectDisabled: false,
+      startInfo:null,
+      endInfo:null,
+      clientFullNameInfo: '',
+      usernameInfo: '',
       currentEvent: "",
+      priceInfo: 0,
       selectData: [],
       entityType: "",
       calendarOptions: {
@@ -221,9 +296,35 @@ export default {
         },
         selectable: true,
         eventClick: (arg)=>{
+          if(arg.event.title=='Available'){
+              
          this.$refs.myRef.open()
           this.start=arg.event.start
           this.end=arg.event.end
+          }else if(arg.event.title=='Reservation'){
+                  this.$refs.reservationInfo.open()
+                  this.startInfo=arg.event.start
+                  this.endInfo=arg.event.end
+                  this.priceInfo=arg.event.extendedProps.price
+                  this.usernameInfo=arg.event.extendedProps.email
+                  this.adServices=arg.event.extendedProps.adServices
+                  this.clientFullNameInfo=arg.event.extendedProps.clientFullName
+        /*   }else if(arg.event.title=='QuickReservation'){
+                  this.$refs.quickReservationInfo.open()
+                  this.startQuickInfo=arg.event.start
+                  this.endQuickInfo=arg.event.end
+                  this.priceQuickInfo=arg.event.extendedProps.price
+                  this.captainIsRequiredQuick=arg.event.extendedProps.captainIsRequired
+                  if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
+                       this.usernameQuickInfo="Not reservated yet."
+                       this.clientQuickFullNameInfo="Not reservated yet."
+
+                  }else{
+                  this.usernameQuickInfo=arg.event.extendedProps.email
+                  this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
+                 
+                  }*/
+           }
         },
         selectMirror: true,
         dayMaxEvents: true,
@@ -292,7 +393,9 @@ export default {
         newPrice: 0,
        totalPrice: 0,
        cancelingCondition : '',
-       maxPeople: 0
+       maxPeople: 0,
+        adServices: [],
+        adServicesQuick: [],
 
          
            
@@ -311,15 +414,18 @@ export default {
             axios.get("http://localhost:8081/adventures/findInstructorsAdventure/"+this.email+"/")
                .then(response => {
                         this.adventureDto=response.data
+                        if(this.adventureDto.length> 0){
                         for(let i=0; i< this.adventureDto[0].additionalServices.length ; i++){
                                this.options.push({ 
                                   value: this.adventureDto[0].additionalServices[i].id,
                                   label: this.adventureDto[0].additionalServices[i].name+"-"+this.adventureDto[0].additionalServices[i].price+"$ per hour",
                                 })
                         }
-
-
+                        
+                        this.getInstructorsReservation()
+                         }
                         this.getAvailableInstructorsPeriod();
+                       
               })
 
        },
@@ -348,6 +454,23 @@ export default {
                             }
               })   
         },
+         getInstructorsReservation: function(){
+                axios.get("http://localhost:8081/reservationAdventure/getByInstructorUsername/"+this.email+"/")
+                        .then(response => {
+                            for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                              this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                              this.state.push( newData.startDate)
+                              console.log("len od liste"+temp.length)
+                            }
+              })   
+          }  , 
          formatDate(formatDate) {
             const date = dayjs(formatDate);
            return date.format('YYYY-MM-DDTHH:mm:ss');

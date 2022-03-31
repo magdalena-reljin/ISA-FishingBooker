@@ -7,8 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -44,9 +43,9 @@ public class AdventureReservationController {
         }
     }
 
-    @GetMapping(value= "/getByInstructorId/{username:.+}/")
+    @GetMapping(value= "/getByInstructorUsername/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
-    public ResponseEntity<Set<AdventureReservationDto>> getPresentByInstructorId(@PathVariable ("username")String username) {
+    public ResponseEntity<Set<AdventureReservationDto>> getPresentByInstructorId(@PathVariable("username")String username) {
         Long instructorId= fishingInstructorService.findByUsername(username).getId();
         Set<AdventureReservationDto> adventureReservations= new HashSet<>();
         for(AdventureReservation adventureReservation: adventureReservationService.getPresentByInstructorId(instructorId))

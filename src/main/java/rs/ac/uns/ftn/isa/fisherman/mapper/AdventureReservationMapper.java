@@ -9,7 +9,8 @@ public class AdventureReservationMapper {
     public AdventureReservation adventureReservationDtoToAdventureReservation(AdventureReservationDto adventureReservationDto){
        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         return new AdventureReservation(adventureReservationDto.getId(),adventureReservationDto.getStartDate(),
-                adventureReservationDto.getEndDate(),adventureReservationDto.getPrice(),null,adventure,null,null);
+                adventureReservationDto.getEndDate(),adventureReservationDto.getPrice(),null,adventure,null,
+                additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
     }
     public AdventureReservationDto adventureReservationToAdventureReservationDto(AdventureReservation adventureReservation){
         String fullName=adventureReservation.getClient().getName()+" "+adventureReservation.getClient().getLastName();
