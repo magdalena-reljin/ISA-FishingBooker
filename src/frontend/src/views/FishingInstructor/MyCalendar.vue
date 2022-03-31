@@ -118,6 +118,108 @@
   
   <hr>
 </vue-modality>
+
+
+<vue-modality ref="makeQuickReservation" title="Create quick reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
+
+   <br>
+         <div style="text-align: left;">
+         <h4><b>Create quick reservation</b></h4>
+         </div>
+         <hr>
+         <form @submit="createQuickReservation" method="post" class="was-validated">
+ 
+        
+             <div class="row">
+           <div class=col>
+             <div class="row">
+               <div class="col-sm-3" style="color: gray; text-align: left;">Adventure</div>
+               <div class="col-sm-10" style=" width: 100%; text-align: left;" > 
+
+                  <select @change="switchSelect($event)" v-model="selected" class="form-select" aria-label="Default select example" required>
+                    <option   v-for="(adventure,index) in adventureDto" :key="index" :value="index" >{{adventure.name}}</option>
+                  </select>
+
+               </div> 
+          </div>
+            
+            <br>
+            
+              <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">From</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="startQuickReservation" ></Datepicker>
+          </div>
+        </div>
+               <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">To</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="endQuickReservation"></Datepicker>
+          </div>
+        </div>
+
+ 
+  
+        </div>
+        <div class="col">
+                
+          
+          <div class="row">
+              <div class="col form-group">
+              <label style="color: gray;  " id="label">Price per hour ($)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+          </div>
+
+          <div class="col form-group">
+              <label style="color: gray;" id="label">Max people</label>
+              <input v-model="adventureDto[selected].maxPeople" class="form-control" disabled>
+          </div>
+
+             <div class="col form-group">
+                    <label style="color: gray;  " id="label">Canceling</label>   
+                    <input v-model="adventureDto[selected].cancelingCondition"   class="form-control" disabled>
+          </div> 
+
+          
+
+          </div> 
+          <br>
+          <div class="col">
+                    <label style="color: gray;  padding-top: 1%; " id="label">Additional services </label>  
+                     <Multiselect   style="color: gray; padding-bottom: 5%; " 
+                           v-model="value"
+                          mode="tags"
+                          :close-on-select="false"
+                          :searchable="true"
+                          :create-option="false"
+                          :options="options"
+                          
+                        />
+          </div> 
+
+              
+     
+        </div>
+</div>
+      <div  style="text-align: left;">
+      <label style="color: red;" v-if="startQuickReservation==null || endQuickReservation==null || dateIsNotValidQuick==true">Please enter valid dates.</label>
+         </div>
+        <hr>
+        
+        <button @click="clearModalQuick()" type="button" class="btn btn-secondary" style="margin-right: 1%; width: 10%;">Close</button>
+      
+        <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
+
+       </form>
+  
+ 
+</vue-modality>
+
+
   <vue-modality ref="makeReservation" title="Create reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
    <br>
@@ -278,6 +380,9 @@ export default {
       closeModal: false,
       disabledPickers: false,
       selectDisabled: false,
+      startQuickReservation: null,
+      endQuickReservation:null,
+      dateIsNotValidQuick: false,
       startInfo:null,
       endInfo:null,
       clientFullNameInfo: '',
@@ -396,11 +501,6 @@ export default {
        maxPeople: 0,
         adServices: [],
         adServicesQuick: [],
-
-         
-           
-      
-     
     };
   },
  
@@ -420,6 +520,7 @@ export default {
                                   value: this.adventureDto[0].additionalServices[i].id,
                                   label: this.adventureDto[0].additionalServices[i].name+"-"+this.adventureDto[0].additionalServices[i].price+"$ per hour",
                                 })
+                            this.newPrice= this.adventureDto[0].price
                         }
                         
                         this.getInstructorsReservation()
@@ -439,6 +540,7 @@ export default {
                                   value: this.adventureDto[idx].additionalServices[i].id,
                                   label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
                                 })
+                                this.newPrice=this.adventureDto[idx].price
               }
        },
         getAvailableInstructorsPeriod: function(){
@@ -588,6 +690,57 @@ export default {
                               
                                  
                     }
+           },   createQuickReservation: function(event){
+                    event.preventDefault()
+          
+                    if(!this.dataIsValid(this.startQuickReservation,this.endQuickReservation)){
+                      this.dateIsNotValidQuick=true
+                      return;
+                    }
+
+
+                    if(this.startQuickReservation != null && this.startQuickReservation!=null){
+                                 this.additionalServicesAdded()
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                axios
+                                .post(
+                                "http://localhost:8081/quickReservationAdventure/instructorCreates/",
+                                {
+                                id: null,
+                                startDate: this.formatDate(this.startQuickReservation),
+                                endDate: this.formatDate(this.endQuickReservation),
+                                price: this.totalPrice,
+                                adventureDto: this.adventureDto[this.selected],
+                                addedAdditionalServices: this.additionalServicesToSend,
+                                clientUsername: this.client,
+                                needsCaptainServices:  this.needsCaptainServices
+                                })
+                              .then((response) => {
+                                    console.log(response)
+                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null, } ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
+                                    
+                                     this.$swal.fire({
+                                          position: 'top-end',
+                                          icon: 'success',
+                                          title: 'Successfully created quick reservation!',
+                                          showConfirmButton: false,
+                                           timer: 1500
+                                       })
+                                         this.clearModalQuick()
+                                })
+                              .catch((err) =>{
+                                      this.$refs.makeQuickReservation.hide()
+                                     console.log(err)
+                                       this.$swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Something went wrong!',
+                                      })
+                                    this.clearModalQuick()
+                              })
+                              
+                                 
+                    }
            },
                additionalServicesAdded: function(){
                   
@@ -627,12 +780,30 @@ export default {
                  this.totalPrice=0
                  this.selected= 0
                      let idx=0
-             for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+                 for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
                                this.options.push({ 
                                   value: this.adventureDto[idx].additionalServices[i].id,
                                   label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
                                 })
               }
+            },
+             clearModalQuick: function(){
+                 this.$refs.makeQuickReservation.hide()
+                 this.startQuickReservation=null
+                 this.endQuickReservation=null
+                 this.dateIsNotValidQuick=false
+                 this.value=[]
+                 this.options =[]
+                 this.totalPrice=0
+                 this.selected= 0
+                 let idx=0
+                 for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+                               this.options.push({ 
+                                  value: this.adventureDto[idx].additionalServices[i].id,
+                                  label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
+                                })
+                        }
+                 this.newPrice=this.adventureDto[0].price;
             },
      }
     
