@@ -35,6 +35,7 @@ import ClientCabins from '../views/Client/ClientCabins'
 import store from '../store/index'
 import PersonalCalendar from '../views/BoatOwner/PersonalCalendar.vue'
 import ClientReservations from '../views/Client/ClientReservations'
+import ClientCabinProfile from '../views/Client/ClientCabinProfile'
 
 const routes = [
   
@@ -178,6 +179,12 @@ const routes = [
     path: '/reservations/:email',
     name: 'ClientReservations',
     component: ClientReservations,
+    props: true
+  },
+  {
+    path: '/cabin/:email/:cabinName',
+    name: 'Cabin',
+    component: ClientCabinProfile,
     props: true
   },
   {
@@ -426,7 +433,6 @@ const routes = [
     name: 'MyCalendar',
     component: MyCalendar,
     beforeEnter: (to, from,next) => {
-
       store.dispatch('refreshToken')
       if(localStorage.token == 'empty' || localStorage.role !='FISHINGINSTRUCTOR' || localStorage.logged == false){
            next('/')
@@ -435,6 +441,7 @@ const routes = [
          }
        }
   },
+ 
   {
     path: '/CabinCalendar/:email/:cabinName',
     name: 'CabinCalendar',

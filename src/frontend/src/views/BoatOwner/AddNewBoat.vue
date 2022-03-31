@@ -334,7 +334,6 @@
        },
        updateLocation: function(latitude,longitude){
 
-           console.log("POGODIO");
                  axios.get("https://nominatim.openstreetmap.org/reverse", {
                            params: {
                            lat: longitude,
@@ -381,7 +380,6 @@
         },
         addNewBoat: function(event){
                event.preventDefault();
-               console.log('ja sam duzinaliste '+this.boatDto.additionalServices.length)
             
                   this.boatDto.additionalServices.push({
                         id: null,
@@ -397,9 +395,8 @@
                           .then(response => {
                                   
                                     this.saveImages()
-                                    this.loader.hide();
-                                    this.loader=null
-                                    this.$router.push('/boatOwnerHome/'+ this.email);
+                                    
+                                 
                                     return response;   
                           })
                           .catch(err => {
@@ -413,7 +410,7 @@
                                       timer: 1500
                                 })
                                 this.resetForm()
-                            console.log('ja sam greska  '+err)
+                                console.log(err)
                           }
                           )
         },
@@ -424,10 +421,11 @@
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
                        axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name+"/"+this.ownerId,formData)
-                    .then(response => {
-                       this.loader.hide();
-                       this.loader=null
-                       this.$router.push('/boatOwnerHome/'+ this.email);
+                       .then(response => {
+                                    this.loader.hide();
+                                    this.loader=null
+                                    this.$router.push('/boatOwnerHome/'+ this.email);    
+                                    
                       return response;
                     })
               

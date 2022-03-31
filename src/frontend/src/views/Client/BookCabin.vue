@@ -160,135 +160,190 @@
           </div>
         </div>
 
-        <hr />
+        <template v-if="bookingProcess">
+          
+          <hr />
 
-        <p>Additional services:</p>
+          <p>Additional services:</p>
 
-        <table class="table" v-show="cabinDto.additionalServices.length != 0">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Service</th>
-              <th scope="col">Price ($)</th>
-              <th scope="col">&nbsp;</th>
-            </tr>
-          </thead>
+          <table class="table" v-show="cabinDto.additionalServices.length != 0">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Service</th>
+                <th scope="col">Price ($)</th>
+                <th scope="col">&nbsp;</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            <tr
-              v-for="(service, index) in availableAdditionalServices"
-              :key="index"
+            <tbody>
+              <tr
+                v-for="(service, index) in availableAdditionalServices"
+                :key="index"
+              >
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ service.name }}</td>
+                <td>{{ service.price }}</td>
+                <td>
+                  <input
+                    @click="addService(service)"
+                    type="button"
+                    value="add"
+                    class="btn btn-outline-success"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p v-show="availableAdditionalServices.length == 0">
+            No additional services for adding.
+          </p>
+
+          <p>Added additional services:</p>
+          <table class="table" v-show="addedAdditionalServices.length != 0">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Service</th>
+                <th scope="col">Price ($)</th>
+                <th scope="col">&nbsp;</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                v-for="(service, index) in addedAdditionalServices"
+                :key="index"
+              >
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ service.name }}</td>
+                <td>{{ service.price }}</td>
+                <td>
+                  <input
+                    @click="removeService(service)"
+                    type="button"
+                    value="remove"
+                    class="btn btn-outline-danger"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p v-show="addedAdditionalServices.length == 0">
+            No additional services added.
+          </p>
+          <hr />
+          <div class="row">
+            <div class="col">
+              <p>Start date:</p>
+            </div>
+            <div class="col">
+              <Datepicker
+                @change="calculatePrice()"
+                v-model="start"
+                required
+              ></Datepicker>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <p>End date:</p>
+            </div>
+            <div class="col">
+              <Datepicker
+                @change="calculatePrice()"
+                v-model="end"
+                required
+              ></Datepicker>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col">
+              <p>Total price:</p>
+            </div>
+            <div class="col">
+              <p>{{ totalPrice }}</p>
+            </div>
+          </div>
+
+          <button
+            style="background-color: #1d7ac9; width: 100%"
+            type="button"
+            class="btn text-light rounded-pill"
+            @click="bookCabin()"
+          >
+            BOOK
+          </button>
+        </template>
+
+        <template v-if="!bookingProcess">
+          <p>Additional services:</p>
+          <div
+            v-for="(service, index) in cabinDto.additionalServices"
+            :key="index"
+            class="group"
+            role="group"
+            aria-label="Basic outlined example"
+          >
+            <span
+              v-if="service.price == 0"
+              style="background-color: #59d47a"
+              class="badge rounded-pill text-light"
+              >{{ service.name }} - Free</span
             >
-              <th scope="row">{{ index + 1 }}</th>
-              <td>{{ service.name }}</td>
-              <td>{{ service.price }}</td>
-              <td>
-                <input
-                  @click="addService(service)"
-                  type="button"
-                  value="add"
-                  class="btn btn-outline-success"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p v-show="availableAdditionalServices.length == 0">
-          No additional services for adding.
-        </p>
-
-        <p>Added additional services:</p>
-        <table class="table" v-show="addedAdditionalServices.length != 0">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Service</th>
-              <th scope="col">Price ($)</th>
-              <th scope="col">&nbsp;</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr
-              v-for="(service, index) in addedAdditionalServices"
-              :key="index"
+            <span
+              v-else
+              style="background-color: #703636"
+              class="badge rounded-pill text-light"
+              >{{ service.name }} - {{ service.price }}$ per day</span
             >
-              <th scope="row">{{ index + 1 }}</th>
-              <td>{{ service.name }}</td>
-              <td>{{ service.price }}</td>
-              <td>
-                <input
-                  @click="removeService(service)"
-                  type="button"
-                  value="remove"
-                  class="btn btn-outline-danger"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          </div>
+        </template>
 
-        <p v-show="addedAdditionalServices.length == 0">
-          No additional services added.
-        </p>
-        <hr />
-        <div class="row">
-          <div class="col">
-            <p>Start date:</p>
-          </div>
-          <div class="col">
-            <Datepicker
-              @change="calculatePrice()"
-              v-model="start"
-              required
-            ></Datepicker>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <p>End date:</p>
-          </div>
-          <div class="col">
-            <Datepicker
-              @change="calculatePrice()"
-              v-model="end"
-              required
-            ></Datepicker>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col">
-            <p>Total price:</p>
-          </div>
-          <div class="col">
-            <p>{{ totalPrice }}</p>
-          </div>
-        </div>
-
-        <button
-          style="background-color: #1d7ac9; width: 100%"
-          type="button"
-          class="btn text-light rounded-pill"
-          @click="bookCabin()"
-        >
-          BOOK
-        </button>
       </div>
 
-      <div class="col" style="margin-top: 3%">
-        <button
-          @click="back()"
-          style="background-color: #1d7ac9; width: 100%"
-          type="button"
-          class="btn text-light rounded-pill"
-        >
-          BACK
-        </button>
-      </div>
-
+      <template v-if="bookingProcess">
+        <div class="col" style="margin-top: 3%">
+          <button
+            @click="back()"
+            style="background-color: #1d7ac9; width: 100%"
+            type="button"
+            class="btn text-light rounded-pill"
+          >
+            BACK
+          </button>
+        </div>
+      </template>
+      <template v-if="!bookingProcess">
+      <template v-if="!cabinDto.subscription">
+        <div class="col" style="margin-top: 3%">
+          <button
+            @click="subscribe()"
+            style="background-color: #1d7ac9; width: 100%"
+            type="button"
+            class="btn text-light rounded-pill"
+          >
+            SUBSCRIBE
+          </button>
+        </div>
+      </template>
+      <template v-if="cabinDto.subscription">
+        <div class="col" style="margin-top: 3%">
+          <button
+            @click="unsubscribe()"
+            style="background-color: #1d7ac9; width: 100%"
+            type="button"
+            class="btn text-light rounded-pill"
+          >
+            UNSUBSCRIBE
+          </button>
+        </div>
+      </template>
+      </template>
       <div
         style="
           text-align: left;
@@ -323,6 +378,7 @@ export default {
     back: Function,
     startDate: Date,
     endDate: Date,
+    bookingProcess: Boolean,
   },
   components: {
     OpenLayersMap,
@@ -387,14 +443,16 @@ export default {
       start: null,
       end: null,
       totalPrice: 0,
+      cabinNameParam: "",
     };
   },
   mounted() {
     this.email = this.$route.params.email;
+    this.cabinNameParam = this.$route.params.cabinName;
     this.start = this.startDate;
     this.end = this.endDate;
     this.getCabin();
-    this.calculatePrice();
+    if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
     calculatePrice: function () {
@@ -452,9 +510,14 @@ export default {
       this.calculatePrice();
     },
     getCabin: function () {
-      this.cabinDto.name = this.cabinName;
+      this.cabinDto.ownerUsername = this.email;
+      if (this.bookingProcess) {
+        this.cabinDto.name = this.cabinName;
+      } else {
+        this.cabinDto.name = this.cabinNameParam;
+      }
       axios
-        .post("http://localhost:8081/cabins/findByName", this.cabinDto, {})
+        .post("http://localhost:8081/cabins/findByNameClient", this.cabinDto, {})
         .then((response) => {
           this.addedAdditionalServices = [];
           this.cabinDto = response.data;
@@ -462,7 +525,7 @@ export default {
           this.currentImageUrl = this.cabinDto.images[0].url;
           this.maxImageIndex = this.cabinDto.images.length - 1;
           this.availableAdditionalServices = this.cabinDto.additionalServices;
-          this.calculatePrice();
+          if (this.bookingProcess) this.calculatePrice();
         });
     },
     previousImage: function () {
@@ -570,6 +633,44 @@ export default {
             title: "Something went wrong!",
             text: "Unsuccessful reservation! Period already taken.",
           });
+        });
+    },
+    subscribe: function(){
+      axios
+        .post("http://localhost:8081/cabinSubscription/addSubscription", 
+        {
+          cabinDto:this.cabinDto,
+          clientUsername:this.email
+        }
+        , {})
+        .then((response) => {
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: response.data,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          this.getCabin();
+        });
+    },
+    unsubscribe: function(){
+       axios
+        .post("http://localhost:8081/cabinSubscription/removeSubscription", 
+        {
+          cabinDto:this.cabinDto,
+          clientUsername:this.email
+        }
+        , {})
+        .then((response) => {
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: response.data,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          this.getCabin();
         });
     },
   },

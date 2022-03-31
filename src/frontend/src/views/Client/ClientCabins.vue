@@ -164,7 +164,7 @@
     </template>
 
   <template v-if="bookCabinOpen">
-    <BookCabin :cabinName="cabinName" :back="back" :startDate="startDate" :endDate="endDate"></BookCabin>
+    <BookCabin :bookingProcess="true" :cabinName="cabinName" :back="back" :startDate="startDate" :endDate="endDate"></BookCabin>
   </template>
 </template>
 
@@ -270,7 +270,7 @@ export default {
       return "logoF1.png";
     },
     seeProfile: function (cabinName) {
-      this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
+      this.$router.push("/cabin/" + this.email + "/" + cabinName);
     },
     bookCabin: function (cabinName) {
       this.bookCabinOpen=true;

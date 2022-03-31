@@ -80,7 +80,7 @@ public class BoatController {
         if(boat != null)
             return new ResponseEntity<>(boatMapper.boatToBoatDto(boat),HttpStatus.OK);
         else
-            return new ResponseEntity<>(boatMapper.boatToBoatDto(boat),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new BoatDto(),HttpStatus.BAD_REQUEST);
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/getAll")
@@ -89,5 +89,10 @@ public class BoatController {
         for(Boat boat: boatService.findAll())
             boats.add(boatMapper.boatToBoatDto(boat));
         return new ResponseEntity<>(boats,HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('BOATOWNER')")
+    @PostMapping("/canBeEditedOrDeleted/{id}")
+    public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
+            return new ResponseEntity<>(boatService.canBeEditedOrDeleted(id),HttpStatus.OK);
     }
 }

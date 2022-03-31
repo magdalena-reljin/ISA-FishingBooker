@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.AdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.FishingInstructorDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
@@ -32,18 +33,19 @@ public class AdventureController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody AdventureDto adventureDto){
-        boolean services=false;
         Adventure adventure=adventureMapper.adventureDtoToAdventure(adventureDto);
-        adventure.setFishingInstructor(fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername()));
-        adventureService.save(adventure);
-
-       if(adventureDto.getAdditionalServices()!=null) {
-            adventure.setAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices()));
-            services=true;
+        Set<AdditionalServices> services = new HashSet<>();
+        if(adventureDto.getAdditionalServices()!= null){
+                 services = additionalServiceMapper
+                .additionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices());
         }
-        if(services)
-            adventureService.save(adventure);
-        return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
+        if(adventureService.addNewAdventure(adventure,adventureDto.getFishingInstructorUsername(),services))
+            return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
+
+        else
+            return new ResponseEntity<>("Already exists", HttpStatus.BAD_REQUEST);
+
+
     }
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -88,4 +90,16 @@ public class AdventureController {
         adventureService.edit(adventure,fishingInstructor.getId());
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @GetMapping("/findInstructorsAdventure/{username:.+}/")
+    public ResponseEntity<Set<AdventureDto>> findInstructorsAdventure(@PathVariable ("username") String username){
+        Set<AdventureDto> adventures=new HashSet<>();
+        FishingInstructor fishingInstructor = fishingInstructorService.findByUsername(username);
+        for(Adventure adventure: adventureService.findAdventuresByInstructorId(fishingInstructor.getId()))
+            adventures.add(adventureMapper.adventureToAdventureDto(adventure));
+        return new ResponseEntity<>(adventures, HttpStatus.OK);
+    }
+
+
+
 }

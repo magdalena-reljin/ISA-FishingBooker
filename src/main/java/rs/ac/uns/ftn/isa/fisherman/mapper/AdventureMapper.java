@@ -12,7 +12,6 @@ public class AdventureMapper {
 
         return  new Adventure(adventure.getId(),adventure.getName(),addressMapper.dtoToAddress(adventure.getAddress()),
                 adventure.getDescription(),adventure.getInstructorsBiography(),adventure.getMaxPeople(),adventure.getPrice(),
-
                 adventure.getRules(),adventure.getEquipment(),adventure.getCancelingCondition());
     }
 
@@ -30,4 +29,7 @@ public class AdventureMapper {
                     adventureDto.getMaxPeople(),adventureDto.getPrice(),adventureDto.getRules(),adventureDto.getEquipment(),additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices()),
                     adventureDto.getCancelingCondition());
     }
+
+
+
 }

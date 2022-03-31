@@ -346,14 +346,23 @@
                axios.post("http://localhost:8081/adventures/save",this.adventureDto)
                .then(response => {
                         
-                        if(this.imagesSelected==true)
                         this.saveImages()
-                        else{
-                        this.loader.hide();
-                        this.$router.push('/fishingInstructorHome/'+ this.email);
-                        }
+                        
                         return response;   
-              })
+              }).catch(err =>{
+                    this.loader.hide();
+                    this.loader=null;
+                    this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'error',
+                      title: 'Adventure name must be unique!',
+                      showConfirmButton: false,
+                      timer: 2500
+                   })
+                      return err
+              });
+
+              
         },
         saveImages: function(){
             
@@ -362,11 +371,11 @@
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
                        axios.post("http://localhost:8081/firebase/uploadAdventureImage/"+this.adventureDto.name,formData)
-                    .then(response => {
-                    this.loader.hide();
-
-                       this.$router.push('/fishingInstructorHome/'+ this.email);
-                      return response;
+                      .then(response => {
+                          this.loader.hide();
+                          this.loader=null;
+                          this.$router.push('/fishingInstructorHome/'+ this.email);
+                       return response;
                     })
               
               }                

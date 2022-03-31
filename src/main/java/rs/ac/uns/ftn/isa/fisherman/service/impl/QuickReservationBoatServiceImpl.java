@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
@@ -59,6 +60,11 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public Set<QuickReservationBoat> findReservationsByOwnerId(Long id) {
+        return quickReservationBoatRepository.findReservationsByOwnerId(id);
+    }
+
+    @Override
     public Set<QuickReservationBoat> getByBoatId(Long cabinId) {
         return quickReservationBoatRepository.getByBoatId(cabinId);
     }
@@ -79,5 +85,9 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
                 .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
 
         return true;
+    }
+    @Override
+    public boolean futureQuickReservationsExist(LocalDateTime currentDate,Long boatId){
+        return quickReservationBoatRepository.futureQuickReservationsExist(currentDate,boatId);
     }
 }

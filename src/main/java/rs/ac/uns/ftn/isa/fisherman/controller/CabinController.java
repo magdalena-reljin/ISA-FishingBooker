@@ -13,6 +13,8 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +28,8 @@ public class CabinController {
     private CabinService cabinService;
     @Autowired
     private CabinOwnerService cabinOwnerService;
+    @Autowired
+    private CabinSubscriptionService cabinSubscriptionService;
 
     private final CabinMapper cabinMapper=new CabinMapper();
     private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
@@ -56,10 +60,17 @@ public class CabinController {
         return new ResponseEntity<>(cabins,HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CABINOWNER')"+"|| hasRole('CLIENT')")
+    @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/findByName")
     public ResponseEntity<CabinDto> findByName(@RequestBody CabinDto cabinDto){
         CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
+        return new ResponseEntity<>(cabin,HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("/findByNameClient")
+    public ResponseEntity<CabinDto> findByNameClient(@RequestBody CabinDto cabinDto){
+        CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
+        cabin.setSubscription(cabinSubscriptionService.checkIfUserIsSubscribed(cabinDto.getOwnerUsername(), cabin.getId()));
         return new ResponseEntity<>(cabin,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER')")

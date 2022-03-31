@@ -26,4 +26,6 @@ public interface BoatService {
     boolean delete(Long id);
 
     List<Boat> findAll();
+
+    boolean canBeEditedOrDeleted(Long id);
 }
