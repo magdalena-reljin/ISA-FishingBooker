@@ -18,8 +18,6 @@ public class AvailableBoatPeriodServiceImpl implements AvailableBoatPeriodServic
     @Autowired
     private QuickReservationBoatService quickReservationBoatService;
     @Autowired
-    private BoatOwnerService boatOwnerService;
-    @Autowired
     private AvailablePeriodService availablePeriodService;
 
     @Override

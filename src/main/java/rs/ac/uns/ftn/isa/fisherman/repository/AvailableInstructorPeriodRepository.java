@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AvailableBoatPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
 
 import java.time.LocalDateTime;
@@ -19,4 +20,9 @@ public interface AvailableInstructorPeriodRepository extends JpaRepository<Avail
     @Query(value = "SELECT CASE WHEN  COUNT(ap) > 0 THEN true ELSE false END FROM available_period ap where users_id=:users_id and ((:start between start_date and end_date)) and ((:end between start_date and end_date))", nativeQuery = true)
     boolean instructorIsAvailable(@Param("users_id") Long id, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
+    @Query(value="SELECT CASE WHEN  COUNT(ap) > 0 THEN true ELSE false END FROM available_period ap where id=:id and ((:startDate between start_date and end_date) and (:endDate between start_date and end_date))",nativeQuery = true)
+    boolean availablePeriodIncludesUnavailable(@Param("id")Long id, @Param("startDate")LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query(value="SELECT * FROM available_period where users_id=:users_id and start_date=:startDate and end_date=:endDate",nativeQuery = true)
+    AvailableInstructorPeriod findId(@Param("users_id")Long id, @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
 }
