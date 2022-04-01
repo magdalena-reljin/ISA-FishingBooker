@@ -2,10 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
@@ -23,15 +20,15 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     @Autowired
     private AdventureReservationService adventureReservationService;
     @Override
-    public boolean instructorCreates(AdventureReservation adventureReservation) {
-        if(!validateForReservation(adventureReservation)) return false;
+    public boolean instructorCreates(QuickReservationAdventure quickReservationAdventure) {
+        if(!validateForReservation(quickReservationAdventure)) return false;
 
-        QuickReservationAdventure successfullQuickReservation=new QuickReservationAdventure(adventureReservation.getId(),adventureReservation.getStartDate(),
-                adventureReservation.getEndDate(),adventureReservation.getPrice(),adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
+        QuickReservationAdventure successfullQuickReservation=new QuickReservationAdventure(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
+                quickReservationAdventure.getEndDate(),quickReservationAdventure.getPrice(),quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),null,quickReservationAdventure.getDiscount());
         successfullQuickReservation.setClient(null);
         quickReservationAdventureRepository.save(successfullQuickReservation);
-        if(adventureReservation.getAddedAdditionalServices()!=null){
-            successfullQuickReservation.setAddedAdditionalServices(adventureReservation.getAddedAdditionalServices());
+        if(quickReservationAdventure.getAddedAdditionalServices()!=null){
+            successfullQuickReservation.setAddedAdditionalServices(quickReservationAdventure.getAddedAdditionalServices());
             quickReservationAdventureRepository.save(successfullQuickReservation);
         }
         //TO DO: poslati mejl onima koji su pretplaceni na akcije od tog cabina
@@ -54,15 +51,15 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return quickReservationAdventureRepository.futureQuickReservationsExist(currentDate,id);
     }
 
-    private boolean validateForReservation(AdventureReservation adventureReservation){
-        if(!availableInstructorPeriodService.instructorIsAvailable(adventureReservation.getFishingInstructor()
-                .getId(),adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
+    private boolean validateForReservation(QuickReservationAdventure quickReservationAdventure){
+        if(!availableInstructorPeriodService.instructorIsAvailable(quickReservationAdventure.getFishingInstructor()
+                .getId(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
-        if(adventureReservationService.reservationExists(adventureReservation.getFishingInstructor()
-                .getId(),adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
+        if(adventureReservationService.reservationExists(quickReservationAdventure.getFishingInstructor()
+                .getId(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
-        if(quickReservationAdventureRepository.quickReservationExists(adventureReservation.getFishingInstructor().getId()
-                ,adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
+        if(quickReservationAdventureRepository.quickReservationExists(quickReservationAdventure.getFishingInstructor().getId()
+                ,quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
         return true;
     }

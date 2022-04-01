@@ -183,7 +183,7 @@
           </div>
           <div class="col form-group">
               <label style="color: gray;  " id="label">Discount (%)</label>
-              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="discount" class="form-control" required>
           </div>
           
             <hr style="color: white;">
@@ -470,6 +470,16 @@
                 
           </div>
         </div>
+          <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountQuick}}%</b></p>
+                
+          </div>
+        </div>
 
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
@@ -552,11 +562,13 @@ export default {
       unavailableEnd:  null,
       startEdit: null,
       endEdit: null,
+      discount: 0,
       adventureNameInfo: '',
       priceQuickInfo: 0,
       usernameQuickInfo: '',
       startQuickInfo: null,
       endQuickInfo: null,
+      discountQuick: 0,
       adventureNameQuick: '',
       startInfo:null,
       endInfo:null,
@@ -596,6 +608,7 @@ export default {
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
                   this.priceQuickInfo=arg.event.extendedProps.price
+                  this.discountQuick=arg.event.extendedProps.discount
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
@@ -764,7 +777,7 @@ export default {
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
-                              this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                              this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adventureName: newData.adventureDto.name,discount: newData.discount,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
 
                             }
@@ -905,7 +918,7 @@ export default {
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
-                                needsCaptainServices:  this.needsCaptainServices
+                                discount: this.discount
                                 })
                               .then((response) => {
                                     console.log(response)

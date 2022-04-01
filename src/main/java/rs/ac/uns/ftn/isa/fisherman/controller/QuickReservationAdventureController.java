@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationAdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
@@ -24,14 +26,13 @@ public class QuickReservationAdventureController {
     private QuickReservationAdventureService quickReservationAdventureService;
     @Autowired
     private FishingInstructorService fishingInstructorService;
-    private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
-    private AdventureMapper adventureMapper = new AdventureMapper();
+    private QuickReservationAdventureMapper quickReservationAdventureMapper = new QuickReservationAdventureMapper();
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
-    public ResponseEntity<String> instructorCreates (@RequestBody AdventureReservationDto adventureReservationDto) {
-        FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
-        AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
-        if(quickReservationAdventureService.instructorCreates(adventureReservation)) {
+    public ResponseEntity<String> instructorCreates (@RequestBody QuickReservationAdventureDto quickReservationAdventureDto) {
+        FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(quickReservationAdventureDto.getAdventureDto().getFishingInstructorUsername());
+        QuickReservationAdventure quickReservationAdventure = quickReservationAdventureMapper.dtoToQuickReservationAdventure(quickReservationAdventureDto,fishingInstructor);
+        if(quickReservationAdventureService.instructorCreates(quickReservationAdventure)) {
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         }else {
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
@@ -39,11 +40,11 @@ public class QuickReservationAdventureController {
     }
     @GetMapping(value= "/getByInstructorId/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
-    public ResponseEntity<Set<AdventureReservationDto>> getPresentByCabinId(@PathVariable ("username")String username) {
+    public ResponseEntity<Set<QuickReservationAdventureDto>> getPresentByCabinId(@PathVariable ("username")String username) {
         Long instructorId= fishingInstructorService.findByUsername(username).getId();
-        Set<AdventureReservationDto> reservationDtos= new HashSet<>();
+        Set<QuickReservationAdventureDto> reservationDtos= new HashSet<>();
         for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getByInstructorId(instructorId))
-            reservationDtos.add(adventureReservationMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
+            reservationDtos.add(quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
     }
 
