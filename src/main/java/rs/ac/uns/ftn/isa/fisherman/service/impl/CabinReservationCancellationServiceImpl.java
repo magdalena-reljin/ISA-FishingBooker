@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinReservationCancellationService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 @Service
 public class CabinReservationCancellationServiceImpl implements CabinReservationCancellationService {
@@ -30,9 +31,13 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
             return false;
         CabinReservationCancellation cabinReservationCancellation = new CabinReservationCancellation();
         CabinReservation cabinReservation = cabinReservationRepository.getById(cabinReservationDto.getId());
-        cabinReservation.setClient(clientService.findByUsername(cabinReservationDto.getClientUsername()));
-        cabinReservationCancellation.setCabinReservation(cabinReservation);
+        cabinReservationCancellation.setCabin(cabinReservation.getCabin());
         cabinReservationCancellation.setClient(cabinReservation.getClient());
+        cabinReservationCancellation.setStartDate(cabinReservation.getStartDate());
+        cabinReservationCancellation.setEndDate(cabinReservation.getEndDate());
+        cabinReservation.setAddedAdditionalServices(new HashSet<>());
+        cabinReservationRepository.save(cabinReservation);
+        cabinReservationRepository.deleteByReservationId(cabinReservation.getId());
         cabinReservationCancellationRepository.save(cabinReservationCancellation);
         return true;
     }
