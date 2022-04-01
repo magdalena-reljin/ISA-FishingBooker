@@ -307,36 +307,69 @@
               this.idx--;
        },
        deleteCabin: function(){
-           axios.post("http://localhost:8081/cabins/delete",this.cabinDto)
+            axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
                .then(response => {
-                    this.$router.push('/cabinOwnerHome/'+ this.email);
-                    return response;
+                     if(response.data == true){
+                      axios.post("http://localhost:8081/cabins/delete",this.cabinDto)
+                      .then(response => {
+                            this.$router.push('/cabinOwnerHome/'+ this.email);
+                            return response;
+                      })
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This cabin has future reservations and can not be deleted!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
               })
+           
        },
        editCabin: function(event){
            event.preventDefault()
            if(this.imagesSelected==true)
                this.cabinDto.images=null
-           
-           axios.post("http://localhost:8081/cabins/edit",this.cabinDto)
+
+          
+           axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
                .then(response => {
-                       
-                    if(this.imagesSelected==true){
-                        this.saveImages()
-                    }else{
-                      this.$swal.fire({
-                       position: 'top-end',
-                       icon: 'success',
-                       title: 'Changes saved',
-                       showConfirmButton: false,
-                       timer: 1500
-                       })
-                       this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
+                     if(response.data == true){
+                          axios.post("http://localhost:8081/cabins/edit",this.cabinDto)
+                          .then(response => {
+                                  
+                                if(this.imagesSelected==true){
+                                    this.saveImages()
+                                }else{
+                                  this.$swal.fire({
+                                  position: 'top-end',
+                                  icon: 'success',
+                                  title: 'Changes saved',
+                                  showConfirmButton: false,
+                                  timer: 1500
+                                  })
+                                  this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
 
-                    }
-                    return response;
+                                }
+                                return response;
+                             })
+
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This cabin has future reservations and can not be edited!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
               })
-
+           
+           
+           
        },
        onFileSelected: function(event){
               console.log(event)

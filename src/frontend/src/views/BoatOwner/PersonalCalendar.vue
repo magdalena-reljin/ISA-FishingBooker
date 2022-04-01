@@ -338,7 +338,6 @@ import VueModality from 'vue-modality-v3'
                                  this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
 
                                 }
-                                    console.log("JA SAM DUZINA LISTE U METODI"+ newData.addedAdditionalServices.length)
                       }   
               })
 

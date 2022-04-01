@@ -174,6 +174,21 @@
                 
           </div>
         </div>
+         <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServices" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
 
   
   <hr>
@@ -229,6 +244,21 @@
                 
           </div>
         </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div  class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesQuick" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                </ul>
+                
+          </div>
+        </div>
+          
 
   
   <hr>
@@ -533,6 +563,8 @@ import axios from "axios";
         usernameInfo: '',
         clientFullNameInfo: '',
         startQuickInfo: null,
+        adServicesQuick: [],
+        adServices: [],
         endQuickInfo: null,
         priceQuickInfo: null,
         usernameQuickInfo: null,
@@ -550,6 +582,7 @@ import axios from "axios";
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
+                  this.adServices=arg.event.extendedProps.adServices
            }else if(arg.event.title=='QuickReservation'){
                   this.$refs.quickReservationInfo.open()
                   this.startQuickInfo=arg.event.start
@@ -564,6 +597,7 @@ import axios from "axios";
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
                  
                   }
+                  this.adServicesQuick=arg.event.extendedProps.adServicesQuick
            }
         },
         selectMirror: true,
@@ -658,7 +692,10 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                                this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                                this.calendarOptions.events.push({ id: newData.id , extendedProps: {adServices: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -671,7 +708,11 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adServicesQuick: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -826,7 +867,6 @@ import axios from "axios";
                                 })
                               .then((response) => {
                                     console.log(response)
-                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null} ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
                                     
                                      this.$swal.fire({
                                           position: 'top-end',
@@ -892,6 +932,10 @@ import axios from "axios";
               return true;
             },
             clearModalReservation: function(){
+                 this.calendarOptions.events=[]
+                   this.getCabinsAvailablePeriod()
+                   this.getQuickReservations()
+                   this.getCabinReservations()
                  this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
@@ -901,6 +945,10 @@ import axios from "axios";
                  this.totalPrice=0
             },
             clearModalQuick: function(){
+                this.calendarOptions.events=[]
+                   this.getCabinsAvailablePeriod()
+                   this.getQuickReservations()
+                   this.getCabinReservations()
                  this.$refs.makeQuickReservation.hide()
                  this.startQuickReservation=null
                  this.endQuickReservation=null

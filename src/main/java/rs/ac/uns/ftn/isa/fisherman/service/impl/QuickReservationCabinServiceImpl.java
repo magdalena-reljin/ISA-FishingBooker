@@ -49,6 +49,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         return quickReservationCabinRepository.quickReservationExists(id,startDate,endDate);
     }
 
+    @Override
+    public boolean futureQuickReservationsExist(LocalDateTime currentDate, Long id) {
+        return quickReservationCabinRepository.futureQuickReservationsExist(currentDate,id);
+    }
+
     private boolean validateForReservation(CabinReservation cabinReservation){
         if(!availableCabinPeriodService.cabinIsAvailable(cabinReservation.getCabin()
                 .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;

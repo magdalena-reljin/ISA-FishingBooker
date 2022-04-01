@@ -13,4 +13,6 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> getByCabinId(Long cabinId);
 
     boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate);
+
+    boolean futureQuickReservationsExist(LocalDateTime currentDate, Long id);
 }

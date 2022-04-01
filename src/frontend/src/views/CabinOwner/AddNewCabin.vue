@@ -337,6 +337,19 @@
                         
                         return response;   
               })
+              .catch(err => {
+                console.log(err)
+                this.loader.hide();
+                this.loader=null
+                this.$swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: 'Oops... something went wrong',
+                  showConfirmButton: false,
+                  timer: 1500
+                  })
+
+              })
         },
         saveImages: function(){
             
