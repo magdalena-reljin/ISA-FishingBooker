@@ -23,15 +23,15 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Autowired
     private QuickReservationCabinRepository quickReservationCabinRepository;
     @Override
-    public boolean ownerCreates(CabinReservation cabinReservation) {
-        if(!validateForReservation(cabinReservation)) return false;
+    public boolean ownerCreates(QuickReservationCabin quickReservationCabin) {
+        if(!validateForReservation(quickReservationCabin)) return false;
 
-        QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(cabinReservation.getId(),cabinReservation.getStartDate(),
-                cabinReservation.getEndDate(),cabinReservation.getPrice(),cabinReservation.getCabin(),null);
+        QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
+                quickReservationCabin.getEndDate(),quickReservationCabin.getPrice(),quickReservationCabin.getCabin(),null,quickReservationCabin.getDiscount());
         successfullQuickReservation.setClient(null);
         quickReservationCabinRepository.save(successfullQuickReservation);
-        if(cabinReservation.getAddedAdditionalServices()!=null){
-            successfullQuickReservation.setAddedAdditionalServices(cabinReservation.getAddedAdditionalServices());
+        if(quickReservationCabin.getAddedAdditionalServices()!=null){
+            successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());
             quickReservationCabinRepository.save(successfullQuickReservation);
         }
         //TO DO: poslati mejl onima koji su pretplaceni na akcije od tog cabina
@@ -54,15 +54,15 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         return quickReservationCabinRepository.futureQuickReservationsExist(currentDate,id);
     }
 
-    private boolean validateForReservation(CabinReservation cabinReservation){
-        if(!availableCabinPeriodService.cabinIsAvailable(cabinReservation.getCabin()
-                .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
+    private boolean validateForReservation(QuickReservationCabin cabinQuickReservation){
+        if(!availableCabinPeriodService.cabinIsAvailable(cabinQuickReservation.getCabin()
+                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) return false;
 
-        if(reservationCabinService.reservationExists(cabinReservation.getCabin()
-                .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
+        if(reservationCabinService.reservationExists(cabinQuickReservation.getCabin()
+                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) return false;
 
-        if(quickReservationCabinRepository.quickReservationExists(cabinReservation.getCabin()
-                .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
+        if(quickReservationCabinRepository.quickReservationExists(cabinQuickReservation.getCabin()
+                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) return false;
 
         return true;
     }

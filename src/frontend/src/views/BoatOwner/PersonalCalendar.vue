@@ -177,6 +177,16 @@
                 
           </div>
         </div>
+         <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountInfo}}%</b></p>
+                
+          </div>
+        </div>
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -256,7 +266,7 @@ import VueModality from 'vue-modality-v3'
                   this.endQuickInfo=arg.event.end
                   this.priceQuickInfo=arg.event.extendedProps.price
                   this.boatNameQuick=arg.event.extendedProps.boatName
-                  if(arg.event.extendedProps.email==null){
+                  if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==""){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
                   }else{
@@ -266,6 +276,7 @@ import VueModality from 'vue-modality-v3'
                   }
                   this.captainIsRequiredQuick=arg.event.extendedProps.captainIsRequired
                   this.adServicesQuick=arg.event.extendedProps.adServices
+                  this.discountInfo=arg.event.extendedProps.discount
            }
         },
         selectMirror: true,
@@ -288,6 +299,7 @@ import VueModality from 'vue-modality-v3'
         boatNameQuick: null,
         adServices: [],
         adServicesQuick: [],
+        discountInfo: 0,
         },
        }
      },
@@ -302,6 +314,7 @@ import VueModality from 'vue-modality-v3'
                 axios.get("http://localhost:8081/reservationBoat/getByOwnerUsername/"+this.email+"/")
                 .then(response => {
                       for( let newData of response.data ){
+                                  if(newData.needsCaptainServices==true){
                                   var start=newData.startDate
                                   var end=newData.endDate
                                   newData.startDate=this.setDate(start)
@@ -316,6 +329,7 @@ import VueModality from 'vue-modality-v3'
                                   }else{
                                   this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'Reservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
                                   }
+                                  }
                         }   
                 })
 
@@ -324,6 +338,7 @@ import VueModality from 'vue-modality-v3'
                axios.get("http://localhost:8081/quickReservationBoat/getByOwnerUsername/"+this.email+"/")
                .then(response => {
                      for( let newData of response.data ){
+                                if(newData.needsCaptainServices==true){
                                 var start=newData.startDate
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
@@ -333,10 +348,11 @@ import VueModality from 'vue-modality-v3'
                                    temp.push(newData.addedAdditionalServices[i].name)
 
                                 if(newData.needsCaptainServices==false){
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {discount: newData.discount, email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                                 }else{
-                                 this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
+                                 this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {discount: newData.discount,email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
 
+                                }
                                 }
                       }   
               })

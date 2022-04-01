@@ -9,6 +9,8 @@ public class QuickReservationCabin extends Reservation {
     @ManyToOne
     @JoinColumn(name="cabin_id")
     protected Cabin cabin;
+    @Column(name="discount")
+    protected Integer discount;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinTable(name = "cabin_quickr_services",
@@ -16,11 +18,21 @@ public class QuickReservationCabin extends Reservation {
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     protected Set<AdditionalServices> addedAdditionalServices;
 
-    public QuickReservationCabin(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Cabin cabin, Set<AdditionalServices> addedAdditionalServices) {
+    public QuickReservationCabin(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Cabin cabin, Set<AdditionalServices> addedAdditionalServices,Integer discount) {
         super(id, startDate, endDate, price);
         this.cabin = cabin;
         this.addedAdditionalServices = addedAdditionalServices;
+        this.discount=discount;
     }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
     public QuickReservationCabin(){}
 
     public Cabin getCabin() {

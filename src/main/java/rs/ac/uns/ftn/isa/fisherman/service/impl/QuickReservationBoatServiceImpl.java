@@ -1,18 +1,13 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
-import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
-import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -27,19 +22,19 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     private QuickReservationBoatRepository quickReservationBoatRepository;
 
     @Override
-    public boolean ownerCreates(BoatReservation boatReservation) {
-        if(!validateForReservation(boatReservation)) return false;
+    public boolean ownerCreates(QuickReservationBoat quickReservationBoat) {
+        if(!validateForReservation(quickReservationBoat)) return false;
 
-        QuickReservationBoat successfullQuickReservation=new QuickReservationBoat(boatReservation.getId(),boatReservation.getStartDate(),
-                boatReservation.getEndDate(),boatReservation.getPrice(),boatReservation.getBoat(),null,boatReservation.getNeedsCaptainService());
+        QuickReservationBoat successfullQuickReservation=new QuickReservationBoat(quickReservationBoat.getId(), quickReservationBoat.getStartDate(),
+                quickReservationBoat.getEndDate(), quickReservationBoat.getPrice(), quickReservationBoat.getBoat(),null, quickReservationBoat.getNeedsCaptainServices(),quickReservationBoat.getDiscount());
         successfullQuickReservation.setClient(null);
-        if(boatReservation.getAddedAdditionalServices()!=null){
-            if(boatReservation.getNeedsCaptainService()) {
+        if(quickReservationBoat.getAddedAdditionalServices()!=null){
+            if(quickReservationBoat.getNeedsCaptainServices()) {
                 if (ownerIsNotAvailable(successfullQuickReservation.getBoat().getBoatOwner().getId(),
                         successfullQuickReservation.getStartDate(), successfullQuickReservation.getEndDate())) return false;
             }
             quickReservationBoatRepository.save(successfullQuickReservation);
-            successfullQuickReservation.setAddedAdditionalServices(boatReservation.getAddedAdditionalServices());
+            successfullQuickReservation.setAddedAdditionalServices(quickReservationBoat.getAddedAdditionalServices());
             quickReservationBoatRepository.save(successfullQuickReservation);
         }else{
             quickReservationBoatRepository.save(successfullQuickReservation);
@@ -74,15 +69,15 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         return quickReservationBoatRepository.quickReservationExists(id,startDate,endDate);
     }
 
-    private boolean validateForReservation(BoatReservation boatReservation){
-        if(!availableBoatPeriodService.boatIsAvailable(boatReservation.getBoat()
-                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
+    private boolean validateForReservation(QuickReservationBoat quickReservationBoat){
+        if(!availableBoatPeriodService.boatIsAvailable(quickReservationBoat.getBoat()
+                .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
 
-        if(boatReservationService.reservationExists(boatReservation.getBoat()
-                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
+        if(boatReservationService.reservationExists(quickReservationBoat.getBoat()
+                .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
 
-        if(quickReservationBoatRepository.quickReservationExists(boatReservation.getBoat()
-                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
+        if(quickReservationBoatRepository.quickReservationExists(quickReservationBoat.getBoat()
+                .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
 
         return true;
     }

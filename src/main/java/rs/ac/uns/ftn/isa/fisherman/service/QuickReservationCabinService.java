@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface QuickReservationCabinService {
-    boolean ownerCreates(CabinReservation cabinReservation);
+    boolean ownerCreates(QuickReservationCabin quickReservationCabin);
 
 
     Set<QuickReservationCabin> getByCabinId(Long cabinId);

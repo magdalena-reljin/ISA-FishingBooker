@@ -9,6 +9,9 @@ public class QuickReservationBoat extends Reservation{
     @JoinColumn(name="boat_id")
     protected Boat boat;
 
+    @Column(name="discount")
+    protected Integer discount;
+
     @ManyToMany(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
     @JoinTable(name = "boat_quickr_services",
             joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"),
@@ -18,11 +21,21 @@ public class QuickReservationBoat extends Reservation{
     protected boolean needsCaptainServices;
     public QuickReservationBoat(){}
 
-    public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Boat boat, Set<AdditionalServices> addedAdditionalServices,boolean needsCaptainServices) {
+    public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Boat boat, Set<AdditionalServices> addedAdditionalServices,boolean needsCaptainServices,Integer discount) {
         super(id, startDate, endDate, price);
         this.boat = boat;
         this.addedAdditionalServices = addedAdditionalServices;
         this.needsCaptainServices=needsCaptainServices;
+        this.discount=discount;
+    }
+
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 
     public boolean getNeedsCaptainServices() {
