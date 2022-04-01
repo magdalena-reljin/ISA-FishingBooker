@@ -331,6 +331,78 @@
 </vue-modality>
 
 
+
+<vue-modality ref="myRef" title="Edit available period" hide-footer hide-header centered no-close-on-esc=true no-close-on-backdrop=true>
+  <h4><b>Edit available period</b></h4>
+  <hr>
+   <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;" >
+            <h6>From</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startEdit" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;">
+            <h6>To</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endEdit" disabled ></Datepicker>
+          </div>
+        </div>
+
+  <br>
+  
+  <hr>
+  <div style="text-align: left;">
+  <h6>Add unavailable days</h6>
+  </div>
+         <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;" >
+            <h6>From</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           
+           v-model="unavailableStart" 
+                
+         >
+          </Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;">
+            <h6>To</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="unavailableEnd"></Datepicker>
+          </div>
+        </div>
+        
+  <br>
+  <label style="color: red;" v-if="editDataIsNotValid==true">Please enter valid dates</label>
+  <hr>
+   <div class="row">
+        <div class="col">
+           <button type="button" @click="clearModalEdit()" class="btn btn-secondary">Close</button>
+        </div>
+        <div class="col">
+           <button type="button" @click="deleteAvailablePeriod()" class="btn btn-danger">Delete</button>
+        </div>
+        <div class="col">
+           <button type="button" @click="editAvailablePeriod()" class="btn btn-primary" >Save</button>
+        </div>
+    </div>
+</vue-modality>
+
+
 <vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered >
 
    <br>
@@ -468,6 +540,11 @@ export default {
       endQuickReservation:null,
       dateIsNotValidQuick: false,
       clientQuickFullNameInfo: '',
+      editDataIsNotValid: false,
+      unavailableStart: null,
+      unavailableEnd:  null,
+      startEdit: null,
+      endEdit: null,
       adventureNameInfo: '',
       priceQuickInfo: 0,
       usernameQuickInfo: '',
@@ -493,10 +570,10 @@ export default {
         selectable: true,
         eventClick: (arg)=>{
           if(arg.event.title=='Available'){
-              
-         this.$refs.myRef.open()
-          this.start=arg.event.start
-          this.end=arg.event.end
+           this.$refs.myRef.open()
+           this.startEdit=arg.event.start
+           this.endEdit=arg.event.end
+           this.argEventDeleting=arg.event
           }else if(arg.event.title=='Reservation'){
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
@@ -579,8 +656,8 @@ export default {
              fishingInstructorUsername: ''
          }],
          
-         selected: 0,
-         startReservation: null,
+        selected: 0,
+        startReservation: null,
         endReservation: null,
         dateIsNotValid: false,
         adventureName: '',
@@ -589,11 +666,12 @@ export default {
         options: [ ], 
         additionalServicesToSend: [],
         newPrice: 0,
-       totalPrice: 0,
-       cancelingCondition : '',
-       maxPeople: 0,
+        totalPrice: 0,
+        cancelingCondition : '',
+        maxPeople: 0,
         adServices: [],
         adServicesQuick: [],
+        argEventDeleting: null
     };
   },
  
@@ -777,7 +855,7 @@ export default {
                                 })
                               .then((response) => {
                                       console.log(response)
-                                      this.calendarOptions.events.push({extendedProps: {email: this.client, price: this.totalPrice, clientFullName: '', captainIsRequired: this.needsCaptainServices} ,title: 'Reservation', start: this.startReservation , end: this.endReservation})
+                                      this.calendarOptions.events.push({extendedProps: {adventureName: this.adventureDto[this.selected].name,email: this.client, price: this.totalPrice, clientFullName: ''} ,title: 'Reservation', start: this.startReservation , end: this.endReservation})
                                     
                                        this.$swal.fire({
                                           position: 'top-end',
@@ -828,7 +906,7 @@ export default {
                                 })
                               .then((response) => {
                                     console.log(response)
-                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null, } ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
+                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {adventureName: this.adventureDto[this.selected].name,email: this.client, price: this.totalPrice, clientFullName: null, } ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
                                     
                                      this.$swal.fire({
                                           position: 'top-end',
@@ -854,6 +932,70 @@ export default {
                     }
 
            },
+              editAvailablePeriod: function(){
+                 if(!this.dataIsValid(this.unavailableStart,this.unavailableEnd)){
+                    this.editDataIsNotValid=true
+                    return
+                 }
+
+                 console.log("un start    "+this.unavailableStart)
+                 console.log("un start   f "+this.formatDate(this.unavailableStart))
+                  console.log("un start    "+this.unavailableEnd)
+                 console.log("un start   f "+this.formatDate(this.unavailableEnd))
+                  axios.post("http://localhost:8081/instructorsPeriod/editAvailableInstructorsPeriod",[
+               {
+                 id: null,
+                startDate: this.formatDate(this.startEdit),
+                endDate: this.formatDate(this.endEdit),
+                username: this.email,
+                },
+                {
+                 id: null,
+                startDate: this.formatDate(this.unavailableStart),
+                endDate: this.formatDate(this.unavailableEnd),
+                username: this.email,
+                }]
+
+              )
+              .then(response => {
+                   this.calendarOptions.events=[]
+                   
+                    this.getAvailableInstructorsPeriod();
+                    this.getInstructorsReservation()
+                    this.getInstructorsQuickReservation()
+                   
+                   this.$swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Available period successfully edited!',
+                    showConfirmButton: false,
+                    timer: 2500
+                   })
+                    this.clearModalEdit()
+                 return response;
+              })
+              .catch(err => {
+                   console.log("usao u catch")
+                   console.log(err)
+                   this.$swal.fire({
+                   position: 'top-end',
+                   icon: 'error',
+                   title: 'Available period can not be edited',
+                   showConfirmButton: false,
+                   timer: 2500
+                   })
+                   this.clearModalEdit()
+                })
+
+            },
+            clearModalEdit: function(){
+                 this.$refs.myRef.hide()
+                 this.unavailableStart=null
+                 this.unavailableEnd=null
+                 this.editDataIsNotValid=false
+                 this.argEventDeleting=null
+
+            },
                additionalServicesAdded: function(){
                   
                     this.additionalServicesToSend=[]
@@ -918,6 +1060,42 @@ export default {
                         }
                  this.newPrice=this.adventureDto[0].price;
             },
+                 deleteAvailablePeriod: function(){
+                  axios.post("http://localhost:8081/instructorsPeriod/deleteAvailableInstructorsPeriod",
+                  {
+                    id: null,
+                    startDate: this.formatDate(this.startEdit),
+                    endDate: this.formatDate(this.endEdit),
+                    username: this.email,
+                    }
+                  )
+                  .then(response => {
+                      this.argEventDeleting.remove()
+                      this.$swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Available period successfully deleted!',
+                        showConfirmButton: false,
+                        timer: 2500
+                      })
+                        this.clearModalEdit()
+                    return response;
+                  })
+                  .catch(err => {
+                    
+                      console.log(err)
+                      this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'error',
+                      title: 'Available period can not be deleted',
+                      showConfirmButton: false,
+                      timer: 2500
+                      })
+                      this.clearModalEdit()
+                    })
+
+             
+            }
      }
     
   }
