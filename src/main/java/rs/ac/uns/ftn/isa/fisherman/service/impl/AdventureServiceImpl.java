@@ -6,10 +6,9 @@ import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
-import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
-import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,10 @@ public class AdventureServiceImpl implements AdventureService {
 
     @Autowired
     private FishingInstructorService fishingInstructorService;
-
+    @Autowired
+    private AdventureReservationService adventureReservationService;
+    @Autowired
+    private QuickReservationAdventureService quickReservationAdventureService;
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -100,5 +102,12 @@ public class AdventureServiceImpl implements AdventureService {
         Set<AdditionalServices> savedServices=adventureRepository.findAdventureByName(adventure.getName(),instructorId).getAdditionalServices();
         if(adventure.getImages()==null)   imageService.delete(oldImages);
         additionalServicesService.delete(additionalServicesService.findDeletedAdditionalServices(oldAdditionalServices,savedServices));
+    }
+    @Override
+    public boolean canBeEditedOrDeleted(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        if(adventureReservationService.futureReservationsExist(currentDate,id)) return false;
+        if(quickReservationAdventureService.futureQuickReservationsExist(currentDate,id)) return false;
+        return true;
     }
 }
