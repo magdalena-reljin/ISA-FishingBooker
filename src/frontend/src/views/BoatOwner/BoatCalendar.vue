@@ -255,6 +255,16 @@
                 
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountInfo}}%</b></p>
+                
+          </div>
+        </div>
          <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Captain</p>
@@ -333,8 +343,14 @@
           <div class="row">
               <div class="col form-group">
               <label style="color: gray;  " id="label">Price per hour ($)</label>
-              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="boatDto.price" class="form-control" disabled>
           </div>
+          <div class="col form-group">
+              <label style="color: gray;  " id="label">Discount (%)</label>
+              <input type="number" min=1 max=100 v-model="discount" class="form-control" required>
+          </div>
+          
+            <hr style="color: white;">
 
           <div class="col form-group">
               <label style="color: gray;" id="label">Max people</label>
@@ -568,6 +584,8 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
                  
                   }
+                  
+                  this.discountInfo=arg.event.extendedProps.discount
            }
         },
         selectMirror: true,
@@ -665,6 +683,8 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
             dateIsNotValidQuick: false,
             newPrice: 0,
             boatId: null,
+            discount: 0,
+            discountInfo: 0,
           
        }
 
@@ -686,7 +706,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   label: this.boatDto.additionalServices[i].name+"-"+this.boatDto.additionalServices[i].price+"$ per hour",
                                 })
                          }
-                         this.newPrice=this.boatDto.price
+                         
                          this.getBoatsAvailablePeriod();
                          this.getBoatReservations();
                          this.getQuickReservations();
@@ -740,7 +760,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                    temp.push(newData.addedAdditionalServices[i].name)
 
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adServicesQuick: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {discount: newData.discount, adServicesQuick: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -937,7 +957,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
 
                     if(this.startQuickReservation != null && this.startQuickReservation!=null){
                                  this.additionalServicesAdded()
-                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.boatDto.price)
                                 axios
                                 .post(
                                 "http://localhost:8081/quickReservationBoat/ownerCreates/"+this.email+"/",
@@ -949,7 +969,8 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
-                                needsCaptainServices:  this.needsCaptainServices
+                                needsCaptainServices:  this.needsCaptainServices,
+                                discount: this.discount
                                 })
                               .then((response) => {
                                     console.log(response)
@@ -1022,6 +1043,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                  this.needsCaptainServices=false
             },
             clearModalQuick: function(){
+                 this.discount=0
                  this.calendarOptions.events=[]
                  this.getBoatsAvailablePeriod()
                  this.getBoatReservations()

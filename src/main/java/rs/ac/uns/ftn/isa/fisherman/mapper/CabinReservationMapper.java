@@ -36,18 +36,4 @@ public class CabinReservationMapper {
                 fullName,cabinMapper.cabinToCabinDto(cabinReservation.getCabin()),additionalServicesDtos);
     }
 
-    public CabinReservationDto quickCabinReservationToCabinReservationDto(QuickReservationCabin quickReservationCabin) {
-        Client client=new Client();
-        String fullName=null;
-        Set<AdditionalServicesDto> additionalServicesSet=new HashSet<>();
-        if(quickReservationCabin.getClient() !=null){
-            client.setUsername(quickReservationCabin.getClient().getUsername());
-            fullName=quickReservationCabin.getClient().getName()+" "+quickReservationCabin.getClient().getLastName();
-        }
-        if(quickReservationCabin.getAddedAdditionalServices()!= null)
-            additionalServicesSet= additionalServicesMapper.additionalServicesToAdditionalServiceDtoS(quickReservationCabin.getAddedAdditionalServices());
-        return new CabinReservationDto(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
-                quickReservationCabin.getEndDate(),quickReservationCabin.getPrice(),client.getUsername(),
-                fullName,null,additionalServicesSet);
-    }
 }

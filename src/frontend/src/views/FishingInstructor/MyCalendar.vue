@@ -179,8 +179,14 @@
           <div class="row">
               <div class="col form-group">
               <label style="color: gray;  " id="label">Price per hour ($)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="adventureDto[selected].price" class="form-control" disabled>
+          </div>
+          <div class="col form-group">
+              <label style="color: gray;  " id="label">Discount (%)</label>
               <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
           </div>
+          
+            <hr style="color: white;">
 
           <div class="col form-group">
               <label style="color: gray;" id="label">Max people</label>
@@ -464,6 +470,7 @@
                 
           </div>
         </div>
+
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -704,7 +711,6 @@ export default {
 
        },
        switchSelect(event){
-        console.log("Ja sam event"+event.target.value)
         this.options=[]
         this.value= []
         let idx=event.target.value
@@ -832,8 +838,6 @@ export default {
         },
            createReservation: function(event){
                     event.preventDefault()
-                    console.log("Ja sam selected"+ this.selected)
-          
                     if(!this.dataIsValid(this.startReservation,this.endReservation)){
                       this.dateIsNotValid=true
                       return;
@@ -936,10 +940,6 @@ export default {
                     return
                  }
 
-                 console.log("un start    "+this.unavailableStart)
-                 console.log("un start   f "+this.formatDate(this.unavailableStart))
-                  console.log("un start    "+this.unavailableEnd)
-                 console.log("un start   f "+this.formatDate(this.unavailableEnd))
                   axios.post("http://localhost:8081/instructorsPeriod/editAvailableInstructorsPeriod",[
                {
                  id: null,
