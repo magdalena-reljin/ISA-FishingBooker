@@ -17,4 +17,6 @@ public interface BoatReservationService {
     boolean ownerIsNotAvailableReservation(Long ownerId, LocalDateTime start, LocalDateTime end);
     Set<BoatReservation> findReservationsByOwnerId(Long id);
     boolean futureReservationsExist(LocalDateTime currentDate, Long boatId);
+
+    Set<BoatReservation> getPastReservations(Long id);
 }

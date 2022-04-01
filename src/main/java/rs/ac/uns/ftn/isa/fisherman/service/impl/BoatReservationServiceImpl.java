@@ -99,6 +99,12 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return boatReservationRepository.futureReservationsExist(currentDate,boatId);
     }
 
+    @Override
+    public Set<BoatReservation> getPastReservations(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        return boatReservationRepository.getPastReservations(id,currentDate);
+    }
+
     private void sendMailNotification(BoatReservation boatReservation,String email){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
