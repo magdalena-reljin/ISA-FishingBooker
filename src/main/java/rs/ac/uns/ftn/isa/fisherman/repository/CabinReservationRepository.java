@@ -1,9 +1,12 @@
 package rs.ac.uns.ftn.isa.fisherman.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
+
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -25,4 +28,9 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
 
     @Query(value="SELECT * FROM cabin_reservation where id=:id",nativeQuery = true)
     CabinReservation getById(@Param("id")Long id);
+
+    @Transactional
+    @Modifying
+    @Query(value="DELETE FROM cabin_reservation c where c.id=:id",nativeQuery = true)
+    void deleteByReservationId(@Param("id")Long id);
 }

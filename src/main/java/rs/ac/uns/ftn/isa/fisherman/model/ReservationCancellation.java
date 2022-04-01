@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public class ReservationCancellation {
@@ -13,10 +14,32 @@ public class ReservationCancellation {
     @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name="users_id")
     protected Client client;
+    @Column(name= "startDate")
+    protected LocalDateTime startDate;
+    @Column(name= "endDate")
+    protected LocalDateTime endDate;
 
-    public ReservationCancellation(Long id, Client client) {
+    public ReservationCancellation(Long id, Client client, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.client = client;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public ReservationCancellation(){}
