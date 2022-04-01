@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
@@ -22,6 +24,7 @@ import java.util.Set;
 
 @Service
 public class AdventureReservationServiceImpl implements AdventureReservationService {
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Autowired
     private AdventureReservationRepository adventureReservationRepository;
     @Autowired
@@ -88,7 +91,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
             String message = adventureReservation.getAdventure().getName() + " is booked from " + adventureReservation.getStartDate().format(formatter) + " to " + adventureReservation.getEndDate().format(formatter) + " .";
             mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 }
