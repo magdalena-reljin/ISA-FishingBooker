@@ -120,7 +120,7 @@
 
        <div  class="col" style="margin-top: 3%;">
            <button @click="editProfile()" style="background-color: #1d7ac9; width: 100%; " type="button" class="btn text-light rounded-pill">EDIT PROFILE</button>
-             <button @click="calendar()" style="background-color: #1d7ac9; width: 100%; margin-top: 3% " type="button" class="btn text-light rounded-pill">CALENDAR</button>
+        
        </div>
 
         
@@ -257,9 +257,6 @@ export default{
        editProfile: function(){
             this.$router.push('/editAdventure/'+ this.email+'/'+this.adventureDto.name);
        },
-       calendar:function(){
-            this.$router.push('/adventureCalendar/'+ this.adventureDto.name+'/'+this.email);
-       }
 
        
       

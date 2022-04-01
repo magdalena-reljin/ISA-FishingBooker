@@ -12,4 +12,6 @@ public interface AdventureReservationService {
     boolean instructorCreates(AdventureReservation adventureReservation, String clientUsername);
     Set<AdventureReservation> getPresentByInstructorId(Long cabinId);
     boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
+
+    boolean futureReservationsExist(LocalDateTime currentDate, Long id);
 }
