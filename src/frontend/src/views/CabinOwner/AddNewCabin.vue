@@ -115,7 +115,15 @@
        <hr style="color: white;">
             
        </div>     
-       
+       <div class="col form-group">
+             <label id="label" for="formFileMultiple" class="form-label">Cancelling</label>
+
+             <select v-model="selectedCancelling" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                 <option value="0">FREE</option>
+                 <option value="1">OWNER KEEPS PERCENTAGE</option>
+             </select>
+        </div>
+        
         <hr>
         
           <div class="row">
@@ -222,7 +230,8 @@
                  cabin: ''
 
              }],
-             ownerUsername: ''
+             ownerUsername: '',
+             cancellingConditions: '',
          },
            prices: '',
            names: '',
@@ -232,7 +241,8 @@
            imagesSelected: false,
            imagesSelectedEvent: null,
            additionalServicesAdded: false,
-           loader: null
+           loader: null,
+           selectedCancelling: 0,
        
        }
      },
@@ -324,6 +334,11 @@
                if(this.additionalServicesAdded==false)
                   this.cabinDto.additionalServices=null   
 
+               if(this.selectedCancelling==0)
+                    this.cabinDto.cancellingConditions='FREE'
+               else
+                    this.cabinDto.cancellingConditions='NOT FREE'
+
                    this.loader = this.$loading.show({
                     // Optional parameters
                     container: this.fullPage ? null : this.$refs.formContainer,
@@ -348,7 +363,7 @@
                   showConfirmButton: false,
                   timer: 1500
                   })
-
+               
               })
         },
         saveImages: function(){

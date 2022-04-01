@@ -24,7 +24,8 @@ public class Cabin {
     @Column(name="bedsPerRoom")
     protected Integer bedsPerRoom;
 
-
+    @Column(name="cancelingConditions")
+    protected String cancellingConditions;
 
     @Column(name="rules")
     protected String rules;
@@ -158,7 +159,7 @@ public class Cabin {
         this.bedsPerRoom = bedsPerRoom;
     }
 
-    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Double rating) {
+    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Double rating, String cancellingConditions) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -171,9 +172,10 @@ public class Cabin {
         this.additionalServices = new HashSet<>();
         this.images = new HashSet<>();
         this.availableCabinPeriods=new HashSet<>();
+        this.cancellingConditions = cancellingConditions;
     }
 
-    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Set<AdditionalServices> additionalServices, Double rating) {
+    public Cabin(Long id, String name, String description, Integer numOfRooms, Integer bedsPerRoom, String rules, double price, Address address, Set<AdditionalServices> additionalServices, Double rating,String cancellingConditions) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -186,5 +188,14 @@ public class Cabin {
         this.rating = rating;
         this.images=new HashSet<>();
         this.availableCabinPeriods=new HashSet<>();
+        this.cancellingConditions = cancellingConditions;
+    }
+
+    public String getCancellingConditions() {
+        return cancellingConditions;
+    }
+
+    public void setCancellingConditions(String cancelingConditions) {
+        this.cancellingConditions = cancelingConditions;
     }
 }

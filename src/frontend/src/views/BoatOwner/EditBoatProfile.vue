@@ -128,12 +128,6 @@
               <div class="invalid-feedback">Please fill out this field.</div>
           </div>
 
-          <div class="form-group">
-                    <label id="label">Canceling conditions</label>   
-                    <input v-model="boatDto.cancelingCondition"  type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-          </div> 
 
                 
 
@@ -165,6 +159,15 @@
        <hr style="color: white;">
             
        </div>     
+       
+          <div class="col form-group">
+             <label id="label" for="formFileMultiple" class="form-label">Cancelling</label>
+
+             <select v-model="selectedCancelling" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                 <option value="0">FREE</option>
+                 <option value="1">OWNER KEEPS PERCENTAGE</option>
+             </select>
+        </div>
        
         <hr>
         
@@ -322,7 +325,8 @@
          ownerId: 0,
          userRequestDto: {
           username: '',
-       }
+       },
+       selectedCancelling: 0
        }
 
      },
@@ -357,6 +361,11 @@
                                 }
                             }
                         }
+
+                        if(this.boatDto.cancelingCondition=='FREE')
+                           this.selectedCancelling=0
+                        else
+                           this.selectedCancelling=1
 
                     
               })
@@ -417,6 +426,11 @@
               }
 
            }
+           if(this.selectedCancelling==0){
+                    this.boatDto.cancelingCondition='FREE'
+                  }else{
+                    this.boatDto.cancelingCondition='NOT FREE'
+                  }
              
           axios.post("http://localhost:8081/boats/canBeEditedOrDeleted/"+this.boatDto.id)
                .then(response => {

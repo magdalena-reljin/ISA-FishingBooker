@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.CabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
@@ -37,10 +38,12 @@ public class CabinController {
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody CabinDto cabinDto){
-            boolean services = false;
             Cabin cabin = cabinMapper.cabinDtoToCabin(cabinDto);
             cabin.setCabinOwner(cabinOwnerService.findByUsername(cabinDto.getOwnerUsername()));
-            if(cabinService.save(cabin,additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinDto.getAdditionalServices())))
+            Set<AdditionalServices> additionalServices=new HashSet<>();
+            if(cabinDto.getAdditionalServices()!=null)
+                 additionalServices=additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinDto.getAdditionalServices());
+            if(cabinService.save(cabin,additionalServices))
                 return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
             else
                 return new ResponseEntity<>("Already exists.", HttpStatus.CREATED);

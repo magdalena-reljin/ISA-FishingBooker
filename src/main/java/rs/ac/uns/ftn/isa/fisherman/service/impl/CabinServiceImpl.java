@@ -78,6 +78,7 @@ public class CabinServiceImpl implements CabinService {
         oldCabin.setBedsPerRoom(newCabin.getBedsPerRoom());
         oldCabin.setDescription(newCabin.getDescription());
         oldCabin.setRules(newCabin.getRules());
+        oldCabin.setCancellingConditions(newCabin.getCancellingConditions());
         Set<AdditionalServices> oldAdditionalServices=oldCabin.getAdditionalServices();
         Set<Image> oldImages= oldCabin.getImages();
         oldCabin.setAdditionalServices(newCabin.getAdditionalServices());

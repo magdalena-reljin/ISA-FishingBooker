@@ -10,7 +10,7 @@ public class CabinMapper {
     public Cabin cabinDtoToCabin(CabinDto cabin){
         return new Cabin(cabin.getId(),cabin.getName(),cabin.getDescription(),cabin.getNumOfRooms(),cabin.getBedsPerRoom(),
                 cabin.getRules(),cabin.getPrice(),addressMapper.dtoToAddress(cabin.getAddressDto()),
-                cabin.getRating());
+                cabin.getRating(),cabin.getCancellingConditions());
 
     }
     public Cabin cabinDtoEditToCabin(CabinDto cabin){
@@ -18,13 +18,14 @@ public class CabinMapper {
                 cabin.getBedsPerRoom(), cabin.getRules(), cabin.getPrice(),
                 addressMapper.dtoToAddress(cabin.getAddressDto()),
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabin.getAdditionalServices()),
-                cabin.getRating());
+                cabin.getRating(),cabin.getCancellingConditions());
     }
     public CabinDto cabinToCabinDto(Cabin cabin){
         ImageMapper imageMapper=new ImageMapper();
         return new CabinDto(cabin.getId(),cabin.getName(),cabin.getDescription(),cabin.getNumOfRooms(),cabin.getBedsPerRoom(),
                 cabin.getRules(),cabin.getPrice(),addressMapper.addressToDTO(cabin.getAddress()),
                 additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(cabin.getAdditionalServices()),
-                cabin.getRating(),imageMapper.imageToImageDtoS(cabin.getImages()),cabin.getCabinOwner().getUsername());
+                cabin.getRating(),imageMapper.imageToImageDtoS(cabin.getImages()),cabin.getCabinOwner().getUsername(),
+                cabin.getCancellingConditions());
     }
 }
