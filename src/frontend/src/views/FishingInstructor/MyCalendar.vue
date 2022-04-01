@@ -180,6 +180,7 @@
               <div class="col form-group">
               <label style="color: gray;  " id="label">Price per hour ($)</label>
               <input type="text" pattern="[1-9]+.?[0-9]*" v-model="adventureDto[selected].price" class="form-control" disabled>
+
           </div>
           <div class="col form-group">
               <label style="color: gray;  " id="label">Discount (%)</label>
@@ -470,6 +471,7 @@
                 
           </div>
         </div>
+
           <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Discount</p>
