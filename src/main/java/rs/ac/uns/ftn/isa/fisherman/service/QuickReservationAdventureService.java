@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface QuickReservationAdventureService {
 
-    boolean instructorCreates(AdventureReservation adventureReservation);
+    boolean instructorCreates(QuickReservationAdventure adventureReservation);
 
 
    Set<QuickReservationAdventure> getByInstructorId(Long id) ;

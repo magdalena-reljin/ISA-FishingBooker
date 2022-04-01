@@ -13,6 +13,10 @@ public class QuickReservationAdventure extends  Reservation {
     @JoinColumn(name="instructors_id")
     protected FishingInstructor fishingInstructor;
 
+    @Column(name="discount")
+    protected Integer discount;
+
+
     @ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "adventure_quickr_services",
             joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"),
@@ -21,19 +25,13 @@ public class QuickReservationAdventure extends  Reservation {
 
     public QuickReservationAdventure() {}
 
-    public QuickReservationAdventure(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Adventure adventure, FishingInstructor fishingInstructor, Set<AdditionalServices> addedAdditionalServices) {
+    public QuickReservationAdventure(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Adventure adventure, FishingInstructor fishingInstructor, Set<AdditionalServices> addedAdditionalServices ,Integer discount) {
         super(id, startDate, endDate, price);
         this.adventure = adventure;
         this.fishingInstructor = fishingInstructor;
         this.addedAdditionalServices = addedAdditionalServices;
+        this.discount =discount;
     }
-
-    public QuickReservationAdventure(Adventure adventure, FishingInstructor fishingInstructor, Set<AdditionalServices> addedAdditionalServices) {
-        this.adventure = adventure;
-        this.fishingInstructor = fishingInstructor;
-        this.addedAdditionalServices = addedAdditionalServices;
-    }
-
     public Adventure getAdventure() {
         return adventure;
     }
@@ -56,5 +54,13 @@ public class QuickReservationAdventure extends  Reservation {
 
     public void setAddedAdditionalServices(Set<AdditionalServices> addedAdditionalServices) {
         this.addedAdditionalServices = addedAdditionalServices;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 }

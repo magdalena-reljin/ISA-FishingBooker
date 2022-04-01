@@ -22,18 +22,5 @@ public class AdventureReservationMapper {
                 .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()));
     }
 
-    public AdventureReservationDto quickAdventureReservationToQuickAdventureReservationDto(QuickReservationAdventure quickReservationAdventure) {
-        Client client=new Client();
-        String fullName=null;
-        if(quickReservationAdventure.getClient() !=null){
-            client.setUsername(quickReservationAdventure.getClient().getUsername());
-            fullName=quickReservationAdventure.getClient().getName()+" "+quickReservationAdventure.getClient().getLastName();
-        }
-
-        return new AdventureReservationDto(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
-                quickReservationAdventure.getEndDate(),quickReservationAdventure.getPrice(),client.getUsername(),
-                fullName,adventureMapper.adventureToAdventureDto(quickReservationAdventure.getAdventure()),
-                additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(quickReservationAdventure.getAddedAdditionalServices()));
-    }
 
 }
