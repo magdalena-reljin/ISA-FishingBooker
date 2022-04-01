@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
 import org.springframework.cache.annotation.Cacheable;
+import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 
@@ -13,7 +14,7 @@ public interface CabinService {
     List<Cabin> findAll();
     @Cacheable("cabin")
     Cabin findByName(String cabin);
-    void save(Cabin cabin);
+    boolean save(Cabin cabin, Set<AdditionalServices> additionalServices);
 
     void addNewImage(String cabinName, Image image);
 
@@ -22,4 +23,5 @@ public interface CabinService {
     void delete(Long id);
 
     void edit(Cabin cabin, Boolean deleteOldImages);
+    boolean canBeEditedOrDeleted(Long id);
 }

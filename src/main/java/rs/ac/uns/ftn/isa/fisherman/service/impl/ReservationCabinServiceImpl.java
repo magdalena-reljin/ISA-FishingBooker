@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
@@ -24,7 +26,7 @@ import java.util.Set;
 
 @Service
 public class ReservationCabinServiceImpl implements ReservationCabinService {
-
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Autowired
     private ClientService clientService;
     @Autowired
@@ -99,7 +101,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 String message = cabinReservationDto.getCabinDto().getName() + " is booked from " + cabinReservationDto.getStartDate().format(formatter) + " to " + cabinReservationDto.getEndDate().format(formatter) + " .";
                 mailService.sendMail(cabinReservationDto.getClientUsername(), message, new CabinReservationSuccessfulInfo());
             } catch (MessagingException e) {
-                e.printStackTrace();
+                logger.error(e.toString());
             }
             return true;
         }
@@ -179,7 +181,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
             String message = cabinReservation.getCabin().getName() + " is booked from " + cabinReservation.getStartDate().format(formatter) + " to " + cabinReservation.getEndDate().format(formatter) + " .";
             mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 
@@ -189,5 +191,9 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     public Set<CabinReservation> getClientReservationHistoryByUsername(String clientUsername){
         return cabinReservationRepository.getClientReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+    @Override
+    public boolean futureReservationsExist(LocalDateTime currentDate,Long boatId) {
+        return cabinReservationRepository.futureReservationsExist(currentDate,boatId);
     }
 }

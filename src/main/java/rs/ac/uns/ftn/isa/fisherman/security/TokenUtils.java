@@ -3,6 +3,8 @@ package rs.ac.uns.ftn.isa.fisherman.security;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -12,11 +14,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
+import rs.ac.uns.ftn.isa.fisherman.service.impl.FirebaseServiceImpl;
 
 // Utility klasa za rad sa JSON Web Tokenima
 @Component
 public class TokenUtils {
-
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Value("spring-security-example")
     private String appName;
 
@@ -162,7 +165,8 @@ public class TokenUtils {
         return expiration;
     }
 
-    private Claims getAllClaimsFromToken(String token) {
+    private Claims getAllClaimsFromToken(String token)//NOSONAR
+    {
 
         Claims claims;
         try {
@@ -172,7 +176,9 @@ public class TokenUtils {
                     .getBody();
     } catch (ExpiredJwtException ex) {
             claims =null;
-        } catch (Exception e) {
+        } catch (Exception e)//NOSONAR
+        {
+
             claims = null;
         }
 
@@ -219,7 +225,7 @@ public class TokenUtils {
         String refreshedToken;
         try {
             final Claims claims = this.getAllClaimsFromToken(token);
-            claims.setIssuedAt(new Date());
+            claims.setIssuedAt(new Date());//NOSONAR
             refreshedToken = Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate())

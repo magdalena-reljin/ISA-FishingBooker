@@ -12,9 +12,6 @@ public class AvailablePeriodServiceImpl implements AvailablePeriodService {
     private AvailablePeriodRepository availablePeriodRepository;
     @Override
     public void deleteAvailablePeriod(Long id) {
-        AvailablePeriod availablePeriodToDelete=availablePeriodRepository.findByPeriodId(id);
-        System.out.println("``````````````````````````````````````````````````````````` nasao sam ovo"
-        +availablePeriodToDelete.getId());
         availablePeriodRepository.deleteById(id);
     }
 }

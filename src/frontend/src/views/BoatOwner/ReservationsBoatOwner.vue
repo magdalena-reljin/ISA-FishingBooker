@@ -1,0 +1,344 @@
+<template>
+<div >
+<BoatOwnerNav :username=email />
+
+<h1>RESERVATIONS</h1>
+<div style="  padding: 2%;">
+    <div style="padding-left: 2%; padding-right:2%; ">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><b>Current/Upcoming</b></button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><b>Past</b></button>
+  </li>
+  </ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Boat name</th>
+                            <th scope="col">Start date</th>
+                            <th scope="col">End date</th>
+                            <th scope="col">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(ads,index) in reservations" :key="index">
+                            <th scope="row">1</th>
+                            <td>{{ads.boatDto.name}}</td>
+                            <td>{{setandFormatDate(ads.startDate)}}</td>
+                            <td>{{setandFormatDate(ads.endDate)}}</td>
+                            <td><button @click="reservationInformation(ads)" type="button" class="btn btn-info">Details</button></td>
+                            </tr>
+                        </tbody>
+                        </table>
+    </div>
+   
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="conact-tab">
+                        <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Boat name</th>
+                            <th scope="col">Start date</th>
+                            <th scope="col">End date</th>
+                            <th scope="col">&nbsp;</th>
+                            <th scope="col">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(ads1,index) in pastReservations" :key="index">
+                            <th scope="row">1</th>
+                            <td>{{ads1.boatDto.name}}</td>
+                            <td>{{setandFormatDate(ads1.startDate)}}</td>
+                            <td>{{setandFormatDate(ads1.endDate)}}</td>
+                            <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
+                            <td><button  type="button" class="btn btn-success">Review</button></td>
+
+                            </tr>
+                        </tbody>
+                        </table>
+
+    </div>
+    
+    </div>
+</div>
+</div>
+</div>
+
+<vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
+
+   <br>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Boat </p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{boatInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceInfo}}$</b></p>
+                
+          </div>
+        </div>
+         <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Captain</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p v-if="captainInfo==true"><b>YES</b></p>
+                  <p v-else><b>NO</b></p>
+                
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesInfo" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
+
+  
+  <hr>
+  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+</vue-modality>
+
+<vue-modality ref="reservationInfo" title="Write a review" hide-footer centered>
+
+   <br>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Boat </p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{boatInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceInfo}}$</b></p>
+                
+          </div>
+        </div>
+         <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Captain</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p v-if="captainInfo==true"><b>YES</b></p>
+                  <p v-else><b>NO</b></p>
+                
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesInfo" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
+
+  
+  <hr>
+  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+</vue-modality>
+
+</template>
+<script>
+
+import axios from "axios";
+import BoatOwnerNav from './BoatOwnerNav.vue'
+import dayjs from 'dayjs';
+import VueModality from 'vue-modality-v3'
+import Datepicker from 'vue3-date-time-picker';
+import 'vue3-date-time-picker/dist/main.css';
+export default ({
+    components: {
+         BoatOwnerNav,
+         VueModality,
+         Datepicker
+  
+     },
+      data(){
+       return{
+        email: '',
+        reservations: [],
+        pastReservations: [],
+        boatInfo: '',
+        startInfo: '',
+        endInfo: '',
+        usernameInfo: '',
+        clientFullNameInfo: '',
+        priceInfo: '',
+        captainInfo: true,
+        adServicesInfo: [],
+
+       }
+       },
+       mounted() {
+             this.email = this.$route.params.email
+             this.getBoatReservations()
+             this.getPastReservations()
+       },
+       methods: {
+           setandFormatDate: function(newDate){
+           var date= new Date()
+           var splits =newDate.toString().split(",")
+           date.setDate( splits[1],splits[2], splits[0])
+           var newData= new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
+            const dateee = dayjs(newData);
+           return dateee.format('YYYY-MM-DD HH:mm:ss');
+           },
+           setDate: function(newDate){
+           var date= new Date()
+           var splits =newDate.toString().split(",")
+           date.setDate( splits[1],splits[2], splits[0])
+           return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
+           },
+           getBoatReservations: function(){
+               this.reservations=[]
+                axios.get("http://localhost:8081/reservationBoat/getByOwnerUsername/"+this.email+"/")
+                .then(response => {
+                      this.reservations= response.data; 
+                })
+               
+          },
+          getPastReservations: function(){
+                this.pastReservations=[]
+                axios.get("http://localhost:8081/reservationBoat/getPastReservations/"+this.email+"/")
+                .then(response => {
+                     console.log("ja sam len od liste  "+response.data.length)
+                      this.pastReservations= response.data; 
+                })
+               
+          },
+          reservationInformation: function(ads){
+              this.adServicesInfo=[]
+              if(ads.addedAdditionalServices.length>0){
+                      for(let i = 0 ; i < ads.addedAdditionalServices.length ; i++)
+                         this.adServicesInfo.push(ads.addedAdditionalServices[i].name)
+              }
+              this.boatInfo=ads.boatDto.name
+              this.startInfo=this.setDate(ads.startDate)
+              this.endInfo=this.setDate(ads.endDate)
+              this.usernameInfo=ads.clientUsername
+              this.clientFullNameInfo=ads.clientFullName
+              this.priceInfo=ads.price
+              this.captainInfo=ads.needsCaptainService
+              this.$refs.reservationInfo.open()
+              
+          },
+          openCalendarOfBoat: function(){
+              this.$router.push("/boatCalendar/"+this.email+"/"+this.boatInfo)
+          }
+
+       }
+    
+})
+</script>

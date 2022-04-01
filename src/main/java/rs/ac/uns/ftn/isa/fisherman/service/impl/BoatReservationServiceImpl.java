@@ -1,4 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
@@ -18,6 +20,7 @@ import java.util.Set;
 
 @Service
 public class BoatReservationServiceImpl implements BoatReservationService {
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Autowired
     private BoatReservationRepository boatReservationRepository;
     @Autowired
@@ -99,13 +102,19 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return boatReservationRepository.futureReservationsExist(currentDate,boatId);
     }
 
+    @Override
+    public Set<BoatReservation> getPastReservations(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        return boatReservationRepository.getPastReservations(id,currentDate);
+    }
+
     private void sendMailNotification(BoatReservation boatReservation,String email){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
             String message = boatReservation.getBoat().getName() + " is booked from " + boatReservation.getStartDate().format(formatter) + " to " + boatReservation.getEndDate().format(formatter) + " .";
             mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 

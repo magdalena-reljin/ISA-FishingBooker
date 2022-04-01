@@ -20,4 +20,6 @@ public interface ReservationCabinService {
 
     Set<CabinReservation> getUpcomingClientReservationsByUsername(String clientUsername);
     Set<CabinReservation> getClientReservationHistoryByUsername(String clientUsername);
+
+    boolean futureReservationsExist(LocalDateTime currentDate, Long id);
 }

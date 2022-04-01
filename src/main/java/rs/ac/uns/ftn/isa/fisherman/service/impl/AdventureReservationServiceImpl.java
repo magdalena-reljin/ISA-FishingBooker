@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
@@ -12,6 +14,9 @@ import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
+
+
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,8 +24,11 @@ import java.util.Set;
 
 @Service
 public class AdventureReservationServiceImpl implements AdventureReservationService {
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Autowired
     private AdventureReservationRepository adventureReservationRepository;
+    @Autowired
+    private QuickReservationAdventureService quickReservationAdventureService;
     @Autowired
     private ClientService clientService;
     @Autowired
@@ -49,11 +57,17 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return adventureReservationRepository.getPresentByInstructorId(id,currentDate);
     }
 
+    @Override
+    public boolean reservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return adventureReservationRepository.reservationExists(id,startDate,endDate);
+
+    }
 
     @Override
-    public boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate) {
-        return false;
+    public boolean futureReservationsExist(LocalDateTime currentDate, Long id) {
+        return  adventureReservationRepository.futureReservationsExist(currentDate,id);
     }
+
     private boolean validateForReservation(AdventureReservation adventureReservation, Client client){
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;
@@ -65,8 +79,10 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
         if(adventureReservationRepository.reservationExists(adventureReservation.getFishingInstructor().getId()
                 ,adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
-        /*if(quickReservationCabinService.quickReservationExists(cabinReservation.getCabin().getId(),
-                cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;*/
+
+        if(quickReservationAdventureService.quickReservationExists(adventureReservation.getFishingInstructor().getId(),
+                adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
+
         return true;
     }
     private void sendMailNotification(AdventureReservation adventureReservation,String email){
@@ -75,7 +91,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
             String message = adventureReservation.getAdventure().getName() + " is booked from " + adventureReservation.getStartDate().format(formatter) + " to " + adventureReservation.getEndDate().format(formatter) + " .";
             mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 }

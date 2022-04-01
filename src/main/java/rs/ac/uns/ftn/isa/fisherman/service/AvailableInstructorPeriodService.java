@@ -13,4 +13,7 @@ public interface AvailableInstructorPeriodService {
     boolean setAvailableInstructorPeriod(AvailableInstructorPeriod availableInstructorPeriod);
 
     boolean instructorIsAvailable(Long id, LocalDateTime startDate, LocalDateTime endDate);
+
+    boolean deleteAvailableBoatsPeriod(AvailableInstructorPeriod availableInstructorPeriod);
+    boolean editAvailableInstructorsPeriod(AvailableInstructorPeriod oldPeriod, AvailableInstructorPeriod newPeriod);
 }

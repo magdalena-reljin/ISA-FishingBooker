@@ -99,7 +99,11 @@ public class AdventureController {
             adventures.add(adventureMapper.adventureToAdventureDto(adventure));
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PostMapping("/canBeEditedOrDeleted/{id}")
+    public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
+        return new ResponseEntity<>(adventureService.canBeEditedOrDeleted(id),HttpStatus.OK);
+    }
 
 
 }

@@ -51,6 +51,15 @@
 <vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
 
    <br>
+    <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Adventure</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{adventureNameInfo}}</b></p>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
             <p>Start</p>
@@ -118,6 +127,113 @@
   
   <hr>
 </vue-modality>
+
+<vue-modality ref="makeQuickReservation" title="Create quick reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
+
+   <br>
+         <div style="text-align: left;">
+         <h4><b>Create quick reservation</b></h4>
+         </div>
+         <hr>
+         <form @submit="createQuickReservation" method="post" class="was-validated">
+ 
+        
+             <div class="row">
+           <div class=col>
+             <div class="row">
+               <div class="col-sm-3" style="color: gray; text-align: left;">Adventure</div>
+               <div class="col-sm-10" style=" width: 100%; text-align: left;" > 
+
+                  <select @change="switchSelect($event)" v-model="selected" class="form-select" aria-label="Default select example" required>
+                    <option   v-for="(adventure,index) in adventureDto" :key="index" :value="index" >{{adventure.name}}</option>
+                  </select>
+
+               </div> 
+          </div>
+            
+            <br>
+            
+              <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">From</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="startQuickReservation" ></Datepicker>
+          </div>
+        </div>
+               <div class="row">
+          <div class="col" style="padding-top: 2%; padding-left: 2.5%; text-align: left;">
+            <h6 style="color: gray;">To</h6>
+          </div>
+          <div class="col-sm-9"  style="padding: 2.5%;">
+             <Datepicker  v-model="endQuickReservation"></Datepicker>
+          </div>
+        </div>
+
+ 
+  
+        </div>
+        <div class="col">
+                
+          
+          <div class="row">
+              <div class="col form-group">
+              <label style="color: gray;  " id="label">Price per hour ($)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="adventureDto[selected].price" class="form-control" disabled>
+
+          </div>
+          <div class="col form-group">
+              <label style="color: gray;  " id="label">Discount (%)</label>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="discount" class="form-control" required>
+          </div>
+          
+            <hr style="color: white;">
+
+          <div class="col form-group">
+              <label style="color: gray;" id="label">Max people</label>
+              <input v-model="adventureDto[selected].maxPeople" class="form-control" disabled>
+          </div>
+
+             <div class="col form-group">
+                    <label style="color: gray;  " id="label">Canceling</label>   
+                    <input v-model="adventureDto[selected].cancelingCondition"   class="form-control" disabled>
+          </div> 
+
+          
+
+          </div> 
+          <br>
+          <div class="col">
+                    <label style="color: gray;  padding-top: 1%; " id="label">Additional services </label>  
+                     <Multiselect   style="color: gray; padding-bottom: 5%; " 
+                           v-model="value"
+                          mode="tags"
+                          :close-on-select="false"
+                          :searchable="true"
+                          :create-option="false"
+                          :options="options"
+                          
+                        />
+          </div> 
+
+              
+     
+        </div>
+</div>
+      <div  style="text-align: left;">
+      <label style="color: red;" v-if="startQuickReservation==null || endQuickReservation==null || dateIsNotValidQuick==true">Please enter valid dates.</label>
+         </div>
+        <hr>
+        
+        <button @click="clearModalQuick()" type="button" class="btn btn-secondary" style="margin-right: 1%; width: 10%;">Close</button>
+      
+        <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
+
+       </form>
+  
+ 
+</vue-modality>
+
   <vue-modality ref="makeReservation" title="Create reservation" hide-footer hide-header centered width="900px" no-close-on-backdrop=true no-close-on-esc=true>
 
    <br>
@@ -219,7 +335,169 @@
         <button type="submit"  class="btn btn-success" style="margin-left: 1%; width: 10%;" >Create</button>
     
        </form>
+</vue-modality>
+
+
+
+<vue-modality ref="myRef" title="Edit available period" hide-footer hide-header centered no-close-on-esc=true no-close-on-backdrop=true>
+  <h4><b>Edit available period</b></h4>
+  <hr>
+   <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;" >
+            <h6>From</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startEdit" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;">
+            <h6>To</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endEdit" disabled ></Datepicker>
+          </div>
+        </div>
+
+  <br>
+  
+  <hr>
+  <div style="text-align: left;">
+  <h6>Add unavailable days</h6>
+  </div>
+         <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;" >
+            <h6>From</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           
+           v-model="unavailableStart" 
+                
+         >
+          </Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left;">
+            <h6>To</h6>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="unavailableEnd"></Datepicker>
+          </div>
+        </div>
         
+  <br>
+  <label style="color: red;" v-if="editDataIsNotValid==true">Please enter valid dates</label>
+  <hr>
+   <div class="row">
+        <div class="col">
+           <button type="button" @click="clearModalEdit()" class="btn btn-secondary">Close</button>
+        </div>
+        <div class="col">
+           <button type="button" @click="deleteAvailablePeriod()" class="btn btn-danger">Delete</button>
+        </div>
+        <div class="col">
+           <button type="button" @click="editAvailablePeriod()" class="btn btn-primary" >Save</button>
+        </div>
+    </div>
+</vue-modality>
+
+
+<vue-modality ref="quickReservationInfo" title="Quick reservation information" hide-footer centered >
+
+   <br>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Adventure</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                  <p ><b>{{adventureNameQuick}}</b></p>
+                
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startQuickInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endQuickInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameQuickInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientQuickFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceQuickInfo}}$</b></p>
+                
+          </div>
+        </div>
+
+          <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountQuick}}%</b></p>
+                
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div  class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesQuick" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                </ul>
+                
+          </div>
+        </div>
+         <hr>
   
  
 </vue-modality>
@@ -240,7 +518,6 @@ import VueModality from 'vue-modality-v3'
 import Multiselect from '@vueform/multiselect'
 import FishingInstructorNavbar from './FishingInstructorNav.vue'
 import axios from "axios";
-
 axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
    props: {
@@ -278,6 +555,23 @@ export default {
       closeModal: false,
       disabledPickers: false,
       selectDisabled: false,
+      startQuickReservation: null,
+      endQuickReservation:null,
+      dateIsNotValidQuick: false,
+      clientQuickFullNameInfo: '',
+      editDataIsNotValid: false,
+      unavailableStart: null,
+      unavailableEnd:  null,
+      startEdit: null,
+      endEdit: null,
+      discount: 0,
+      adventureNameInfo: '',
+      priceQuickInfo: 0,
+      usernameQuickInfo: '',
+      startQuickInfo: null,
+      endQuickInfo: null,
+      discountQuick: 0,
+      adventureNameQuick: '',
       startInfo:null,
       endInfo:null,
       clientFullNameInfo: '',
@@ -297,10 +591,10 @@ export default {
         selectable: true,
         eventClick: (arg)=>{
           if(arg.event.title=='Available'){
-              
-         this.$refs.myRef.open()
-          this.start=arg.event.start
-          this.end=arg.event.end
+           this.$refs.myRef.open()
+           this.startEdit=arg.event.start
+           this.endEdit=arg.event.end
+           this.argEventDeleting=arg.event
           }else if(arg.event.title=='Reservation'){
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
@@ -308,13 +602,15 @@ export default {
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.adServices=arg.event.extendedProps.adServices
+                  this.adventureNameInfo=arg.event.extendedProps.adventureName
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
-        /*   }else if(arg.event.title=='QuickReservation'){
+           }else if(arg.event.title=='QuickReservation'){
                   this.$refs.quickReservationInfo.open()
+                  this.adventureNameQuick=arg.event.extendedProps.adventureName
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
                   this.priceQuickInfo=arg.event.extendedProps.price
-                  this.captainIsRequiredQuick=arg.event.extendedProps.captainIsRequired
+                  this.discountQuick=arg.event.extendedProps.discount
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
@@ -322,8 +618,9 @@ export default {
                   }else{
                   this.usernameQuickInfo=arg.event.extendedProps.email
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
-                 
-                  }*/
+                  }
+                  this.adServicesQuick=arg.event.extendedProps.adServices
+
            }
         },
         selectMirror: true,
@@ -381,8 +678,8 @@ export default {
              fishingInstructorUsername: ''
          }],
          
-         selected: 0,
-         startReservation: null,
+        selected: 0,
+        startReservation: null,
         endReservation: null,
         dateIsNotValid: false,
         adventureName: '',
@@ -391,16 +688,12 @@ export default {
         options: [ ], 
         additionalServicesToSend: [],
         newPrice: 0,
-       totalPrice: 0,
-       cancelingCondition : '',
-       maxPeople: 0,
+        totalPrice: 0,
+        cancelingCondition : '',
+        maxPeople: 0,
         adServices: [],
         adServicesQuick: [],
-
-         
-           
-      
-     
+        argEventDeleting: null
     };
   },
  
@@ -420,9 +713,12 @@ export default {
                                   value: this.adventureDto[0].additionalServices[i].id,
                                   label: this.adventureDto[0].additionalServices[i].name+"-"+this.adventureDto[0].additionalServices[i].price+"$ per hour",
                                 })
+                            this.newPrice= this.adventureDto[0].price
                         }
                         
                         this.getInstructorsReservation()
+                        this.getInstructorsQuickReservation()
+
                          }
                         this.getAvailableInstructorsPeriod();
                        
@@ -430,7 +726,6 @@ export default {
 
        },
        switchSelect(event){
-        console.log("Ja sam event"+event.target.value)
         this.options=[]
         this.value= []
         let idx=event.target.value
@@ -439,6 +734,8 @@ export default {
                                   value: this.adventureDto[idx].additionalServices[i].id,
                                   label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
                                 })
+                                this.newPrice=this.adventureDto[idx].price
+
               }
        },
         getAvailableInstructorsPeriod: function(){
@@ -465,9 +762,26 @@ export default {
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
-                              this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+
+                              this.calendarOptions.events.push({id: newData.id , extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
-                              console.log("len od liste"+temp.length)
+                            }
+              })   
+          }  , 
+           getInstructorsQuickReservation: function(){
+                axios.get("http://localhost:8081/quickReservationAdventure/getByInstructorId/"+this.email+"/")
+                        .then(response => {
+                            for( let newData of response.data ){
+                                var start=newData.startDate
+                                var end=newData.endDate
+                                newData.startDate=this.setDate(start)
+                                newData.endDate=this.setDate(end)
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                              this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adventureName: newData.adventureDto.name,discount: newData.discount,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                              this.state.push( newData.startDate)
+
                             }
               })   
           }  , 
@@ -539,14 +853,10 @@ export default {
         },
            createReservation: function(event){
                     event.preventDefault()
-                    console.log("Ja sam selected"+ this.selected)
-          
                     if(!this.dataIsValid(this.startReservation,this.endReservation)){
                       this.dateIsNotValid=true
                       return;
                     }
-
-
                     if(this.startReservation != null && this.endReservation!=null){
                                  this.additionalServicesAdded()
                                  this.calculatePrice(this.startReservation,this.endReservation,this.adventureDto[this.selected].price)
@@ -564,7 +874,6 @@ export default {
                                 })
                               .then((response) => {
                                       console.log(response)
-                                      this.calendarOptions.events.push({extendedProps: {email: this.client, price: this.totalPrice, clientFullName: '', captainIsRequired: this.needsCaptainServices} ,title: 'Reservation', start: this.startReservation , end: this.endReservation})
                                     
                                        this.$swal.fire({
                                           position: 'top-end',
@@ -588,7 +897,118 @@ export default {
                               
                                  
                     }
+           },   createQuickReservation: function(event){
+                    event.preventDefault()
+          
+                    if(!this.dataIsValid(this.startQuickReservation,this.endQuickReservation)){
+                      this.dateIsNotValidQuick=true
+                      return;
+                    }
+
+
+                    if(this.startQuickReservation != null && this.startQuickReservation!=null){
+                                 this.additionalServicesAdded()
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                axios
+                                .post(
+                                "http://localhost:8081/quickReservationAdventure/instructorCreates/",
+                                {
+                                id: null,
+                                startDate: this.formatDate(this.startQuickReservation),
+                                endDate: this.formatDate(this.endQuickReservation),
+                                price: this.totalPrice,
+                                adventureDto: this.adventureDto[this.selected],
+                                addedAdditionalServices: this.additionalServicesToSend,
+                                clientUsername: this.client,
+                                discount: this.discount
+                                })
+                              .then((response) => {
+                                    console.log(response)
+                                    
+                                     this.$swal.fire({
+                                          position: 'top-end',
+                                          icon: 'success',
+                                          title: 'Successfully created quick reservation!',
+                                          showConfirmButton: false,
+                                           timer: 1500
+                                       })
+                                         this.clearModalQuick()
+                                })
+                              .catch((err) =>{
+                                      this.$refs.makeQuickReservation.hide()
+                                     console.log(err)
+                                       this.$swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Something went wrong!',
+                                      })
+                                    this.clearModalQuick()
+                              })
+                              
+                                 
+                    }
+
            },
+              editAvailablePeriod: function(){
+                 if(!this.dataIsValid(this.unavailableStart,this.unavailableEnd)){
+                    this.editDataIsNotValid=true
+                    return
+                 }
+
+                  axios.post("http://localhost:8081/instructorsPeriod/editAvailableInstructorsPeriod",[
+               {
+                 id: null,
+                startDate: this.formatDate(this.startEdit),
+                endDate: this.formatDate(this.endEdit),
+                username: this.email,
+                },
+                {
+                 id: null,
+                startDate: this.formatDate(this.unavailableStart),
+                endDate: this.formatDate(this.unavailableEnd),
+                username: this.email,
+                }]
+
+              )
+              .then(response => {
+                   this.calendarOptions.events=[]
+                   
+                    this.getAvailableInstructorsPeriod();
+                    this.getInstructorsReservation()
+                    this.getInstructorsQuickReservation()
+                   
+                   this.$swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Available period successfully edited!',
+                    showConfirmButton: false,
+                    timer: 2500
+                   })
+                    this.clearModalEdit()
+                 return response;
+              })
+              .catch(err => {
+                   console.log("usao u catch")
+                   console.log(err)
+                   this.$swal.fire({
+                   position: 'top-end',
+                   icon: 'error',
+                   title: 'Available period can not be edited',
+                   showConfirmButton: false,
+                   timer: 2500
+                   })
+                   this.clearModalEdit()
+                })
+
+            },
+            clearModalEdit: function(){
+                 this.$refs.myRef.hide()
+                 this.unavailableStart=null
+                 this.unavailableEnd=null
+                 this.editDataIsNotValid=false
+                 this.argEventDeleting=null
+
+            },
                additionalServicesAdded: function(){
                   
                     this.additionalServicesToSend=[]
@@ -617,6 +1037,10 @@ export default {
                return diffInHours;
            },
            clearModalReservation: function(){
+                 this.calendarOptions.events=[]
+                 this.getAvailableInstructorsPeriod();
+                 this.getInstructorsReservation()
+                 this.getInstructorsQuickReservation()
                  this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
@@ -627,13 +1051,72 @@ export default {
                  this.totalPrice=0
                  this.selected= 0
                      let idx=0
-             for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+                 for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+
                                this.options.push({ 
                                   value: this.adventureDto[idx].additionalServices[i].id,
                                   label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
                                 })
               }
             },
+             clearModalQuick: function(){
+                this.calendarOptions.events=[]
+                this.getAvailableInstructorsPeriod();
+                this.getInstructorsReservation()
+                this.getInstructorsQuickReservation()
+                 this.$refs.makeQuickReservation.hide()
+                 this.startQuickReservation=null
+                 this.endQuickReservation=null
+                 this.dateIsNotValidQuick=false
+                 this.value=[]
+                 this.options =[]
+                 this.totalPrice=0
+                 this.selected= 0
+                 let idx=0
+                 for(let i =0; i< this.adventureDto[idx].additionalServices.length; i++){
+                               this.options.push({ 
+                                  value: this.adventureDto[idx].additionalServices[i].id,
+                                  label: this.adventureDto[idx].additionalServices[i].name+"-"+this.adventureDto[idx].additionalServices[i].price+"$ per hour",
+                                })
+                        }
+                 this.newPrice=this.adventureDto[0].price;
+            },
+                 deleteAvailablePeriod: function(){
+                  axios.post("http://localhost:8081/instructorsPeriod/deleteAvailableInstructorsPeriod",
+                  {
+                    id: null,
+                    startDate: this.formatDate(this.startEdit),
+                    endDate: this.formatDate(this.endEdit),
+                    username: this.email,
+                    }
+                  )
+                  .then(response => {
+                      this.argEventDeleting.remove()
+                      this.$swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Available period successfully deleted!',
+                        showConfirmButton: false,
+                        timer: 2500
+                      })
+                        this.clearModalEdit()
+                    return response;
+                  })
+                  .catch(err => {
+                    
+                      console.log(err)
+                      this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'error',
+                      title: 'Available period can not be deleted',
+                      showConfirmButton: false,
+                      timer: 2500
+                      })
+                      this.clearModalEdit()
+                    })
+
+             
+            }
      }
     
   }

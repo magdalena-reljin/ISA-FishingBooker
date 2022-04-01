@@ -174,6 +174,21 @@
                 
           </div>
         </div>
+         <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServices" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
 
   
   <hr>
@@ -229,6 +244,31 @@
                 
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountQuick}}%</b></p>
+                
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div  class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesQuick" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                </ul>
+                
+          </div>
+        </div>
+          
 
   
   <hr>
@@ -281,21 +321,23 @@
           <div class="row">
               <div class="col form-group">
               <label style="color: gray;  " id="label">Price per night ($)</label>
-              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="cabinDto.price" class="form-control" disabled>
           </div>
-
+      
+              <div class="col form-group">
+              <label style="color: gray;  " id="label">Discount (%)</label>
+              <input type="number" min=1 max=100 v-model="discount" class="form-control" required>
+          </div>
+          
+            <hr style="color: white;">
           <div class="col form-group">
                     <label style="color: gray;" id="label">Number of rooms </label>   
                     <input v-model="cabinDto.numOfRooms"  class="form-control" disabled>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
                     </div> 
 
           <div class="col form-group">
                     <label style="color: gray; " id="label">Beds per room </label>   
                     <input v-model="cabinDto.bedsPerRoom"   class="form-control" disabled>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
           </div> 
 
           
@@ -533,10 +575,13 @@ import axios from "axios";
         usernameInfo: '',
         clientFullNameInfo: '',
         startQuickInfo: null,
+        adServicesQuick: [],
+        adServices: [],
         endQuickInfo: null,
         priceQuickInfo: null,
         usernameQuickInfo: null,
         clientQuickFullNameInfo: null,
+        discountQuick: 0,
         eventClick: (arg)=>{
            if(arg.event.title=='Available'){
                   this.$refs.myRef.open()
@@ -550,11 +595,13 @@ import axios from "axios";
                   this.priceInfo=arg.event.extendedProps.price
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
+                  this.adServices=arg.event.extendedProps.adServices
            }else if(arg.event.title=='QuickReservation'){
                   this.$refs.quickReservationInfo.open()
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
                   this.priceQuickInfo=arg.event.extendedProps.price
+                  this.discountQuick=arg.event.extendedProps.discount
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
@@ -564,6 +611,7 @@ import axios from "axios";
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
                  
                   }
+                  this.adServicesQuick=arg.event.extendedProps.adServicesQuick
            }
         },
         selectMirror: true,
@@ -624,6 +672,7 @@ import axios from "axios";
             editDataIsNotValid: false,
             dateIsNotValidQuick: false,
             argEventDeleting: null,
+            discount: 0,
        }
      },
      mounted() {
@@ -658,7 +707,11 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                                this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                                
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                                this.calendarOptions.events.push({ id: newData.id , extendedProps: {adServices: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -671,7 +724,12 @@ import axios from "axios";
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                console.log("ja sam popust    "+newData.discount.toString())
+                                
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                     temp.push(newData.addedAdditionalServices[i].name)
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adServicesQuick: temp, discount: newData.discount, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -811,7 +869,7 @@ import axios from "axios";
 
                     if(this.startQuickReservation != null && this.startQuickReservation!=null){
                                  this.additionalServicesAdded()
-                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.cabinDto.price)
                                 axios
                                 .post(
                                 "http://localhost:8081/quickReservationCabin/ownerCreates",
@@ -820,13 +878,13 @@ import axios from "axios";
                                 startDate: this.formatDate(this.startQuickReservation),
                                 endDate: this.formatDate(this.endQuickReservation),
                                 price: this.totalPrice,
+                                discount: this.discount,
                                 cabinDto: this.cabinDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client
                                 })
                               .then((response) => {
                                     console.log(response)
-                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null} ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
                                     
                                      this.$swal.fire({
                                           position: 'top-end',
@@ -892,6 +950,10 @@ import axios from "axios";
               return true;
             },
             clearModalReservation: function(){
+                 this.calendarOptions.events=[]
+                   this.getCabinsAvailablePeriod()
+                   this.getQuickReservations()
+                   this.getCabinReservations()
                  this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
@@ -901,23 +963,23 @@ import axios from "axios";
                  this.totalPrice=0
             },
             clearModalQuick: function(){
+                this.calendarOptions.events=[]
+                   this.getCabinsAvailablePeriod()
+                   this.getQuickReservations()
+                   this.getCabinReservations()
                  this.$refs.makeQuickReservation.hide()
                  this.startQuickReservation=null
                  this.endQuickReservation=null
                  this.dateIsNotValidQuick=false
                  this.value=[]
                  this.totalPrice=0
+                 this.discount=0
             },
             editAvailablePeriod: function(){
                  if(!this.dataIsValid(this.unavailableStart,this.unavailableEnd)){
                     this.editDataIsNotValid=true
                     return
                  }
-
-                 console.log("un start    "+this.unavailableStart)
-                 console.log("un start   f "+this.formatDate(this.unavailableStart))
-                  console.log("un start    "+this.unavailableEnd)
-                 console.log("un start   f "+this.formatDate(this.unavailableEnd))
                   axios.post("http://localhost:8081/cabinsPeriod/editAvailableCabinsPeriod",[
                {
                  id: null,

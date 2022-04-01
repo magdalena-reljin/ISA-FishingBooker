@@ -185,6 +185,21 @@
                 
           </div>
         </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServices" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
 
   
   <hr>
@@ -240,6 +255,16 @@
                 
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountInfo}}%</b></p>
+                
+          </div>
+        </div>
          <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Captain</p>
@@ -250,6 +275,21 @@
                   <p v-else><b>NO</b></p>
                 
           </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesQuick" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
         </div>
 
   
@@ -303,8 +343,14 @@
           <div class="row">
               <div class="col form-group">
               <label style="color: gray;  " id="label">Price per hour ($)</label>
-              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="newPrice" class="form-control" required>
+              <input type="text" pattern="[1-9]+.?[0-9]*" v-model="boatDto.price" class="form-control" disabled>
           </div>
+          <div class="col form-group">
+              <label style="color: gray;  " id="label">Discount (%)</label>
+              <input type="number" min=1 max=100 v-model="discount" class="form-control" required>
+          </div>
+          
+            <hr style="color: white;">
 
           <div class="col form-group">
               <label style="color: gray;" id="label">Max people</label>
@@ -490,6 +536,8 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
     },
      data(){
        return{
+      adServicesQuick: [],
+      adServices: [],
       closeModal: false,
       disabledPickers: false,
       selectDisabled: false,
@@ -519,12 +567,14 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
                   this.captainIsRequired=arg.event.extendedProps.captainIsRequired
+                  this.adServices=arg.event.extendedProps.adServices
            }else if(arg.event.title=='QuickReservation'){
                   this.$refs.quickReservationInfo.open()
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
                   this.priceQuickInfo=arg.event.extendedProps.price
                   this.captainIsRequiredQuick=arg.event.extendedProps.captainIsRequired
+                  this.adServicesQuick=arg.event.extendedProps.adServicesQuick
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
                        this.clientQuickFullNameInfo="Not reservated yet."
@@ -534,6 +584,8 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                   this.clientQuickFullNameInfo=arg.event.extendedProps.clientFullName
                  
                   }
+                  
+                  this.discountInfo=arg.event.extendedProps.discount
            }
         },
         selectMirror: true,
@@ -631,6 +683,8 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
             dateIsNotValidQuick: false,
             newPrice: 0,
             boatId: null,
+            discount: 0,
+            discountInfo: 0,
           
        }
 
@@ -652,7 +706,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   label: this.boatDto.additionalServices[i].name+"-"+this.boatDto.additionalServices[i].price+"$ per hour",
                                 })
                          }
-                         this.newPrice=this.boatDto.price
+                         
                          this.getBoatsAvailablePeriod();
                          this.getBoatReservations();
                          this.getQuickReservations();
@@ -685,7 +739,11 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   var end=newData.endDate
                                   newData.startDate=this.setDate(start)
                                   newData.endDate=this.setDate(end)
-                                  this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                                  var temp=[]
+                                  for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                   temp.push(newData.addedAdditionalServices[i].name)
+
+                                  this.calendarOptions.events.push({id: newData.id , extendedProps: {adServices: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                         }   
                 })
 
@@ -698,7 +756,11 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 var end=newData.endDate
                                 newData.startDate=this.setDate(start)
                                 newData.endDate=this.setDate(end)
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                var temp=[]
+                                for(let i=0;i<newData.addedAdditionalServices.length;i++)
+                                   temp.push(newData.addedAdditionalServices[i].name)
+
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {discount: newData.discount, adServicesQuick: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -777,10 +839,6 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                     return
                  }
 
-                 console.log("un start    "+this.unavailableStart)
-                 console.log("un start   f "+this.formatDate(this.unavailableStart))
-                  console.log("un start    "+this.unavailableEnd)
-                 console.log("un start   f "+this.formatDate(this.unavailableEnd))
                   axios.post("http://localhost:8081/boatsPeriod/editAvailableBoatsPeriod",[
                {
                  id: null,
@@ -864,7 +922,6 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 })
                               .then((response) => {
                                       console.log(response)
-                                      this.calendarOptions.events.push({extendedProps: {email: this.client, price: this.totalPrice, clientFullName: '', captainIsRequired: this.needsCaptainServices} ,title: 'Reservation', start: this.startReservation , end: this.endReservation})
                                     
                                        this.$swal.fire({
                                           position: 'top-end',
@@ -900,7 +957,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
 
                     if(this.startQuickReservation != null && this.startQuickReservation!=null){
                                  this.additionalServicesAdded()
-                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.boatDto.price)
                                 axios
                                 .post(
                                 "http://localhost:8081/quickReservationBoat/ownerCreates/"+this.email+"/",
@@ -912,11 +969,11 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
-                                needsCaptainServices:  this.needsCaptainServices
+                                needsCaptainServices:  this.needsCaptainServices,
+                                discount: this.discount
                                 })
                               .then((response) => {
                                     console.log(response)
-                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {email: this.client, price: this.totalPrice, clientFullName: null, captainIsRequired: this.needsCaptainServices} ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
                                     
                                      this.$swal.fire({
                                           position: 'top-end',
@@ -972,6 +1029,10 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                return diffInHours;
            },
            clearModalReservation: function(){
+                 this.calendarOptions.events=[]
+                 this.getBoatsAvailablePeriod()
+                 this.getBoatReservations()
+                 this.getQuickReservations()
                  this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
@@ -982,13 +1043,18 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                  this.needsCaptainServices=false
             },
             clearModalQuick: function(){
+                 this.discount=0
+                 this.calendarOptions.events=[]
+                 this.getBoatsAvailablePeriod()
+                 this.getBoatReservations()
+                 this.getQuickReservations()
                  this.$refs.makeQuickReservation.hide()
                  this.startQuickReservation=null
                  this.endQuickReservation=null
                  this.dateIsNotValidQuick=false
                  this.value=[]
                  this.totalPrice=0
-                  this.needsCaptainServices=false
+                 this.needsCaptainServices=false
             },
             deleteAvailablePeriod: function(){
                   axios.post("http://localhost:8081/boatsPeriod/deleteAvailableBoatsPeriod",

@@ -7,10 +7,12 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface QuickReservationCabinService {
-    boolean ownerCreates(CabinReservation cabinReservation);
+    boolean ownerCreates(QuickReservationCabin quickReservationCabin);
 
 
     Set<QuickReservationCabin> getByCabinId(Long cabinId);
 
     boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate);
+
+    boolean futureQuickReservationsExist(LocalDateTime currentDate, Long id);
 }

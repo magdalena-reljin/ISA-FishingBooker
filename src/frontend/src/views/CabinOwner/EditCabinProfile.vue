@@ -115,6 +115,14 @@
        <hr style="color: white;">
             
        </div>     
+       <div class="col form-group">
+             <label id="label" for="formFileMultiple" class="form-label">Cancelling</label>
+
+             <select v-model="selectedCancelling" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                 <option value="0">FREE</option>
+                 <option value="1">OWNER KEEPS PERCENTAGE</option>
+             </select>
+        </div>
        
         <hr>
         
@@ -250,7 +258,8 @@
                  cabin: ''
 
              }],
-             ownerUsername: ''
+             ownerUsername: '',
+             cancellingConditions: '',
          },
           user:{
            username: ''
@@ -263,7 +272,7 @@
          additionalServicesAdded: false,
          names: '',
          prices: '',
-         
+         selectedCancelling: 0
 
        
        }
@@ -285,6 +294,10 @@
                             this.tableHidden=false;
                             this.additionalServicesAdded=true
                         }
+                        if(this.cabinDto.cancellingConditions=='FREE')
+                           this.selectedCancelling=0
+                        else 
+                           this.selectedCancelling=1
 
                     
               })
@@ -307,36 +320,73 @@
               this.idx--;
        },
        deleteCabin: function(){
-           axios.post("http://localhost:8081/cabins/delete",this.cabinDto)
+            axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
                .then(response => {
-                    this.$router.push('/cabinOwnerHome/'+ this.email);
-                    return response;
+                     if(response.data == true){
+                      axios.post("http://localhost:8081/cabins/delete",this.cabinDto)
+                      .then(response => {
+                            this.$router.push('/cabinOwnerHome/'+ this.email);
+                            return response;
+                      })
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This cabin has future reservations and can not be deleted!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
               })
+           
        },
        editCabin: function(event){
            event.preventDefault()
            if(this.imagesSelected==true)
                this.cabinDto.images=null
-           
-           axios.post("http://localhost:8081/cabins/edit",this.cabinDto)
+
+          if(this.selectedCancelling==0)
+                    this.cabinDto.cancellingConditions='FREE'
+          else
+                    this.cabinDto.cancellingConditions='NOT FREE'
+
+           axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
                .then(response => {
-                       
-                    if(this.imagesSelected==true){
-                        this.saveImages()
-                    }else{
-                      this.$swal.fire({
-                       position: 'top-end',
-                       icon: 'success',
-                       title: 'Changes saved',
-                       showConfirmButton: false,
-                       timer: 1500
-                       })
-                       this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
+                     if(response.data == true){
+                          axios.post("http://localhost:8081/cabins/edit",this.cabinDto)
+                          .then(response => {
+                                  
+                                if(this.imagesSelected==true){
+                                    this.saveImages()
+                                }else{
+                                  this.$swal.fire({
+                                  position: 'top-end',
+                                  icon: 'success',
+                                  title: 'Changes saved',
+                                  showConfirmButton: false,
+                                  timer: 1500
+                                  })
+                                  this.$router.push('/cabinProfile/'+ this.email+'/'+this.cabinName);
 
-                    }
-                    return response;
+                                }
+                                return response;
+                             })
+
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This cabin has future reservations and can not be edited!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
               })
-
+           
+           
+           
        },
        onFileSelected: function(event){
               console.log(event)

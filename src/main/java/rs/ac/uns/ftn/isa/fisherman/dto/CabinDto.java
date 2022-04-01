@@ -16,6 +16,15 @@ public class CabinDto {
     private Set<ImageDto> images;
     private String ownerUsername;
     private Boolean subscription;
+    private String cancellingConditions;
+
+    public String getCancellingConditions() {
+        return cancellingConditions;
+    }
+
+    public void setCancellingConditions(String cancellingConditions) {
+        this.cancellingConditions = cancellingConditions;
+    }
 
     public Boolean getSubscription() {
         return subscription;
@@ -126,7 +135,7 @@ public class CabinDto {
         this.bedsPerRoom = bedsPerRoom;
     }
 
-    public CabinDto(Long id, String name, String description, int numOfRooms, int bedsPerRoom, String rules, double price, AddressDTO address, Set<AdditionalServicesDto> additionalServices, Double rating, Set<ImageDto> images, String ownerUsername) {
+    public CabinDto(Long id, String name, String description, int numOfRooms, int bedsPerRoom, String rules, double price, AddressDTO address, Set<AdditionalServicesDto> additionalServices, Double rating, Set<ImageDto> images, String ownerUsername,String cancelingConditions) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -139,6 +148,7 @@ public class CabinDto {
         this.rating = rating;
         this.images = images;
         this.ownerUsername = ownerUsername;
+        this.cancellingConditions = cancelingConditions;
 
     }
 }

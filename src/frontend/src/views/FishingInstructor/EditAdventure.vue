@@ -131,6 +131,14 @@
        <hr style="color: white;">
             
        </div>     
+       <div class="col form-group">
+             <label id="label" for="formFileMultiple" class="form-label">Cancelling</label>
+
+             <select v-model="selectedCancelling" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                 <option value="0">FREE</option>
+                 <option value="1">OWNER KEEPS PERCENTAGE</option>
+             </select>
+        </div>
        
         <hr>
         
@@ -276,7 +284,7 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
          imagesSelectedEvent: null,
          tableHidden: true,
          additionalServicesAdded: false,
-        
+         selectedCancelling: 0
            
        
        }
@@ -308,23 +316,45 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
              if(this.imagesSelected==true)
                 this.adventureDto.images=null
 
-           axios.post("http://localhost:8081/adventures/edit",this.adventureDto)
-               .then(response => {
-                    if(this.imagesSelected==true){
+                if(this.selectedCancelling==0)
+                 this.adventureDto.cancelingCondition='FREE'
+               else
+                  this.adventureDto.cancelingCondition='NOT FREE'
+            axios.post("http://localhost:8081/adventures/canBeEditedOrDeleted/"+this.adventureDto.id)
+                  .then(response => {
+                     if(response.data == true){
+
+                        axios.post("http://localhost:8081/adventures/edit",this.adventureDto)
+                        .then(response => {
+                        if(this.imagesSelected==true){
                         this.saveImages()
-                    }else{
-                       this.$swal.fire({
-                       position: 'top-end',
-                       icon: 'success',
-                       title: 'Changes saved',
-                       showConfirmButton: false,
-                       timer: 1500
-                       })
-                       this.$router.push('/adventureProfile/'+ this.email+'/'+this.adventureDto.name);
+                      }else{
+                          this.$swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: 'Changes saved',
+                          showConfirmButton: false,
+                          timer: 1500
+                          })
+                          this.$router.push('/adventureProfile/'+ this.email+'/'+this.adventureDto.name);
                     }
                     return response;
               })
-            
+
+                     }else {
+                            this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This adventure has future reservations and can not be edited!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
+              })
+           
+           
+
        },
        removeService: function(tableIndex) {
               this.adventureDto.additionalServices.splice(tableIndex,1)
@@ -343,6 +373,10 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
                             this.tableHidden=false;
                             this.additionalServicesAdded=true
                 }
+                if(this.adventureDto.cancelingCondition=='FREE')
+                    this.selectedCancelling=0
+                else
+                    this.selectedCancelling=1
             
 
              });      
@@ -374,14 +408,28 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
               }                
         },
         deleteAdventure: function(){
-                     
-             axios.post("http://localhost:8081/adventures/deleteAdventure",this.adventureDto)
-             .then(response => {
-               this.$router.push('/fishingInstructorHome/'+ this.email);
-              return response   
+                 axios.post("http://localhost:8081/adventures/canBeEditedOrDeleted/"+this.adventureDto.id)
+                  .then(response => {
+                     if(response.data == true){
+                         axios.post("http://localhost:8081/adventures/deleteAdventure",this.adventureDto)
+                        .then(response => {
+                          this.$router.push('/fishingInstructorHome/'+ this.email);
+                          return response   
 
-             });      
-        }
+                        });   
+                     } else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This adventure has future reservations and can not be deleted!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
+              })
+          
+       },
       
     }
   }

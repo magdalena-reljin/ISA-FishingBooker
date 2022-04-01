@@ -6,15 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdditionalServicesDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
-import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationBoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,15 +23,15 @@ public class QuickReservationBoatController {
     private QuickReservationBoatService quickReservationBoatService;
     @Autowired
     private BoatOwnerService boatOwnerService;
-    private final BoatReservationMapper boatReservationMapper= new BoatReservationMapper();
+    private final QuickReservationBoatMapper quickReservationBoatMapper= new QuickReservationBoatMapper();
 
     @PostMapping("/ownerCreates/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
-    public ResponseEntity<String> ownerCreates (@PathVariable("username") String username,@RequestBody BoatReservationDto boatReservationDto) {
-        BoatReservation boatReservation= boatReservationMapper.boatReservationOwnerDtoToBoatReservation(boatReservationDto);
+    public ResponseEntity<String> ownerCreates (@PathVariable("username") String username,@RequestBody QuickReservationBoatDto quickReservationBoatDto) {
+        QuickReservationBoat quickReservationBoat= quickReservationBoatMapper.dtoToBoatQuickReservation(quickReservationBoatDto);
         BoatOwner boatOwner= boatOwnerService.findByUsername(username);
-        boatReservation.getBoat().setBoatOwner(boatOwner);
-        if(quickReservationBoatService.ownerCreates(boatReservation)){
+        quickReservationBoat.getBoat().setBoatOwner(boatOwner);
+        if(quickReservationBoatService.ownerCreates(quickReservationBoat)){
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         }else{
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
@@ -42,19 +39,19 @@ public class QuickReservationBoatController {
     }
     @GetMapping(value= "/getByBoatId/{boatId}")
     @PreAuthorize("hasRole('BOATOWNER')")
-    public ResponseEntity<Set<BoatReservationDto>> getPresentByBoatId(@PathVariable ("boatId") Long boatId) {
-        Set<BoatReservationDto> boatReservationDtos= new HashSet<>();
+    public ResponseEntity<Set<QuickReservationBoatDto>> getPresentByBoatId(@PathVariable ("boatId") Long boatId) {
+        Set<QuickReservationBoatDto> boatReservationDtos= new HashSet<>();
         for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getByBoatId(boatId))
-            boatReservationDtos.add(boatReservationMapper.quickBoatReservationToBoatReservationDto(quickReservationBoat));
+            boatReservationDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
     }
     @GetMapping("/getByOwnerUsername/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
-    public ResponseEntity<Set<BoatReservationDto>> getByOwnerUsername (@PathVariable("username") String username) {
+    public ResponseEntity<Set<QuickReservationBoatDto>> getByOwnerUsername (@PathVariable("username") String username) {
         BoatOwner boatOwner= boatOwnerService.findByUsername(username);
-        Set<BoatReservationDto> boatReservationDtos=new HashSet<>();
+        Set<QuickReservationBoatDto> boatReservationDtos=new HashSet<>();
         for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.findReservationsByOwnerId(boatOwner.getId())){
-            boatReservationDtos.add(boatReservationMapper.quickBoatReservationToBoatReservationDto(quickReservationBoat));
+            boatReservationDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
     }

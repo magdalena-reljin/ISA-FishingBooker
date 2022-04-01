@@ -19,7 +19,7 @@ public interface AdventureService {
     void delete(Long id);
 
     void edit(Adventure adventure, Long id);
-
+    boolean canBeEditedOrDeleted(Long id);
     List<Adventure> findAll();
     boolean addNewAdventure(Adventure adventure, String username,Set<AdditionalServices>additionalServices);
 }
