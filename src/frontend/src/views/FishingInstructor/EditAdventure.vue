@@ -131,6 +131,14 @@
        <hr style="color: white;">
             
        </div>     
+       <div class="col form-group">
+             <label id="label" for="formFileMultiple" class="form-label">Cancelling</label>
+
+             <select v-model="selectedCancelling" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                 <option value="0">FREE</option>
+                 <option value="1">OWNER KEEPS PERCENTAGE</option>
+             </select>
+        </div>
        
         <hr>
         
@@ -276,7 +284,7 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
          imagesSelectedEvent: null,
          tableHidden: true,
          additionalServicesAdded: false,
-        
+         selectedCancelling: 0
            
        
        }
@@ -307,6 +315,11 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
       
              if(this.imagesSelected==true)
                 this.adventureDto.images=null
+
+                if(this.selectedCancelling==0)
+                 this.adventureDto.cancelingCondition='FREE'
+               else
+                  this.adventureDto.cancelingCondition='NOT FREE'
             axios.post("http://localhost:8081/adventures/canBeEditedOrDeleted/"+this.adventureDto.id)
                   .then(response => {
                      if(response.data == true){
@@ -360,6 +373,10 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
                             this.tableHidden=false;
                             this.additionalServicesAdded=true
                 }
+                if(this.adventureDto.cancelingCondition=='FREE')
+                    this.selectedCancelling=0
+                else
+                    this.selectedCancelling=1
             
 
              });      

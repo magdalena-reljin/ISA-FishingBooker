@@ -855,7 +855,6 @@ export default {
                                 })
                               .then((response) => {
                                       console.log(response)
-                                      this.calendarOptions.events.push({extendedProps: {adventureName: this.adventureDto[this.selected].name,email: this.client, price: this.totalPrice, clientFullName: ''} ,title: 'Reservation', start: this.startReservation , end: this.endReservation})
                                     
                                        this.$swal.fire({
                                           position: 'top-end',
@@ -906,7 +905,6 @@ export default {
                                 })
                               .then((response) => {
                                     console.log(response)
-                                    this.calendarOptions.events.push({color: '#ffd04f', extendedProps: {adventureName: this.adventureDto[this.selected].name,email: this.client, price: this.totalPrice, clientFullName: null, } ,title: 'QuickReservation', start: this.startQuickReservation , end: this.endQuickReservation})
                                     
                                      this.$swal.fire({
                                           position: 'top-end',
@@ -1024,6 +1022,10 @@ export default {
                return diffInHours;
            },
            clearModalReservation: function(){
+                 this.calendarOptions.events=[]
+                 this.getAvailableInstructorsPeriod();
+                 this.getInstructorsReservation()
+                 this.getInstructorsQuickReservation()
                  this.$refs.makeReservation.hide()
                  this.startReservation=null
                  this.endReservation=null
@@ -1043,6 +1045,10 @@ export default {
               }
             },
              clearModalQuick: function(){
+                this.calendarOptions.events=[]
+                this.getAvailableInstructorsPeriod();
+                this.getInstructorsReservation()
+                this.getInstructorsQuickReservation()
                  this.$refs.makeQuickReservation.hide()
                  this.startQuickReservation=null
                  this.endQuickReservation=null

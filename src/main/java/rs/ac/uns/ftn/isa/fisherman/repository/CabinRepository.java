@@ -12,4 +12,5 @@ public interface CabinRepository extends JpaRepository<Cabin,Integer> {
 
     @Query(value = "SELECT * FROM cabin WHERE users_id=:users_id",nativeQuery = true)
     Set<Cabin> findByOwnersId(@Param("users_id")Long id);
+
 }

@@ -6,9 +6,9 @@ import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AdditionalServicesService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
-import rs.ac.uns.ftn.isa.fisherman.service.ImageService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +21,10 @@ public class CabinServiceImpl implements CabinService {
     private AdditionalServicesService additionalServicesService;
     @Autowired
     private ImageService imageService;
-
+    @Autowired
+    private ReservationCabinService reservationCabinService;
+    @Autowired
+    private QuickReservationCabinService quickReservationCabinService;
     public Cabin findById(Long id){
         return cabinRepository.findById(id);
     }
@@ -34,8 +37,13 @@ public class CabinServiceImpl implements CabinService {
     }
 
     @Override
-    public void save(Cabin cabin) {
+    public boolean save(Cabin cabin,Set<AdditionalServices> additionalServices) {
         cabinRepository.save(cabin);
+        if (additionalServices!= null) {
+            cabin.setAdditionalServices(additionalServices);
+            cabinRepository.save(cabin);
+        }
+        return true;
     }
 
     @Override
@@ -70,6 +78,7 @@ public class CabinServiceImpl implements CabinService {
         oldCabin.setBedsPerRoom(newCabin.getBedsPerRoom());
         oldCabin.setDescription(newCabin.getDescription());
         oldCabin.setRules(newCabin.getRules());
+        oldCabin.setCancellingConditions(newCabin.getCancellingConditions());
         Set<AdditionalServices> oldAdditionalServices=oldCabin.getAdditionalServices();
         Set<Image> oldImages= oldCabin.getImages();
         oldCabin.setAdditionalServices(newCabin.getAdditionalServices());
@@ -78,6 +87,14 @@ public class CabinServiceImpl implements CabinService {
         Set<AdditionalServices> savedServices= cabinRepository.findByName(oldCabin.getName()).getAdditionalServices();
         if(Boolean.TRUE.equals(deleteOldImages))   imageService.delete(oldImages);
         additionalServicesService.delete(additionalServicesService.findDeletedAdditionalServices(oldAdditionalServices,savedServices));
+    }
+
+    @Override
+    public boolean canBeEditedOrDeleted(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        if(reservationCabinService.futureReservationsExist(currentDate,id)) return false;
+        if(quickReservationCabinService.futureQuickReservationsExist(currentDate,id)) return false;
+        return true;
     }
 
 }

@@ -98,6 +98,14 @@
                  <p>{{cabinDto.bedsPerRoom}}</p>
                  </div>
             </div>
+            <div class="row"> 
+                 <div class="col">
+                 <p>Cancelling: </p>
+                 </div>
+                 <div class="col">
+                 <p>{{cabinDto.cancellingConditions}}</p>
+                 </div>
+            </div>
 
 
 
@@ -174,7 +182,8 @@
                  cabin: ''
 
              }],
-             ownerUsername: ''
+             ownerUsername: '',
+             cancellingConditions: ''
          },
           user:{
            username: ''
@@ -202,7 +211,9 @@
              this.cabinDto.name=this.cabinName
              axios.post("http://localhost:8081/cabins/findByName",this.cabinDto)
                .then(response => {
+                       
                         this.cabinDto=response.data
+                         console.log("cancellling   "+this.cabinDto.cancellingConditions)
                         this.cabinLoaded=true;
                         this.currentImageUrl=this.cabinDto.images[0].url
                         this.maxImageIndex=this.cabinDto.images.length-1

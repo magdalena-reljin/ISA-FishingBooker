@@ -97,13 +97,7 @@
 
          
         
-          <hr style="color: white;">
-              <div class="col form-group">
-                  <label id="label">Canceling condition </label>   
-                    <input v-model="adventureDto.cancelingCondition" type="text" class="form-control" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-              </div> 
+         
               
 
         <div class="mb-3">
@@ -131,6 +125,14 @@
        <hr style="color: white;">
             
        </div>     
+       <div class="col form-group">
+             <label id="label" for="formFileMultiple" class="form-label">Cancelling</label>
+
+             <select v-model="selectedCancelling" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                 <option value="0">FREE</option>
+                 <option value="1">OWNER KEEPS PERCENTAGE</option>
+             </select>
+        </div>
        
         <hr>
         
@@ -209,6 +211,7 @@
      data(){
        return{
          email: '',
+         selectedCancelling: 0,
             adventureDto: {
               id: null,
               name: '',
@@ -342,7 +345,10 @@
                     onCancel: this.onCancel,
                 });
                 
-
+               if(this.selectedCancelling==0)
+                 this.adventureDto.cancelingCondition='FREE'
+               else
+                  this.adventureDto.cancelingCondition='NOT FREE'
                axios.post("http://localhost:8081/adventures/save",this.adventureDto)
                .then(response => {
                         

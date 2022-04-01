@@ -197,4 +197,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     public Set<CabinReservation> getClientReservationHistoryByUsername(String clientUsername){
         return cabinReservationRepository.getClientReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
     }
+    @Override
+    public boolean futureReservationsExist(LocalDateTime currentDate,Long boatId) {
+        return cabinReservationRepository.futureReservationsExist(currentDate,boatId);
+    }
 }
