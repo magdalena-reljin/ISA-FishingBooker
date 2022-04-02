@@ -38,6 +38,8 @@ import ClientReservations from '../views/Client/ClientReservations'
 import ClientCabinProfile from '../views/Client/ClientCabinProfile'
 import ReservationsBoatOwner from '../views/BoatOwner/ReservationsBoatOwner'
 import QuickReservationsBoatOwner from '../views/BoatOwner/QuickReservationsBoat'
+import ReservationsCabinOwner from '../views/CabinOwner/ReservationsCabinOwner'
+import QuickReservationsCabin from '../views/CabinOwner/QuickReservationsCabin'
 
 const routes = [
   
@@ -153,6 +155,7 @@ const routes = [
       }                                                         
 
   },
+  
   {
     path: '/quickReservationsBoatOwner/:email',
     name: 'QuickReservationsBoatOwner',
@@ -160,6 +163,35 @@ const routes = [
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
      if(localStorage.token == 'empty' || localStorage.role !='BOATOWNER' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }                                                         
+
+  },
+  {
+    path: '/reservationsCabinOwner/:email',
+    name: 'ReservationsCabinOwner',
+    component: ReservationsCabinOwner,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }                                                         
+
+  },
+  
+  {
+    path: '/quickReservationsCabinOwner/:email',
+    name: 'QuickReservationsCabinOwner',
+    component: QuickReservationsCabin,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
           next('/')
         }else {
           next()

@@ -35,7 +35,7 @@
 
           <div class="col" >
           <button
-            @click="resetSearch()"
+            @click="resetSearch(activePage)"
             style="height: 90%; width: 90%; background-color: #0b477b; color: white;"
             type="button"
             class="btn  rounded-pill"
@@ -188,6 +188,16 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Cancelling</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p ><b>{{cancelingInfo}}</b></p>
+                
+          </div>
+        </div>
+        <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
           </div>
@@ -208,7 +218,7 @@
   <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
 </vue-modality>
 
-<vue-modality ref="reservationInfo" title="Write a review" hide-footer centered>
+<vue-modality ref="reservationInfodfs" title="Write a review" hide-footer centered>
 
    <br>
         <div class="row">
@@ -330,6 +340,7 @@ export default ({
         searchBoatNameReservations: '',
         searchClientReservations: '',
         activePage: 1,
+        cancelingInfo: '',
 
        }
        },
@@ -337,7 +348,6 @@ export default ({
              this.email = this.$route.params.email
              this.getBoatReservations()
              this.getPastReservations()
-             console.log("aktivna stranicaa   "+this.activePage)
        },
        methods: {
            setandFormatDate: function(newDate){
@@ -377,6 +387,7 @@ export default ({
                          this.adServicesInfo.push(ads.addedAdditionalServices[i].name)
               }
               this.boatInfo=ads.boatDto.name
+              this.cancelingInfo=ads.boatDto.cancelingCondition
               this.startInfo=this.setDate(ads.startDate)
               this.endInfo=this.setDate(ads.endDate)
               this.usernameInfo=ads.clientUsername
@@ -391,7 +402,6 @@ export default ({
           },
           resetSearch: function(num){
               this.activePage=num
-              console.log("USAO U RESER  "+this.activePage)
               this.searchBoatNameReservations=''
               this.searchClientReservations=''
               this.getBoatReservations();

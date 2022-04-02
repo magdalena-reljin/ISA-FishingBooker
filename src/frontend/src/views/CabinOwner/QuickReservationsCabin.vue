@@ -1,6 +1,6 @@
 <template>
 <div >
-<BoatOwnerNav :username=email />
+<CabinOwnerNav :username=email />
 
 <h1>QUICK RESERVATIONS</h1>
 <div  class="header" >
@@ -15,9 +15,9 @@
             type="text"
             style="height: 90%; width: 90%; padding-left: 5%;"
             id="search-field"
-            placeholder="BOAT NAME"
-            :value="searchBoatNameReservations" 
-            @input="searchBoatNameReservations = $event.target.value.toUpperCase()"
+            placeholder="CABIN NAME"
+            :value="searchCabinNameReservations" 
+            @input="searchCabinNameReservations = $event.target.value.toUpperCase()"
           />
           </div>
 
@@ -81,7 +81,7 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Boat name</th>
+                            <th scope="col">Cabin name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
                             <th scope="col">Client</th>
@@ -91,7 +91,7 @@
                         <tbody>
                             <tr v-for="(ads,index) in filteredRes" :key="index">
                             <th scope="row">{{index+1}}</th>
-                            <td>{{ads.boatDto.name}}</td>
+                            <td>{{ads.cabinDto.name}}</td>
                             <td>{{setandFormatDate(ads.startDate)}}</td>
                             <td>{{setandFormatDate(ads.endDate)}}</td>
                             <td>{{ads.clientUsername}}</td>
@@ -106,7 +106,7 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Boat name</th>
+                            <th scope="col">Cabin name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
                             <th scope="col">Client</th>
@@ -117,7 +117,7 @@
                         <tbody>
                             <tr v-for="(ads1,index) in filteredPastRes" :key="index">
                             <th scope="row">{{index+1}}</th>
-                            <td>{{ads1.boatDto.name}}</td>
+                            <td>{{ads1.cabinDto.name}}</td>
                             <td>{{setandFormatDate(ads1.startDate)}}</td>
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
@@ -140,10 +140,10 @@
    <br>
         <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Boat </p>
+            <p>Cabin </p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left;">
-             <p><b>{{boatInfo}}</b></p>
+             <p><b>{{cabinInfo}}</b></p>
           </div>
         </div>
         <div class="row">
@@ -193,27 +193,17 @@
                 
           </div>
         </div>
-         <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Captain</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p v-if="captainInfo==true"><b>YES</b></p>
-                  <p v-else><b>NO</b></p>
-                
-          </div>
-        </div>
-         <div class="row">
+        <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Cancelling</p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left; ">
              
-                 <p ><b>{{cancelingInfo}}</b></p>
+                 <p><b>{{cancelingInfo}}$</b></p>
                 
           </div>
         </div>
+         
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -232,15 +222,15 @@
 
   
   <hr>
-  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+  <button type="button" @click="openCalendarOfCabin()" class="btn btn-primary">Open calendar of this cabin</button>
 </vue-modality>
 
-<vue-modality ref="reservationInfodsf" title="Write a review" hide-footer centered>
+<vue-modality ref="reservationInfo1" title="Write a review" hide-footer centered>
 
    <br>
         <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Boat </p>
+            <p>Cabin </p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left;">
              <p><b>{{boatInfo}}</b></p>
@@ -293,17 +283,7 @@
                 
           </div>
         </div>
-         <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Captain</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p v-if="captainInfo==true"><b>YES</b></p>
-                  <p v-else><b>NO</b></p>
-                
-          </div>
-        </div>
+        
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -322,21 +302,21 @@
 
   
   <hr>
-  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+  <button type="button" @click="openCalendarOfCabin()" class="btn btn-primary">Open calendar of this cabin</button>
 </vue-modality>
 
 </template>
 <script>
 
 import axios from "axios";
-import BoatOwnerNav from './BoatOwnerNav.vue'
+import CabinOwnerNav from './CabinOwnerNav.vue'
 import dayjs from 'dayjs';
 import VueModality from 'vue-modality-v3'
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
 export default ({
     components: {
-         BoatOwnerNav,
+         CabinOwnerNav,
          VueModality,
          Datepicker
   
@@ -346,25 +326,24 @@ export default ({
         email: '',
         reservations: [],
         pastReservations: [],
-        boatInfo: '',
+        cabinInfo: '',
         startInfo: '',
         endInfo: '',
         usernameInfo: '',
         clientFullNameInfo: '',
         priceInfo: '',
-        captainInfo: true,
         adServicesInfo: [],
         discountInfo: 0,
         searchReservated: 1,
-        searchBoatNameReservations: '',
+        searchCabinNameReservations: '',
         searchClientReservations: '',
         activePage: 1,
-        cancelingInfo: '',
+        cancelingInfo: ''
        }
        },
        mounted() {
              this.email = this.$route.params.email
-             this.getBoatQuickReservations()
+             this.getQuickReservations()
              this.getPastQuickReservations()
        },
        methods: {
@@ -382,9 +361,9 @@ export default ({
            date.setDate( splits[1],splits[2], splits[0])
            return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
            },
-           getBoatQuickReservations: function(){
+           getQuickReservations: function(){
                this.reservations=[]
-                axios.get("http://localhost:8081/quickReservationBoat/getByOwnerUsername/"+this.email+"/")
+                axios.get("http://localhost:8081/quickReservationCabin/getByOwnerUsername/"+this.email+"/")
                 .then(response => {
                       this.reservations= response.data; 
                 })
@@ -392,7 +371,7 @@ export default ({
           },
           getPastQuickReservations: function(){
                 this.pastReservations=[]
-                axios.get("http://localhost:8081/quickReservationBoat/getPastQuickReservations/"+this.email+"/")
+                axios.get("http://localhost:8081/quickReservationCabin/getPastQuickReservations/"+this.email+"/")
                 .then(response => {
                       this.pastReservations= response.data; 
                 })
@@ -404,32 +383,30 @@ export default ({
                       for(let i = 0 ; i < ads.addedAdditionalServices.length ; i++)
                          this.adServicesInfo.push(ads.addedAdditionalServices[i].name)
               }
-              this.boatInfo=ads.boatDto.name
-              this.startInfo=this.setDate(ads.startDate)
-              this.endInfo=this.setDate(ads.endDate)
-              this.cancelingInfo=ads.boatDto.cancelingCondition
-              if(ads.clientUsername=='' || ads.clientUsername==null){
+            if(ads.clientUsername=='' || ads.clientUsername==null){
                  this.usernameInfo="not reservated yet"
                  this.clientFullNameInfo="not reservated yet"
-              }else{
+            }else{
                  this.usernameInfo=ads.clientUsername
                  this.clientFullNameInfo=ads.clientFullName
-              }
+            }
+              this.cabinInfo=ads.cabinDto.name
+              this.cancelingInfo=ads.cabinDto.cancellingConditions
+              this.startInfo=this.setDate(ads.startDate)
+              this.endInfo=this.setDate(ads.endDate)
               this.priceInfo=ads.price
-              this.captainInfo=ads.needsCaptainServices
               this.$refs.reservationInfo.open()
               
-              
           },
-          openCalendarOfBoat: function(){
-              this.$router.push("/boatCalendar/"+this.email+"/"+this.boatInfo)
+          openCalendarOfCabin: function(){
+              this.$router.push("/cabinCalendar/"+this.email+"/"+this.cabinInfo)
           },
           resetSearch: function(num){
               this.activePage=num
               this.searchReservated=1
-              this.searchBoatNameReservations=''
+              this.searchCabinNameReservations=''
               this.searchClientReservations=''
-              this.getBoatQuickReservations();
+              this.getQuickReservations();
               this.getPastQuickReservations();
           }
 
@@ -441,7 +418,7 @@ export default ({
                     let cl=1
                     if(res.clientUsername=='' || res.clientUsername==null)
                         cl=2
-                    return res.boatDto.name.toUpperCase().match(this.searchBoatNameReservations) && 
+                    return res.cabinDto.name.toUpperCase().match(this.searchCabinNameReservations) && 
                         res.clientUsername.toUpperCase().match(this.searchClientReservations) &&
                         cl==this.searchReservated;
                 });
@@ -456,7 +433,7 @@ export default ({
                     let cl=1
                     if(res.clientUsername=='' || res.clientUsername==null)
                         cl=2
-                    return res.boatDto.name.toUpperCase().match(this.searchBoatNameReservations) && 
+                    return res.cabinDto.name.toUpperCase().match(this.searchCabinNameReservations) && 
                         res.clientUsername.toUpperCase().match(this.searchClientReservations)  &&
                         cl==this.searchReservated;
                 });
