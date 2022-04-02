@@ -287,6 +287,16 @@
                 
           </div>
         </div>
+          <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Cancelling</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p ><b>{{cancelingInfo}}</b></p>
+                
+          </div>
+        </div>
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>

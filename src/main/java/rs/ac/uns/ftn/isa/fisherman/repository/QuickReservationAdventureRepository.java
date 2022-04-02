@@ -15,7 +15,7 @@ public interface QuickReservationAdventureRepository extends JpaRepository<Quick
     boolean quickReservationExists(@Param("instructors_id")Long instructorId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query(value="SELECT * FROM quick_reservation_adventure where instructors_id=:instructors_id and (:currentDate <= end_date) ",nativeQuery = true)
-    Set<QuickReservationAdventure> getByInstructorId(@Param("instructors_id")Long instructorId);
+    Set<QuickReservationAdventure> getByInstructorId(@Param("instructors_id")Long instructorId,@Param("currentDate")LocalDateTime currentDate);
 
     @Query(value="SELECT * FROM quick_reservation_adventure where instructors_id=:instructors_id and (:currentDate > end_date) ",nativeQuery = true)
     Set<QuickReservationAdventure> getPastReservations(@Param("instructors_id")Long instructorId, @Param("currentDate")LocalDateTime currentDate);

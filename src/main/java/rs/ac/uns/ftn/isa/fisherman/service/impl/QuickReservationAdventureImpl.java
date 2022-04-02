@@ -38,7 +38,7 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public Set<QuickReservationAdventure> getByInstructorId(Long id) {
-        return  quickReservationAdventureRepository.getByInstructorId(id);
+        return  quickReservationAdventureRepository.getByInstructorId(id,LocalDateTime.now());
     }
 
     @Override
@@ -53,8 +53,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {
-        LocalDateTime currentDate = LocalDateTime.now();
-        return quickReservationAdventureRepository.getPastReservations(instructorId,currentDate);
+
+        return quickReservationAdventureRepository.getPastReservations(instructorId,LocalDateTime.now());
     }
 
     private boolean validateForReservation(QuickReservationAdventure quickReservationAdventure){
