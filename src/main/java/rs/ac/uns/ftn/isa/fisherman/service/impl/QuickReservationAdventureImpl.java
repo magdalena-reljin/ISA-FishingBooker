@@ -51,6 +51,12 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return quickReservationAdventureRepository.futureQuickReservationsExist(currentDate,id);
     }
 
+    @Override
+    public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        return quickReservationAdventureRepository.getPastReservations(instructorId,currentDate);
+    }
+
     private boolean validateForReservation(QuickReservationAdventure quickReservationAdventure){
         if(!availableInstructorPeriodService.instructorIsAvailable(quickReservationAdventure.getFishingInstructor()
                 .getId(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
