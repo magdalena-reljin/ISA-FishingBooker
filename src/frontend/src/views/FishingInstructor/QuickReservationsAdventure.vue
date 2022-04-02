@@ -1,11 +1,11 @@
 <template>
+<div >
+<FishingInstructorNav :username=email />
 
-<CabinOwnerNav :username=email />
-
-<h1>RESERVATIONS</h1>
+<h1>QUICK RESERVATIONS</h1>
 <div  class="header" >
       <form>
-        <h1 style="text-align: left; color: #0b477b;  padding-left: 2%;">Search reservations</h1>
+        <h1 style="text-align: left; color: #0b477b;  padding-left: 2%;">Search quick reservations</h1>
         <br>
         <div class="row" >
            
@@ -15,11 +15,13 @@
             type="text"
             style="height: 90%; width: 90%; padding-left: 5%;"
             id="search-field"
-            placeholder="CABIN NAME"
-            :value="searchCabinNameReservations" 
-            @input="searchCabinNameReservations = $event.target.value.toUpperCase()"
+            placeholder="ADVENTURE NAME"
+            :value="searchAdventureNameReservations" 
+            @input="searchAdventureNameReservations = $event.target.value.toUpperCase()"
           />
           </div>
+
+          
 
           <div class="col">
           <input
@@ -32,6 +34,19 @@
             @input="searchClientReservations = $event.target.value.toUpperCase()"
           />
           </div>
+          <div class="col">
+          <select
+             style="height: 90%; width: 90%; color: #5f7280;"
+            v-model="searchReservated"
+            class="form-select rounded-pill"
+            aria-label="Default select example"
+            placeholder="Rating"
+          >
+            <option  disabled value="">STATUS</option>
+            <option v-bind:value="1">RESERVATED</option>
+            <option v-bind:value="2">NOT RESERVATED</option>
+          </select>
+          </div>
 
           <div class="col" >
           <button
@@ -43,6 +58,8 @@
             RESET SEARCH
           </button>
           </div>
+
+          
           
         </div>
       </form>
@@ -64,7 +81,7 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Cabin name</th>
+                            <th scope="col">Adventure name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
                             <th scope="col">Client</th>
@@ -74,7 +91,7 @@
                         <tbody>
                             <tr v-for="(ads,index) in filteredRes" :key="index">
                             <th scope="row">{{index+1}}</th>
-                            <td>{{ads.cabinDto.name}}</td>
+                            <td>{{ads.adventureDto.name}}</td>
                             <td>{{setandFormatDate(ads.startDate)}}</td>
                             <td>{{setandFormatDate(ads.endDate)}}</td>
                             <td>{{ads.clientUsername}}</td>
@@ -89,10 +106,10 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Cabin name</th>
+                            <th scope="col">Adventure name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
-                             <th scope="col">Client</th>
+                            <th scope="col">Client</th>
                             <th scope="col">&nbsp;</th>
                             <th scope="col">&nbsp;</th>
                             </tr>
@@ -100,7 +117,7 @@
                         <tbody>
                             <tr v-for="(ads1,index) in filteredPastRes" :key="index">
                             <th scope="row">{{index+1}}</th>
-                            <td>{{ads1.cabinDto.name}}</td>
+                            <td>{{ads1.adventureDto.name}}</td>
                             <td>{{setandFormatDate(ads1.startDate)}}</td>
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
@@ -115,7 +132,7 @@
     
     </div>
 </div>
-
+</div>
 </div>
 
 <vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
@@ -123,10 +140,10 @@
    <br>
         <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Cabin </p>
+            <p>Adventure </p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left;">
-             <p><b>{{cabinInfo}}</b></p>
+             <p><b>{{adventureInfo}}</b></p>
           </div>
         </div>
         <div class="row">
@@ -176,14 +193,93 @@
                 
           </div>
         </div>
-         <div class="row">
+        <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Captain</p>
+            <p>Cancelling</p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left; ">
              
-                 <p v-if="captainInfo==true"><b>YES</b></p>
-                  <p v-else><b>NO</b></p>
+                 <p><b>{{cancelingInfo}}</b></p>
+                
+          </div>
+        </div>
+         
+        <div class="row">
+          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Additional services</p>
+          </div>
+        </div>
+        <div class="row">
+          <div   class="col" style="padding: 4%; text-align: left; ">
+                 
+                 <ul v-for="(ads,index) in adServicesInfo" :key="index" class="list-group">
+                  <li class="list-group-item"><b>{{ads}}</b></li>
+                 </ul>
+                
+          </div>
+        
+        </div>
+
+  
+  <hr>
+  <button type="button" @click="openCalendarOfInstructor()" class="btn btn-primary">Open calendar</button>
+</vue-modality>
+
+<vue-modality ref="reservationInfo1" title="Write a review" hide-footer centered>
+
+   <br>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Adventure </p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{adventureInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;" >
+             <Datepicker   
+           v-model="startInfo" 
+                
+         disabled >
+          </Datepicker>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%;">
+             <Datepicker  v-model="endInfo" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Username</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left;">
+             <p><b>{{usernameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full name</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             <p><b>{{clientFullNameInfo}}</b></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Full price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{priceInfo}}$</b></p>
                 
           </div>
         </div>
@@ -215,112 +311,21 @@
 
   
   <hr>
-  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
-</vue-modality>
-
-<vue-modality ref="reservationInfofdsf" title="Write a review" hide-footer centered>
-
-   <br>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Cabin </p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left;">
-             <p><b>{{cabinInfo}}</b></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col" style="padding-top: 2%; text-align: left; color: gray;" >
-            <p>Start</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
-           v-model="startInfo" 
-                
-         disabled >
-          </Datepicker>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col" style="padding-top: 2%; text-align: left; color: gray;">
-            <p>End</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker  v-model="endInfo" disabled></Datepicker>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Username</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left;">
-             <p><b>{{usernameInfo}}</b></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Full name</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             <p><b>{{clientFullNameInfo}}</b></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Full price</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p><b>{{priceInfo}}$</b></p>
-                
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Cancelling</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p><b>{{cancelingInfo}}</b></p>
-                
-          </div>
-        </div>
-         
-         
-        <div class="row">
-          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Additional services</p>
-          </div>
-        </div>
-        <div class="row">
-          <div   class="col" style="padding: 4%; text-align: left; ">
-                 
-                 <ul v-for="(ads,index) in adServicesInfo" :key="index" class="list-group">
-                  <li class="list-group-item"><b>{{ads}}</b></li>
-                 </ul>
-                
-          </div>
-        
-        </div>
-
-  
-  <hr>
-  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+  <button type="button" @click="openCalendarOfInstructor()" class="btn btn-primary">Open calendar</button>
 </vue-modality>
 
 </template>
 <script>
 
 import axios from "axios";
-import CabinOwnerNav from './CabinOwnerNav.vue'
+import FishingInstructorNav from './FishingInstructorNav.vue'
 import dayjs from 'dayjs';
 import VueModality from 'vue-modality-v3'
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
 export default ({
     components: {
-         CabinOwnerNav,
+         FishingInstructorNav,
          VueModality,
          Datepicker
   
@@ -330,24 +335,25 @@ export default ({
         email: '',
         reservations: [],
         pastReservations: [],
-        cabinInfo: '',
+        adventureInfo: '',
         startInfo: '',
         endInfo: '',
         usernameInfo: '',
         clientFullNameInfo: '',
         priceInfo: '',
         adServicesInfo: [],
-        searchCabinNameReservations: '',
+        discountInfo: 0,
+        searchReservated: 1,
+        searchAdventureNameReservations: '',
         searchClientReservations: '',
         activePage: 1,
         cancelingInfo: ''
-
        }
        },
        mounted() {
              this.email = this.$route.params.email
-             this.getReservations()
-             this.getPastReservations()
+             this.getQuickReservations()
+             this.getPastQuickReservations()
        },
        methods: {
            setandFormatDate: function(newDate){
@@ -364,17 +370,17 @@ export default ({
            date.setDate( splits[1],splits[2], splits[0])
            return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
            },
-           getReservations: function(){
+           getQuickReservations: function(){
                this.reservations=[]
-                axios.get("http://localhost:8081/reservationCabin/getByOwnerUsername/"+this.email+"/")
+                axios.get("http://localhost:8081/quickReservationAdventure/getByInstructorId/"+this.email+"/")
                 .then(response => {
                       this.reservations= response.data; 
                 })
                
           },
-          getPastReservations: function(){
+          getPastQuickReservations: function(){
                 this.pastReservations=[]
-                axios.get("http://localhost:8081/reservationCabin/getPastReservations/"+this.email+"/")
+                axios.get("http://localhost:8081/quickReservationAdventure/getPastReservations/"+this.email+"/")
                 .then(response => {
                       this.pastReservations= response.data; 
                 })
@@ -386,51 +392,65 @@ export default ({
                       for(let i = 0 ; i < ads.addedAdditionalServices.length ; i++)
                          this.adServicesInfo.push(ads.addedAdditionalServices[i].name)
               }
-              this.cabinInfo=ads.cabinDto.name
-              this.cancelingInfo=ads.cabinDto.cancellingConditions
+            if(ads.clientUsername=='' || ads.clientUsername==null){
+                 this.usernameInfo="not reservated yet"
+                 this.clientFullNameInfo="not reservated yet"
+            }else{
+                 this.usernameInfo=ads.clientUsername
+                 this.clientFullNameInfo=ads.clientFullName
+            }
+              this.adventureInfo=ads.adventureDto.name
+              this.cancelingInfo=ads.adventureDto.cancelingCondition
               this.startInfo=this.setDate(ads.startDate)
               this.endInfo=this.setDate(ads.endDate)
-              this.usernameInfo=ads.clientUsername
-              this.clientFullNameInfo=ads.clientFullName
               this.priceInfo=ads.price
               this.$refs.reservationInfo.open()
-         
+              
           },
-          openCalendarOfBoat: function(){
-              this.$router.push("/cabinCalendar/"+this.email+"/"+this.cabinInfo)
+          openCalendarOfInstructor: function(){
+              this.$router.push("/myCalendar/"+this.email)
           },
           resetSearch: function(num){
               this.activePage=num
-              this.searchCabinNameReservations=''
+              this.searchReservated=1
+              this.searchAdventureNameReservations=''
               this.searchClientReservations=''
-              this.getReservations();
-              this.getPastReservations();
+              this.getQuickReservations();
+              this.getPastQuickReservations();
           }
 
        },
-       computed: {
+        computed: {
         filteredRes: function () {
                if(this.activePage==1){
                 var temp = this.reservations.filter((res) => {
-                    return res.cabinDto.name.toUpperCase().match(this.searchCabinNameReservations) && 
-                        res.clientUsername.toUpperCase().match(this.searchClientReservations) ;
+                    let cl=1
+                    if(res.clientUsername=='' || res.clientUsername==null)
+                        cl=2
+                    return res.adventureDto.name.toUpperCase().match(this.searchAdventureNameReservations) && 
+                        res.clientUsername.toUpperCase().match(this.searchClientReservations) &&
+                        cl==this.searchReservated;
                 });
                }
 
            return temp;
         },
         filteredPastRes: function () {
+               
                if(this.activePage==2){
                 var temp = this.pastReservations.filter((res) => {
-                    return res.cabinDto.name.toUpperCase().match(this.searchCabinNameReservations) && 
-                        res.clientUsername.toUpperCase().match(this.searchClientReservations) ;
+                    let cl=1
+                    if(res.clientUsername=='' || res.clientUsername==null)
+                        cl=2
+                    return res.adventureDto.name.toUpperCase().match(this.searchAdventureNameReservations) && 
+                        res.clientUsername.toUpperCase().match(this.searchClientReservations)  &&
+                        cl==this.searchReservated;
                 });
                }
 
            return temp;
         },
   },
-       
     
 })
 </script>

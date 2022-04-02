@@ -1,6 +1,6 @@
 <template>
 
-<CabinOwnerNav :username=email />
+<FishingInstructorNav :username=email />
 
 <h1>RESERVATIONS</h1>
 <div  class="header" >
@@ -15,9 +15,9 @@
             type="text"
             style="height: 90%; width: 90%; padding-left: 5%;"
             id="search-field"
-            placeholder="CABIN NAME"
-            :value="searchCabinNameReservations" 
-            @input="searchCabinNameReservations = $event.target.value.toUpperCase()"
+            placeholder="ADVENTURE NAME"
+            :value="searchAdventureNameReservations" 
+            @input="searchAdventureNameReservations = $event.target.value.toUpperCase()"
           />
           </div>
 
@@ -64,7 +64,7 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Cabin name</th>
+                            <th scope="col">Adventure name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
                             <th scope="col">Client</th>
@@ -74,7 +74,7 @@
                         <tbody>
                             <tr v-for="(ads,index) in filteredRes" :key="index">
                             <th scope="row">{{index+1}}</th>
-                            <td>{{ads.cabinDto.name}}</td>
+                            <td>{{ads.adventureDto.name}}</td>
                             <td>{{setandFormatDate(ads.startDate)}}</td>
                             <td>{{setandFormatDate(ads.endDate)}}</td>
                             <td>{{ads.clientUsername}}</td>
@@ -89,7 +89,7 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Cabin name</th>
+                            <th scope="col">Adventure name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
                              <th scope="col">Client</th>
@@ -100,7 +100,7 @@
                         <tbody>
                             <tr v-for="(ads1,index) in filteredPastRes" :key="index">
                             <th scope="row">{{index+1}}</th>
-                            <td>{{ads1.cabinDto.name}}</td>
+                            <td>{{ads1.adventureDto.name}}</td>
                             <td>{{setandFormatDate(ads1.startDate)}}</td>
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
@@ -123,10 +123,10 @@
    <br>
         <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Cabin </p>
+            <p>Adventure </p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left;">
-             <p><b>{{cabinInfo}}</b></p>
+             <p><b>{{adventureInfo}}</b></p>
           </div>
         </div>
         <div class="row">
@@ -178,17 +178,6 @@
         </div>
          <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Captain</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p v-if="captainInfo==true"><b>YES</b></p>
-                  <p v-else><b>NO</b></p>
-                
-          </div>
-        </div>
-          <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Cancelling</p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left; ">
@@ -197,6 +186,8 @@
                 
           </div>
         </div>
+        
+        
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -215,7 +206,7 @@
 
   
   <hr>
-  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+  <button type="button" @click="openCalendarOfInstructor()" class="btn btn-primary">Open calendar</button>
 </vue-modality>
 
 <vue-modality ref="reservationInfofdsf" title="Write a review" hide-footer centered>
@@ -223,10 +214,10 @@
    <br>
         <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Cabin </p>
+            <p>Adventure </p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left;">
-             <p><b>{{cabinInfo}}</b></p>
+             <p><b>{{adventureInfo}}</b></p>
           </div>
         </div>
         <div class="row">
@@ -306,21 +297,21 @@
 
   
   <hr>
-  <button type="button" @click="openCalendarOfBoat()" class="btn btn-primary">Open calendar of this boat</button>
+  <button type="button" @click="openCalendarOfInstructor()" class="btn btn-primary">Open calendar</button>
 </vue-modality>
 
 </template>
 <script>
 
 import axios from "axios";
-import CabinOwnerNav from './CabinOwnerNav.vue'
+import FishingInstructorNav from './FishingInstructorNav.vue'
 import dayjs from 'dayjs';
 import VueModality from 'vue-modality-v3'
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
 export default ({
     components: {
-         CabinOwnerNav,
+         FishingInstructorNav,
          VueModality,
          Datepicker
   
@@ -330,14 +321,14 @@ export default ({
         email: '',
         reservations: [],
         pastReservations: [],
-        cabinInfo: '',
+        adventureInfo: '',
         startInfo: '',
         endInfo: '',
         usernameInfo: '',
         clientFullNameInfo: '',
         priceInfo: '',
         adServicesInfo: [],
-        searchCabinNameReservations: '',
+        searchAdventureNameReservations: '',
         searchClientReservations: '',
         activePage: 1,
         cancelingInfo: ''
@@ -366,7 +357,7 @@ export default ({
            },
            getReservations: function(){
                this.reservations=[]
-                axios.get("http://localhost:8081/reservationCabin/getByOwnerUsername/"+this.email+"/")
+                axios.get("http://localhost:8081/reservationAdventure/getByInstructorUsername/"+this.email+"/")
                 .then(response => {
                       this.reservations= response.data; 
                 })
@@ -374,7 +365,7 @@ export default ({
           },
           getPastReservations: function(){
                 this.pastReservations=[]
-                axios.get("http://localhost:8081/reservationCabin/getPastReservations/"+this.email+"/")
+                axios.get("http://localhost:8081/reservationAdventure/getPastReservations/"+this.email+"/")
                 .then(response => {
                       this.pastReservations= response.data; 
                 })
@@ -386,8 +377,8 @@ export default ({
                       for(let i = 0 ; i < ads.addedAdditionalServices.length ; i++)
                          this.adServicesInfo.push(ads.addedAdditionalServices[i].name)
               }
-              this.cabinInfo=ads.cabinDto.name
-              this.cancelingInfo=ads.cabinDto.cancellingConditions
+              this.adventureInfo=ads.adventureDto.name
+              this.cancelingInfo=ads.adventureDto.cancelingCondition
               this.startInfo=this.setDate(ads.startDate)
               this.endInfo=this.setDate(ads.endDate)
               this.usernameInfo=ads.clientUsername
@@ -396,12 +387,12 @@ export default ({
               this.$refs.reservationInfo.open()
          
           },
-          openCalendarOfBoat: function(){
-              this.$router.push("/cabinCalendar/"+this.email+"/"+this.cabinInfo)
+          openCalendarOfInstructor: function(){
+              this.$router.push("/myCalendar/"+this.email)
           },
           resetSearch: function(num){
               this.activePage=num
-              this.searchCabinNameReservations=''
+              this.searchAdventureNameReservations=''
               this.searchClientReservations=''
               this.getReservations();
               this.getPastReservations();
@@ -412,7 +403,7 @@ export default ({
         filteredRes: function () {
                if(this.activePage==1){
                 var temp = this.reservations.filter((res) => {
-                    return res.cabinDto.name.toUpperCase().match(this.searchCabinNameReservations) && 
+                    return res.adventureDto.name.toUpperCase().match(this.searchAdventureNameReservations) && 
                         res.clientUsername.toUpperCase().match(this.searchClientReservations) ;
                 });
                }
@@ -422,7 +413,7 @@ export default ({
         filteredPastRes: function () {
                if(this.activePage==2){
                 var temp = this.pastReservations.filter((res) => {
-                    return res.cabinDto.name.toUpperCase().match(this.searchCabinNameReservations) && 
+                    return res.adventureDto.name.toUpperCase().match(this.searchAdventureNameReservations) && 
                         res.clientUsername.toUpperCase().match(this.searchClientReservations) ;
                 });
                }
