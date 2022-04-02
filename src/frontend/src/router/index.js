@@ -37,6 +37,7 @@ import PersonalCalendar from '../views/BoatOwner/PersonalCalendar.vue'
 import ClientReservations from '../views/Client/ClientReservations'
 import ClientCabinProfile from '../views/Client/ClientCabinProfile'
 import ReservationsBoatOwner from '../views/BoatOwner/ReservationsBoatOwner'
+import ClientEvaluationForm from '../views/Client/ClientEvaluationForm'
 import QuickReservationsBoatOwner from '../views/BoatOwner/QuickReservationsBoat'
 import ReservationsCabinOwner from '../views/CabinOwner/ReservationsCabinOwner'
 import QuickReservationsCabin from '../views/CabinOwner/QuickReservationsCabin'
@@ -275,6 +276,12 @@ const routes = [
     path: '/cabin/:email/:cabinName',
     name: 'Cabin',
     component: ClientCabinProfile,
+    props: true
+  },
+  {
+    path: '/evaluation/:email/:entity/:reservationId',
+    name: 'ClientEvaluationForm',
+    component: ClientEvaluationForm,
     props: true
   },
   {
