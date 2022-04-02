@@ -53,14 +53,12 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
 
     @Override
     public Set<QuickReservationCabin> findReservationsByOwnerId(Long id) {
-        LocalDateTime currentDate=LocalDateTime.now();
-        return quickReservationCabinRepository.findReservationsByOwnerId(id,currentDate);
+        return quickReservationCabinRepository.findReservationsByOwnerId(id,LocalDateTime.now());
     }
 
     @Override
     public Set<QuickReservationCabin> getPastReservations(Long id) {
-        LocalDateTime currentDate=LocalDateTime.now();
-        return quickReservationCabinRepository.getPastReservations(id,currentDate);
+        return quickReservationCabinRepository.getPastReservations(id,LocalDateTime.now());
     }
 
     private boolean validateForReservation(QuickReservationCabin cabinQuickReservation){
