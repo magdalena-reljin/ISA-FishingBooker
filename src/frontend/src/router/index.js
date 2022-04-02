@@ -42,6 +42,7 @@ import ReservationsCabinOwner from '../views/CabinOwner/ReservationsCabinOwner'
 import QuickReservationsCabin from '../views/CabinOwner/QuickReservationsCabin'
 import QuickReservationAdventure from '../views/FishingInstructor/QuickReservationsAdventure'
 import ReservationAdventure from '../views/FishingInstructor/AdventureReservations'
+import UserRank from '../views/Admin/UserRank'
 
 const routes = [
   
@@ -89,6 +90,19 @@ const routes = [
     path: '/requests/:email',
     name: 'RequestsFromUsers',
     component: RequestsFromUsers,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }
+  },
+  {
+    path: '/userRank/:email',
+    name: 'UserRank',
+    component: UserRank,
     beforeEnter: (to, from, next) => {
       store.dispatch('refreshToken')
      if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
