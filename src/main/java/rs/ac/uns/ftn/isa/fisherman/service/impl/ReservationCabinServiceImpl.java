@@ -151,15 +151,13 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public Set<CabinReservation> getPresentByCabinId(Long cabinId) {
-        LocalDateTime currentDate= LocalDateTime.now();
-        return cabinReservationRepository.getPresentByCabinId(cabinId,currentDate);
+        return cabinReservationRepository.getPresentByCabinId(cabinId,LocalDateTime.now());
     }
 
     private boolean validateForReservation(CabinReservation cabinReservation,Client client){
-        LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;
         if(!cabinReservationRepository.clientHasReservation(cabinReservation.getCabin().
-                getId(),client.getId(),currentDate)) return false;
+                getId(),client.getId(),LocalDateTime.now())) return false;
 
         if(!availableCabinPeriodService.cabinIsAvailable(cabinReservation.getCabin()
                 .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
@@ -198,13 +196,11 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public Set<CabinReservation> findReservationsByOwnerId(Long id) {
-        LocalDateTime currentDate=LocalDateTime.now();
-        return cabinReservationRepository.findReservationsByOwnerId(id,currentDate);
+        return cabinReservationRepository.findReservationsByOwnerId(id,LocalDateTime.now());
     }
 
     @Override
     public Set<CabinReservation> getPastReservations(Long id) {
-        LocalDateTime currentDate=LocalDateTime.now();
-        return cabinReservationRepository.getPastReservations(id,currentDate);
+        return cabinReservationRepository.getPastReservations(id,LocalDateTime.now());
     }
 }

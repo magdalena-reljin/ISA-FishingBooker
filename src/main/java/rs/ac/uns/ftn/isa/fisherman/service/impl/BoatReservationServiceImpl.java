@@ -94,8 +94,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
 
     @Override
     public Set<BoatReservation> findReservationsByOwnerId(Long id) {
-        LocalDateTime currentDate=LocalDateTime.now();
-        return boatReservationRepository.findReservationsByOwnerId(id,currentDate);
+        return boatReservationRepository.findReservationsByOwnerId(id,LocalDateTime.now());
     }
 
     @Override
@@ -105,8 +104,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
 
     @Override
     public Set<BoatReservation> getPastReservations(Long id) {
-        LocalDateTime currentDate=LocalDateTime.now();
-        return boatReservationRepository.getPastReservations(id,currentDate);
+        return boatReservationRepository.getPastReservations(id,LocalDateTime.now());
     }
 
     private void sendMailNotification(BoatReservation boatReservation,String email){

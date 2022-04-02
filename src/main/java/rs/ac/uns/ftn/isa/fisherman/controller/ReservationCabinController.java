@@ -33,7 +33,7 @@ public class ReservationCabinController {
     @PostMapping("/getAvailableCabins")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Set<CabinDto>> getAvailableCabins (@RequestBody SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
-        Set<CabinDto> cabinsDto= new HashSet<CabinDto>();
+        Set<CabinDto> cabinsDto= new HashSet<>();
         for(Cabin cabin:reservationCabinService.getAvailableCabins(searchAvailablePeriodsCabinDto)){
             cabinsDto.add(cabinMapper.cabinToCabinDto(cabin));
         }
