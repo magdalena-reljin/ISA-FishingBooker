@@ -11,6 +11,12 @@ INSERT INTO AUTHORITY (id ,name) VALUES (3, 'ROLE_BOATOWNER');
 INSERT INTO AUTHORITY (id ,name) VALUES (4, 'ROLE_FISHING_INSTRUCTOR');
 INSERT INTO AUTHORITY (id ,name) VALUES (6, 'ROLE_CLIENT');
 
+INSERT INTO RANK (id ,discount_percentage,points,rank) VALUES (1, null,null,0);
+INSERT INTO RANK (id ,discount_percentage,points,rank) VALUES (2, null,null,1);
+INSERT INTO RANK (id ,discount_percentage,points,rank) VALUES (3, null,null,2);
+
+INSERT INTO RESERVATION_POINTS (id ,app_profit_percentage,client_points,owner_points) VALUES (1, null,null,null);
+
 
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 1);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (2, 2);

@@ -2,6 +2,8 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import rs.ac.uns.ftn.isa.fisherman.enums.RankType;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -52,6 +54,8 @@ public abstract class User implements UserDetails {
 
     @Column(name = "reasonForDeleting")
     private String reasonForDeleting;
+    @Embedded
+    private UserRank userRank;
 
     protected User(){}
     protected User(Long id, String name, String lastName, String username, String password, String phoneNum, Address address) {
@@ -63,6 +67,7 @@ public abstract class User implements UserDetails {
         this.phoneNum = phoneNum;
         this.address = address;
         this.reasonForDeleting="";
+        this.userRank = new UserRank(RankType.BRONZE,0);
     }
 
     public String getReasonForDeleting() {
@@ -107,6 +112,14 @@ public abstract class User implements UserDetails {
 
     public String getRoleApp() {
         return ROLE_APP;
+    }
+
+    public UserRank getUserRank() {
+        return userRank;
+    }
+
+    public void setUserRank(UserRank userRank) {
+        this.userRank = userRank;
     }
 
     public void setAuthorities(List<Authority> authorities) {
