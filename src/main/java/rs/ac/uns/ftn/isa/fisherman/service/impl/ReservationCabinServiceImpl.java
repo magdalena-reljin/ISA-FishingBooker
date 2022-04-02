@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,5 +194,17 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     @Override
     public boolean futureReservationsExist(LocalDateTime currentDate,Long boatId) {
         return cabinReservationRepository.futureReservationsExist(currentDate,boatId);
+    }
+
+    @Override
+    public Set<CabinReservation> findReservationsByOwnerId(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        return cabinReservationRepository.findReservationsByOwnerId(id,currentDate);
+    }
+
+    @Override
+    public Set<CabinReservation> getPastReservations(Long id) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        return cabinReservationRepository.getPastReservations(id,currentDate);
     }
 }
