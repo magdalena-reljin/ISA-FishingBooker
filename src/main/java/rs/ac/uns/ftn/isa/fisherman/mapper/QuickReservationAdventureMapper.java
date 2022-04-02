@@ -1,6 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.mapper;
-
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
