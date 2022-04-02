@@ -94,7 +94,8 @@ public class BoatReservationServiceImpl implements BoatReservationService {
 
     @Override
     public Set<BoatReservation> findReservationsByOwnerId(Long id) {
-        return boatReservationRepository.findReservationsByOwnerId(id);
+        LocalDateTime currentDate=LocalDateTime.now();
+        return boatReservationRepository.findReservationsByOwnerId(id,currentDate);
     }
 
     @Override

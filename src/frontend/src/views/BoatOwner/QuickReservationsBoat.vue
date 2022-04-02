@@ -1,11 +1,11 @@
 <template>
-
+<div >
 <BoatOwnerNav :username=email />
 
-<h1>RESERVATIONS</h1>
+<h1>QUICK RESERVATIONS</h1>
 <div  class="header" >
       <form>
-        <h1 style="text-align: left; color: #0b477b;  padding-left: 2%;">Search reservations</h1>
+        <h1 style="text-align: left; color: #0b477b;  padding-left: 2%;">Search quick reservations</h1>
         <br>
         <div class="row" >
            
@@ -21,6 +21,8 @@
           />
           </div>
 
+          
+
           <div class="col">
           <input
             class="form-control rounded-pill"
@@ -31,6 +33,19 @@
             :value="searchClientReservations" 
             @input="searchClientReservations = $event.target.value.toUpperCase()"
           />
+          </div>
+          <div class="col">
+          <select
+             style="height: 90%; width: 90%; color: #5f7280;"
+            v-model="searchReservated"
+            class="form-select rounded-pill"
+            aria-label="Default select example"
+            placeholder="Rating"
+          >
+            <option  disabled value="">STATUS</option>
+            <option v-bind:value="1">RESERVATED</option>
+            <option v-bind:value="2">NOT RESERVATED</option>
+          </select>
           </div>
 
           <div class="col" >
@@ -43,6 +58,8 @@
             RESET SEARCH
           </button>
           </div>
+
+          
           
         </div>
       </form>
@@ -92,7 +109,7 @@
                             <th scope="col">Boat name</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
-                             <th scope="col">Client</th>
+                            <th scope="col">Client</th>
                             <th scope="col">&nbsp;</th>
                             <th scope="col">&nbsp;</th>
                             </tr>
@@ -115,7 +132,7 @@
     
     </div>
 </div>
-
+</div>
 </div>
 
 <vue-modality ref="reservationInfo" title="Reservation information" hide-footer centered>
@@ -327,17 +344,17 @@ export default ({
         priceInfo: '',
         captainInfo: true,
         adServicesInfo: [],
+        discountInfo: 0,
+        searchReservated: 1,
         searchBoatNameReservations: '',
         searchClientReservations: '',
         activePage: 1,
-
        }
        },
        mounted() {
              this.email = this.$route.params.email
-             this.getBoatReservations()
-             this.getPastReservations()
-             console.log("aktivna stranicaa   "+this.activePage)
+             this.getBoatQuickReservations()
+             this.getPastQuickReservations()
        },
        methods: {
            setandFormatDate: function(newDate){
@@ -354,17 +371,17 @@ export default ({
            date.setDate( splits[1],splits[2], splits[0])
            return new Date( parseInt(splits[0]), parseInt(splits[1])-1, parseInt(splits[2]),parseInt(splits[3]),parseInt(splits[4]))
            },
-           getBoatReservations: function(){
+           getBoatQuickReservations: function(){
                this.reservations=[]
-                axios.get("http://localhost:8081/reservationBoat/getByOwnerUsername/"+this.email+"/")
+                axios.get("http://localhost:8081/quickReservationBoat/getByOwnerUsername/"+this.email+"/")
                 .then(response => {
                       this.reservations= response.data; 
                 })
                
           },
-          getPastReservations: function(){
+          getPastQuickReservations: function(){
                 this.pastReservations=[]
-                axios.get("http://localhost:8081/reservationBoat/getPastReservations/"+this.email+"/")
+                axios.get("http://localhost:8081/quickReservationBoat/getPastQuickReservations/"+this.email+"/")
                 .then(response => {
                       this.pastReservations= response.data; 
                 })
@@ -384,27 +401,32 @@ export default ({
               this.priceInfo=ads.price
               this.captainInfo=ads.needsCaptainServices
               this.$refs.reservationInfo.open()
-         
+              
           },
           openCalendarOfBoat: function(){
               this.$router.push("/boatCalendar/"+this.email+"/"+this.boatInfo)
           },
           resetSearch: function(num){
               this.activePage=num
-              console.log("USAO U RESER  "+this.activePage)
+              this.searchReservated=1
+              console.log("USAO U RESER  "+this.activePage+" rezervisano"+this.searchReservated)
               this.searchBoatNameReservations=''
               this.searchClientReservations=''
-              this.getBoatReservations();
-              this.getPastReservations();
+              this.getBoatQuickReservations();
+              this.getPastQuickReservations();
           }
 
        },
-       computed: {
+        computed: {
         filteredRes: function () {
                if(this.activePage==1){
                 var temp = this.reservations.filter((res) => {
+                    let cl=1
+                    if(res.clientUsername=='' || res.clientUsername==null)
+                        cl=2
                     return res.boatDto.name.toUpperCase().match(this.searchBoatNameReservations) && 
-                        res.clientUsername.toUpperCase().match(this.searchClientReservations) ;
+                        res.clientUsername.toUpperCase().match(this.searchClientReservations) &&
+                        cl==this.searchReservated;
                 });
                }
 
@@ -414,15 +436,18 @@ export default ({
                
                if(this.activePage==2){
                 var temp = this.pastReservations.filter((res) => {
+                    let cl=1
+                    if(res.clientUsername=='' || res.clientUsername==null)
+                        cl=2
                     return res.boatDto.name.toUpperCase().match(this.searchBoatNameReservations) && 
-                        res.clientUsername.toUpperCase().match(this.searchClientReservations) ;
+                        res.clientUsername.toUpperCase().match(this.searchClientReservations)  &&
+                        cl==this.searchReservated;
                 });
                }
 
            return temp;
         },
   },
-       
     
 })
 </script>
