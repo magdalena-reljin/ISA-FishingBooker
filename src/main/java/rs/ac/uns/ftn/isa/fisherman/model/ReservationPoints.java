@@ -12,12 +12,22 @@ public class ReservationPoints {
     private Integer clientPoints;
     private Integer ownerPoints;
     private Integer appProfitPercentage;
+    private Integer cancelationFeePercentage;
 
-    public ReservationPoints(Long id, Integer clientPoints, Integer ownerPoints, Integer appProfitPercentage) {
+    public ReservationPoints(Long id, Integer clientPoints, Integer ownerPoints, Integer appProfitPercentage,Integer cancelationFeePercentage) {
         this.id = id;
         this.clientPoints = clientPoints;
         this.ownerPoints = ownerPoints;
         this.appProfitPercentage = appProfitPercentage;
+        this.cancelationFeePercentage = cancelationFeePercentage;
+    }
+
+    public Integer getCancelationFeePercentage() {
+        return cancelationFeePercentage;
+    }
+
+    public void setCancelationFeePercentage(Integer cancelationFeePercentage) {
+        this.cancelationFeePercentage = cancelationFeePercentage;
     }
 
     public Long getId() {
