@@ -6,17 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.Client;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
-import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
-
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
-
-
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +25,8 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     private ClientService clientService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private ReservationPaymentService reservationPaymentService;
 
     @Autowired
     private AvailableInstructorPeriodService availableInstructorPeriodService;
@@ -41,12 +35,17 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(adventureReservation,client)) return false;
         AdventureReservation successfullReservation=new AdventureReservation(adventureReservation.getId(),adventureReservation.getStartDate()
-        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
+        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),
+                adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getFishingInstructor());
+        successfullReservation.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getFishingInstructor());
         adventureReservationRepository.save(successfullReservation);
         if(adventureReservation.getAddedAdditionalServices()!=null){
             successfullReservation.setAddedAdditionalServices(adventureReservation.getAddedAdditionalServices());
             adventureReservationRepository.save(successfullReservation);
         }
+
         sendMailNotification(successfullReservation,client.getUsername());
         return true;
     }

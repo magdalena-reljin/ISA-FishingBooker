@@ -56,7 +56,9 @@ public class ReservationCabinController {
     @PostMapping("/ownerCreates")
     @PreAuthorize("hasRole('CABINOWNER')")
     public ResponseEntity<String> ownerCreates (@RequestBody CabinReservationDto cabinReservationDto) {
+        CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
         CabinReservation cabinReservation= cabinReservationMapper.cabinOwnerReservationDtoToCabinReservation(cabinReservationDto);
+        cabinReservation.getCabin().setCabinOwner(cabinOwner);
         if(reservationCabinService.ownerCreates(cabinReservation,cabinReservationDto.getClientUsername())) {
 
             return new ResponseEntity<>("Success.", HttpStatus.OK);

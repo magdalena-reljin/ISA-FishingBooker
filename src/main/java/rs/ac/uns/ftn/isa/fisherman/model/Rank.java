@@ -10,6 +10,7 @@ public class Rank {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rank_sequence_generator")
     @Column(name = "id", unique = true)
     protected Long id;
+    @Enumerated(EnumType.ORDINAL)
     private RankType rank;
     private Integer points;
     private Integer discountPercentage;

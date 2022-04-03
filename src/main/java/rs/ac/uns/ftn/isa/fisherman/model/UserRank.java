@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Embeddable
 public class UserRank {
+    @Enumerated(EnumType.ORDINAL)
     private RankType rankType;
     private Integer currentPoints;
 

@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.enums.RankType;
 import rs.ac.uns.ftn.isa.fisherman.model.Rank;
 import rs.ac.uns.ftn.isa.fisherman.repository.RankRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.RankService;
@@ -20,5 +21,15 @@ public class RankServiceImpl implements RankService {
     @Override
     public void update(Rank rank) {
         rankRepository.save(rank);
+    }
+
+    @Override
+    public Integer getPointsByRank(Integer rank) {
+        return  rankRepository.getPointsByRank(rank);
+    }
+
+    @Override
+    public Integer getDiscountByRank(Integer rank) {
+        return rankRepository.getDiscountByRank(rank);
     }
 }
