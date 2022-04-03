@@ -826,7 +826,11 @@ import axios from "axios";
                                 id: null,
                                 startDate: this.formatDate(this.startReservation),
                                 endDate: this.formatDate(this.endReservation),
-                                price: this.totalPrice,
+                                paymentInformationDto:{
+                                  totalPrice: this.totalPrice,
+                                  companysPart: 0,
+                                  ownersPart: 0
+                                },
                                 cabinDto: this.cabinDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client
@@ -877,7 +881,11 @@ import axios from "axios";
                                 id: null,
                                 startDate: this.formatDate(this.startQuickReservation),
                                 endDate: this.formatDate(this.endQuickReservation),
-                                price: this.totalPrice,
+                                paymentInformationDto:{
+                                  totalPrice: this.totalPrice,
+                                  companysPart: 0,
+                                  ownersPart: 0
+                                },
                                 discount: this.discount,
                                 cabinDto: this.cabinDto,
                                 addedAdditionalServices: this.additionalServicesToSend,

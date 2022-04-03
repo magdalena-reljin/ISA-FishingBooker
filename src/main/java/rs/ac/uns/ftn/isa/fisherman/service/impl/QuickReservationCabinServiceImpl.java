@@ -24,8 +24,7 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         if(!validateForReservation(quickReservationCabin)) return false;
 
         QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
-                quickReservationCabin.getEndDate(),quickReservationCabin.getPrice(),quickReservationCabin.getCabin(),null,quickReservationCabin.getDiscount());
-        successfullQuickReservation.setClient(null);
+                quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(),quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
         quickReservationCabinRepository.save(successfullQuickReservation);
         if(quickReservationCabin.getAddedAdditionalServices()!=null){
             successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());

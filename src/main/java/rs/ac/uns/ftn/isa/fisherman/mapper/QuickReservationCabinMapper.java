@@ -11,6 +11,7 @@ import java.util.Set;
 public class QuickReservationCabinMapper {
     private final CabinMapper cabinMapper=new CabinMapper();
     private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
+    private final PaymentInformationMapper paymentInformationMapper= new PaymentInformationMapper();
 
     public QuickReservationCabin dtoToQuickReservation(QuickReservationCabinDto quickReservationCabinDto) {
         Set<AdditionalServices> additionalServicesSet=new HashSet<>();
@@ -18,8 +19,9 @@ public class QuickReservationCabinMapper {
              additionalServicesSet=additionalServiceMapper.additionalServicesDtoToAdditionalServices(quickReservationCabinDto
                      .getAddedAdditionalServices());
         return new QuickReservationCabin(quickReservationCabinDto.getId(),quickReservationCabinDto.getStartDate(),
-                quickReservationCabinDto.getEndDate(),quickReservationCabinDto.getPrice(),cabinMapper.cabinDtoEditToCabin(quickReservationCabinDto.getCabinDto()),
-                additionalServicesSet,quickReservationCabinDto.getDiscount());
+                quickReservationCabinDto.getEndDate(),null,paymentInformationMapper
+                .dtoToPaymentInformation(quickReservationCabinDto.getPaymentInformationDto()),cabinMapper
+                .cabinDtoEditToCabin(quickReservationCabinDto.getCabinDto()),quickReservationCabinDto.getDiscount(),additionalServicesSet);
     }
     public QuickReservationCabinDto quickReservationToDto(QuickReservationCabin quickReservationCabin) {
         Set<AdditionalServicesDto> additionalServicesSet=new HashSet<>();
@@ -33,7 +35,8 @@ public class QuickReservationCabinMapper {
             clientFullName=quickReservationCabin.getClient().getName()+" "+quickReservationCabin.getClient().getLastName();
         }
         return new QuickReservationCabinDto(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
-                quickReservationCabin.getEndDate(),quickReservationCabin.getPrice(),clientUsername,clientFullName,
+                quickReservationCabin.getEndDate(),clientUsername,clientFullName,
+                paymentInformationMapper.paymentInformationToDto(quickReservationCabin.getPaymentInformation()),quickReservationCabin.isSuccessfull(),
                 cabinMapper.cabinToCabinDto(quickReservationCabin.getCabin()),
                 additionalServicesSet,quickReservationCabin.getDiscount());
     }

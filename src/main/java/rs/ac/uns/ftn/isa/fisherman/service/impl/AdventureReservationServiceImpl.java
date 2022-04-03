@@ -41,7 +41,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(adventureReservation,client)) return false;
         AdventureReservation successfullReservation=new AdventureReservation(adventureReservation.getId(),adventureReservation.getStartDate()
-        ,adventureReservation.getEndDate(),adventureReservation.getPrice(),client,adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
+        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
         adventureReservationRepository.save(successfullReservation);
         if(adventureReservation.getAddedAdditionalServices()!=null){
             successfullReservation.setAddedAdditionalServices(adventureReservation.getAddedAdditionalServices());

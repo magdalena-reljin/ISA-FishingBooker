@@ -688,7 +688,7 @@ export default {
         options: [ ], 
         additionalServicesToSend: [],
         newPrice: 0,
-        totalPrice: 0,
+        totalPrice: 0.0,
         cancelingCondition : '',
         maxPeople: 0,
         adServices: [],
@@ -867,7 +867,11 @@ export default {
                                 id: null,
                                 startDate: this.formatDate(this.startReservation),
                                 endDate: this.formatDate(this.endReservation),
-                                price: this.totalPrice,
+                                paymentInformationDto:{
+                                  totalPrice: this.totalPrice,
+                                  companysPart: 0,
+                                  ownersPart: 0
+                                },
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
@@ -908,7 +912,7 @@ export default {
 
                     if(this.startQuickReservation != null && this.startQuickReservation!=null){
                                  this.additionalServicesAdded()
-                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.newPrice)
+                                 this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.adventureDto[this.selected].price)
                                 axios
                                 .post(
                                 "http://localhost:8081/quickReservationAdventure/instructorCreates/",
@@ -916,7 +920,11 @@ export default {
                                 id: null,
                                 startDate: this.formatDate(this.startQuickReservation),
                                 endDate: this.formatDate(this.endQuickReservation),
-                                price: this.totalPrice,
+                                paymentInformationDto:{
+                                  totalPrice: this.totalPrice,
+                                  companysPart: 0,
+                                  ownersPart: 0
+                                },
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,

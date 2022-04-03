@@ -10,13 +10,14 @@ public class QuickReservationBoatDto extends ReservationDto {
     private boolean needsCaptainServices;
     private Integer discount;
 
-    public QuickReservationBoatDto(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, String clientUsername, String clientFullName, BoatDto boatDto, Set<AdditionalServicesDto> addedAdditionalServices, boolean needsCaptainServices, Integer discount) {
-        super(id, startDate, endDate, price, clientUsername, clientFullName);
+    public QuickReservationBoatDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull, BoatDto boatDto, Set<AdditionalServicesDto> addedAdditionalServices, boolean needsCaptainServices, Integer discount) {
+        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull);
         this.boatDto = boatDto;
         this.addedAdditionalServices = addedAdditionalServices;
         this.needsCaptainServices = needsCaptainServices;
         this.discount = discount;
     }
+
     public QuickReservationBoatDto(){}
 
     public BoatDto getBoatDto() {

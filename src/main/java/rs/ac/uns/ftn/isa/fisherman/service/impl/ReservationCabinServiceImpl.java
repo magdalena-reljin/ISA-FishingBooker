@@ -139,7 +139,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(cabinReservation,client)) return false;
         CabinReservation successfullReservation=new CabinReservation(cabinReservation.getId(),cabinReservation.getStartDate(),
-                    cabinReservation.getEndDate(),cabinReservation.getPrice(),client,cabinReservation.getCabin(),null);
+                    cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.getCabin(),null);
         cabinReservationRepository.save(successfullReservation);
         if(cabinReservation.getAddedAdditionalServices()!=null){
                 successfullReservation.setAddedAdditionalServices(cabinReservation.getAddedAdditionalServices());
