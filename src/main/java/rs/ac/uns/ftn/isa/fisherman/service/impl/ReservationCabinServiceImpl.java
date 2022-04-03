@@ -12,10 +12,8 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
-import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
+
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +27,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     @Autowired
     private ClientService clientService;
     @Autowired
+    private CabinOwnerService cabinOwnerService;
+    @Autowired
     private MailService<String> mailService;
     private CabinReservationMapper cabinReservationMapper = new CabinReservationMapper();
     AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
@@ -40,6 +40,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     private QuickReservationCabinService quickReservationCabinService;
     @Autowired
     private CabinReservationCancellationRepository cabinReservationCancellationRepository;
+    @Autowired
+    private ReservationPaymentService reservationPaymentService;
 
     @Override
     public Set<Cabin> getAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
@@ -86,9 +88,14 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public boolean makeReservation(CabinReservationDto cabinReservationDto) {
+        CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
         CabinReservation cabinReservation = cabinReservationMapper.cabinReservationDtoToCabinReservation(cabinReservationDto);
+        cabinReservation.getCabin().setCabinOwner(cabinOwner);
         cabinReservation.setClient(clientService.findByUsername(cabinReservationDto.getClientUsername()));
         if(periodStillAvailable(cabinReservation)&&(!cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabin().getId(), cabinReservation.getClient().getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate()))){
+            PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(cabinReservation,cabinReservation.getCabin().getCabinOwner());
+            cabinReservation.setPaymentInformation(paymentInformation);
+            reservationPaymentService.updateUserRankAfterReservation(cabinReservation.getClient(),cabinReservation.getCabin().getCabinOwner());
             cabinReservationRepository.save(cabinReservation);
             if(cabinReservationDto.getAddedAdditionalServices()!=null)
             {
@@ -140,6 +147,9 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         if(!validateForReservation(cabinReservation,client)) return false;
         CabinReservation successfullReservation=new CabinReservation(cabinReservation.getId(),cabinReservation.getStartDate(),
                     cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.getCabin(),null);
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getCabin().getCabinOwner());
+        successfullReservation.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getCabin().getCabinOwner());
         cabinReservationRepository.save(successfullReservation);
         if(cabinReservation.getAddedAdditionalServices()!=null){
                 successfullReservation.setAddedAdditionalServices(cabinReservation.getAddedAdditionalServices());

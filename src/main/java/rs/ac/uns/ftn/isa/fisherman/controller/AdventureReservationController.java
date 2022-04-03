@@ -1,14 +1,11 @@
 package rs.ac.uns.ftn.isa.fisherman.controller;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -26,7 +23,6 @@ public class AdventureReservationController {
  @Autowired
  private FishingInstructorService fishingInstructorService;
  private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
- private AdventureMapper adventureMapper = new AdventureMapper();
 
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")

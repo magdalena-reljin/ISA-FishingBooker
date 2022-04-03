@@ -171,4 +171,9 @@ public class UserServiceImpl implements UserService {
         return tokenUtils.getUsernameFromToken(s);
     }
 
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
 }

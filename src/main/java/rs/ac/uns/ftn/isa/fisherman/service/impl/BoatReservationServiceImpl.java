@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
+import rs.ac.uns.ftn.isa.fisherman.mapper.ReservationPaymentMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
+import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
+import rs.ac.uns.ftn.isa.fisherman.model.Reservation;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
-import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
@@ -29,9 +29,11 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     private AvailableBoatPeriodService availableBoatPeriodService;
     @Autowired
     private MailService<String> mailService;
-
+    @Autowired
+    private ReservationPaymentService reservationPaymentService;
     @Autowired
     private QuickReservationBoatService quickReservationBoatService;
+    private ReservationPaymentMapper reservationPaymentMapper;
 
     @Override
     public boolean ownerCreates(BoatReservation boatReservation, String clientUsername) {
@@ -40,7 +42,9 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         BoatReservation successfullReservation=new BoatReservation(boatReservation.getId(),boatReservation.getStartDate(),
                 boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
-
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
+        successfullReservation.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getBoat().getBoatOwner());
         if(boatReservation.getAddedAdditionalServices()!=null){
             if(boatReservation.getNeedsCaptainService()) {
                 if (ownerIsNotAvailable(successfullReservation.getBoat().getBoatOwner().getId(),
