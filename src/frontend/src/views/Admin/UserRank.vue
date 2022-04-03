@@ -94,6 +94,17 @@
                 </div>
                
             </div>
+
+               <div class="row" style="padding-left:1%; padding-right:1%; padding-bottom:1%">
+
+                <div  class="col-sm-8">
+                      <input  class="form-control" value="Cancelation fee percentage"  disabled>
+                </div>
+                <div class="col-sm-4">
+                    <input min=1 type="number" v-model="reservationPointsDto.cancelationFeePercentage" class="form-control" required>
+                </div>
+               
+            </div>
             <br>
               <div  class="col">   
                      <button  type="submit" class="btn btn-outline-dark">Save</button>
@@ -138,6 +149,7 @@ import axios from "axios";
             clientPoints: 0,
             ownerPoints: 0,
             appProfitPercentage: 0,
+            cancelationFeePercentage: 0
             }
        
        }
