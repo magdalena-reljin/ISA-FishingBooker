@@ -8,10 +8,11 @@ public class ReservationDto {
     protected Long id;
     protected LocalDateTime startDate;
     protected LocalDateTime endDate;
-    protected Double price;
     protected String clientUsername;
     protected String clientFullName;
     private boolean evaluated;
+    private PaymentInformationDto paymentInformationDto;
+    private boolean successfull;
 
     public boolean isEvaluated() {
         return evaluated;
@@ -21,13 +22,14 @@ public class ReservationDto {
         this.evaluated = evaluated;
     }
 
-    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, String clientUsername, String clientFullName) {
+    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.price = price;
         this.clientUsername = clientUsername;
         this.clientFullName = clientFullName;
+        this.paymentInformationDto = paymentInformationDto;
+        this.successfull = successfull;
     }
 
     public ReservationDto(){}
@@ -56,14 +58,6 @@ public class ReservationDto {
         this.endDate = endDate;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public String getClientUsername() {
         return clientUsername;
     }
@@ -78,5 +72,21 @@ public class ReservationDto {
 
     public void setClientFullName(String clientFullName) {
         this.clientFullName = clientFullName;
+    }
+
+    public PaymentInformationDto getPaymentInformationDto() {
+        return paymentInformationDto;
+    }
+
+    public void setPaymentInformationDto(PaymentInformationDto paymentInformationDto) {
+        this.paymentInformationDto = paymentInformationDto;
+    }
+
+    public boolean isSuccessfull() {
+        return successfull;
+    }
+
+    public void setSuccessfull(boolean successfull) {
+        this.successfull = successfull;
     }
 }

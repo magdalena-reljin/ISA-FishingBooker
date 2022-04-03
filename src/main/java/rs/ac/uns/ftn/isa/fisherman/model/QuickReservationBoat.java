@@ -21,14 +21,13 @@ public class QuickReservationBoat extends Reservation{
     protected boolean needsCaptainServices;
     public QuickReservationBoat(){}
 
-    public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Boat boat, Set<AdditionalServices> addedAdditionalServices,boolean needsCaptainServices,Integer discount) {
-        super(id, startDate, endDate, price);
+    public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, Boat boat, Integer discount, Set<AdditionalServices> addedAdditionalServices, boolean needsCaptainServices) {
+        super(id, startDate, endDate, client, paymentInformation);
         this.boat = boat;
+        this.discount = discount;
         this.addedAdditionalServices = addedAdditionalServices;
-        this.needsCaptainServices=needsCaptainServices;
-        this.discount=discount;
+        this.needsCaptainServices = needsCaptainServices;
     }
-
 
     public Integer getDiscount() {
         return discount;

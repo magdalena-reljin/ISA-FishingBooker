@@ -26,8 +26,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         if(!validateForReservation(quickReservationBoat)) return false;
 
         QuickReservationBoat successfullQuickReservation=new QuickReservationBoat(quickReservationBoat.getId(), quickReservationBoat.getStartDate(),
-                quickReservationBoat.getEndDate(), quickReservationBoat.getPrice(), quickReservationBoat.getBoat(),null, quickReservationBoat.getNeedsCaptainServices(),quickReservationBoat.getDiscount());
-        successfullQuickReservation.setClient(null);
+                quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(), quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
         if(quickReservationBoat.getAddedAdditionalServices()!=null){
             if(quickReservationBoat.getNeedsCaptainServices()) {
                 if (ownerIsNotAvailable(successfullQuickReservation.getBoat().getBoatOwner().getId(),

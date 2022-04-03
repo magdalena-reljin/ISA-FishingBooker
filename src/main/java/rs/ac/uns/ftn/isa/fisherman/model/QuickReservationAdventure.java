@@ -25,13 +25,14 @@ public class QuickReservationAdventure extends  Reservation {
 
     public QuickReservationAdventure() {}
 
-    public QuickReservationAdventure(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Adventure adventure, FishingInstructor fishingInstructor, Set<AdditionalServices> addedAdditionalServices ,Integer discount) {
-        super(id, startDate, endDate, price);
+    public QuickReservationAdventure(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, Adventure adventure, FishingInstructor fishingInstructor, Integer discount, Set<AdditionalServices> addedAdditionalServices) {
+        super(id, startDate, endDate, client, paymentInformation);
         this.adventure = adventure;
         this.fishingInstructor = fishingInstructor;
+        this.discount = discount;
         this.addedAdditionalServices = addedAdditionalServices;
-        this.discount =discount;
     }
+
     public Adventure getAdventure() {
         return adventure;
     }

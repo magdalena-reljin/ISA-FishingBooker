@@ -24,8 +24,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         if(!validateForReservation(quickReservationAdventure)) return false;
 
         QuickReservationAdventure successfullQuickReservation=new QuickReservationAdventure(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
-                quickReservationAdventure.getEndDate(),quickReservationAdventure.getPrice(),quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),null,quickReservationAdventure.getDiscount());
-        successfullQuickReservation.setClient(null);
+                quickReservationAdventure.getEndDate(),null,quickReservationAdventure.getPaymentInformation(),quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount(),null);
+
         quickReservationAdventureRepository.save(successfullQuickReservation);
         if(quickReservationAdventure.getAddedAdditionalServices()!=null){
             successfullQuickReservation.setAddedAdditionalServices(quickReservationAdventure.getAddedAdditionalServices());

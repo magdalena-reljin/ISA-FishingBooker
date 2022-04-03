@@ -914,7 +914,11 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 id: null,
                                 startDate: this.formatDate(this.startReservation),
                                 endDate: this.formatDate(this.endReservation),
-                                price: this.totalPrice,
+                                paymentInformationDto:{
+                                  totalPrice: this.totalPrice,
+                                  companysPart: 0,
+                                  ownersPart: 0
+                                },
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
@@ -965,7 +969,11 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                 id: null,
                                 startDate: this.formatDate(this.startQuickReservation),
                                 endDate: this.formatDate(this.endQuickReservation),
-                                price: this.totalPrice,
+                                paymentInformationDto:{
+                                  totalPrice: this.totalPrice,
+                                  companysPart: 0,
+                                  ownersPart: 0
+                                },
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,

@@ -38,7 +38,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(boatReservation,client)) return false;
         BoatReservation successfullReservation=new BoatReservation(boatReservation.getId(),boatReservation.getStartDate(),
-                boatReservation.getEndDate(),boatReservation.getPrice(),client,boatReservation.getBoat(),
+                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
 
         if(boatReservation.getAddedAdditionalServices()!=null){

@@ -6,10 +6,11 @@ import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 public class QuickReservationAdventureMapper {
     private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     private AdventureMapper adventureMapper = new AdventureMapper();
+    private PaymentInformationMapper paymentInformationMapper=new PaymentInformationMapper();
     public QuickReservationAdventure dtoToQuickReservationAdventure(QuickReservationAdventureDto quickReservationAdventureDto, FishingInstructor fishingInstructor){
-        return new QuickReservationAdventure(quickReservationAdventureDto.getId(),quickReservationAdventureDto.getStartDate(),quickReservationAdventureDto.getEndDate(),
-           quickReservationAdventureDto.getPrice(),adventureMapper.adventureDtoToAdventure(quickReservationAdventureDto.getAdventureDto()),
-                fishingInstructor,additionalServiceMapper.additionalServicesDtoToAdditionalServices(quickReservationAdventureDto.getAddedAdditionalServices()),quickReservationAdventureDto.getDiscount());
+        return new QuickReservationAdventure(quickReservationAdventureDto.getId(),quickReservationAdventureDto.getStartDate(),quickReservationAdventureDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(quickReservationAdventureDto.getPaymentInformationDto())
+        ,adventureMapper.adventureDtoToAdventure(quickReservationAdventureDto.getAdventureDto()),
+                fishingInstructor,quickReservationAdventureDto.getDiscount(),additionalServiceMapper.additionalServicesDtoToAdditionalServices(quickReservationAdventureDto.getAddedAdditionalServices()));
     }
     public QuickReservationAdventureDto quickAdventureReservationToQuickAdventureReservationDto(QuickReservationAdventure quickReservationAdventure) {
         String fullName="";
@@ -20,8 +21,9 @@ public class QuickReservationAdventureMapper {
         }
 
         return new QuickReservationAdventureDto(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
-                quickReservationAdventure.getEndDate(),quickReservationAdventure.getPrice(), clientUsername, fullName,adventureMapper.adventureToAdventureDto(
-                quickReservationAdventure.getAdventure()),additionalServiceMapper
+                quickReservationAdventure.getEndDate(), clientUsername, fullName,paymentInformationMapper
+                .paymentInformationToDto(quickReservationAdventure.getPaymentInformation()),quickReservationAdventure.isSuccessfull(),
+                adventureMapper.adventureToAdventureDto(quickReservationAdventure.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(quickReservationAdventure.getAddedAdditionalServices())
 ,quickReservationAdventure.getDiscount());
     }

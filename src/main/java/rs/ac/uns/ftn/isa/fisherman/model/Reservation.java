@@ -15,25 +15,28 @@ public class Reservation {
     private LocalDateTime startDate;
     @Column(name= "endDate")
     private LocalDateTime endDate;
-    @Column(name= "price", nullable = false)
-    private Double price;
+    @Embedded
+    private PaymentInformation paymentInformation;
     @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name="users_id")
     protected Client client;
+    @Column(name = "successfull")
+    private boolean successfull;
 
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price, Client client) {
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client,PaymentInformation paymentInformation) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.price = price;
         this.client = client;
+        this.successfull=true;
+        this.paymentInformation=paymentInformation;
     }
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Double price) {
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.price = price;
         this.client = new Client();
+        this.successfull=true;
     }
 
     public Reservation(){}
@@ -62,12 +65,12 @@ public class Reservation {
         this.endDate = endDate;
     }
 
-    public Double getPrice() {
-        return price;
+    public PaymentInformation getPaymentInformation() {
+        return paymentInformation;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setPaymentInformation(PaymentInformation paymentInformation) {
+        this.paymentInformation = paymentInformation;
     }
 
     public Client getClient() {
@@ -76,5 +79,13 @@ public class Reservation {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public boolean isSuccessfull() {
+        return successfull;
+    }
+
+    public void setSuccessfull(boolean successfull) {
+        this.successfull = successfull;
     }
 }

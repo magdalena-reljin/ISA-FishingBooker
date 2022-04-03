@@ -606,7 +606,11 @@ export default {
             id: null,
             startDate: this.formatDate(this.start),
             endDate: this.formatDate(this.end),
-            price: this.totalPrice,
+            paymentInformationDto:{
+              totalPrice: this.totalPrice,
+              companysPart: 0,
+              ownersPart: 0
+             },
             cabinDto: this.cabinDto,
             addedAdditionalServices: this.addedAdditionalServices,
             clientUsername: this.email,
