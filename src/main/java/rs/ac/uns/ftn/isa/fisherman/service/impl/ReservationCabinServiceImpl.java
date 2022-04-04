@@ -146,7 +146,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(cabinReservation,client)) return false;
         CabinReservation successfullReservation=new CabinReservation(cabinReservation.getId(),cabinReservation.getStartDate(),
-                    cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.getCabin(),null);
+                    cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.getOwnersReport(),cabinReservation.getCabin(),null);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getCabin().getCabinOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getCabin().getCabinOwner());
@@ -212,5 +212,14 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     @Override
     public Set<CabinReservation> getPastReservations(Long id) {
         return cabinReservationRepository.getPastReservations(id,LocalDateTime.now());
+    }
+
+    @Override
+    public void ownerCreatesReview(CabinReservation reservation, boolean isSuccessFull) {
+        CabinReservation cabinReservation=cabinReservationRepository.getById(reservation.getId());
+        cabinReservation.setSuccessfull(isSuccessFull);
+        cabinReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+        cabinReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        cabinReservationRepository.save(cabinReservation);
     }
 }

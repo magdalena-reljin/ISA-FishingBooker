@@ -126,4 +126,11 @@ public class ReservationCabinController {
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
     }
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('CABINOWNER')")
+    public ResponseEntity<String> writeAReview (@RequestBody CabinReservationDto cabinReservationDto) {
+        CabinReservation reservation=cabinReservationMapper.cabinOwnerReservationDtoToCabinReservation(cabinReservationDto);
+        reservationCabinService.ownerCreatesReview(reservation,cabinReservationDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
 }

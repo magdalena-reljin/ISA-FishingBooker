@@ -17,4 +17,6 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> findReservationsByOwnerId(Long id);
 
     Set<QuickReservationCabin> getPastReservations(Long id);
+
+    void ownerCreatesReview(QuickReservationCabin reservation, boolean successfull);
 }

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
-import rs.ac.uns.ftn.isa.fisherman.mapper.ReservationPaymentMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
@@ -32,14 +31,14 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     private ReservationPaymentService reservationPaymentService;
     @Autowired
     private QuickReservationBoatService quickReservationBoatService;
-    private ReservationPaymentMapper reservationPaymentMapper;
 
     @Override
     public boolean ownerCreates(BoatReservation boatReservation, String clientUsername) {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(boatReservation,client)) return false;
         BoatReservation successfullReservation=new BoatReservation(boatReservation.getId(),boatReservation.getStartDate(),
-                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.getBoat(),
+                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),
+                boatReservation.getOwnersReport(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
         successfullReservation.setPaymentInformation(paymentInformation);

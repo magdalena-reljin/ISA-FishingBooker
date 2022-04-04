@@ -64,13 +64,8 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
     @Override
     public void resetLoyaltyStatusAfterCancellation(Client client, User user) {
         ReservationPoints points = reservationPointsService.get();
-        Integer clientPoints= 0;
-        Integer userPoints =0;
-        if(clientPoints > 0)
-            clientPoints=client.getUserRank().getCurrentPoints()-points.getClientPoints();
-
-        if(userPoints>0)
-            userPoints = user.getUserRank().getCurrentPoints()-points.getOwnerPoints();
+        Integer clientPoints=client.getUserRank().getCurrentPoints()-points.getClientPoints();
+        Integer userPoints = user.getUserRank().getCurrentPoints()-points.getOwnerPoints();
         
         client.getUserRank().setCurrentPoints(clientPoints);
         user.getUserRank().setCurrentPoints(userPoints);
