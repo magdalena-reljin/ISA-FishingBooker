@@ -181,7 +181,8 @@ import axios from "axios";
                             this.$router.push('/boatOwnerHome/'+this.email); 
                         else if(this.role == 'fishingInstructor')
                             this.$router.push('/fishingInstructorHome/'+this.email); 
-                        
+                        else if (this.role == 'client')
+                            this.$router.push('/clientHome/'+this.email); 
                         return response;
                    })
 
