@@ -24,9 +24,11 @@
 		<sonar.organization>dajana11-99</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io/</sonar.host.url>
 		<email.version>1.16.18</email.version>
-		<sonar.coverage.exclusions>
-			src/main/java/rs/ac/uns/ftn/isa/fisherman/dto/**
-		</sonar.coverage.exclusions>
+
+		<sonar.cpd.exclusions>
+			src/main/java/rs/ac/uns/ftn/isa/fisherman/dto/*
+		</sonar.cpd.exclusions>
+
 	</properties>
 
 	<dependencies>
