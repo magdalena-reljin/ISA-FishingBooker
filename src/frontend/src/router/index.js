@@ -43,7 +43,7 @@ import ReservationsCabinOwner from '../views/CabinOwner/ReservationsCabinOwner'
 import QuickReservationsCabin from '../views/CabinOwner/QuickReservationsCabin'
 import QuickReservationAdventure from '../views/FishingInstructor/QuickReservationsAdventure'
 import ReservationAdventure from '../views/FishingInstructor/AdventureReservations'
-
+import ClientComplaintForm from '../views/Client/ClientComplaintForm'
 import UserRank from '../views/Admin/UserRank'
 
 const routes = [
@@ -297,6 +297,12 @@ const routes = [
     path: '/evaluation/:email/:entity/:reservationId',
     name: 'ClientEvaluationForm',
     component: ClientEvaluationForm,
+    props: true
+  },
+  {
+    path: '/complaint/:email/:entity/:reservationId',
+    name: 'ClientComplaintForm',
+    component: ClientComplaintForm,
     props: true
   },
   {

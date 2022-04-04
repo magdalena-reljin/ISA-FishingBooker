@@ -3,6 +3,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -41,4 +42,9 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="SELECT * FROM cabin_reservation res join cabin b on res.cabin_id=b.id  where b.users_id=:users_id and (:currentDate > end_date) ",nativeQuery = true)
     Set<CabinReservation> getPastReservations(@Param("users_id")Long boatId, @Param("currentDate")LocalDateTime currentDate);
 
+    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id=:cabin_id and users_id=:users_id",nativeQuery = true)
+    boolean clientHasReservationInCabin(@Param("cabin_id")Long cabinId,@Param("users_id")Long usersId);
+
+    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id in :owners_cabins and users_id=:users_id",nativeQuery = true)
+    boolean clientHasReservationInOwnersCabin(@Param("owners_cabins")Set<Integer> owners_cabins, @Param("users_id")Long usersId);
 }

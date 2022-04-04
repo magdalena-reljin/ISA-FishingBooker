@@ -23,4 +23,6 @@ public interface ReservationCabinService {
 
     Set< CabinReservation> findReservationsByOwnerId(Long id);
     Set<CabinReservation> getPastReservations(Long id);
+
+    CabinReservation getById(Long id);
 }
