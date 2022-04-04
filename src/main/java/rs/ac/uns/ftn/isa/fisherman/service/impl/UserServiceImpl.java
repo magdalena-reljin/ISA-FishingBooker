@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,8 +90,32 @@ public class UserServiceImpl implements UserService {
         List<Authority> auth = authorityService.findByname(client.getRoleApp());
         client.setAuthorities(auth);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client.setActivationURL(getRandomString());
         client=userRepository.save(client);
+        try{
+           sendActivationLink(client.getUsername(), client.getActivationURL());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
         return client;
+    }
+
+    private String getRandomString() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 15;
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+
+    private void sendActivationLink(String recipient, String activationCode) throws MessagingException {
+
+        mailService.sendMail(recipient, "http://localhost:8080/accountActivation/" + activationCode + "/" + recipient,new ActivationLink());
     }
 
     public User activateAccount(String email, String code) {

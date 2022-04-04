@@ -45,6 +45,8 @@ import QuickReservationAdventure from '../views/FishingInstructor/QuickReservati
 import ReservationAdventure from '../views/FishingInstructor/AdventureReservations'
 import ClientComplaintForm from '../views/Client/ClientComplaintForm'
 import UserRank from '../views/Admin/UserRank'
+import ClientActivation from '../views/Client/ClientActivation'
+import ClientAccountAlert from '../views/Client/ClientAccountAlert'
 
 const routes = [
   
@@ -69,9 +71,19 @@ const routes = [
     component: AccountAlert
   },
   {
+    path: '/clientAccountAlert/:email',
+    name: 'ClientAccountAlert',
+    component: ClientAccountAlert
+  },
+  {
     path: '/activation/:activationCode/:email',
     name: 'Activation',
     component: Activation
+  },
+  {
+    path: '/accountActivation/:activationCode/:email',
+    name: 'accountActivation',
+    component: ClientActivation
   },
   {
    

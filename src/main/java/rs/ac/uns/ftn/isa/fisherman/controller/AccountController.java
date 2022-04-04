@@ -49,6 +49,15 @@ public class AccountController {
         }
         return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/activateClientAccount")
+    public ResponseEntity<String> activateClientAccount(@RequestBody VerificationDTO verificationDTO) {
+        if(this.userService.activateAccount(verificationDTO.getEmail(), verificationDTO.getActivationCode()) != null){
+            return new ResponseEntity<>("Successfully activated account!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Bad request!", HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping("/passwordStatus")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> hasAlreadyResetPassword(@RequestBody UserRequestDTO userRequest) {
