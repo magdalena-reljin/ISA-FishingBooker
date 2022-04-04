@@ -25,7 +25,7 @@
 		<sonar.host.url>https://sonarcloud.io/</sonar.host.url>
 		<email.version>1.16.18</email.version>
 		<sonar.coverage.exclusions>
-			**/*Dto.java
+			**/dto/**
 		</sonar.coverage.exclusions>
 	</properties>
 
