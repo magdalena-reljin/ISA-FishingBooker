@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.mapper.*;
@@ -119,6 +120,14 @@ public class AuthenticationController {
         }
         this.userService.registerClient(clientMapper.userRequestDtoToClient(userRequest));
         return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/clientAccountActivation")
+    public ResponseEntity<String> activateClientAccount(@RequestBody VerificationDTO verificationDTO) {
+        if(this.userService.activateAccount(verificationDTO.getEmail(), verificationDTO.getActivationCode()) != null){
+            return new ResponseEntity<>("Successfully activated account!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Bad request!", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/changePassword")
