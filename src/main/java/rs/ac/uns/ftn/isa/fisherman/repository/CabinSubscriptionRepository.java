@@ -16,4 +16,7 @@ public interface CabinSubscriptionRepository extends JpaRepository<CabinSubscrip
 
     @Query(value="SELECT * FROM cabin_subscription where users_id=:users_id and cabin_id=:cabin_id",nativeQuery = true)
     CabinSubscription getSubscriptionOnCabin(@Param("cabin_id")Long cabinId,@Param("users_id")Long usersId);
+
+    @Query(value="SELECT u.username FROM cabin_subscription c join users u on c.users_id=u.id where cabin_id=:cabin_id",nativeQuery = true)
+    Set<String> findCabinSubscribers(@Param("cabin_id")Long cabinId);
 }
