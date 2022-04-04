@@ -216,12 +216,12 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public void ownerCreatesReview(CabinReservation reservation, boolean isSuccessFull) {
-        CabinReservation cabinReservation=cabinReservationRepository.getById(reservation.getId());
+        CabinReservation cabinReservation = cabinReservationRepository.getById(reservation.getId());
         cabinReservation.setSuccessfull(isSuccessFull);
         cabinReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
         cabinReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
         cabinReservationRepository.save(cabinReservation);
-
+    }
     public CabinReservation getById(Long id) {
         return cabinReservationRepository.getById(id);
     }

@@ -55,7 +55,7 @@
     <button @click="resetSearch(1)" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><b>Current/Upcoming</b></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button @click="resetSearch(1)" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><b>Past</b></button>
+    <button @click="resetSearch(2)" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><b>Past</b></button>
   </li>
   </ul>
 <div class="tab-content" id="myTabContent">
@@ -98,7 +98,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(ads1,index) in filteredRes" :key="index">
+                            <tr v-for="(ads1,index) in filteredPastRes" :key="index">
                             <th scope="row">{{index+1}}</th>
                             <td>{{ads1.cabinDto.name}}</td>
                             <td>{{setandFormatDate(ads1.startDate)}}</td>
