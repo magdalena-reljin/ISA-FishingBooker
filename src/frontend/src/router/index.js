@@ -285,37 +285,85 @@ const routes = [
   {
     path: '/reservation/:email',
     name: 'ClientReservationForm',
-    component: ClientReservationForm
+    component: ClientReservationForm,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
   },
   {
     path: '/availableCabins/:email',
     name: 'ClientCabins',
     component: ClientCabins,
-    props: true
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
   },
   {
     path: '/reservations/:email',
     name: 'ClientReservations',
     component: ClientReservations,
-    props: true
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
   },
   {
     path: '/cabin/:email/:cabinName',
     name: 'Cabin',
     component: ClientCabinProfile,
-    props: true
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
   },
   {
     path: '/evaluation/:email/:entity/:reservationId',
     name: 'ClientEvaluationForm',
     component: ClientEvaluationForm,
-    props: true
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
   },
   {
     path: '/complaint/:email/:entity/:reservationId',
     name: 'ClientComplaintForm',
     component: ClientComplaintForm,
-    props: true
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
   },
   {
     path: '/editProfile/:role/:email',

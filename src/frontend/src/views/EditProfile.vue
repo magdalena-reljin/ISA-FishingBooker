@@ -150,8 +150,6 @@ import axios from "axios";
      methods: {
        
        loadData: function(){
-           console.log(this.role);
-           console.log(this.email);
            this.userRequestDto.username=this.email
                  axios.post("http://localhost:8081/auth/findByEmail/",this.userRequestDto)
                  .then(response => {
