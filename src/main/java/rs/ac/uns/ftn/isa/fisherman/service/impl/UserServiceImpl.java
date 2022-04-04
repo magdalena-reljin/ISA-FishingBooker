@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Client registerClient(Client client){
         List<Authority> auth = authorityService.findByname(client.getRoleApp());
+        client.setActivationURL(getRandomString());
         client.setAuthorities(auth);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
         client.setActivationURL(getRandomString());

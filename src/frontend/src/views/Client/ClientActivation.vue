@@ -47,7 +47,7 @@ export default {
     this.activationDTO.email = this.$route.params.email;
     axios
       .post(
-        "http://localhost:8081/account/activateClientAccount",
+        "http://localhost:8081/auth/clientAccountActivation",
         this.activationDTO
       )
       .then((response) => {
@@ -60,7 +60,6 @@ export default {
         });
       })
       .catch(() => {
-        this.loader.hide();
         this.$swal.fire({
           icon: "error",
           title: "Something went wrong!",
