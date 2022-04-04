@@ -7,10 +7,10 @@ import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import java.util.List;
 
 public interface BoatOwnerRepository extends JpaRepository<BoatOwner,Integer> {
-    @Query(value="SELECT * FROM users where role='BOAT OWNER' and enabled=false",nativeQuery = true)
+    @Query(value="SELECT * FROM users where role='BOATOWNER' and enabled=false",nativeQuery = true)
     List<BoatOwner> getNewBoatOwners();
 
-    @Query(value="SELECT * FROM users where role='BOAT OWNER' and enabled=true",nativeQuery = true)
+    @Query(value="SELECT * FROM users where role='BOATOWNER' and enabled=true",nativeQuery = true)
     List<BoatOwner> getActiveBoatOwners();
 
     @Query(value="SELECT * FROM users where username=:username",nativeQuery = true)

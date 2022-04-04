@@ -11,7 +11,9 @@ public interface QuickReservationAdventureService {
    Set<QuickReservationAdventure> getByInstructorId(Long id) ;
 
     boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate);
-    public boolean futureQuickReservationsExist(LocalDateTime currentDate,Long id);
+    boolean futureQuickReservationsExist(LocalDateTime currentDate,Long id);
 
     Set<QuickReservationAdventure> getPastReservations(Long instructorId);
+
+    void ownerCreatesReview(QuickReservationAdventure reservation, boolean successfull);
 }

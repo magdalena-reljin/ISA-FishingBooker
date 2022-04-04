@@ -5,9 +5,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationCabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
@@ -60,6 +62,13 @@ public class QuickReservationCabinController {
             cabinReservationDtos.add(quickReservationCabinMapper.quickReservationToDto(quickReservationCabin));
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
+    }
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('CABINOWNER')")
+    public ResponseEntity<String> writeAReview (@RequestBody QuickReservationCabinDto quickReservationCabinDto) {
+        QuickReservationCabin reservation=quickReservationCabinMapper.dtoToQuickReservation(quickReservationCabinDto);
+        quickReservationCabinService.ownerCreatesReview(reservation,quickReservationCabinDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 
 }

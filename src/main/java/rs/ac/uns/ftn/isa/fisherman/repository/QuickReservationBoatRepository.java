@@ -26,4 +26,6 @@ public interface QuickReservationBoatRepository extends JpaRepository<QuickReser
     @Query(value="SELECT * FROM quick_reservation_boat res join boat b on res.boat_id=b.id where b.users_id=:users_id and (:currentDate > end_date) ",nativeQuery = true)
     Set<QuickReservationBoat> getPastReservations(@Param("users_id")Long id, @Param("currentDate")LocalDateTime currentDate);
 
+    @Query(value="SELECT * FROM quick_reservation_boat where id=:id",nativeQuery = true)
+    QuickReservationBoat getById(@Param("id")Long id);
 }

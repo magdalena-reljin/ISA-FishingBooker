@@ -22,21 +22,32 @@ public class Reservation {
     protected Client client;
     @Column(name = "successfull")
     private boolean successfull;
-
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client,PaymentInformation paymentInformation) {
+    @Embedded
+    private OwnersReport ownersReport;
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,OwnersReport ownersReport) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.client = client;
         this.successfull=true;
         this.paymentInformation=paymentInformation;
+        this.ownersReport=ownersReport;
     }
+
     public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.client = new Client();
         this.successfull=true;
+    }
+
+    public OwnersReport getOwnersReport() {
+        return ownersReport;
+    }
+
+    public void setOwnersReport(OwnersReport ownersReport) {
+        this.ownersReport = ownersReport;
     }
 
     public Reservation(){}
@@ -88,4 +99,5 @@ public class Reservation {
     public void setSuccessfull(boolean successfull) {
         this.successfull = successfull;
     }
+
 }

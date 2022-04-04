@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
@@ -25,7 +26,8 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         if(!validateForReservation(quickReservationBoat)) return false;
 
         QuickReservationBoat successfullQuickReservation=new QuickReservationBoat(quickReservationBoat.getId(), quickReservationBoat.getStartDate(),
-                quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(), quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
+                quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(),
+                quickReservationBoat.getOwnersReport(),quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
         if(quickReservationBoat.getAddedAdditionalServices()!=null){
             if(quickReservationBoat.getNeedsCaptainServices()) {
                 if (ownerIsNotAvailable(successfullQuickReservation.getBoat().getBoatOwner().getId(),
@@ -89,5 +91,14 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     public Set<QuickReservationBoat> getPastReservations(Long id) {
         LocalDateTime currentDate=LocalDateTime.now();
         return quickReservationBoatRepository.getPastReservations(id, currentDate);
+    }
+
+    @Override
+    public void ownerCreatesReview(QuickReservationBoat reservation, boolean successfull) {
+        QuickReservationBoat quickReservationBoat=quickReservationBoatRepository.getById(reservation.getId());
+        quickReservationBoat.setSuccessfull(successfull);
+        quickReservationBoat.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+        quickReservationBoat.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        quickReservationBoatRepository.save(quickReservationBoat);
     }
 }

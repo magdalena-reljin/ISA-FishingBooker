@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationAdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -53,6 +54,15 @@ public class QuickReservationAdventureController {
             reservationDtos.add(quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
         }
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    public ResponseEntity<String> writeAReview (@RequestBody QuickReservationAdventureDto quickReservationAdventureDto) {
+        FishingInstructor fishingInstructor = fishingInstructorService.findByUsername(quickReservationAdventureDto.getAdventureDto().getFishingInstructorUsername());
+        QuickReservationAdventure reservation = quickReservationAdventureMapper.dtoToQuickReservationAdventure(quickReservationAdventureDto,fishingInstructor);
+        quickReservationAdventureService.ownerCreatesReview(reservation, quickReservationAdventureDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 
 }

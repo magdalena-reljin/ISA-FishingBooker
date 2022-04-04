@@ -126,9 +126,17 @@ public class ReservationCabinController {
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
     }
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('CABINOWNER')")
+    public ResponseEntity<String> writeAReview (@RequestBody CabinReservationDto cabinReservationDto) {
+        CabinReservation reservation = cabinReservationMapper.cabinOwnerReservationDtoToCabinReservation(cabinReservationDto);
+        reservationCabinService.ownerCreatesReview(reservation, cabinReservationDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
 
-    @GetMapping(value= "/getById/{id}")
-    public ResponseEntity<CabinReservationDto> getById(@PathVariable ("id") Long id) {
-        return new ResponseEntity<>(cabinReservationMapper.cabinReservationToCabinReservationDto(reservationCabinService.getById(id)),HttpStatus.OK);
     }
+
+        @GetMapping(value= "/getById/{id}")
+        public ResponseEntity<CabinReservationDto> getById(@PathVariable ("id") Long id) {
+            return new ResponseEntity<>(cabinReservationMapper.cabinReservationToCabinReservationDto(reservationCabinService.getById(id)),HttpStatus.OK);
+        }
 }

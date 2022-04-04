@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.mail.AdventureReservationSuccessfullInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -35,7 +36,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(adventureReservation,client)) return false;
         AdventureReservation successfullReservation=new AdventureReservation(adventureReservation.getId(),adventureReservation.getStartDate()
-        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),
+        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.getOwnersReport(),
                 adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getFishingInstructor());
         successfullReservation.setPaymentInformation(paymentInformation);
@@ -73,6 +74,15 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return adventureReservationRepository.getPastReservations(id,currentDate);
     }
 
+    @Override
+    public void ownerCreatesReview(AdventureReservation reservation, boolean successfull) {
+        AdventureReservation adventureReservation = adventureReservationRepository.getById(reservation.getId());
+        adventureReservation.setSuccessfull(successfull);
+        adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+        adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        adventureReservationRepository.save(adventureReservation);
+    }
+
     private boolean validateForReservation(AdventureReservation adventureReservation, Client client){
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;
@@ -94,7 +104,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
             String message = adventureReservation.getAdventure().getName() + " is booked from " + adventureReservation.getStartDate().format(formatter) + " to " + adventureReservation.getEndDate().format(formatter) + " .";
-            mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
+            mailService.sendMail(email, message, new AdventureReservationSuccessfullInfo());
         } catch (MessagingException e) {
             logger.error(e.toString());
         }

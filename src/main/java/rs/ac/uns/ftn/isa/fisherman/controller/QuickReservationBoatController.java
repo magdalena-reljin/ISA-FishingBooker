@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationBoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -65,5 +66,12 @@ public class QuickReservationBoatController {
             boatReservationDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
+    }
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<String> writeAReview (@RequestBody QuickReservationBoatDto quickReservationBoatDto) {
+        QuickReservationBoat quickReservationBoat=quickReservationBoatMapper.dtoToBoatQuickReservation(quickReservationBoatDto);
+        quickReservationBoatService.ownerCreatesReview(quickReservationBoat,quickReservationBoatDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 }

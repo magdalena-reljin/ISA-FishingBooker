@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
@@ -56,5 +57,14 @@ public class AdventureReservationController {
             reservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
         }
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    public ResponseEntity<String> writeAReview (@RequestBody AdventureReservationDto adventureReservationDto) {
+        FishingInstructor fishingInstructor = fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
+        AdventureReservation reservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
+        adventureReservationService.ownerCreatesReview(reservation, adventureReservationDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 }

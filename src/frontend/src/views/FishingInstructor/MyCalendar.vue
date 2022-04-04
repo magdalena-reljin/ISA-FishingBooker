@@ -872,6 +872,10 @@ export default {
                                   companysPart: 0,
                                   ownersPart: 0
                                 },
+                                 ownersReportDto: {
+                                    badComment: false,
+                                    comment: ''
+                                  },
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
@@ -925,6 +929,10 @@ export default {
                                   companysPart: 0,
                                   ownersPart: 0
                                 },
+                                ownersReportDto: {
+                                      badComment: false,
+                                      comment: ''
+                                    },
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,

@@ -15,4 +15,6 @@ public interface QuickReservationBoatService {
     boolean futureQuickReservationsExist(LocalDateTime currentDate,Long boatId);
 
     Set<QuickReservationBoat> getPastReservations(Long id);
+
+    void ownerCreatesReview(QuickReservationBoat quickReservationBoat, boolean successfull);
 }

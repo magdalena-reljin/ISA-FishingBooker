@@ -8,11 +8,12 @@ public class BoatReservationMapper {
     private  BoatMapper boatMapper=new BoatMapper();
     private AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
     private PaymentInformationMapper paymentInformationMapper=new PaymentInformationMapper();
-
+    private OwnersReportMapper ownersReportMapper = new OwnersReportMapper();
     public BoatReservation boatReservationOwnerDtoToBoatReservation(BoatReservationDto boatReservationDto){
         Boat boat=boatMapper.boatDtoToBoat(boatReservationDto.getBoatDto());
         return new BoatReservation(boatReservationDto.getId(),boatReservationDto.getStartDate(),
-                boatReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(boatReservationDto.getPaymentInformationDto()),boat,
+                boatReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(boatReservationDto.getPaymentInformationDto()),
+                ownersReportMapper.dtoToOwnersReport(boatReservationDto.getOwnersReportDto()),boat,
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatReservationDto.getAddedAdditionalServices()),
                 boatReservationDto.getNeedsCaptainServices());
     }
@@ -20,7 +21,9 @@ public class BoatReservationMapper {
         String fullName=boatReservation.getClient().getName()+" "+boatReservation.getClient().getLastName();
         return new BoatReservationDto(boatReservation.getId(),boatReservation.getStartDate(),
                 boatReservation.getEndDate(),boatReservation.getClient().getUsername(),
-                fullName,paymentInformationMapper.paymentInformationToDto(boatReservation.getPaymentInformation()),boatReservation.isSuccessfull(),boatMapper.boatToBoatDto(boatReservation.getBoat()),
+                fullName,paymentInformationMapper.paymentInformationToDto(boatReservation.getPaymentInformation()),boatReservation.isSuccessfull(),
+                ownersReportMapper.ownersReportToDto(boatReservation.getOwnersReport()),
+                boatMapper.boatToBoatDto(boatReservation.getBoat()),
                 additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(boatReservation.getAddedAdditionalServices()),
                 boatReservation.getNeedsCaptainService());
     }

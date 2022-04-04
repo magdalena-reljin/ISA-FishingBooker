@@ -8,8 +8,8 @@ public class CabinReservationDto extends ReservationDto{
     private CabinDto cabinDto;
     private Set<AdditionalServicesDto> addedAdditionalServices;
 
-    public CabinReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull, CabinDto cabinDto, Set<AdditionalServicesDto> addedAdditionalServices) {
-        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull);
+    public CabinReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,OwnersReportDto ownersReportDto,CabinDto cabinDto, Set<AdditionalServicesDto> addedAdditionalServices) {
+        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull,ownersReportDto);
         this.cabinDto = cabinDto;
         this.addedAdditionalServices = addedAdditionalServices;
     }

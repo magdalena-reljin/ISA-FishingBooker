@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
@@ -24,7 +25,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         if(!validateForReservation(quickReservationAdventure)) return false;
 
         QuickReservationAdventure successfullQuickReservation=new QuickReservationAdventure(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
-                quickReservationAdventure.getEndDate(),null,quickReservationAdventure.getPaymentInformation(),quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount(),null);
+                quickReservationAdventure.getEndDate(),null,quickReservationAdventure.getPaymentInformation(),
+                quickReservationAdventure.getOwnersReport(),quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount(),null);
 
         quickReservationAdventureRepository.save(successfullQuickReservation);
         if(quickReservationAdventure.getAddedAdditionalServices()!=null){
@@ -55,6 +57,15 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {
 
         return quickReservationAdventureRepository.getPastReservations(instructorId,LocalDateTime.now());
+    }
+
+    @Override
+    public void ownerCreatesReview(QuickReservationAdventure reservation, boolean successfull) {
+        QuickReservationAdventure adventureReservation = quickReservationAdventureRepository.getById(reservation.getId());
+        adventureReservation.setSuccessfull(successfull);
+        adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+        adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        quickReservationAdventureRepository.save(adventureReservation);
     }
 
     private boolean validateForReservation(QuickReservationAdventure quickReservationAdventure){

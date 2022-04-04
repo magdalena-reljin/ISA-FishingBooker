@@ -8,10 +8,10 @@ import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import java.util.List;
 
 public interface CabinOwnerRepository extends JpaRepository<CabinOwner,Integer> {
-    @Query(value="SELECT * FROM users where role='CABIN OWNER' and enabled=false",nativeQuery = true)
+    @Query(value="SELECT * FROM users where role='CABINOWNER' and enabled=false",nativeQuery = true)
     List<CabinOwner> getNewCabinOwners();
 
-    @Query(value="SELECT * FROM users where role='CABIN OWNER' and enabled=true",nativeQuery = true)
+    @Query(value="SELECT * FROM users where role='CABINOWNER' and enabled=true",nativeQuery = true)
     List<CabinOwner> getActiveCabinOwners();
 
     @Query(value="SELECT * FROM users where username=:username",nativeQuery = true)

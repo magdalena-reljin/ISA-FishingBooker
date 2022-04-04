@@ -3,10 +3,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfullInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
-import rs.ac.uns.ftn.isa.fisherman.mapper.ReservationPaymentMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
@@ -32,14 +33,14 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     private ReservationPaymentService reservationPaymentService;
     @Autowired
     private QuickReservationBoatService quickReservationBoatService;
-    private ReservationPaymentMapper reservationPaymentMapper;
 
     @Override
     public boolean ownerCreates(BoatReservation boatReservation, String clientUsername) {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(boatReservation,client)) return false;
         BoatReservation successfullReservation=new BoatReservation(boatReservation.getId(),boatReservation.getStartDate(),
-                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.getBoat(),
+                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),
+                boatReservation.getOwnersReport(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
@@ -110,11 +111,20 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return boatReservationRepository.getPastReservations(id,LocalDateTime.now());
     }
 
+    @Override
+    public void ownerCreatesReview(BoatReservation boatReservation, boolean successfull) {
+        BoatReservation oldReservation = boatReservationRepository.getById(boatReservation.getId());
+        oldReservation.setSuccessfull(successfull);
+        oldReservation.getOwnersReport().setComment(boatReservation.getOwnersReport().getComment());
+        oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
+        boatReservationRepository.save(oldReservation);
+    }
+
     private void sendMailNotification(BoatReservation boatReservation,String email){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
             String message = boatReservation.getBoat().getName() + " is booked from " + boatReservation.getStartDate().format(formatter) + " to " + boatReservation.getEndDate().format(formatter) + " .";
-            mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
+            mailService.sendMail(email, message, new BoatReservationSuccessfullInfo());
         } catch (MessagingException e) {
             logger.error(e.toString());
         }

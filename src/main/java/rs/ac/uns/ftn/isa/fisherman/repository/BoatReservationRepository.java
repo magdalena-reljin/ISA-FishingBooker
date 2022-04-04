@@ -30,4 +30,6 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
     @Query(value="SELECT * FROM boat_reservation res join boat b on res.boat_id=b.id  where b.users_id=:users_id and (:currentDate > end_date) ",nativeQuery = true)
     Set<BoatReservation> getPastReservations(@Param("users_id")Long boatId, @Param("currentDate")LocalDateTime currentDate);
 
+    @Query(value="SELECT * FROM boat_reservation where id=:id",nativeQuery = true)
+    BoatReservation getById(@Param("id")Long id);
 }
