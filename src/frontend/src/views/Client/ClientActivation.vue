@@ -45,6 +45,7 @@ export default {
   mounted() {
     this.activationDTO.activationCode = this.$route.params.activationCode;
     this.activationDTO.email = this.$route.params.email;
+    console.log(this.activationDTO);
     axios
       .post(
         "http://localhost:8081/auth/clientAccountActivation",
