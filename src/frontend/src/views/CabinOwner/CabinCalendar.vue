@@ -254,6 +254,16 @@
                 
           </div>
         </div>
+          <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Owners part</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{ownersPart}}%</b></p>
+                
+          </div>
+        </div>
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -592,7 +602,7 @@ import axios from "axios";
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
                   this.endInfo=arg.event.end
-                  this.priceInfo=arg.event.extendedProps.price
+                  this.priceInfo=arg.event.extendedProps.paymentInformation.ownersPart
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
                   this.adServices=arg.event.extendedProps.adServices
@@ -600,7 +610,8 @@ import axios from "axios";
                   this.$refs.quickReservationInfo.open()
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
-                  this.priceQuickInfo=arg.event.extendedProps.price
+                  this.priceQuickInfo=arg.event.extendedProps.paymentInformation.totalPrice
+                  this.ownersPart=arg.event.extendedProps.paymentInformation.ownersPart
                   this.discountQuick=arg.event.extendedProps.discount
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
@@ -673,6 +684,7 @@ import axios from "axios";
             dateIsNotValidQuick: false,
             argEventDeleting: null,
             discount: 0,
+            ownersPart: 0
        }
      },
      mounted() {
@@ -711,7 +723,7 @@ import axios from "axios";
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
-                                this.calendarOptions.events.push({ id: newData.id , extendedProps: {adServices: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                                this.calendarOptions.events.push({ id: newData.id , extendedProps: {paymentInformation:newData.paymentInformationDto,adServices: temp, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
@@ -729,7 +741,7 @@ import axios from "axios";
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adServicesQuick: temp, discount: newData.discount, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {paymentInformation:newData.paymentInformationDto,adServicesQuick: temp, discount: newData.discount, email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                       }   
               })
 
