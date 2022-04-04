@@ -132,5 +132,11 @@ public class ReservationCabinController {
         CabinReservation reservation=cabinReservationMapper.cabinOwnerReservationDtoToCabinReservation(cabinReservationDto);
         reservationCabinService.ownerCreatesReview(reservation,cabinReservationDto.isSuccessfull());
         return new ResponseEntity<>("Success.", HttpStatus.OK);
+
+
+    @GetMapping(value= "/getById/{id}")
+    public ResponseEntity<CabinReservationDto> getById(@PathVariable ("id") Long id) {
+        return new ResponseEntity<>(cabinReservationMapper.cabinReservationToCabinReservationDto(reservationCabinService.getById(id)),HttpStatus.OK);
+
     }
 }

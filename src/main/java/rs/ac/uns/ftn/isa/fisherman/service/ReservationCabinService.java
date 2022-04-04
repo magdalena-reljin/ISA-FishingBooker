@@ -25,4 +25,7 @@ public interface ReservationCabinService {
     Set<CabinReservation> getPastReservations(Long id);
 
     void ownerCreatesReview(CabinReservation reservation,boolean isSuccessfull);
+
+    CabinReservation getById(Long id);
+
 }

@@ -221,5 +221,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         cabinReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
         cabinReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
         cabinReservationRepository.save(cabinReservation);
+
+    public CabinReservation getById(Long id) {
+        return cabinReservationRepository.getById(id);
     }
 }

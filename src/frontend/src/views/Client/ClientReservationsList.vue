@@ -118,6 +118,15 @@
                     </h6>
                     <div class="row">
                       <div class="col" style="text-align: right">
+                          <button
+                            @click="writeComplaint(cabinReservationDto)"
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            WRITE COMPLAINT
+                          </button>
+                      </div>
+                      <div class="col" style="text-align: right">
                         <template v-if="upcomingCabinReservations">
                           <button
                             @click="cancelReservation(cabinReservationDto)"
@@ -305,6 +314,9 @@ export default {
     },
     evaluateReservation: function (cabinReservationDto) {
       this.$router.push("/evaluation/" + this.email + "/" + "cabin/" + cabinReservationDto.id);
+    },
+    writeComplaint: function (cabinReservationDto) {
+      this.$router.push("/complaint/" + this.email + "/" + "cabin/" + cabinReservationDto.id);
     },
     cancelReservation: function (cabinReservationDto) {
       this.loader = this.$loading.show({
