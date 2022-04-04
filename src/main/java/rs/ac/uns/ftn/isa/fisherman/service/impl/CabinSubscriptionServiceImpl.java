@@ -9,6 +9,8 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
+import java.util.Set;
+
 
 @Service
 public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
@@ -44,5 +46,10 @@ public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
         if(cabinSubscriptionRepository.subscriptionExists(cabinId, client.getId()))
             return true;
         return false;
+    }
+
+    @Override
+    public Set<String> findCabinSubscribers(Long cabinId) {
+        return cabinSubscriptionRepository.findCabinSubscribers(cabinId);
     }
 }

@@ -3,6 +3,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfullInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
@@ -123,7 +124,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
             String message = boatReservation.getBoat().getName() + " is booked from " + boatReservation.getStartDate().format(formatter) + " to " + boatReservation.getEndDate().format(formatter) + " .";
-            mailService.sendMail(email, message, new CabinReservationSuccessfulInfo());
+            mailService.sendMail(email, message, new BoatReservationSuccessfullInfo());
         } catch (MessagingException e) {
             logger.error(e.toString());
         }

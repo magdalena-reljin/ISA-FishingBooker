@@ -1,14 +1,23 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
+import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinSubscription;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
+import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Service
@@ -20,6 +29,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     private ReservationCabinService reservationCabinService;
     @Autowired
     private QuickReservationCabinRepository quickReservationCabinRepository;
+    @Autowired
+    private CabinSubscriptionService cabinSubscriptionService;
+    @Autowired
+    private MailService mailService;
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Override
     public boolean ownerCreates(QuickReservationCabin quickReservationCabin) {
         if(!validateForReservation(quickReservationCabin)) return false;
@@ -33,8 +47,20 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
             quickReservationCabinRepository.save(successfullQuickReservation);
         }
         //TO DO: poslati mejl onima koji su pretplaceni na akcije od tog cabina
-
+        sendMailNotificationToSubscribedUsers(successfullQuickReservation.getCabin().getId(),successfullQuickReservation.getCabin().getName());
         return true;
+    }
+    private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
+        Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
+        subscriptionEmails.add("reljin.magdalena@gmail.com");
+        for(String email: subscriptionEmails) {
+            try {
+                String message = cabinName;
+                mailService.sendMail(email, message, new QuickActionCabinInfo());
+            } catch (MessagingException e) {
+                logger.error(e.toString());
+            }
+        }
     }
 
     @Override

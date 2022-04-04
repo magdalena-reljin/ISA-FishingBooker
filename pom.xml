@@ -26,6 +26,7 @@
 		<email.version>1.16.18</email.version>
 		<sonar.coverage.exclusions>
 			**/dto/**
+
 		</sonar.coverage.exclusions>
 	</properties>
 
