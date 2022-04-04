@@ -474,11 +474,22 @@
 
           <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Discount</p>
+            <p>Owners part</p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left; ">
              
                  <p><b>{{discountQuick}}%</b></p>
+                
+          </div>
+        </div>
+
+         <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{ownersPart}}%</b></p>
                 
           </div>
         </div>
@@ -599,7 +610,7 @@ export default {
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
                   this.endInfo=arg.event.end
-                  this.priceInfo=arg.event.extendedProps.price
+                  this.priceInfo=arg.event.extendedProps.paymentInformation.ownersPart
                   this.usernameInfo=arg.event.extendedProps.email
                   this.adServices=arg.event.extendedProps.adServices
                   this.adventureNameInfo=arg.event.extendedProps.adventureName
@@ -609,7 +620,8 @@ export default {
                   this.adventureNameQuick=arg.event.extendedProps.adventureName
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
-                  this.priceQuickInfo=arg.event.extendedProps.price
+                  this.priceQuickInfo=arg.event.extendedProps.paymentInformation.totalPrice
+                  this.ownersPart=arg.event.extendedProps.paymentInformation.ownersPart
                   this.discountQuick=arg.event.extendedProps.discount
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==''){
                        this.usernameQuickInfo="Not reservated yet."
@@ -693,7 +705,8 @@ export default {
         maxPeople: 0,
         adServices: [],
         adServicesQuick: [],
-        argEventDeleting: null
+        argEventDeleting: null,
+        ownersPart: 0
     };
   },
  
@@ -763,7 +776,7 @@ export default {
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
 
-                              this.calendarOptions.events.push({id: newData.id , extendedProps: {adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                              this.calendarOptions.events.push({id: newData.id , extendedProps: {paymentInformation:newData.paymentInformationDto,adventureName: newData.adventureDto.name,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
                             }
               })   
@@ -779,7 +792,7 @@ export default {
                                   var temp=[]
                                   for(let i=0;i<newData.addedAdditionalServices.length;i++)
                                      temp.push(newData.addedAdditionalServices[i].name)
-                              this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {adventureName: newData.adventureDto.name,discount: newData.discount,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                              this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {paymentInformation:newData.paymentInformationDto,adventureName: newData.adventureDto.name,discount: newData.discount,email: newData.clientUsername, price: newData.price, clientFullName: newData.clientFullName,adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                               this.state.push( newData.startDate)
 
                             }

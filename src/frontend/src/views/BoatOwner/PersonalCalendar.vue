@@ -187,6 +187,16 @@
                 
           </div>
         </div>
+            <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Owners part</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{ownersPart}}%</b></p>
+                
+          </div>
+        </div>
         <div class="row">
           <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Additional services</p>
@@ -254,7 +264,7 @@ import VueModality from 'vue-modality-v3'
                   this.$refs.reservationInfo.open()
                   this.startInfo=arg.event.start
                   this.endInfo=arg.event.end
-                  this.priceInfo=arg.event.extendedProps.price
+                  this.priceInfo=arg.event.extendedProps.paymentInformation.ownersPart
                   this.usernameInfo=arg.event.extendedProps.email
                   this.clientFullNameInfo=arg.event.extendedProps.clientFullName
                   this.captainIsRequired=arg.event.extendedProps.captainIsRequired
@@ -264,7 +274,8 @@ import VueModality from 'vue-modality-v3'
                   this.$refs.quickReservationInfo.open()
                   this.startQuickInfo=arg.event.start
                   this.endQuickInfo=arg.event.end
-                  this.priceQuickInfo=arg.event.extendedProps.price
+                  this.priceQuickInfo=arg.event.extendedProps.paymentInformation.totalPrice
+                  this.ownersPart=arg.event.extendedProps.paymentInformation.ownersPart
                   this.boatNameQuick=arg.event.extendedProps.boatName
                   if(arg.event.extendedProps.email==null || arg.event.extendedProps.email==""){
                        this.usernameQuickInfo="Not reservated yet."
@@ -300,6 +311,7 @@ import VueModality from 'vue-modality-v3'
         adServices: [],
         adServicesQuick: [],
         discountInfo: 0,
+        ownersPart: 0
         },
        }
      },
@@ -325,9 +337,9 @@ import VueModality from 'vue-modality-v3'
 
 
                                   if(newData.needsCaptainServices==false){
-                                  this.calendarOptions.events.push({id: newData.id , extendedProps: {email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
+                                  this.calendarOptions.events.push({id: newData.id , extendedProps: {paymentInformation:newData.paymentInformationDto,email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'Reservation', start: newData.startDate , end: newData.endDate})
                                   }else{
-                                  this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'Reservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
+                                  this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {paymentInformation:newData.paymentInformationDto,email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'Reservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
                                   }
                                   }
                         }   
@@ -348,9 +360,9 @@ import VueModality from 'vue-modality-v3'
                                    temp.push(newData.addedAdditionalServices[i].name)
 
                                 if(newData.needsCaptainServices==false){
-                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {discount: newData.discount, email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
+                                this.calendarOptions.events.push({id: newData.id ,color: '#ffd04f', extendedProps: {paymentInformation:newData.paymentInformationDto,discount: newData.discount, email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation', start: newData.startDate , end: newData.endDate})
                                 }else{
-                                 this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {discount: newData.discount,email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
+                                 this.calendarOptions.events.push({id: newData.id ,color: '#7910b5', extendedProps: {paymentInformation:newData.paymentInformationDto,discount: newData.discount,email: newData.clientUsername, boatName: newData.boatDto.name, price: newData.price, clientFullName: newData.clientFullName, captainIsRequired: newData.needsCaptainServices, adServices: temp} ,title: 'QuickReservation - CAPTAIN', start: newData.startDate , end: newData.endDate})
 
                                 }
                                 }

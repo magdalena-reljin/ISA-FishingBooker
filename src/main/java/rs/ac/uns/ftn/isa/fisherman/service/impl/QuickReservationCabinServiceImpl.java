@@ -52,7 +52,6 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
         Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
-        subscriptionEmails.add("reljin.magdalena@gmail.com");
         for(String email: subscriptionEmails) {
             try {
                 String message = cabinName;

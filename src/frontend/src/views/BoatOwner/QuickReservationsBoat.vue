@@ -193,6 +193,26 @@
                 
           </div>
         </div>
+             <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Discount</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{discountInfo}}$</b></p>
+                
+          </div>
+        </div>
+             <div class="row">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Owners part</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
+             
+                 <p><b>{{ownersPart}}$</b></p>
+                
+          </div>
+        </div>
          <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Captain</p>
@@ -387,6 +407,8 @@ export default ({
         searchClientReservations: '',
         activePage: 1,
         cancelingInfo: '',
+        ownersPart: ''
+        
        }
        },
        mounted() {
@@ -442,7 +464,9 @@ export default ({
                  this.usernameInfo=ads.clientUsername
                  this.clientFullNameInfo=ads.clientFullName
               }
-              this.priceInfo=ads.paymentInformationDto.ownersPart
+              this.priceInfo=ads.paymentInformationDto.totalPrice
+              this.discountInfo=ads.discount
+              this.ownersPart=ads.paymentInformationDto.ownersPart
               this.captainInfo=ads.needsCaptainServices
               this.$refs.reservationInfo.open()
               
