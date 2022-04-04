@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -24,4 +25,6 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
     @Query(value="SELECT * FROM adventure_reservation where instructors_id=:instructors_id and (:currentDate > end_date) ",nativeQuery = true)
     Set<AdventureReservation> getPastReservations(@Param("instructors_id")Long instructorId, @Param("currentDate")LocalDateTime currentDate);
 
+    @Query(value="SELECT * FROM adventure_reservation where id=:id ",nativeQuery = true)
+    AdventureReservation getById(@Param("id")Long id);
 }

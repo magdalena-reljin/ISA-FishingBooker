@@ -105,7 +105,7 @@
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
                             <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
-                            <td  @click="writeAReview(ads1)" v-if="(ads1.ownersReportDto.comment==='' || ads1.ownersReportDto.comment==null)"><button  type="button" class="btn btn-success">Review</button></td>
+                            <td  v-if="(ads1.ownersReportDto.comment==='' || ads1.ownersReportDto.comment==null)"><button  @click="writeAReview(ads1)" type="button" class="btn btn-success">Review</button></td>
 
                             </tr>
                         </tbody>

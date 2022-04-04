@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 
 import java.time.LocalDateTime;
@@ -21,4 +22,7 @@ public interface QuickReservationAdventureRepository extends JpaRepository<Quick
 
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM quick_reservation_adventure c where adventure_id=:adventure_id and (:currentDate <= end_date) ",nativeQuery = true)
     boolean futureQuickReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("adventure_id") Long adventureId);
+
+    @Query(value="SELECT * FROM quick_reservation_adventure where id=:id ",nativeQuery = true)
+    QuickReservationAdventure getById(@Param("id")Long id);
 }
