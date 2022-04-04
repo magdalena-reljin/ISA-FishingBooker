@@ -105,7 +105,7 @@
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
                             <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
-                            <td><button  type="button" class="btn btn-success">Review</button></td>
+                            <td  v-if="(ads1.ownersReportDto.comment==='' || ads1.ownersReportDto.comment==null)"><button @click="review(ads1)" type="button" class="btn btn-success">Review</button></td>
 
                             </tr>
                         </tbody>
@@ -209,9 +209,13 @@
   <button type="button" @click="openCalendarOfInstructor()" class="btn btn-primary">Open calendar</button>
 </vue-modality>
 
-<vue-modality ref="reservationInfofdsf" title="Write a review" hide-footer centered>
+
+
+<vue-modality ref="writeAReview" title="Write a review" hide-footer centered width="900px">
 
    <br>
+   <div class="row"> 
+     <div class="col">
         <div class="row">
           <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
             <p>Adventure </p>
@@ -257,47 +261,71 @@
              <p><b>{{clientFullNameInfo}}</b></p>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Full price</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p><b>{{priceInfo}}$</b></p>
-                
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Cancelling</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p><b>{{cancelingInfo}}</b></p>
-                
-          </div>
-        </div>
+     </div>
          
-         
-        <div class="row">
-          <div class="col" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Additional services</p>
+         <div class="col">
+        <div class="row" style="padding-bottom: 1%;">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Review</p>
           </div>
         </div>
-        <div class="row">
-          <div   class="col" style="padding: 4%; text-align: left; ">
-                 
-                 <ul v-for="(ads,index) in adServicesInfo" :key="index" class="list-group">
-                  <li class="list-group-item"><b>{{ads}}</b></li>
-                 </ul>
-                
-          </div>
+        <div class="row" style=" padding-left: 3%; padding-right: 3%; height: 40%;">
+                 <textarea v-model="comment" required ></textarea>
+                 <label style="color: red;" v-if="comment===''">Please write a review.</label>
+               
+        </div>
         
-        </div>
+          
+       
+  <br>
+         <div class="row">
+             <div class="col-sm-6" style="text-align: left;">
+                <p>Client showed up</p>
+             </div>
 
-  
+             <div class="col-sm-6" style="text-align: left;">
+                <p>Suggest client gets 1 penal</p>
+             </div>
+         </div>
+         <div class="row">
+             <div class="col-sm-6">
+                    <select
+                    style="color: #5f7280;"
+                    v-model="selectedClientShowedUp"
+                    class="form-select "
+                    aria-label="Default select example"
+                    placeholder="Rating"
+                  >
+                    <option v-bind:value="0">YES</option>
+                    <option v-bind:value="1">NO</option>
+                   </select>
+             </div>
+             
+             <div class="col-sm-6">
+                    <select
+                    style="color: #5f7280;"
+                    v-model="selectedPenalty"
+                    class="form-select "
+                    aria-label="Default select example"
+                    placeholder="Rating"
+                  >
+                    <option v-bind:value="0">YES</option>
+                    <option v-bind:value="1">NO</option>
+                   </select>
+             </div>
+         </div>
+
+
+
+            
+      </div>
+
+
+
+      
+  </div>
   <hr>
-  <button type="button" @click="openCalendarOfInstructor()" class="btn btn-primary">Open calendar</button>
+  <button type="button" @click="createReview()" class="btn btn-success">Send report to system admins</button>
 </vue-modality>
 
 </template>
@@ -331,7 +359,12 @@ export default ({
         searchAdventureNameReservations: '',
         searchClientReservations: '',
         activePage: 1,
-        cancelingInfo: ''
+        cancelingInfo: '',
+        reservationId: 0,
+        selectedPenalty: 1,
+        selectedClientShowedUp: 0,
+        comment: '',
+        reservation: null
 
        }
        },
@@ -371,6 +404,48 @@ export default ({
                 })
                
           },
+          createReview: function(){
+            if(this.comment=='') return;
+            var bad=false
+            var success=true
+                if(this.selectedPenalty==0)
+                   bad=true
+                if(this.selectedClientShowedUp==1)
+                   success=false
+
+            this.reservation.successfull=success
+            this.reservation.ownersReportDto.badComment= bad
+            this.reservation.ownersReportDto.comment=this.comment
+                axios.post("http://localhost:8081/reservationAdventure/ownerCreatesReview",this.reservation)
+                .then(response => {
+                      this.$refs.writeAReview.hide()
+                      console.log(response)
+                      this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'success',
+                      title: 'Your review has been saved',
+                      showConfirmButton: false,
+                      timer: 2500
+                    })
+                      
+                })
+
+                this.selectedClientShowedUp=0
+                this.selectedPenalty=1
+                this.comment=''
+                this.reservationId=0
+               
+
+       },
+          review: function(ads){
+              this.adventureInfo=ads.adventureDto.name
+              this.startInfo=this.setDate(ads.startDate)
+              this.endInfo=this.setDate(ads.endDate)
+              this.usernameInfo=ads.clientUsername
+              this.clientFullNameInfo=ads.clientFullName
+              this.reservation=ads
+              this.$refs.writeAReview.open()
+          },
           reservationInformation: function(ads){
               this.adServicesInfo=[]
               if(ads.addedAdditionalServices.length>0){
@@ -383,7 +458,7 @@ export default ({
               this.endInfo=this.setDate(ads.endDate)
               this.usernameInfo=ads.clientUsername
               this.clientFullNameInfo=ads.clientFullName
-              this.priceInfo=ads.price
+              this.priceInfo=ads.paymentInformationDto.ownersPart
               this.$refs.reservationInfo.open()
          
           },
@@ -399,6 +474,7 @@ export default ({
           }
 
        },
+      
        computed: {
         filteredRes: function () {
                if(this.activePage==1){

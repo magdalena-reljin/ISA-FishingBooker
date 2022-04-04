@@ -73,6 +73,15 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return adventureReservationRepository.getPastReservations(id,currentDate);
     }
 
+    @Override
+    public void ownerCreatesReview(AdventureReservation reservation, boolean successfull) {
+        AdventureReservation adventureReservation = adventureReservationRepository.getById(reservation.getId());
+        adventureReservation.setSuccessfull(successfull);
+        adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+        adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        adventureReservationRepository.save(adventureReservation);
+    }
+
     private boolean validateForReservation(AdventureReservation adventureReservation, Client client){
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;
