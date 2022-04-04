@@ -1,10 +1,10 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@DiscriminatorValue("CABIN")
 public class CabinComplaint extends Complaint{
 
     @ManyToOne(cascade= CascadeType.MERGE)
@@ -16,7 +16,7 @@ public class CabinComplaint extends Complaint{
         this.cabin = cabin;
     }
 
-    CabinComplaint(){}
+    public CabinComplaint() {}
 
     public Cabin getCabin() {
         return cabin;

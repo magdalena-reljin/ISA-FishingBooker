@@ -10,22 +10,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinEvaluationService;
+import rs.ac.uns.ftn.isa.fisherman.dto.NewComplaintDto;
+import rs.ac.uns.ftn.isa.fisherman.service.ComplaintService;
 
 @RestController
-@RequestMapping(value = "/cabinEvaluation", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CabinEvaluationController {
+@RequestMapping(value = "/complaint", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ComplaintController {
 
     @Autowired
-    CabinEvaluationService cabinEvaluationService;
+    private ComplaintService complaintService;
 
     @PreAuthorize("hasRole('CLIENT')")
-    @PostMapping("/addEvaluation")
-    public ResponseEntity<String> addEvaluation(@RequestBody CabinEvaluationDto cabinEvaluationDto){
-        if(cabinEvaluationService.addEvaluation(cabinEvaluationDto)){
-            return new ResponseEntity<>("Evaluation successfully added.", HttpStatus.OK);
+    @PostMapping("/addComplaint")
+    public ResponseEntity<String> addComplaint(@RequestBody NewComplaintDto newComplaintDto){
+        if(complaintService.addComplaint(newComplaintDto)){
+            return new ResponseEntity<>("Complaint successfully added.", HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Reservation already has evaluation!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("You must have at least one reservation to post this complaint!", HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -203,4 +203,9 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     public Set<CabinReservation> getPastReservations(Long id) {
         return cabinReservationRepository.getPastReservations(id,LocalDateTime.now());
     }
+
+    @Override
+    public CabinReservation getById(Long id) {
+        return cabinReservationRepository.getById(id);
+    }
 }

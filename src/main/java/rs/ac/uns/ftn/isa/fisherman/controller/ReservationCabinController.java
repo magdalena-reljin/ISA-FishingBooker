@@ -124,4 +124,9 @@ public class ReservationCabinController {
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
     }
+
+    @GetMapping(value= "/getById/{id}")
+    public ResponseEntity<CabinReservationDto> getById(@PathVariable ("id") Long id) {
+        return new ResponseEntity<>(cabinReservationMapper.cabinReservationToCabinReservationDto(reservationCabinService.getById(id)),HttpStatus.OK);
+    }
 }
