@@ -919,6 +919,10 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   companysPart: 0,
                                   ownersPart: 0
                                 },
+                                ownersReportDto: {
+                                badComment: false,
+                                comment: ''
+                              },
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
@@ -974,6 +978,10 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   companysPart: 0,
                                   ownersPart: 0
                                 },
+                                ownersReportDto: {
+                                badComment: false,
+                                comment: ''
+                              },
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,

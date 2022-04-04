@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
@@ -107,6 +108,15 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     @Override
     public Set<BoatReservation> getPastReservations(Long id) {
         return boatReservationRepository.getPastReservations(id,LocalDateTime.now());
+    }
+
+    @Override
+    public void ownerCreatesReview(BoatReservation boatReservation, boolean successfull) {
+        BoatReservation oldReservation = boatReservationRepository.getById(boatReservation.getId());
+        oldReservation.setSuccessfull(successfull);
+        oldReservation.getOwnersReport().setComment(boatReservation.getOwnersReport().getComment());
+        oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
+        boatReservationRepository.save(oldReservation);
     }
 
     private void sendMailNotification(BoatReservation boatReservation,String email){

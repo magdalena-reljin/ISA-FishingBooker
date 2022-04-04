@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
 
@@ -67,6 +69,14 @@ public class BoatReservationController {
             boatReservationDtos.add(boatReservationMapper.boatReservationToBoatReservationDto(boatReservation));
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
+    }
+    @PostMapping("/ownerCreatesReview")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<String> writeAReview (@RequestBody BoatReservationDto boatReservationDto) {
+        BoatReservation boatReservation = boatReservationMapper.boatReservationOwnerDtoToBoatReservation(boatReservationDto);
+        boatReservationService.ownerCreatesReview(boatReservation, boatReservationDto.isSuccessfull());
+        return new ResponseEntity<>("Success.", HttpStatus.OK);
+
     }
 
 }
