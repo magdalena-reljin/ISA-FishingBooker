@@ -2,9 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.model.AvailableBoatPeriod;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
-import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableInstructorPeriodRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 

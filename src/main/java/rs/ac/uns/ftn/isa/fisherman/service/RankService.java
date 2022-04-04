@@ -10,5 +10,6 @@ public interface RankService {
     void update(Rank rank);
     Integer getPointsByRank(Integer rank);
     Integer getDiscountByRank(Integer rank);
+    RankType updateRankType(Integer points);
 
 }
