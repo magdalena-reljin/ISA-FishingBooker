@@ -187,7 +187,7 @@ import axios from "axios";
                             showConfirmButton: false,
                             timer: 2500
                          })
-                }
+                }else {
                axios.post("http://localhost:8081/ranks/updatePoints",this.rankDto)
                   .then(response => {
                           this.$swal.fire({
@@ -199,6 +199,7 @@ import axios from "axios";
                          })
                       return response;
                    })
+                }
                 
          },
          updatePoints: function(event){

@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.enums.RankType;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.RankService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationPaymentService;
@@ -17,6 +16,7 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
     private RankService rankService;
     @Autowired
     private UserService userService;
+
 
     @Override
     public PaymentInformation setTotalPaymentAmount(Reservation reservation,User user){
@@ -45,7 +45,6 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
         Integer clientDiscount= rankService.getDiscountByRank(client.getUserRank().getRankType().ordinal());
         if(clientDiscount==0)
             return  totalPrice;
-
         return totalPrice-clientDiscount/100.00 * totalPrice;
     }
 
@@ -56,10 +55,8 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
         Integer userPoints = user.getUserRank().getCurrentPoints()+points.getOwnerPoints();
         user.getUserRank().setCurrentPoints(userPoints);
         client.getUserRank().setCurrentPoints(clientPoints);
-        Integer silverPoints= rankService.getPointsByRank(1);
-        Integer goldPoints = rankService.getPointsByRank(2);
-        client.getUserRank().setRankType(updateRankType(clientPoints,silverPoints,goldPoints));
-        user.getUserRank().setRankType(updateRankType(userPoints,silverPoints,goldPoints));
+        client.getUserRank().setRankType(rankService.updateRankType(clientPoints));
+        user.getUserRank().setRankType(rankService.updateRankType(userPoints));
         userService.save(client);
         userService.save(user);
     }
@@ -78,21 +75,12 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
         client.getUserRank().setCurrentPoints(clientPoints);
         user.getUserRank().setCurrentPoints(userPoints);
 
-        Integer silverPoints= rankService.getPointsByRank(1);
-        Integer goldPoints = rankService.getPointsByRank(2);
-        client.getUserRank().setRankType(updateRankType(clientPoints,silverPoints,goldPoints));
-        user.getUserRank().setRankType(updateRankType(userPoints,silverPoints,goldPoints));
+        client.getUserRank().setRankType(rankService.updateRankType(clientPoints));
+        user.getUserRank().setRankType(rankService.updateRankType(userPoints));
         userService.save(client);
         userService.save(user);
 
     }
 
-    private RankType updateRankType(Integer points, Integer silverPoints, Integer goldPoints){
-        if(points>=silverPoints  && points<goldPoints){
-            return  RankType.SILVER;
-        }else if( points >= goldPoints){
-            return  RankType.GOLD;
-        }
-        return  RankType.BRONZE;
-    }
+
 }

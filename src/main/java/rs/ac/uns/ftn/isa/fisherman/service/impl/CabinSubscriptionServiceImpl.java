@@ -9,8 +9,6 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {

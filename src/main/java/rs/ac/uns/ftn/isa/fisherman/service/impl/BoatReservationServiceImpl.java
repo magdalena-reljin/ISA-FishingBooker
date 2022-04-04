@@ -9,7 +9,6 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.ReservationPaymentMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
-import rs.ac.uns.ftn.isa.fisherman.model.Reservation;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 

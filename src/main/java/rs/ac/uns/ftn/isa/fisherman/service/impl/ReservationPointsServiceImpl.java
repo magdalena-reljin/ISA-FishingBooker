@@ -12,10 +12,12 @@ public class ReservationPointsServiceImpl implements ReservationPointsService {
     @Override
     public void update(ReservationPoints reservationPoints) {
         reservationPointsRepository.save(reservationPoints);
+
     }
 
     @Override
     public ReservationPoints get() {
        return reservationPointsRepository.findAll().get(0);
     }
+
 }
