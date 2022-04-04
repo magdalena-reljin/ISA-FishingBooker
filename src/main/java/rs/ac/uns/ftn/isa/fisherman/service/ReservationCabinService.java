@@ -28,4 +28,6 @@ public interface ReservationCabinService {
 
     CabinReservation getById(Long id);
 
+    Set<CabinReservation> getAllReports();
+
 }

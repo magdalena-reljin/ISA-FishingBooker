@@ -109,4 +109,8 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
             logger.error(e.toString());
         }
     }
+
+    public Set<AdventureReservation>getAllReports(){
+       return adventureReservationRepository.getAllReports();
+    }
 }

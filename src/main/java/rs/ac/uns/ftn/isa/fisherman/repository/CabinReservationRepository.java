@@ -3,6 +3,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import javax.transaction.Transactional;
@@ -47,4 +48,7 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
 
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id in :owners_cabins and users_id=:users_id",nativeQuery = true)
     boolean clientHasReservationInOwnersCabin(@Param("owners_cabins")Set<Integer> owners_cabins, @Param("users_id")Long usersId);
+
+    @Query(value="SELECT * FROM cabin_reservation where successfull=true and bad_comment=true and comment!='' ",nativeQuery = true)
+    Set<CabinReservation> getAllReports();
 }

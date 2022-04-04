@@ -27,4 +27,9 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
 
     @Query(value="SELECT * FROM adventure_reservation where id=:id ",nativeQuery = true)
     AdventureReservation getById(@Param("id")Long id);
+
+    @Query(value="SELECT * FROM adventure_reservation where successfull=true and bad_comment=true and comment!='' ",nativeQuery = true)
+    Set<AdventureReservation> getAllReports();
+
+
 }

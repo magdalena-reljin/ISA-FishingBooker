@@ -24,7 +24,7 @@ public class Client extends User{
     }
 
     public Client(Long id, String name, String lastName, String username, String password, String phoneNum, Address address) {
-        super(id, name, lastName, username, password, phoneNum, address);
+        super(id, name, lastName, username, password, phoneNum, address,null);
     }
 
     @Override

@@ -16,4 +16,5 @@ public interface AdventureReservationService {
     Set<AdventureReservation>  getPastReservations(Long id);
 
     void ownerCreatesReview(AdventureReservation reservation, boolean successfull);
+    Set<AdventureReservation>getAllReports();
 }

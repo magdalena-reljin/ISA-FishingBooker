@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 
 import java.time.LocalDateTime;
@@ -32,4 +33,7 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
 
     @Query(value="SELECT * FROM boat_reservation where id=:id",nativeQuery = true)
     BoatReservation getById(@Param("id")Long id);
+
+    @Query(value="SELECT * FROM boat_reservation where successfull=true and bad_comment=true and comment!='' ",nativeQuery = true)
+    Set<BoatReservation> getAllReports();
 }

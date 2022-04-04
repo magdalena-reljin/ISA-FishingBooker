@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-import javax.persistence.*;
 
 public class OwnersReportDto {
     private boolean badComment;

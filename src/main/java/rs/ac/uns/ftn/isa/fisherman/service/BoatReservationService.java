@@ -9,13 +9,18 @@ public interface BoatReservationService {
 
     Set<BoatReservation> getPresentByCabinId(Long boatId);
 
-    boolean reservationExists(Long boatId, LocalDateTime startDate,LocalDateTime endDate);
+    boolean reservationExists(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
 
     boolean ownerIsNotAvailableReservation(Long ownerId, LocalDateTime start, LocalDateTime end);
+
     Set<BoatReservation> findReservationsByOwnerId(Long id);
+
     boolean futureReservationsExist(LocalDateTime currentDate, Long boatId);
 
     Set<BoatReservation> getPastReservations(Long id);
 
     void ownerCreatesReview(BoatReservation boatReservation, boolean successfull);
+
+    Set<BoatReservation> getAllReports();
+
 }
