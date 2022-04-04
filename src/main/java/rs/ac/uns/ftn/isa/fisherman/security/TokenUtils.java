@@ -19,7 +19,6 @@ import rs.ac.uns.ftn.isa.fisherman.service.impl.FirebaseServiceImpl;
 // Utility klasa za rad sa JSON Web Tokenima
 @Component
 public class TokenUtils {
-    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Value("spring-security-example")
     private String appName;
 

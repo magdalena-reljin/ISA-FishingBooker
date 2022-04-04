@@ -24,5 +24,6 @@ public interface QuickReservationCabinRepository extends JpaRepository<QuickRese
     @Query(value="SELECT * FROM quick_reservation_cabin res join cabin b on res.cabin_id=b.id where b.users_id=:users_id and (:currentDate > end_date) ",nativeQuery = true)
     Set<QuickReservationCabin> getPastReservations(@Param("users_id")Long id, @Param("currentDate")LocalDateTime currentDate);
 
-
+    @Query(value="SELECT * FROM quick_reservation_cabin where id=:id ",nativeQuery = true)
+    QuickReservationCabin getById(@Param("id")Long id);
 }

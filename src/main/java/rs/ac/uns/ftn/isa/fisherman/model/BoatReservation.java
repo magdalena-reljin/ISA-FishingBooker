@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,8 +22,8 @@ public class BoatReservation extends Reservation{
 
     public BoatReservation(){};
 
-    public BoatReservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, Boat boat, Set<AdditionalServices> addedAdditionalServices, boolean needsCaptainService) {
-        super(id, startDate, endDate, client, paymentInformation);
+    public BoatReservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, OwnersReport ownersReport, Boat boat, Set<AdditionalServices> addedAdditionalServices, boolean needsCaptainService) {
+        super(id, startDate, endDate, client, paymentInformation,ownersReport);
         this.boat = boat;
         this.addedAdditionalServices = addedAdditionalServices;
         this.needsCaptainService = needsCaptainService;

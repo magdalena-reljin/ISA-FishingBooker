@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
@@ -24,7 +25,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         if(!validateForReservation(quickReservationCabin)) return false;
 
         QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
-                quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(),quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
+                quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(),
+                quickReservationCabin.getOwnersReport(),quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
         quickReservationCabinRepository.save(successfullQuickReservation);
         if(quickReservationCabin.getAddedAdditionalServices()!=null){
             successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());
@@ -58,6 +60,15 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Override
     public Set<QuickReservationCabin> getPastReservations(Long id) {
         return quickReservationCabinRepository.getPastReservations(id,LocalDateTime.now());
+    }
+
+    @Override
+    public void ownerCreatesReview(QuickReservationCabin reservation, boolean successfull) {
+        QuickReservationCabin quickReservationCabin=quickReservationCabinRepository.getById(reservation.getId());
+        quickReservationCabin.setSuccessfull(successfull);
+        quickReservationCabin.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+        quickReservationCabin.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        quickReservationCabinRepository.save(quickReservationCabin);
     }
 
     private boolean validateForReservation(QuickReservationCabin cabinQuickReservation){

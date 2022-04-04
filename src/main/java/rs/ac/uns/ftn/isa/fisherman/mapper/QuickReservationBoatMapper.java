@@ -12,12 +12,14 @@ public class QuickReservationBoatMapper {
     private final BoatMapper boatMapper=new BoatMapper();
     private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
     private final PaymentInformationMapper paymentInformationMapper=new PaymentInformationMapper();
+    private final OwnersReportMapper ownersReportMapper=new OwnersReportMapper();
     public QuickReservationBoat dtoToBoatQuickReservation(QuickReservationBoatDto quickReservationBoatDto) {
         Set<AdditionalServices> additionalServicesSet=new HashSet<>();
         if(quickReservationBoatDto.getAddedAdditionalServices()!=null)
             additionalServicesSet=additionalServiceMapper.additionalServicesDtoToAdditionalServices(quickReservationBoatDto.getAddedAdditionalServices());
         return  new QuickReservationBoat(quickReservationBoatDto.getId(),quickReservationBoatDto.getStartDate(),
-                quickReservationBoatDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(quickReservationBoatDto.getPaymentInformationDto()), boatMapper.boatDtoToBoat(quickReservationBoatDto.getBoatDto())
+                quickReservationBoatDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(quickReservationBoatDto.getPaymentInformationDto()),
+                ownersReportMapper.dtoToOwnersReport(quickReservationBoatDto.getOwnersReportDto()),boatMapper.boatDtoToBoat(quickReservationBoatDto.getBoatDto())
                 ,quickReservationBoatDto.getDiscount(),additionalServicesSet,quickReservationBoatDto.getNeedsCaptainServices());
     }
     public QuickReservationBoatDto boatQuickReservationToDto(QuickReservationBoat quickReservationBoat) {
@@ -33,6 +35,7 @@ public class QuickReservationBoatMapper {
         return  new QuickReservationBoatDto(quickReservationBoat.getId(),quickReservationBoat.getStartDate(),
                 quickReservationBoat.getEndDate(),clientUsername,clientFullName,paymentInformationMapper
                 .paymentInformationToDto(quickReservationBoat.getPaymentInformation()),quickReservationBoat.isSuccessfull(),
+                ownersReportMapper.ownersReportToDto(quickReservationBoat.getOwnersReport()),
                 boatMapper.boatToBoatDto(quickReservationBoat.getBoat()),additionalServicesSet,
                 quickReservationBoat.getNeedsCaptainServices(),quickReservationBoat.getDiscount());
     }

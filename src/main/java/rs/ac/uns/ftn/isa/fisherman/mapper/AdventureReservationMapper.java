@@ -7,11 +7,12 @@ public class AdventureReservationMapper {
     private AdventureMapper adventureMapper= new AdventureMapper();
     private AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     private PaymentInformationMapper paymentInformationMapper=new PaymentInformationMapper();
-
+    private OwnersReportMapper ownersReportMapper=new OwnersReportMapper();
     public AdventureReservation adventureReservationDtoToAdventureReservation(AdventureReservationDto adventureReservationDto,FishingInstructor fishingInstructor){
        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         return new AdventureReservation(adventureReservationDto.getId(),adventureReservationDto.getStartDate(),
-                adventureReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(adventureReservationDto.getPaymentInformationDto()),adventure,fishingInstructor,
+                adventureReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(adventureReservationDto.getPaymentInformationDto()),
+                ownersReportMapper.dtoToOwnersReport(adventureReservationDto.getOwnersReportDto()),adventure,fishingInstructor,
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
     }
     public AdventureReservationDto adventureReservationToAdventureReservationDto(AdventureReservation adventureReservation){
@@ -19,6 +20,7 @@ public class AdventureReservationMapper {
         return new AdventureReservationDto(adventureReservation.getId(),
                 adventureReservation.getStartDate(),adventureReservation.getEndDate(),adventureReservation.getClient().getUsername(),fullName,
                 paymentInformationMapper.paymentInformationToDto(adventureReservation.getPaymentInformation()),adventureReservation.isSuccessfull(),
+                ownersReportMapper.ownersReportToDto(adventureReservation.getOwnersReport()),
                 adventureMapper.adventureToAdventureDto(adventureReservation.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()));
     }

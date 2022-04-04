@@ -611,6 +611,10 @@ export default {
               companysPart: 0,
               ownersPart: 0
              },
+             ownersReportDto: {
+               badComment: false,
+               comment: ''
+             },
             cabinDto: this.cabinDto,
             addedAdditionalServices: this.addedAdditionalServices,
             clientUsername: this.email,

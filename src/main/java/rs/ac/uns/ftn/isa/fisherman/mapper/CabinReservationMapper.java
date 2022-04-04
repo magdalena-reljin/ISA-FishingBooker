@@ -12,18 +12,22 @@ public class CabinReservationMapper {
     private final CabinMapper cabinMapper = new CabinMapper();
     private final AdditionalServiceMapper additionalServicesMapper=new AdditionalServiceMapper();
     private final PaymentInformationMapper paymentInformationMapper= new PaymentInformationMapper();
+    private final OwnersReportMapper ownersReportMapper=new OwnersReportMapper();
     public CabinReservation cabinReservationDtoToCabinReservation(CabinReservationDto cabinReservationDto){
         Cabin cabin = cabinMapper.cabinDtoToCabin(cabinReservationDto.getCabinDto());
         return new CabinReservation(cabinReservationDto.getId(),
                 cabinReservationDto.getStartDate(),cabinReservationDto.getEndDate(),
-                new Client(),paymentInformationMapper.dtoToPaymentInformation(cabinReservationDto.getPaymentInformationDto()), cabin, null);
+                new Client(),paymentInformationMapper.dtoToPaymentInformation(cabinReservationDto.getPaymentInformationDto()),
+                ownersReportMapper.dtoToOwnersReport(cabinReservationDto.getOwnersReportDto()),cabin, null);
 
     }
     public CabinReservation cabinOwnerReservationDtoToCabinReservation(CabinReservationDto cabinReservationDto){
         Cabin cabin = cabinMapper.cabinDtoToCabin(cabinReservationDto.getCabinDto());
         return new CabinReservation(cabinReservationDto.getId(),
                 cabinReservationDto.getStartDate(),cabinReservationDto.getEndDate(),
-                new Client(),paymentInformationMapper.dtoToPaymentInformation(cabinReservationDto.getPaymentInformationDto()), cabin, additionalServicesMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
+                new Client(),paymentInformationMapper.dtoToPaymentInformation(cabinReservationDto.getPaymentInformationDto()),
+                ownersReportMapper.dtoToOwnersReport(cabinReservationDto.getOwnersReportDto()),
+                cabin, additionalServicesMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
 
     }
 
@@ -34,7 +38,9 @@ public class CabinReservationMapper {
              additionalServicesDtos=additionalServicesMapper.additionalServicesToAdditionalServiceDtoS(cabinReservation.getAddedAdditionalServices());
         return new CabinReservationDto(cabinReservation.getId(),cabinReservation.getStartDate(),
                 cabinReservation.getEndDate(),cabinReservation.getClient().getUsername(),
-                fullName,paymentInformationMapper.paymentInformationToDto(cabinReservation.getPaymentInformation()),cabinReservation.isSuccessfull(),cabinMapper.cabinToCabinDto(cabinReservation.getCabin()),additionalServicesDtos);
+                fullName,paymentInformationMapper.paymentInformationToDto(cabinReservation.getPaymentInformation()),
+                cabinReservation.isSuccessfull(),ownersReportMapper.ownersReportToDto(cabinReservation.getOwnersReport())
+                ,cabinMapper.cabinToCabinDto(cabinReservation.getCabin()),additionalServicesDtos);
     }
 
 }
