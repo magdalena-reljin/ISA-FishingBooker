@@ -113,6 +113,11 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         }
         return false;
     }
+    @Override
+    public Set<CabinReservation> getAllReports(){
+        return  cabinReservationRepository.getAllReports();
+    }
+
 
     private boolean periodStillAvailable(CabinReservation cabinReservation) {
         for(AvailableCabinPeriod cabinPeriod:availableCabinPeriodService.findAll()){

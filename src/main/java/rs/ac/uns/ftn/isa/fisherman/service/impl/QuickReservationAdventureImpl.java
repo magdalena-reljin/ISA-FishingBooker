@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
@@ -52,6 +53,11 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     public boolean futureQuickReservationsExist(LocalDateTime currentDate,Long id) {
         return quickReservationAdventureRepository.futureQuickReservationsExist(currentDate,id);
     }
+    @Override
+    public Set<QuickReservationAdventure> getAllReports(){
+        return  quickReservationAdventureRepository.getAllReports();
+    }
+
 
     @Override
     public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {

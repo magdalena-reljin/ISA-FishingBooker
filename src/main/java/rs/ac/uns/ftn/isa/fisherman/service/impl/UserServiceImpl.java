@@ -40,7 +40,12 @@ public class UserServiceImpl implements UserService {
       return userRepository.findByUsername(username);
     }
     public List<User> findAll() throws AccessDeniedException {
-        return userRepository.findAll();
+        return userRepository.getAll();
+    }
+
+    @Override
+    public List<User> getNewUsers() {
+        return  userRepository.getNewUsers();
     }
 
     public String findRoleById(Long id){

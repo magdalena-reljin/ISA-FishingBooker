@@ -13,7 +13,7 @@ public class Admin extends User {
 
     public Admin(){}
     public Admin(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, Boolean isPredefined) {
-        super(id, name, lastName, username, password, phoneNum, address);
+        super(id, name, lastName, username, password, phoneNum, address,null);
         this.isPredefined = isPredefined;
         this.changedPassword=false;
 
