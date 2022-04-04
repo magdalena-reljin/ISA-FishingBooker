@@ -49,6 +49,7 @@ public class AccountController {
         }
         return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
     }
+
     @PostMapping("/passwordStatus")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> hasAlreadyResetPassword(@RequestBody UserRequestDTO userRequest) {

@@ -208,7 +208,7 @@ export default {
               axios
                .post("http://localhost:8081/auth/signUpClient",this.user)
                .then((response) => {
-                   this.$router.push('/accountAlert/'+this.user.username);
+                   this.$router.push('/clientAccountAlert/'+this.user.username);
                     return response;
                })
 
