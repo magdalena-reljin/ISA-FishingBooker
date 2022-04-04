@@ -15,11 +15,6 @@ public class BoatOwnerServiceImpl implements BoatOwnerService {
         this.boatOwnerRepository = boatOwnerRepository;
     }
 
-    @Override
-    public List<BoatOwner> getNewBoatOwners() { return boatOwnerRepository.getNewBoatOwners();}
-
-    @Override
-    public List<BoatOwner> getActiveBoatOwners() {return boatOwnerRepository.getActiveBoatOwners();}
 
     @Override
     public BoatOwner findByUsername(String ownersUsername) {
