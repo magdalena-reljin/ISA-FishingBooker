@@ -1,5 +1,5 @@
 <template>
-<CabinOwnerNav :username=email />
+<FishingInstructorNav :username=email />
 <div style="width: 90%; padding-left: 3%; ">
 <h1>STATISTICS</h1>
 <div class="row" style="padding-top: 3%; ">
@@ -11,7 +11,7 @@
                <br>
                <div  class="row">
                  <div class="col-sm-6" style="padding-top: 2%; text-align: left;" >
-                 <h6>OWNER RATING</h6>
+                 <h6>INSTRUCTOR RATING</h6>
                  </div>
                  <div class="col" style="padding: 1%;" >
 
@@ -22,18 +22,6 @@
                 </div>
                 </div>
 
-                <div  class="row">
-                 <div class="col-sm-6" style="padding-top: 2%; text-align: left;" >
-                 <h6>AVERAGE CABIN RATING</h6>
-                 </div>
-                 <div class="col" style="padding: 1%;" >
-        
-                   {{stats.avgRating}}
-                  <svg xmlns="http://www.w3.org/2000/svg" style="color: yellow;" width="18" height="18" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-</svg>
-                </div>
-                </div>
 
                 <div  class="row">
                  <div class="col-sm-6" style="padding-top: 2%; text-align: left;" >
@@ -119,7 +107,7 @@
   </div> 
 
               <div class="col"  >
-                             <h3>OWNERS INCOME</h3>
+                             <h3>INSTRUCTORS INCOME</h3>
         <BarChart :chart-data="dataIncome" :options="options" css-classes="chart-container" />
               </div>
 
@@ -132,7 +120,7 @@
 </div>
 </template>
 <script>
-import CabinOwnerNav from './CabinOwnerNav.vue'
+import FishingInstructorNav from './FishingInstructorNav.vue'
 import {BarChart} from 'vue-chart-3'
 import dayjs from 'dayjs';
 import {Chart, BarController, CategoryScale, LinearScale,BarElement} from 'chart.js'
@@ -144,7 +132,7 @@ import axios from "axios";
 
 export default ({
     components: {
-         CabinOwnerNav,
+         FishingInstructorNav,
          BarChart,
          Datepicker
   
@@ -235,7 +223,7 @@ export default ({
 
                axios
                 .get(
-                "http://localhost:8081/cabinStatisticsReport/findCabinStatistics/"+this.email+"/")
+                "http://localhost:8081/adventureStatisticsReport/findAdventureStatistics/"+this.email+"/")
                 .then((response) => {
                     this.stats = response.data;
                 });
@@ -245,7 +233,7 @@ export default ({
           getReservations: function(){
                 axios
                 .get(
-                "http://localhost:8081/cabinStatisticsReport/countReservations/"+this.email+"/")
+                "http://localhost:8081/adventureStatisticsReport/countReservations/"+this.email+"/")
                 .then((response) => {
                     
                     for(let i=0; i< response.data.length; i++)
@@ -258,7 +246,7 @@ export default ({
           getQuickReservations: function(){
                 axios
                 .get(
-                "http://localhost:8081/cabinStatisticsReport/countQuickReservations/"+this.email+"/")
+                "http://localhost:8081/adventureStatisticsReport/countQuickReservations/"+this.email+"/")
                 .then((response) => {
                        for(let i=0; i< response.data.length; i++)
                        this.data.datasets[1].data.push([response.data[i]])
@@ -278,11 +266,12 @@ export default ({
                  return;
              }
              var dateRange=[]
+             
              dateRange.push(this.formatDate(this.start))
              dateRange.push(this.formatDate(this.end))
              axios
                 .post(
-                "http://localhost:8081/cabinStatisticsReport/sumProfit/"+this.email+"/", dateRange
+                "http://localhost:8081/adventureStatisticsReport/sumProfit/"+this.email+"/", dateRange
                
                 )
                 .then((response) => {
@@ -290,7 +279,8 @@ export default ({
                        this.dataIncome.datasets[1].data=[]
                        this.dataIncome.datasets[0].data.push([response.data[0]])
                        this.dataIncome.datasets[1].data.push([response.data[1]])
-                       
+                  
+
                 });
                
           }

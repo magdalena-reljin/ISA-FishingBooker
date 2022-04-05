@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
 
+import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 

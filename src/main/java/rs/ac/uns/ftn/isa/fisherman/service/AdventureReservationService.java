@@ -17,4 +17,8 @@ public interface AdventureReservationService {
 
     void ownerCreatesReview(AdventureReservation reservation, boolean successfull);
     Set<AdventureReservation>getAllReports();
+
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
+
+    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
 }
