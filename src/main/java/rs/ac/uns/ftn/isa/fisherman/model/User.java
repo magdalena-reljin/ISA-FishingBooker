@@ -33,7 +33,8 @@ public abstract class User implements UserDetails {
     protected String password;
     @Column(name="phoneNum")
     protected String phoneNum;
-
+    @Column(name="registrationReason")
+    private String registrationReason;
     @Embedded
     private  Address address;
 
@@ -58,7 +59,7 @@ public abstract class User implements UserDetails {
     private UserRank userRank;
 
     protected User(){}
-    protected User(Long id, String name, String lastName, String username, String password, String phoneNum, Address address) {
+    protected User(Long id, String name, String lastName, String username, String password, String phoneNum, Address address,String registrationReason) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -67,6 +68,7 @@ public abstract class User implements UserDetails {
         this.phoneNum = phoneNum;
         this.address = address;
         this.reasonForDeleting="";
+        this.registrationReason= registrationReason;
         this.userRank = new UserRank(RankType.BRONZE,0);
     }
 
@@ -100,6 +102,14 @@ public abstract class User implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getRegistrationReason() {
+        return registrationReason;
+    }
+
+    public void setRegistrationReason(String registrationReason) {
+        this.registrationReason = registrationReason;
     }
 
     public String getUsername() {

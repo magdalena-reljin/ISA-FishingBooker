@@ -8,7 +8,6 @@ import java.util.Set;
 @DiscriminatorValue("BOATOWNER")
 public class BoatOwner extends User {
     private static final String ROLE_APP = "ROLE_BOATOWNER";
-    private String registrationReason;
     @OneToMany(mappedBy = "boatOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Boat> boats;
 
@@ -27,8 +26,7 @@ public class BoatOwner extends User {
     public BoatOwner() {}
 
     public BoatOwner(Long id, String name, String lastName, String username, String password, String phoneNum, Address address,String registrationReason) {
-        super(id, name, lastName, username, password, phoneNum, address);
-        this.registrationReason=registrationReason;
+        super(id, name, lastName, username, password, phoneNum, address,registrationReason);
         this.availableBoatOwnerPeriods=new HashSet<>();
     }
 
@@ -40,12 +38,6 @@ public class BoatOwner extends User {
         this.boats = boats;
     }
 
-    public String getRegistrationReason() {
-        return registrationReason;
-    }
-    public void setRegistrationReason(String registrationReason) {
-        this.registrationReason = registrationReason;
-    }
     @Override
     public String getRoleApp() {
         return ROLE_APP;

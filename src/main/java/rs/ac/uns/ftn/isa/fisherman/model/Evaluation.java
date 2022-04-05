@@ -3,8 +3,11 @@ package rs.ac.uns.ftn.isa.fisherman.model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
-public class Evaluation {
+@Entity
+@Table(name="evaluations")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+public abstract class Evaluation {
 
     @Id
     @SequenceGenerator(name = "period_sequence_generator", sequenceName = "period_sequence", initialValue = 100)

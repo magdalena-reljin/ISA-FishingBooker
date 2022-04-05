@@ -8,6 +8,7 @@ import java.util.List;
 public interface UserService {
     User findByUsername(String username);
     List<User> findAll ();
+    List<User> getNewUsers ();
     User registerCabinOwner(CabinOwner cabinOwner);
     User registerBoatOwner(BoatOwner boatOwner);
     User registerClient(Client client);
