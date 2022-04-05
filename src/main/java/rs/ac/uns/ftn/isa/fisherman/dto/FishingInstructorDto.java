@@ -19,10 +19,9 @@ public class FishingInstructorDto {
     private AddressDTO address;
     private String registrationReason;
     private String role;
-    private double rating;
     private Set<AvailablePeriodDto> availablePeriodDtoSet;
 
-    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating) {
+    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -32,11 +31,10 @@ public class FishingInstructorDto {
         this.address = address;
         this.registrationReason = registrationReason;
         this.role = role;
-        this.rating = rating;
         this.availablePeriodDtoSet = new HashSet<>();
     }
 
-    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, double rating, Set<AvailablePeriodDto> availablePeriodDtoSet) {
+    public FishingInstructorDto(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, Set<AvailablePeriodDto> availablePeriodDtoSet) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -46,7 +44,6 @@ public class FishingInstructorDto {
         this.address = address;
         this.registrationReason = registrationReason;
         this.role = role;
-        this.rating = rating;
         this.availablePeriodDtoSet = availablePeriodDtoSet;
     }
 
@@ -123,14 +120,6 @@ public class FishingInstructorDto {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
     }
 
     public Set<AvailablePeriodDto> getAvailableInstructorPeriodDtoSet() {

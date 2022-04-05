@@ -17,7 +17,17 @@ public class UserRequestDTO {
     private String registrationReason;
     private String role;
     private String reasonForDeleting;
-    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role) {
+    private Double rating;
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, Double rating) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -28,8 +38,9 @@ public class UserRequestDTO {
         this.registrationReason = registrationReason;
         this.role=role;
         this.reasonForDeleting="";
+        this.rating=rating;
     }
-    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role,String reasonForDeleting) {
+    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role,String reasonForDeleting,Double rating) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -40,14 +51,16 @@ public class UserRequestDTO {
         this.registrationReason = registrationReason;
         this.role=role;
         this.reasonForDeleting=reasonForDeleting;
+        this.rating=rating;
     }
-    public UserRequestDTO(String username, String firstname, String lastname, String role, String registrationReason) {
+    public UserRequestDTO(String username, String firstname, String lastname, String role, String registrationReason,Double rating) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
         this.registrationReason=registrationReason;
         this.reasonForDeleting="";
+        this.rating=rating;
     }
 
     public UserRequestDTO(){}

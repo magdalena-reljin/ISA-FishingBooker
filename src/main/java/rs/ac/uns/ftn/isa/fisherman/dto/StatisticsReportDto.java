@@ -1,17 +1,17 @@
 package rs.ac.uns.ftn.isa.fisherman.dto;
 
-public class GeneralInformationDto {
+public class StatisticsReportDto {
     private Double ownerRating;
     private Double avgRating;
     private ReservationsPointsDto reservationsPointsDto;
 
-    public GeneralInformationDto(Double ownerRating, Double avgRating, ReservationsPointsDto reservationsPointsDto) {
+    public StatisticsReportDto(Double ownerRating, Double avgRating, ReservationsPointsDto reservationsPointsDto) {
         this.ownerRating = ownerRating;
         this.avgRating = avgRating;
         this.reservationsPointsDto = reservationsPointsDto;
     }
 
-    public GeneralInformationDto() {
+    public StatisticsReportDto() {
     }
 
     public Double getOwnerRating() {

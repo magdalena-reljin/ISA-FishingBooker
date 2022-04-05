@@ -9,11 +9,10 @@ import java.util.Set;
 @DiscriminatorValue("FISHINGINSTRUCTOR")
 public class FishingInstructor extends  User {
     private static String roleApp = "ROLE_FISHING_INSTRUCTOR";
-    private double rating;
+
     public FishingInstructor() {}
-    public FishingInstructor(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, double rating, Set<Adventure> adventures, Set<AvailableInstructorPeriod> availableInstructorPeriods,String registrationReason) {
+    public FishingInstructor(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, Set<Adventure> adventures, Set<AvailableInstructorPeriod> availableInstructorPeriods,String registrationReason) {
         super(id, name, lastName, username, password, phoneNum, address,registrationReason);
-        this.rating = rating;
         this.adventures = adventures;
         this.availableInstructorPeriods = availableInstructorPeriods;
     }
@@ -37,13 +36,7 @@ public class FishingInstructor extends  User {
         this.adventures = adventures;
     }
 
-    public double getRating() {
-        return rating;
-    }
 
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
 
     public Set<AvailableInstructorPeriod> getAvailableInstructorPeriods() {
         return availableInstructorPeriods;

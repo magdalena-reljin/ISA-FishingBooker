@@ -14,7 +14,7 @@ public class BoatOwnerMapper {
 
     public UserRequestDTO boatOwnerToUserRequestDto(BoatOwner boatOwner){
 
-        return new UserRequestDTO(boatOwner.getUsername(),boatOwner.getName(),boatOwner.getLastName(),boatOwner.getRoleApp(),boatOwner.getRegistrationReason());
+        return new UserRequestDTO(boatOwner.getUsername(),boatOwner.getName(),boatOwner.getLastName(),boatOwner.getRoleApp(),boatOwner.getRegistrationReason(),boatOwner.getRating());
     }
 
 }

@@ -57,6 +57,8 @@ public abstract class User implements UserDetails {
     private String reasonForDeleting;
     @Embedded
     private UserRank userRank;
+    @Column(name = "rating")
+    private Double rating;
 
     protected User(){}
     protected User(Long id, String name, String lastName, String username, String password, String phoneNum, Address address,String registrationReason) {
@@ -70,6 +72,7 @@ public abstract class User implements UserDetails {
         this.reasonForDeleting="";
         this.registrationReason= registrationReason;
         this.userRank = new UserRank(RankType.BRONZE,0);
+        this.rating= 0.0;
     }
 
     public String getReasonForDeleting() {
@@ -205,5 +208,13 @@ public abstract class User implements UserDetails {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }

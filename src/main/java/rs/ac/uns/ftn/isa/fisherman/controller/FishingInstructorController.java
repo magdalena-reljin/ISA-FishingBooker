@@ -24,8 +24,8 @@ public class FishingInstructorController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/findInstructorRatingByUsername")
     public ResponseEntity<Double> findInstructorRatingByUsername(@RequestBody FishingInstructorDto instructor){
-       Double instructorRating= fishingInstructorService.findByUsername(instructor.getUsername()).getRating();
-        return new ResponseEntity<>(instructorRating, HttpStatus.OK);
+       /*Double instructorRating= fishingInstructorService.findByUsername(instructor.getUsername()).getRating();*/
+        return new ResponseEntity<>(0.0, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")

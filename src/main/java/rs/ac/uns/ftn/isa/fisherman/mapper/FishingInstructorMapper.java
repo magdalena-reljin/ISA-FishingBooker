@@ -9,13 +9,13 @@ public class FishingInstructorMapper {
 
     public FishingInstructor userRequestDtoToFishingInstructor(UserRequestDTO userRequest){
         return new FishingInstructor(userRequest.getId(),userRequest.getFirstname(),userRequest.getLastname(),userRequest.getUsername(),
-                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtoToAddress(userRequest.getAddress()),0,null,null,userRequest.getRegistrationReason());
+                userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtoToAddress(userRequest.getAddress()),null,null,userRequest.getRegistrationReason());
     }
 
     public FishingInstructorDto fishingInstructorToFishingInstructorDto(FishingInstructor fishingInstructor){
         return  new FishingInstructorDto(fishingInstructor.getId(),fishingInstructor.getUsername(),fishingInstructor.getPassword(),fishingInstructor.getName(),
                 fishingInstructor.getLastName(),fishingInstructor.getPhoneNum(),addressMapper.addressToDTO(fishingInstructor.getAddress()),
-                fishingInstructor.getRegistrationReason(),fishingInstructor.getRoleApp(),fishingInstructor.getRating(), availableInstructorPeriodMapper.availableInstructorPeriodsToDtoS(fishingInstructor.getAvailableInstructorPeriods()));
+                fishingInstructor.getRegistrationReason(),fishingInstructor.getRoleApp(),availableInstructorPeriodMapper.availableInstructorPeriodsToDtoS(fishingInstructor.getAvailableInstructorPeriods()));
     }
 
 
