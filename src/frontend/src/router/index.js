@@ -48,6 +48,7 @@ import UserRank from '../views/Admin/UserRank'
 import ClientActivation from '../views/Client/ClientActivation'
 import ClientAccountAlert from '../views/Client/ClientAccountAlert'
 import Review from '../views/Admin/Review'
+import CabinBusinessReport from '../views/CabinOwner/CabinBusinessReport'
 
 const routes = [
   
@@ -159,6 +160,22 @@ const routes = [
     path: '/cabinOwnerHome/:email',
     name: 'CabinOwnerHome',
     component: CabinOwnerHome,
+    beforeEnter: (to, from,next) => {
+      // reject the navigation
+  
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                            
+ 
+  },
+  {
+    path: '/cabinBusinessReport/:email',
+    name: 'CabinBusinessReport',
+    component: CabinBusinessReport,
     beforeEnter: (to, from,next) => {
       // reject the navigation
   

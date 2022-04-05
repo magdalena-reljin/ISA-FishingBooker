@@ -24,6 +24,8 @@ import VCalendar from 'v-calendar';
 
 import store from '../src/store/index'
 
+import './plugins/chart'
+
 const firebaseConfig = {
     apiKey: "AIzaSyAwNdI28zKlIT2GG3pRLpH9aMmcbUftl04",
     authDomain: "isa15-d7c5c.firebaseapp.com",
