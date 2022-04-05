@@ -6,11 +6,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
-import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 
 
 @Service

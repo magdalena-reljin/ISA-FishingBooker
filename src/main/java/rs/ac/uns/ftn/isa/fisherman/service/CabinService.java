@@ -24,4 +24,5 @@ public interface CabinService {
 
     void edit(Cabin cabin, Boolean deleteOldImages);
     boolean canBeEditedOrDeleted(Long id);
+    void updateCabinGrade(Long cabinId);
 }
