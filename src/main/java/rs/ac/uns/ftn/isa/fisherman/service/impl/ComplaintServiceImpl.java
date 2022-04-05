@@ -3,12 +3,12 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.NewComplaintDto;
+import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinComplaintRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinOwnerComplaintRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.ComplaintService;
 

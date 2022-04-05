@@ -9,12 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
+import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import rs.ac.uns.ftn.isa.fisherman.mail.*;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
-import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
-import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
 import javax.mail.MessagingException;
 
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
     private MailService<String> mailService;
-    private  AuthorityService authorityService;
+    private AuthorityService authorityService;
     private PasswordEncoder passwordEncoder;
     private TokenUtils tokenUtils;
     @Autowired

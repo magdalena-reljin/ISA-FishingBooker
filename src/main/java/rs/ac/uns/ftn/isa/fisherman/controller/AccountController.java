@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.MailDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
-import rs.ac.uns.ftn.isa.fisherman.service.*;
+import rs.ac.uns.ftn.isa.fisherman.service.AdminService;
+import rs.ac.uns.ftn.isa.fisherman.service.UserService;
+
 import javax.mail.MessagingException;
 
 @RestController

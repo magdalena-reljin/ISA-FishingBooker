@@ -2,11 +2,11 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.RankService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationPaymentService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationPointsService;
-import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
 @Service
 public class ReservationPaymentServiceImpl implements ReservationPaymentService {
