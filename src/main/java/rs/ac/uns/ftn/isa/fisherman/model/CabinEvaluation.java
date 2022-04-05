@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@DiscriminatorValue("CABINEVALUATION")
 public class CabinEvaluation extends Evaluation{
 
     @ManyToOne

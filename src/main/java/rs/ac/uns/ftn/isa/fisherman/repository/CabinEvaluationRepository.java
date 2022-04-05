@@ -7,6 +7,6 @@ import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 
 public interface CabinEvaluationRepository extends JpaRepository<CabinEvaluation, Long> {
 
-    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_evaluation c where cabin_reservation_id=:cabin_reservation_id",nativeQuery = true)
+    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM evaluations c where cabin_reservation_id=:cabin_reservation_id",nativeQuery = true)
     boolean reservationHasEvaluation(@Param("cabin_reservation_id")Long cabin_reservation_id);
 }
