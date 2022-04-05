@@ -58,6 +58,16 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return  quickReservationAdventureRepository.getAllReports();
     }
 
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId) {
+        return quickReservationAdventureRepository.countReservationsInPeriod(start,end,ownerId);
+    }
+
+    @Override
+    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
+        return quickReservationAdventureRepository.sumProfit(ownerId,start,end);
+    }
+
 
     @Override
     public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {

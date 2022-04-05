@@ -112,4 +112,14 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public Set<AdventureReservation>getAllReports(){
        return adventureReservationRepository.getAllReports();
     }
+
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId) {
+        return adventureReservationRepository.countReservationsInPeriod(start,end,ownerId);
+    }
+
+    @Override
+    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
+        return adventureReservationRepository.sumProfit(ownerId,start,end);
+    }
 }

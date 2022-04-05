@@ -17,4 +17,8 @@ public interface QuickReservationAdventureService {
 
     void ownerCreatesReview(QuickReservationAdventure reservation, boolean successfull);
     Set<QuickReservationAdventure> getAllReports();
+
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
+
+    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
 }

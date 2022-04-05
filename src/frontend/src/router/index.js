@@ -49,6 +49,7 @@ import ClientActivation from '../views/Client/ClientActivation'
 import ClientAccountAlert from '../views/Client/ClientAccountAlert'
 import Review from '../views/Admin/Review'
 import CabinBusinessReport from '../views/CabinOwner/CabinBusinessReport'
+import InstructorsBusinessReport from '../views/FishingInstructor/InstructorsBusinessReport'
 
 const routes = [
   
@@ -264,6 +265,19 @@ const routes = [
     path: '/fishingInstructorHome/:email',
     name: 'FishingInstructorHome',
     component: FishingInstructorHome,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='FISHINGINSTRUCTOR' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }
+  },
+  {
+    path: '/insctructorsBusinessReport/:email',
+    name: 'InstructorsBusinessReport',
+    component: InstructorsBusinessReport,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
       if(localStorage.token == 'empty' || localStorage.role !='FISHINGINSTRUCTOR' || localStorage.logged == false){

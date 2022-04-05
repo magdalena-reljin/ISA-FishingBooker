@@ -28,6 +28,13 @@ public interface QuickReservationAdventureRepository extends JpaRepository<Quick
 
     @Query(value = "SELECT * FROM quick_reservation_adventure where successfull=true and bad_comment=true and comment!='' ", nativeQuery = true)
     Set<QuickReservationAdventure> getAllReports();
+
+    @Query(value="select sum(cr.owners_part) from quick_reservation_adventure cr where cr.instructors_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Double sumProfit(@Param("users_id")  Long ownerId, @Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+
+    @Query(value="select count(cr.instructors_id) from quick_reservation_adventure cr where cr.instructors_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("users_id") Long ownerId);
+
 }
 
 
