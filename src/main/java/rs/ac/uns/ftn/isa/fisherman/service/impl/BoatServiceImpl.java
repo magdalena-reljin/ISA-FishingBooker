@@ -122,4 +122,9 @@ public class BoatServiceImpl implements BoatService {
         if(quickReservationBoatService.futureQuickReservationsExist(currentDate,id)) return false;
         return true;
     }
+
+    @Override
+    public Double findAvgBoatRatingByOwnerId(Long ownerId) {
+        return boatRepository.findAvgBoatRatingByOwnerId(ownerId);
+    }
 }

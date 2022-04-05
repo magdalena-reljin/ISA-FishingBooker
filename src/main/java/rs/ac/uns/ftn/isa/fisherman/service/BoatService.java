@@ -28,4 +28,6 @@ public interface BoatService {
     List<Boat> findAll();
 
     boolean canBeEditedOrDeleted(Long id);
+
+    Double findAvgBoatRatingByOwnerId(Long ownerId);
 }

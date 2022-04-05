@@ -117,7 +117,18 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
     @Override
     public Set<BoatReservation> getAllReports(){
+
         return  boatReservationRepository.getAllReports();
+    }
+
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId) {
+        return boatReservationRepository.countReservationsInPeriod(start,end,ownerId);
+    }
+
+    @Override
+    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
+        return boatReservationRepository.sumProfit(ownerId,start,end);
     }
 
     private void sendMailNotification(BoatReservation boatReservation,String email){

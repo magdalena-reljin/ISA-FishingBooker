@@ -18,4 +18,8 @@ public interface QuickReservationBoatService {
 
     void ownerCreatesReview(QuickReservationBoat quickReservationBoat, boolean successfull);
     Set<QuickReservationBoat> getAllReports();
+
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
+
+    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
 }
