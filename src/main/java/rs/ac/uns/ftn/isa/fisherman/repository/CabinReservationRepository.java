@@ -47,4 +47,7 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
 
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id in :owners_cabins and users_id=:users_id",nativeQuery = true)
     boolean clientHasReservationInOwnersCabin(@Param("owners_cabins")Set<Integer> owners_cabins, @Param("users_id")Long usersId);
+
+    @Query(value="SELECT id FROM cabin_reservation where cabin_id=:cabin_id and (:currentDate > start_date) ",nativeQuery = true)
+    Set<Integer> getCabinReservationsHistory(@Param("cabin_id")Long cabinId,@Param("currentDate")LocalDateTime currentDate);
 }

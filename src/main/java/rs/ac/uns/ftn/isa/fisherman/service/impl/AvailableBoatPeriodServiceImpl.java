@@ -1,9 +1,12 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
+import rs.ac.uns.ftn.isa.fisherman.service.AvailablePeriodService;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableBoatPeriodRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
