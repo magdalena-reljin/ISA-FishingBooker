@@ -33,7 +33,9 @@ public class AdminController {
         if (existUser != null) {
             return new ResponseEntity<>("Email already in use.", HttpStatus.BAD_REQUEST);
         }
-        this.userService.registerAdmin(adminMapper.userRequestDtoToAdmin(userRequest));
+        Admin admin=adminMapper.userRequestDtoToAdmin(userRequest);
+        admin.setRating(null);
+        this.userService.registerAdmin(admin);
         return new ResponseEntity<>("Success.", HttpStatus.CREATED);
     }
 

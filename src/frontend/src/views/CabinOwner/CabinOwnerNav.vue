@@ -77,7 +77,7 @@
       </li>
 
       <li class="nav-item">
-        <a style="color: white" @click="requests()" class="nav-link active" href="#"
+        <a @click="statistics()" style="color: white" class="nav-link active" href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -124,6 +124,9 @@ export default ({
     },
     quickReservations: function(){
           this.$router.push('/quickReservationsCabinOwner/'+ this.$props.username);
+    },
+    statistics: function(){
+          this.$router.push('/cabinBusinessReport/'+ this.$props.username);
     }  
   }, 
 });

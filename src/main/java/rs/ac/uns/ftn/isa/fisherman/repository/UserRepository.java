@@ -23,5 +23,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query(value = "SELECT * FROM users WHERE role != 'ADMIN' AND reason_for_deleting!=''",nativeQuery = true)
     List<User> getReguestsForDeletingAccount();
 
-
+    @Query(value = "SELECT rating FROM users WHERE username=:username",nativeQuery = true)
+    Double findRatingByUsername(@Param("username")String username);
 }

@@ -1,7 +1,7 @@
 <template>
 
 <CabinOwnerNav :username=email />
-
+<div > 
 <h1>RESERVATIONS</h1>
 <div  class="header" >
       <form>
@@ -335,7 +335,7 @@
   <hr>
   <button type="button" @click="createAReview()" class="btn btn-success">Send report to system admins</button>
 </vue-modality>
-
+</div>
 </template>
 <script>
 

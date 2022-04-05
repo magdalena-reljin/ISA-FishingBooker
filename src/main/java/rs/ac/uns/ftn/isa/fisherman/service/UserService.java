@@ -37,4 +37,6 @@ public interface UserService {
     String getUsernameFromToken(String s);
 
     void save(User user);
+
+    Double findRatingByUsername(String username);
 }

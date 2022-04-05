@@ -198,4 +198,9 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public Double findRatingByUsername(String username) {
+        return userRepository.findRatingByUsername(username);
+    }
+
 }

@@ -54,6 +54,16 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         return  quickReservationCabinRepository.getAllReports();
     }
 
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId) {
+        return quickReservationCabinRepository.countReservationsOfThisWeek(startWeek,endWeek,ownerId);
+    }
+
+    @Override
+    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
+        return quickReservationCabinRepository.sumProfit(ownerId,start,end);
+    }
+
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
         Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
         for(String email: subscriptionEmails) {

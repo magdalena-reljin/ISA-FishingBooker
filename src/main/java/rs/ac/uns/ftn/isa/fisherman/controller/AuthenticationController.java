@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.LogInDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
+
 import rs.ac.uns.ftn.isa.fisherman.service.LoginService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
+
 import rs.ac.uns.ftn.isa.fisherman.model.User;
 import rs.ac.uns.ftn.isa.fisherman.model.UserTokenState;
 import rs.ac.uns.ftn.isa.fisherman.mapper.*;
@@ -119,7 +121,9 @@ public class AuthenticationController {
         if (existUser != null) {
             return new ResponseEntity<>(EMAIL_ALREADY_IN_USE, HttpStatus.BAD_REQUEST);
         }
-        this.userService.registerClient(clientMapper.userRequestDtoToClient(userRequest));
+        Client client=clientMapper.userRequestDtoToClient(userRequest);
+        client.setRating(null);
+        this.userService.registerClient(client);
         return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
 

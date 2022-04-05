@@ -55,4 +55,10 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="SELECT * FROM cabin_reservation where successfull=true and bad_comment=true and comment!='' ",nativeQuery = true)
     Set<CabinReservation> getAllReports();
 
+    @Query(value="select count(c.id) from cabin c join cabin_reservation cr on c.id=cr.cabin_id where c.users_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("users_id") Long ownerId);
+
+    @Query(value="select sum(cr.owners_part) from cabin c join cabin_reservation cr on c.id=cr.cabin_id where c.users_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Double sumProfit(@Param("users_id")  Long ownerId, @Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+
 }
