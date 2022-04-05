@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinEvaluationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinEvaluationService;
+import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,8 @@ public class CabinEvaluationServiceImpl implements CabinEvaluationService {
     CabinReservationRepository cabinReservationRepository;
     @Autowired
     CabinEvaluationRepository cabinEvaluationRepository;
+    @Autowired
+    CabinService cabinService;
 
     @Override
     public boolean addEvaluation(CabinEvaluationDto cabinEvaluationDto) {

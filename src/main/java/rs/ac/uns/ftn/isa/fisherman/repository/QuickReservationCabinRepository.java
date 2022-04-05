@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
 import java.time.LocalDateTime;
@@ -26,4 +27,7 @@ public interface QuickReservationCabinRepository extends JpaRepository<QuickRese
 
     @Query(value="SELECT * FROM quick_reservation_cabin where id=:id ",nativeQuery = true)
     QuickReservationCabin getById(@Param("id")Long id);
+
+    @Query(value = "SELECT * FROM quick_reservation_cabin where successfull=true and bad_comment=true and comment!='' ", nativeQuery = true)
+    Set<QuickReservationCabin> getAllReports();
 }

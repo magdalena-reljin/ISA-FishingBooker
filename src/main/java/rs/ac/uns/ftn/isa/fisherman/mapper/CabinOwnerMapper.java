@@ -10,7 +10,5 @@ public class CabinOwnerMapper {
        return new CabinOwner(userRequest.getId(),userRequest.getFirstname(),userRequest.getLastname(),userRequest.getUsername(),
                 userRequest.getPassword(),userRequest.getPhoneNum(),addressMapper.dtoToAddress(userRequest.getAddress()),userRequest.getRegistrationReason());
     }
-    public UserRequestDTO cabinOwnerToUserRequestDto(CabinOwner cabinOwner){
-       return new UserRequestDTO(cabinOwner.getUsername(),cabinOwner.getName(),cabinOwner.getLastName(),cabinOwner.getRoleApp(),cabinOwner.getRegistrationReason());
-    }
+
 }

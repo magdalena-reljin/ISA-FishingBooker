@@ -17,4 +17,5 @@ public interface QuickReservationBoatService {
     Set<QuickReservationBoat> getPastReservations(Long id);
 
     void ownerCreatesReview(QuickReservationBoat quickReservationBoat, boolean successfull);
+    Set<QuickReservationBoat> getAllReports();
 }

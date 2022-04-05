@@ -7,13 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.*;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
-import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,54 +16,25 @@ import java.util.List;
 @RequestMapping(value = "/userc", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     @Autowired
-    private CabinOwnerService cabinOwnerService;
-
-    @Autowired
-    private FishingInstructorService fishingInstructorService;
-
-    @Autowired
-    private BoatOwnerService boatOwnerService;
-
-    @Autowired
     private UserService userService;
 
-    private final CabinOwnerMapper cabinOwnerMapper = new CabinOwnerMapper();
-    private final BoatOwnerMapper boatOwnerMapper = new BoatOwnerMapper();
-    private final FishingInstructorMapper fishingInstructorMapper = new FishingInstructorMapper();
     private final UserMapper userMapper=new UserMapper();
 
     @GetMapping("/getAllUsers")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Iterable<UserRequestDTO>> getAllUsers(){
         List<UserRequestDTO> allUsers=new ArrayList<>();
-        for(CabinOwner cabinOwner: cabinOwnerService.getActiveCabinOwners()) {
-            if(cabinOwner.isEnabled())
-                allUsers.add(cabinOwnerMapper.cabinOwnerToUserRequestDto(cabinOwner));
-        }
-        for(BoatOwner boatOwner: boatOwnerService.getActiveBoatOwners()) {
-            if(boatOwner.isEnabled())
-                allUsers.add(boatOwnerMapper.boatOwnerToUserRequestDto(boatOwner));
-        }
-        for(FishingInstructor fishingInstructor: fishingInstructorService.getNewActiveInstructors()) {
-            if(fishingInstructor.isEnabled())
-                allUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
-        }
+        for(User user: userService.findAll())
+            allUsers.add(userMapper.userToUserRequestDTO(user));
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
     @GetMapping("/getNewUsers")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserRequestDTO> getNewUsers() {
-        List<UserRequestDTO> newUsers=new ArrayList<>();
-        for(CabinOwner cabinOwner: cabinOwnerService.getNewCabinOwners()) {
-            newUsers.add(cabinOwnerMapper.cabinOwnerToUserRequestDto(cabinOwner));
-        }
-        for(BoatOwner boatOwner: boatOwnerService.getNewBoatOwners()) {
-            newUsers.add(boatOwnerMapper.boatOwnerToUserRequestDto(boatOwner));
-        }
-        for(FishingInstructor fishingInstructor: fishingInstructorService.getNewFishingInstructors()) {
-            newUsers.add(fishingInstructorMapper.fishingInstructorToUserRequestDto(fishingInstructor));
-        }
-        return newUsers;
+    public  ResponseEntity<List<UserRequestDTO>> getNewUsers() {
+        List<UserRequestDTO> userRequestDtos = new ArrayList<>();
+        for(User user :userService.getNewUsers())
+            userRequestDtos.add(userMapper.userToUserRequestDTO(user));
+        return new ResponseEntity<>(userRequestDtos, HttpStatus.OK);
     }
     @PostMapping("/deleteUser")
     @PreAuthorize("hasRole('ADMIN')")

@@ -47,6 +47,7 @@ import ClientComplaintForm from '../views/Client/ClientComplaintForm'
 import UserRank from '../views/Admin/UserRank'
 import ClientActivation from '../views/Client/ClientActivation'
 import ClientAccountAlert from '../views/Client/ClientAccountAlert'
+import Review from '../views/Admin/Review'
 
 const routes = [
   
@@ -104,6 +105,19 @@ const routes = [
     path: '/requests/:email',
     name: 'RequestsFromUsers',
     component: RequestsFromUsers,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }
+  },
+  {
+    path: '/reviews/:email',
+    name: 'Review',
+    component: Review,
     beforeEnter: (to, from, next) => {
       store.dispatch('refreshToken')
      if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){

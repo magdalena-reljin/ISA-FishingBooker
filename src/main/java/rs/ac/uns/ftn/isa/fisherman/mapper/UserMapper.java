@@ -8,7 +8,7 @@ public class UserMapper {
     public UserRequestDTO userToUserRequestDTO(User user){
         AddressMapper addressMapper=new AddressMapper();
         return new UserRequestDTO(user.getId(),user.getUsername(),user.getPassword(),user.getName(),
-                user.getLastName(), user.getPhoneNum(),addressMapper.addressToDTO(user.getAddress()),"","");
+                user.getLastName(), user.getPhoneNum(),addressMapper.addressToDTO(user.getAddress()),user.getRegistrationReason(),user.getRoleApp());
     }
     public UserRequestDTO userToDeleteUserRequestDTO(User user){
         AddressMapper addressMapper=new AddressMapper();

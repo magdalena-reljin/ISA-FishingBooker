@@ -1,9 +1,9 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatOwnerRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 
 import java.util.List;
 
@@ -15,11 +15,6 @@ public class BoatOwnerServiceImpl implements BoatOwnerService {
         this.boatOwnerRepository = boatOwnerRepository;
     }
 
-    @Override
-    public List<BoatOwner> getNewBoatOwners() { return boatOwnerRepository.getNewBoatOwners();}
-
-    @Override
-    public List<BoatOwner> getActiveBoatOwners() {return boatOwnerRepository.getActiveBoatOwners();}
 
     @Override
     public BoatOwner findByUsername(String ownersUsername) {

@@ -4,12 +4,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfullInfo;
-import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.Client;
-import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
@@ -118,6 +114,10 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         oldReservation.getOwnersReport().setComment(boatReservation.getOwnersReport().getComment());
         oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
         boatReservationRepository.save(oldReservation);
+    }
+    @Override
+    public Set<BoatReservation> getAllReports(){
+        return  boatReservationRepository.getAllReports();
     }
 
     private void sendMailNotification(BoatReservation boatReservation,String email){

@@ -2,8 +2,8 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
@@ -63,6 +63,11 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     @Override
     public Set<QuickReservationBoat> getByBoatId(Long cabinId) {
         return quickReservationBoatRepository.getByBoatId(cabinId);
+    }
+
+    @Override
+    public Set<QuickReservationBoat> getAllReports(){
+        return  quickReservationBoatRepository.getAllReports();
     }
 
     @Override

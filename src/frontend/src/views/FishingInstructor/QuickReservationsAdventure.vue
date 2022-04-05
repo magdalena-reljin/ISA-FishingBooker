@@ -72,7 +72,7 @@
     <button @click="resetSearch(1)" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><b>Current/Upcoming</b></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button @click="resetSearch(1)" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><b>Past</b></button>
+    <button @click="resetSearch(2)" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"><b>Past</b></button>
   </li>
   </ul>
 <div class="tab-content" id="myTabContent">
@@ -190,26 +190,6 @@
           <div class="col-sm-9" style="padding: 1%; text-align: left; ">
              
                  <p><b>{{priceInfo}}$</b></p>
-                
-          </div>
-        </div>
-            <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Discount</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p><b>{{discountInfo}}%</b></p>
-                
-          </div>
-        </div>
-             <div class="row">
-          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
-            <p>Owners part</p>
-          </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; ">
-             
-                 <p><b>{{ownersPartInfo}}$</b></p>
                 
           </div>
         </div>
@@ -399,8 +379,7 @@ export default ({
         selectedPenalty: 1,
         selectedClientShowedUp: 0,
         comment: '',
-        reservation: null,
-        ownersPartInfo: ''
+        reservation: null
        }
        },
        mounted() {
@@ -457,8 +436,6 @@ export default ({
               this.startInfo=this.setDate(ads.startDate)
               this.endInfo=this.setDate(ads.endDate)
               this.priceInfo=ads.paymentInformationDto.totalPrice
-              this.discountInfo=ads.discount
-              this.ownersPartInfo=ads.paymentInformationDto.ownersPart
               this.$refs.reservationInfo.open()
               
           },

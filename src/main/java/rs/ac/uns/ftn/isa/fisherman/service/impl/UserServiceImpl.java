@@ -1,7 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
+import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import rs.ac.uns.ftn.isa.fisherman.mail.*;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
 import rs.ac.uns.ftn.isa.fisherman.security.TokenUtils;
-import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
-import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
 import javax.mail.MessagingException;
 
@@ -25,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
     private MailService<String> mailService;
-    private  AuthorityService authorityService;
+    private AuthorityService authorityService;
     private PasswordEncoder passwordEncoder;
     private TokenUtils tokenUtils;
     @Autowired
@@ -42,7 +40,12 @@ public class UserServiceImpl implements UserService {
       return userRepository.findByUsername(username);
     }
     public List<User> findAll() throws AccessDeniedException {
-        return userRepository.findAll();
+        return userRepository.getAll();
+    }
+
+    @Override
+    public List<User> getNewUsers() {
+        return  userRepository.getNewUsers();
     }
 
     public String findRoleById(Long id){
@@ -88,10 +91,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Client registerClient(Client client){
         List<Authority> auth = authorityService.findByname(client.getRoleApp());
-        client.setActivationURL(getRandomString());
+        client.setActivationURL(getEncodedString(client.getUsername()));
         client.setAuthorities(auth);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
-        client.setActivationURL(getRandomString());
         client=userRepository.save(client);
         try{
            sendActivationLink(client.getUsername(), client.getActivationURL());
@@ -101,17 +103,10 @@ public class UserServiceImpl implements UserService {
         return client;
     }
 
-    private String getRandomString() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 15;
-        Random random = new Random();
-
-        return random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+    private String getEncodedString(String username) {
+        String encoded = passwordEncoder.encode(username);
+        encoded.replaceAll("[^A-Za-z0-9]", "");
+        return encoded.substring(0, 15);
     }
 
     private void sendActivationLink(String recipient, String activationCode) throws MessagingException {
