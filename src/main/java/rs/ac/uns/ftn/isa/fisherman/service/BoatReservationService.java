@@ -23,4 +23,7 @@ public interface BoatReservationService {
 
     Set<BoatReservation> getAllReports();
 
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
+
+    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
 }
