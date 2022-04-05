@@ -15,12 +15,6 @@ public class CabinOwnerServiceImpl implements CabinOwnerService {
         this.cabinOwnerRepository = cabinOwnerRepository;
     }
 
-    public List<CabinOwner> getNewCabinOwners(){
-        return cabinOwnerRepository.getNewCabinOwners();
-    }
-
-    @Override
-    public List<CabinOwner> getActiveCabinOwners() {return cabinOwnerRepository.getActiveCabinOwners();}
 
     @Override
     public CabinOwner findByUsername(String username) {

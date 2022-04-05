@@ -9,19 +9,10 @@ import java.util.Set;
 @DiscriminatorValue("FISHINGINSTRUCTOR")
 public class FishingInstructor extends  User {
     private static String roleApp = "ROLE_FISHING_INSTRUCTOR";
-    private String registrationReason;
     private double rating;
     public FishingInstructor() {}
-    public FishingInstructor(Long id, String name, String lastName, String username, String password, String phoneNum, Address address,String registrationReason) {
-        super(id, name, lastName, username, password, phoneNum, address);
-        this.registrationReason=registrationReason;
-        this.rating=0;
-        this.availableInstructorPeriods= new HashSet<>();
-    }
-
-    public FishingInstructor(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, String registrationReason, double rating, Set<Adventure> adventures, Set<AvailableInstructorPeriod> availableInstructorPeriods) {
-        super(id, name, lastName, username, password, phoneNum, address);
-        this.registrationReason = registrationReason;
+    public FishingInstructor(Long id, String name, String lastName, String username, String password, String phoneNum, Address address, double rating, Set<Adventure> adventures, Set<AvailableInstructorPeriod> availableInstructorPeriods,String registrationReason) {
+        super(id, name, lastName, username, password, phoneNum, address,registrationReason);
         this.rating = rating;
         this.adventures = adventures;
         this.availableInstructorPeriods = availableInstructorPeriods;
@@ -32,13 +23,6 @@ public class FishingInstructor extends  User {
 
     @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AvailableInstructorPeriod> availableInstructorPeriods;
-
-    public String getRegistrationReason() {
-        return registrationReason;
-    }
-    public void setRegistrationReason(String registrationReason) {
-        this.registrationReason = registrationReason;
-    }
 
     @Override
     public String getRoleApp() {

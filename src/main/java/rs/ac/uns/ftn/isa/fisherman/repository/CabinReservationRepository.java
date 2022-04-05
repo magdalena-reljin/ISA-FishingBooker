@@ -3,6 +3,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import javax.transaction.Transactional;
@@ -50,4 +51,8 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
 
     @Query(value="SELECT id FROM cabin_reservation where cabin_id=:cabin_id and (:currentDate > start_date) ",nativeQuery = true)
     Set<Integer> getCabinReservationsHistory(@Param("cabin_id")Long cabinId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT * FROM cabin_reservation where successfull=true and bad_comment=true and comment!='' ",nativeQuery = true)
+    Set<CabinReservation> getAllReports();
+
 }

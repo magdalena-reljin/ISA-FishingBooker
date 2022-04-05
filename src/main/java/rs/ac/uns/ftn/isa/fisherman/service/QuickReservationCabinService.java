@@ -19,4 +19,5 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> getPastReservations(Long id);
 
     void ownerCreatesReview(QuickReservationCabin reservation, boolean successfull);
+    Set<QuickReservationCabin> getAllReports();
 }

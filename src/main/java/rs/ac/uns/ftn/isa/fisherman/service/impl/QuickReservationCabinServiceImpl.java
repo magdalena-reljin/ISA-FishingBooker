@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinSubscription;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
@@ -46,6 +49,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         sendMailNotificationToSubscribedUsers(successfullQuickReservation.getCabin().getId(),successfullQuickReservation.getCabin().getName());
         return true;
     }
+    @Override
+    public Set<QuickReservationCabin> getAllReports(){
+        return  quickReservationCabinRepository.getAllReports();
+    }
+
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
         Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
         for(String email: subscriptionEmails) {
