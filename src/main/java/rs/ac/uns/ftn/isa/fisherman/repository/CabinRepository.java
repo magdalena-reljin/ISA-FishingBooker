@@ -15,4 +15,7 @@ public interface CabinRepository extends JpaRepository<Cabin,Integer> {
 
     @Query(value = "SELECT id FROM cabin WHERE users_id=:users_id",nativeQuery = true)
     Set<Integer> findCabinsIdByOwnersId(@Param("users_id")Long id);
+
+    @Query(value = "SELECT avg(rating) FROM cabin WHERE users_id=:users_id",nativeQuery = true)
+    Double findAvgCabinRatingByOwnerId(@Param("users_id")Long id);
 }

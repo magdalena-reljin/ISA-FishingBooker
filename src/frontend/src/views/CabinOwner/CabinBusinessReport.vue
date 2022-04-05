@@ -15,7 +15,7 @@
                  </div>
                  <div class="col" style="padding: 1%;" >
 
-                  nesto
+                      {{stats.ownerRating}}
                   <svg xmlns="http://www.w3.org/2000/svg" style="color: yellow;" width="18" height="18" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
   <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
 </svg>
@@ -28,7 +28,7 @@
                  </div>
                  <div class="col" style="padding: 1%;" >
         
-                  nesto
+                   {{stats.avgRating}}
                   <svg xmlns="http://www.w3.org/2000/svg" style="color: yellow;" width="18" height="18" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
   <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
 </svg>
@@ -41,7 +41,7 @@
                  </div>
                 
                  <div class="col" style="padding: 1%;" >
-                       nesto
+                       {{stats.reservationsPointsDto.appProfitPercentage}}
                      <svg xmlns="http://www.w3.org/2000/svg" style="color: blue;" width="18" height="18" fill="currentColor" class="bi bi-percent" viewBox="0 0 16 16">
   <path d="M13.442 2.558a.625.625 0 0 1 0 .884l-10 10a.625.625 0 1 1-.884-.884l10-10a.625.625 0 0 1 .884 0zM4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm7 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
 </svg>
@@ -54,10 +54,21 @@
                  <h6>CANCELATION FEE </h6>
                  </div>
                  <div class="col" style="padding: 1%;" >
-                  nesto
+                                         {{stats.reservationsPointsDto.cancelationFeePercentage}}
                       <svg xmlns="http://www.w3.org/2000/svg" style="color: blue;" width="18" height="18" fill="currentColor" class="bi bi-percent" viewBox="0 0 16 16">
   <path d="M13.442 2.558a.625.625 0 0 1 0 .884l-10 10a.625.625 0 1 1-.884-.884l10-10a.625.625 0 0 1 .884 0zM4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm7 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
 </svg>
+                </div>
+                </div>
+
+                <div  class="row">
+                 <div class="col-sm-6" style="padding-top: 2%; text-align: left;" >
+                 <h6>POINTS FOR RESERVATION </h6>
+                 </div>
+                 <div class="col" style="padding: 1%;" >
+                                                           {{stats.reservationsPointsDto.clientPoints}}
+                  P
+                     
                 </div>
                 </div>
                 
@@ -129,7 +140,7 @@ Chart.register(BarController,CategoryScale,LinearScale,BarElement)
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
 import {computed, ref} from 'vue'
-//import axios from "axios";
+import axios from "axios";
 
 
 export default ({
@@ -197,11 +208,23 @@ const dataIncome=computed(()=>
         email: '',
         start: '',
         end: '',
+        stats: {
+            ownerRating: 0.0,
+            avgRating: 0.0,
+            reservationsPointsDto: {
+                id: 0,
+                clientPoints: 0,
+                ownerPoints: 0,
+                appProfitPercentage: 0,
+                cancelationFeePercentage: 0
+            }
+        }
 
        }
        },
        mounted() {
              this.email = this.$route.params.email
+             this.getStats()
        },
        methods:{
           formatDate(formatDate) {
@@ -218,6 +241,16 @@ const dataIncome=computed(()=>
                 return false;
               }
               return true;
+          },
+          getStats: function (){
+               axios
+                .get(
+                "http://localhost:8081/statisticsReport/findCabinStatistics/"+this.email+"/")
+                .then((response) => {
+                    this.stats = response.data;
+                    console.log("usaooooooooooooooooooooooooooo u then")
+                });
+
           },
           createIncomeReport: function(){
              if(this.start=="" || this.end=="") return;

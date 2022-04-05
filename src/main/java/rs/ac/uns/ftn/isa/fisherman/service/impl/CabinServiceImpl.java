@@ -97,4 +97,9 @@ public class CabinServiceImpl implements CabinService {
         return true;
     }
 
+    @Override
+    public Double findAvgCabinRatingByOwnerId(Long ownerId) {
+        return cabinRepository.findAvgCabinRatingByOwnerId(ownerId);
+    }
+
 }
