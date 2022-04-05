@@ -118,6 +118,16 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return  cabinReservationRepository.getAllReports();
     }
 
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId) {
+        return cabinReservationRepository.countReservationsInPeriod(startWeek,endWeek,ownerId);
+    }
+
+    @Override
+    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
+        return cabinReservationRepository.sumProfit(ownerId,start,end);
+    }
+
 
     private boolean periodStillAvailable(CabinReservation cabinReservation) {
         for(AvailableCabinPeriod cabinPeriod:availableCabinPeriodService.findAll()){

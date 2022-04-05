@@ -30,4 +30,10 @@ public interface QuickReservationCabinRepository extends JpaRepository<QuickRese
 
     @Query(value = "SELECT * FROM quick_reservation_cabin where successfull=true and bad_comment=true and comment!='' ", nativeQuery = true)
     Set<QuickReservationCabin> getAllReports();
+
+    @Query(value="select count(c.id) from cabin c join quick_reservation_cabin cr on c.id=cr.cabin_id where c.users_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsOfThisWeek(@Param("start")LocalDateTime startWeek,@Param("end") LocalDateTime endWeek,@Param("users_id") Long ownerId);
+
+    @Query(value="select sum(cr.owners_part) from cabin c join quick_reservation_cabin cr on c.id=cr.cabin_id where c.users_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Double sumProfit(@Param("users_id") Long ownerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

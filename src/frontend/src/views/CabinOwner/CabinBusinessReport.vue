@@ -120,7 +120,7 @@
 
               <div class="col"  >
                              <h3>OWNERS INCOME</h3>
-        <BarChart :chart-data="dataIncome" css-classes="chart-container" />
+        <BarChart :chart-data="dataIncome" :options="options" css-classes="chart-container" />
               </div>
 
         </div>
@@ -139,7 +139,6 @@ import {Chart, BarController, CategoryScale, LinearScale,BarElement} from 'chart
 Chart.register(BarController,CategoryScale,LinearScale,BarElement)
 import Datepicker from 'vue3-date-time-picker';
 import 'vue3-date-time-picker/dist/main.css';
-import {computed, ref} from 'vue'
 import axios from "axios";
 
 
@@ -150,61 +149,49 @@ export default ({
          Datepicker
   
      },
-     setup(){
-         
-const dataValues=ref([
-    [1,2,3],
-    [1,2,100]
-]
-)
 
-const data=computed(()=>
-({
-    labels: ["This week","This month","This year"],
-    datasets: [{
-        label: "Reservations",
-        data: dataValues.value[0], 
-        backgroundColor: "#268bd2"
-    },
-    {
-        label: "Quick actions",
-        data: dataValues.value[1], 
-        backgroundColor: "#244bd2"
-
-    }]
-
-})
-)
-const dataValuesIncome=ref([
-    [30],
-    [50]
-]
-)
-const dataIncome=computed(()=>
-({
-    labels: ["Profit ($)"],
-    datasets: [{
-        label: "Reservations",
-        data: dataValuesIncome.value[0], 
-        backgroundColor: "#cafc03"
-    },
-    {
-        label: "Quick actions",
-        data: dataValuesIncome.value[1], 
-        backgroundColor: "#ffd000"
-
-    }]
-
-})
-)
-    return{
-        data,
-        dataIncome
-    }
-
-     },
-      data(){
+    data(){
        return{
+           data:
+                  {
+                    labels: ["This week","This month","This year"],
+                    datasets: [{
+                        label: "Reservations",
+                        data:  [], 
+                        backgroundColor: "#268bd2"
+                    },
+                    {
+                        label: "Quick actions",
+                        data:  [], 
+                        backgroundColor: "#244bd2"
+
+                    }]
+
+                },
+         dataIncome: 
+                {
+                    labels: ["Profit ($)"],
+                    datasets: [{
+                        label: "Reservations",
+                        data: [], 
+                        backgroundColor: "#cafc03"
+                    },
+                    {
+                        label: "Quick actions",
+                        data: [], 
+                        backgroundColor: "#ffd000"
+
+                    }]
+                    
+
+                },
+         options: {
+               plugins: {
+                   title: {
+                       text: "Profit ($)"
+                   }
+               }
+         },
         email: '',
         start: '',
         end: '',
@@ -216,15 +203,17 @@ const dataIncome=computed(()=>
                 clientPoints: 0,
                 ownerPoints: 0,
                 appProfitPercentage: 0,
-                cancelationFeePercentage: 0
-            }
+                cancelationFeePercentage: 0,
+            },
         }
-
        }
        },
        mounted() {
              this.email = this.$route.params.email
              this.getStats()
+             this.getReservations()
+             this.getQuickReservations()
+               
        },
        methods:{
           formatDate(formatDate) {
@@ -243,14 +232,38 @@ const dataIncome=computed(()=>
               return true;
           },
           getStats: function (){
+
                axios
                 .get(
-                "http://localhost:8081/statisticsReport/findCabinStatistics/"+this.email+"/")
+                "http://localhost:8081/cabinStatisticsReport/findCabinStatistics/"+this.email+"/")
                 .then((response) => {
                     this.stats = response.data;
-                    console.log("usaooooooooooooooooooooooooooo u then")
                 });
 
+
+          },
+          getReservations: function(){
+                axios
+                .get(
+                "http://localhost:8081/cabinStatisticsReport/countReservations/"+this.email+"/")
+                .then((response) => {
+                    
+                    for(let i=0; i< response.data.length; i++)
+                       this.data.datasets[0].data.push([response.data[i]])
+
+                    console.log(response.data[1])
+
+                });
+          },
+          getQuickReservations: function(){
+                axios
+                .get(
+                "http://localhost:8081/cabinStatisticsReport/countQuickReservations/"+this.email+"/")
+                .then((response) => {
+                       for(let i=0; i< response.data.length; i++)
+                       this.data.datasets[1].data.push([response.data[i]])
+
+                });
           },
           createIncomeReport: function(){
              if(this.start=="" || this.end=="") return;
@@ -264,6 +277,21 @@ const dataIncome=computed(()=>
                 })
                  return;
              }
+             var dateRange=[]
+             dateRange.push(this.formatDate(this.start))
+             dateRange.push(this.formatDate(this.end))
+             axios
+                .post(
+                "http://localhost:8081/statisticsReport/sumProfit/"+this.email+"/", dateRange
+               
+                )
+                .then((response) => {
+                     
+                       this.dataIncome.datasets[0].data.push([response.data[0]])
+                       this.dataIncome.datasets[1].data.push([response.data[1]])
+
+
+                });
                
           }
 
