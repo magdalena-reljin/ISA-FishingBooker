@@ -487,6 +487,7 @@ export default ({
                       
                 })
 
+  
                 this.selectedClientShowedUp=0
                 this.selectedPenalty=1
                 this.comment=''

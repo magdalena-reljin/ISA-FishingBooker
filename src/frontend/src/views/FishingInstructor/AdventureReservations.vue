@@ -105,7 +105,7 @@
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
                             <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
-                            <td  v-if="(ads1.ownersReportDto.comment==='' || ads1.ownersReportDto.comment==null)"><button @click="review(ads1)" type="button" class="btn btn-success">Review</button></td>
+                            <td  v-if="ads1.ownerWroteAReport==false " ><button @click="review(ads1)" type="button" class="btn btn-success">Review</button></td>
 
                             </tr>
                         </tbody>
@@ -412,12 +412,18 @@ export default ({
                    bad=true
                 if(this.selectedClientShowedUp==1)
                    success=false
+                axios.post("http://localhost:8081/reservationAdventure/ownerCreatesReview/"+this.reservation.id,
+                 {
+                            id: 0,
+                            success: success,
+                            badComment: bad,
+                            comment: this.comment,
+                            approved: false,
+                            ownersUsername: this.email,
+                            clientUsername: this.reservation.clientUsername
 
-            this.reservation.successfull=success
-            this.reservation.ownersReportDto.badComment= bad
-            this.reservation.ownersReportDto.comment=this.comment
-                axios.post("http://localhost:8081/reservationAdventure/ownerCreatesReview",this.reservation)
-                .then(response => {
+                
+                }) .then(response => {
                       this.$refs.writeAReview.hide()
                       console.log(response)
                       this.$swal.fire({
@@ -426,10 +432,13 @@ export default ({
                       title: 'Your review has been saved',
                       showConfirmButton: false,
                       timer: 2500
-                    })
-                      
-                })
+                     
 
+                    })
+                      this.getReservations();
+                       this.getPastReservations();
+
+   })
                 this.selectedClientShowedUp=0
                 this.selectedPenalty=1
                 this.comment=''

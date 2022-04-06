@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
+import rs.ac.uns.ftn.isa.fisherman.service.InstructorReservationReportService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +23,8 @@ public class AdventureReservationController {
  private AdventureReservationService adventureReservationService;
  @Autowired
  private FishingInstructorService fishingInstructorService;
+ @Autowired
+ private InstructorReservationReportService instructorReservationReportService;
  private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
 
     @PostMapping("/instructorCreates")
@@ -58,12 +62,18 @@ public class AdventureReservationController {
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
     }
 
-    @PostMapping("/ownerCreatesReview")
+
+   @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
-    public ResponseEntity<String> writeAReview (@RequestBody AdventureReservationDto adventureReservationDto) {
-        FishingInstructor fishingInstructor = fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
-        AdventureReservation reservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto,fishingInstructor);
-        adventureReservationService.ownerCreatesReview(reservation, adventureReservationDto.isSuccessfull());
+    public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        AdventureReservation reservation= adventureReservationService.findById(reservationId);
+        InstructorReservationReport reservationReport=new InstructorReservationReport(ownersReportDto.getId(),
+                ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),
+                ownersReportDto.getClientUsername(),ownersReportDto.isApproved(),reservation);
+        instructorReservationReportService.save(reservationReport);
+        reservation.setSuccessfull(ownersReportDto.isSuccess());
+        reservation.setOwnerWroteAReport(true);
+        adventureReservationService.save(reservation);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 }

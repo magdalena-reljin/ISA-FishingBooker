@@ -68,6 +68,16 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return quickReservationAdventureRepository.sumProfit(ownerId,start,end);
     }
 
+    @Override
+    public void save(QuickReservationAdventure quickReservationAdventure) {
+        quickReservationAdventureRepository.save(quickReservationAdventure);
+    }
+
+    @Override
+    public QuickReservationAdventure findById(Long id) {
+        return quickReservationAdventureRepository.getById(id);
+    }
+
 
     @Override
     public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {
