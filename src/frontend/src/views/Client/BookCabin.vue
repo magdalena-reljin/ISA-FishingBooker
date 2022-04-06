@@ -319,8 +319,8 @@
           </button>
         </div>
       </template>
-      <template v-if="!bookingProcess">
-      <template v-if="!cabinDto.subscription">
+      <template v-if="!bookingProcess  && role=='CLIENT'">
+      <template v-if="!cabinDto.subscription && role=='CLIENT'">
         <div class="col" style="margin-top: 3%">
           <button
             @click="subscribe()"
@@ -332,7 +332,7 @@
           </button>
         </div>
       </template>
-      <template v-if="cabinDto.subscription">
+      <template v-if="cabinDto.subscription  && role=='CLIENT'">
         <div class="col" style="margin-top: 3%">
           <button
             @click="unsubscribe()"
@@ -344,6 +344,18 @@
           </button>
         </div>
       </template>
+      </template>
+        <template v-if="role=='ADMIN'">
+        <div class="col" style="margin-top: 3%">
+          <button
+            @click="deleteCabin()"
+            style="background-color: #1d7ac9; width: 100%"
+            type="button"
+            class="btn text-light rounded-pill"
+          >
+            DELETE CABIN
+          </button>
+        </div>
       </template>
       <div
         style="
@@ -388,6 +400,7 @@ export default {
   data() {
     return {
       email: "",
+      role: localStorage.role,
       cabinDto: {
         id: null,
         name: "",
@@ -448,6 +461,7 @@ export default {
     };
   },
   mounted() {
+    this.role= localStorage.role
     this.email = this.$route.params.email;
     this.cabinNameParam = this.$route.params.cabinName;
     this.start = this.startDate;
@@ -679,6 +693,29 @@ export default {
           this.getCabin();
         });
     },
+    
+    deleteCabin: function(){
+            axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
+               .then(response => {
+                     if(response.data == true){
+                      axios.post("http://localhost:8081/cabins/delete",this.cabinDto)
+                      .then(response => {
+                            this.$router.push('/profileAdmin/'+ this.email);
+                            return response;
+                      })
+                     }else{
+                           this.$swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'This cabin has future reservations and can not be deleted!',
+                            showConfirmButton: false,
+                            timer: 2500
+                            })
+
+                     }
+              })
+
+    }
   },
 };
 </script> 
