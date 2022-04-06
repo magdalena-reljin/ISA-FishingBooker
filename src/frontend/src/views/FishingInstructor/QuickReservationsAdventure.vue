@@ -473,8 +473,8 @@ export default ({
                     })
 
                     
-              this.getQuickReservations();
-              this.getPastQuickReservations();
+                      this.getQuickReservations();
+                       this.getPastReservations();
 
    })
 

@@ -23,14 +23,14 @@
   <tbody>
     <tr  v-for="(rep,index) in reports" :key="index">
        <th scope="row">{{index +1}}</th>
-      <td>{{rep.ownerUsername}}</td>
+      <td>{{rep.ownersUsername}}</td>
       <td>{{rep.comment}}</td>
       <td>{{rep.clientUsername}}</td>
       <td v-if="rep.badComment == true">YES</td>
       <td>
         <tr>
          <div class="row">
-            <div class="col "><button @click="answer(rep)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+            <div class="col "><button @click="answer(rep)"
                type="button" class="btn btn-outline-success" >ANSWER</button></div>
      
         </div>
@@ -47,6 +47,61 @@
 
   </div>
  
+<vue-modality ref="sendResponse" title="Send email" hide-footer centered width="600px">
+
+         <div class="row">
+         <div class="col">
+        <div class="row" style="padding-bottom: 1%;">
+          <div class="col-sm-3" style="padding-top: 1%; text-align: left; color: gray;">
+            <p>Text message</p>
+          </div>
+        </div>
+        <div class="row" style=" padding-left: 3%; padding-right: 3%; height: 40%;">
+                 <textarea style="height: 150px" v-model="comment" required ></textarea>
+               
+        </div>
+        
+          
+       
+  <br>
+    <br>
+      <br>
+         
+
+        
+         <div class="row">
+           <div style="padding-top: 1%; text-align: left; color: gray;">
+                 <p>Penal for the client</p>
+           </div>
+           
+          
+             <div class="col">
+                    <select
+                    style="color: #5f7280;"
+                    v-model="selectedPenalty"
+                    class="form-select "
+                    aria-label="Default select example"
+                    placeholder="Rating"
+                  >
+                    <option v-bind:value="0">YES</option>
+                    <option v-bind:value="1">NO</option>
+                   </select>
+             </div>
+         </div>
+
+
+
+            
+      </div>
+
+
+  
+                 <label style="color: red; text-align: right;" v-if="comment==='' || selectedPenalty==null">Please fill in all fields.</label>
+      
+  </div>
+  <hr>
+  <button type="button" @click="sendEmail()" class="btn btn-success">Send</button>
+</vue-modality>
 
 </template>
  
@@ -56,20 +111,32 @@
 import AdminNavbar from './AdminNav.vue'
 import axios from 'axios'
 
+import VueModality from 'vue-modality-v3'
+
    export default{
     components: {
-    AdminNavbar 
+    AdminNavbar ,
+    VueModality
     },
      data(){
        return{
          email: '',
-         reports: []
+         reports: [],
+         selectedPenalty: null,
+         comment: '',
+         id: null,
+         clientUsername: '',
+         ownersUsername: ''
        
        }
      },
      mounted() {
        this.email = this.$route.params.email
-              axios.get("http://localhost:8081/reports/getAllReports")
+         this.getAllReports()
+     },
+     methods: {
+       getAllReports: function(){
+               axios.get("http://localhost:8081/reports/getAllReports")
             .then(response => {this.reports = response.data
               
               })
@@ -77,7 +144,52 @@ import axios from 'axios'
                  this.errorMessage = error.message;
                  console.error("There was an error!", error);
            });
-     },
+       },
+       answer: function(res){
+         console.log("aaa"+res)
+         this.id= res.id;
+         this.clientUsername=res.clientUsername,
+         this.ownersUsername=res.ownersUsername
+           this.$refs.sendResponse.open()
+       },
+       sendEmail: function(){
+         if(this.selectedPenalty ==0){
+           //SETOVATI PENAL KLIJENTUUUU
+         }
+               axios.post("http://localhost:8081/reports/sendReviewResponse",{
+                     id:this.id,
+                    comment: this.comment,
+                    ownersUsername: this.ownersUsername,
+                    clientUsername: this.clientUsername
+
+               })
+            .then(response => 
+            {
+                  console.log("AAA"+response)
+                   this.$refs.sendResponse.hide()
+                       this.$swal.fire({
+                                          position: 'top-end',
+                                          icon: 'success',
+                                          title: 'Email has been successfully send to client and owner!',
+                                          showConfirmButton: false,
+                                           timer: 2500
+                                           
+                                       })
+                                       this.comment= ''
+                                       this.selectedPenalty= null
+                                       this.getAllReports()
+
+            }
+              )
+             .catch(error => {
+               
+                this.comment= ''
+                 this.selectedPenalty= null
+                 this.errorMessage = error.message;
+                 console.error("There was an error!", error);
+           });
+       }
+     }
       
     
   }
