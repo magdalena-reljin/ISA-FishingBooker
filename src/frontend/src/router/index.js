@@ -50,6 +50,7 @@ import Review from '../views/Admin/Review'
 import CabinBusinessReport from '../views/CabinOwner/CabinBusinessReport'
 import InstructorsBusinessReport from '../views/FishingInstructor/InstructorsBusinessReport'
 import BoatOwnerBusinessReport from '../views/BoatOwner/BoatOwnerBusinessReport'
+import ClientPenalties from '../views/Client/ClientPenalties'
 
 const routes = [
   
@@ -342,6 +343,20 @@ const routes = [
  
   },
   {
+    path: '/penalties/:email',
+    name: 'ClientPenalties',
+    component: ClientPenalties,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                          
+ 
+  },
+  {
     path: '/reservation/:email',
     name: 'ClientReservationForm',
     component: ClientReservationForm,
@@ -361,7 +376,7 @@ const routes = [
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
-      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.role=='ADMIN' || localStorage.logged == false){
            next('/')
          }else {
            next()

@@ -694,7 +694,6 @@ export default {
     },
     
     deleteCabin: function(){
-            
             axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
                .then(response => {
                      if(response.data == true){
