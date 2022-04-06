@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     private String getEncodedString(String username) {
         String encoded = passwordEncoder.encode(username);
-        encoded.replaceAll("[^A-Za-z0-9]", "");
+        encoded = encoded.replaceAll("[^A-Za-z0-9]", "");
         return encoded.substring(0, 15);
     }
 
