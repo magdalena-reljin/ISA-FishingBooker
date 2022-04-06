@@ -35,8 +35,8 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(boatReservation,client)) return false;
         BoatReservation successfullReservation=new BoatReservation(boatReservation.getId(),boatReservation.getStartDate(),
-                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),
-                boatReservation.getOwnersReport(),boatReservation.getBoat(),
+                boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.isOwnerWroteAReport(),
+                boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
@@ -111,8 +111,8 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     public void ownerCreatesReview(BoatReservation boatReservation, boolean successfull) {
         BoatReservation oldReservation = boatReservationRepository.getById(boatReservation.getId());
         oldReservation.setSuccessfull(successfull);
-        oldReservation.getOwnersReport().setComment(boatReservation.getOwnersReport().getComment());
-        oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
+       // oldReservation.getOwnersReport().setComment(boatReservation.getOwnersReport().getComment());
+       // oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
         boatReservationRepository.save(oldReservation);
     }
     @Override
@@ -129,6 +129,16 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     @Override
     public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
         return boatReservationRepository.sumProfit(ownerId,start,end);
+    }
+
+    @Override
+    public BoatReservation getById(Long reservationId) {
+        return boatReservationRepository.getById(reservationId);
+    }
+
+    @Override
+    public void save(BoatReservation reservation) {
+        boatReservationRepository.save(reservation);
     }
 
     private void sendMailNotification(BoatReservation boatReservation,String email){

@@ -6,10 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnersReservationReportService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
 
 import java.util.HashSet;
@@ -22,6 +23,8 @@ public class BoatReservationController {
     private BoatReservationService boatReservationService;
     @Autowired
     private BoatOwnerService boatOwnerService;
+    @Autowired
+    private BoatOwnersReservationReportService boatOwnersReservationReportService;
 
     private final BoatReservationMapper boatReservationMapper=new BoatReservationMapper();
     @PostMapping("/ownerCreates/{username:.+}/")
@@ -68,13 +71,18 @@ public class BoatReservationController {
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
     }
-    @PostMapping("/ownerCreatesReview")
+    @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('BOATOWNER')")
-    public ResponseEntity<String> writeAReview (@RequestBody BoatReservationDto boatReservationDto) {
-        BoatReservation boatReservation = boatReservationMapper.boatReservationOwnerDtoToBoatReservation(boatReservationDto);
-        boatReservationService.ownerCreatesReview(boatReservation, boatReservationDto.isSuccessfull());
+    public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        BoatReservation reservation=boatReservationService.getById(reservationId);
+        BoatOwnersReservationReport reservationReport=new BoatOwnersReservationReport(ownersReportDto.getId(),
+                ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),
+                ownersReportDto.getClientUsername(),ownersReportDto.isApproved(),reservation);
+        boatOwnersReservationReportService.save(reservationReport);
+        reservation.setSuccessfull(ownersReportDto.isSuccess());
+        reservation.setOwnerWroteAReport(true);
+        boatReservationService.save(reservation);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
-
     }
 
 }

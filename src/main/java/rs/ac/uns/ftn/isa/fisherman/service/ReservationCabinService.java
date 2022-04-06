@@ -33,4 +33,6 @@ public interface ReservationCabinService {
     Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId);
 
     Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+
+    void save(CabinReservation reservation);
 }

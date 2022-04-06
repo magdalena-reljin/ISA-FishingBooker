@@ -11,10 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.CabinReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinEvaluationService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinReservationCancellationService;
-import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +28,8 @@ public class ReservationCabinController {
     private CabinReservationCancellationService cabinReservationCancellationService;
     @Autowired
     private CabinEvaluationService cabinEvaluationService;
+    @Autowired
+    private CabinOwnersReservationReportService cabinOwnersReservationReportService;
 
     private final CabinMapper cabinMapper = new CabinMapper();
     private final CabinReservationMapper cabinReservationMapper=new CabinReservationMapper();
@@ -126,13 +125,18 @@ public class ReservationCabinController {
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
     }
-    @PostMapping("/ownerCreatesReview")
+    @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('CABINOWNER')")
-    public ResponseEntity<String> writeAReview (@RequestBody CabinReservationDto cabinReservationDto) {
-        CabinReservation reservation = cabinReservationMapper.cabinOwnerReservationDtoToCabinReservation(cabinReservationDto);
-        reservationCabinService.ownerCreatesReview(reservation, cabinReservationDto.isSuccessfull());
+    public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        CabinReservation reservation=reservationCabinService.getById(reservationId);
+        CabinOwnersReservationReport reservationReport=new CabinOwnersReservationReport(ownersReportDto.getId(),
+                ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),
+                ownersReportDto.getClientUsername(),ownersReportDto.isApproved(),reservation);
+        cabinOwnersReservationReportService.save(reservationReport);
+        reservation.setSuccessfull(ownersReportDto.isSuccess());
+        reservation.setOwnerWroteAReport(true);
+        reservationCabinService.save(reservation);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
-
     }
 
         @GetMapping(value= "/getById/{id}")

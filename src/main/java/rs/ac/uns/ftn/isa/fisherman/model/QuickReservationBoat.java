@@ -23,8 +23,8 @@ public class QuickReservationBoat extends Reservation{
     protected boolean needsCaptainServices;
     public QuickReservationBoat(){}
 
-    public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,OwnersReport ownersReport, Boat boat, Integer discount, Set<AdditionalServices> addedAdditionalServices, boolean needsCaptainServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownersReport);
+    public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport, Boat boat, Integer discount, Set<AdditionalServices> addedAdditionalServices, boolean needsCaptainServices) {
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport);
         this.boat = boat;
         this.discount = discount;
         this.addedAdditionalServices = addedAdditionalServices;

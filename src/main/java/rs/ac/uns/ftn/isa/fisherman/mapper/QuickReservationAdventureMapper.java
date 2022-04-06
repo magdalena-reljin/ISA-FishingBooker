@@ -13,8 +13,7 @@ public class QuickReservationAdventureMapper {
     private OwnersReportMapper ownersReportMapper=new OwnersReportMapper();
     public QuickReservationAdventure dtoToQuickReservationAdventure(QuickReservationAdventureDto quickReservationAdventureDto, FishingInstructor fishingInstructor){
         return new QuickReservationAdventure(quickReservationAdventureDto.getId(),quickReservationAdventureDto.getStartDate(),quickReservationAdventureDto.getEndDate(),null,
-                paymentInformationMapper.dtoToPaymentInformation(quickReservationAdventureDto.getPaymentInformationDto()),
-        ownersReportMapper.dtoToOwnersReport(quickReservationAdventureDto.getOwnersReportDto())
+                paymentInformationMapper.dtoToPaymentInformation(quickReservationAdventureDto.getPaymentInformationDto()),quickReservationAdventureDto.isOwnerWroteAReport()
         ,adventureMapper.adventureDtoToAdventure(quickReservationAdventureDto.getAdventureDto()),
                 fishingInstructor,quickReservationAdventureDto.getDiscount(),additionalServiceMapper.additionalServicesDtoToAdditionalServices(quickReservationAdventureDto.getAddedAdditionalServices()));
     }
@@ -29,7 +28,7 @@ public class QuickReservationAdventureMapper {
         return new QuickReservationAdventureDto(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
                 quickReservationAdventure.getEndDate(), clientUsername, fullName,paymentInformationMapper
                 .paymentInformationToDto(quickReservationAdventure.getPaymentInformation()),quickReservationAdventure.isSuccessfull(),
-                ownersReportMapper.ownersReportToDto(quickReservationAdventure.getOwnersReport()),
+                 quickReservationAdventure.isOwnerWroteAReport(),
                 adventureMapper.adventureToAdventureDto(quickReservationAdventure.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(quickReservationAdventure.getAddedAdditionalServices())
 ,quickReservationAdventure.getDiscount());

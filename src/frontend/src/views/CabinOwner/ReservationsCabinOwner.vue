@@ -105,7 +105,7 @@
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
                             <td>{{ads1.clientUsername}}</td>
                             <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
-                            <td  v-if="(ads1.ownersReportDto.comment==='' || ads1.ownersReportDto.comment==null)"><button  @click="writeAReview(ads1)" type="button" class="btn btn-success">Review</button></td>
+                            <td ><button v-if="ads1.ownerWroteAReport==false " @click="writeAReview(ads1)" type="button" class="btn btn-success">Review</button></td>
 
                             </tr>
                         </tbody>
@@ -435,6 +435,7 @@ export default ({
               this.usernameInfo=ads.clientUsername
               this.clientFullNameInfo=ads.clientFullName
               this.reservation=ads
+              this.comment=""
               this.$refs.writeAReview.open()
               
           },
@@ -457,10 +458,20 @@ export default ({
                 if(this.selectedClientShowedUp==1)
                    success=false
 
-            this.reservation.successfull=success
+            /*this.reservation.successfull=success
             this.reservation.ownersReportDto.badComment= bad
-            this.reservation.ownersReportDto.comment=this.comment
-                axios.post("http://localhost:8081/reservationCabin/ownerCreatesReview",this.reservation)
+            this.reservation.ownersReportDto.comment=this.comment*/
+                axios.post("http://localhost:8081/reservationCabin/ownerCreatesReview/"+this.reservation.id,
+                 {
+                            id: 0,
+                            success: success,
+                            badComment: bad,
+                            comment: this.comment,
+                            approved: false,
+                            ownersUsername: this.email,
+                            clientUsername: this.reservation.clientUsername
+
+                    })
                 .then(response => {
                       this.$refs.writeAReview.hide()
                       console.log(response)
@@ -471,6 +482,8 @@ export default ({
                       showConfirmButton: false,
                       timer: 2500
                     })
+                    this.getQuickReservations()
+                    this.getPastQuickReservations()
                       
                 })
 

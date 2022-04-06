@@ -27,8 +27,8 @@ public class QuickReservationAdventure extends  Reservation {
 
     public QuickReservationAdventure() {}
 
-    public QuickReservationAdventure(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, OwnersReport ownersReport, Adventure adventure, FishingInstructor fishingInstructor, Integer discount, Set<AdditionalServices> addedAdditionalServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownersReport);
+    public QuickReservationAdventure(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, boolean ownerWroteAReport,Adventure adventure, FishingInstructor fishingInstructor, Integer discount, Set<AdditionalServices> addedAdditionalServices) {
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport);
         this.adventure = adventure;
         this.fishingInstructor = fishingInstructor;
         this.discount = discount;
