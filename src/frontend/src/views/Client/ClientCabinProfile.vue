@@ -1,6 +1,7 @@
 <template>
-  <ClientNavbar />
 
+  <ClientNavbar v-if="role='CLIENT'" />
+ 
   <BookCabin :bookingProcess="false" />
 </template>
 
@@ -12,6 +13,7 @@ export default {
   components: {
     ClientNavbar,
     BookCabin,
+    
   },
   data() {
     return {};
