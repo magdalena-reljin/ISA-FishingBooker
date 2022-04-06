@@ -12,7 +12,7 @@ public class Client extends User{
     public Client() {
 
     }
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.DETACH, orphanRemoval = true)
     private Set<CabinReservation> cabinReservations;
 
     public Set<CabinReservation> getCabinReservations() {

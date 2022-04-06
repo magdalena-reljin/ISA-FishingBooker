@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 
 import javax.persistence.*;
@@ -7,11 +9,15 @@ import java.time.LocalDateTime;
 import java.util.Set;
 @Entity
 public class QuickReservationAdventure extends  Reservation {
-    @ManyToOne
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="adventure_id")
     protected Adventure adventure;
 
-    @ManyToOne
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="instructors_id")
     protected FishingInstructor fishingInstructor;
 
@@ -19,7 +25,7 @@ public class QuickReservationAdventure extends  Reservation {
     protected Integer discount;
 
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(name = "adventure_quickr_services",
             joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))

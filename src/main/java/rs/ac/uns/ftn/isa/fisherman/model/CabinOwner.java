@@ -10,7 +10,7 @@ import java.util.Set;
 public class CabinOwner extends User{
     private static final String ROLE_APP = "ROLE_CABINOWNER";
 
-    @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.LAZY, cascade = CascadeType.DETACH, orphanRemoval = true)
     private Set<Cabin> cabins;
 
     @OneToMany(mappedBy = "cabinOwner", fetch = FetchType.EAGER, cascade = CascadeType.DETACH, orphanRemoval = true)

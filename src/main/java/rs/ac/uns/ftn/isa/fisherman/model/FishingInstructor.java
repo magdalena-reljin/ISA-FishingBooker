@@ -17,7 +17,7 @@ public class FishingInstructor extends  User {
         this.availableInstructorPeriods = availableInstructorPeriods;
     }
 
-    @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.LAZY, cascade = CascadeType.DETACH, orphanRemoval = true)
     private Set<Adventure> adventures;
 
     @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
