@@ -26,8 +26,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         if(!validateForReservation(quickReservationAdventure)) return false;
 
         QuickReservationAdventure successfullQuickReservation=new QuickReservationAdventure(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
-                quickReservationAdventure.getEndDate(),null,quickReservationAdventure.getPaymentInformation(),
-                quickReservationAdventure.getOwnersReport(),quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount(),null);
+                quickReservationAdventure.getEndDate(),null,quickReservationAdventure.getPaymentInformation(),quickReservationAdventure.isOwnerWroteAReport(),
+                quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount(),null);
 
         quickReservationAdventureRepository.save(successfullQuickReservation);
         if(quickReservationAdventure.getAddedAdditionalServices()!=null){
@@ -79,8 +79,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     public void ownerCreatesReview(QuickReservationAdventure reservation, boolean successfull) {
         QuickReservationAdventure adventureReservation = quickReservationAdventureRepository.getById(reservation.getId());
         adventureReservation.setSuccessfull(successfull);
-        adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-        adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+        //adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+      //  adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
         quickReservationAdventureRepository.save(adventureReservation);
     }
 

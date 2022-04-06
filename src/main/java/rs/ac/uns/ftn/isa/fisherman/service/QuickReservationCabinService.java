@@ -16,7 +16,7 @@ public interface QuickReservationCabinService {
     boolean futureQuickReservationsExist(LocalDateTime currentDate, Long id);
 
     Set<QuickReservationCabin> findReservationsByOwnerId(Long id);
-
+    QuickReservationCabin findReservationById(Long id);
     Set<QuickReservationCabin> getPastReservations(Long id);
 
     void ownerCreatesReview(QuickReservationCabin reservation, boolean successfull);
@@ -24,4 +24,6 @@ public interface QuickReservationCabinService {
     Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId);
 
     Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+
+    void save(QuickReservationCabin reservation);
 }

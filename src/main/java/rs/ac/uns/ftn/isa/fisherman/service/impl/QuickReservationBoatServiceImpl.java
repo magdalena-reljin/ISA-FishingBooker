@@ -26,8 +26,8 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         if(!validateForReservation(quickReservationBoat)) return false;
 
         QuickReservationBoat successfullQuickReservation=new QuickReservationBoat(quickReservationBoat.getId(), quickReservationBoat.getStartDate(),
-                quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(),
-                quickReservationBoat.getOwnersReport(),quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
+                quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(),quickReservationBoat.isOwnerWroteAReport(),
+             quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
         if(quickReservationBoat.getAddedAdditionalServices()!=null){
             if(quickReservationBoat.getNeedsCaptainServices()) {
                 if (ownerIsNotAvailable(successfullQuickReservation.getBoat().getBoatOwner().getId(),
@@ -81,6 +81,16 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public QuickReservationBoat getById(Long reservationId) {
+        return quickReservationBoatRepository.getById(reservationId);
+    }
+
+    @Override
+    public void save(QuickReservationBoat reservation) {
+        quickReservationBoatRepository.save(reservation);
+    }
+
+    @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         return quickReservationBoatRepository.quickReservationExists(id,startDate,endDate);
     }
@@ -112,8 +122,8 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     public void ownerCreatesReview(QuickReservationBoat reservation, boolean successfull) {
         QuickReservationBoat quickReservationBoat=quickReservationBoatRepository.getById(reservation.getId());
         quickReservationBoat.setSuccessfull(successfull);
-        quickReservationBoat.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-        quickReservationBoat.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+       // quickReservationBoat.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+       // quickReservationBoat.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
         quickReservationBoatRepository.save(quickReservationBoat);
     }
 }

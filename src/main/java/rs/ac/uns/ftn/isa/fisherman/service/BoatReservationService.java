@@ -26,4 +26,8 @@ public interface BoatReservationService {
     Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
 
     Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+
+    BoatReservation getById(Long reservationId);
+
+    void save(BoatReservation reservation);
 }

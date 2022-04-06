@@ -846,10 +846,7 @@ import axios from "axios";
                                 cabinDto: this.cabinDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
-                                ownersReportDto: {
-                                badComment: false,
-                                comment: ''
-                              },
+                                ownerWroteAReport: false,
                                 })
                               .then((response) => {
                                       console.log(response)
@@ -906,10 +903,8 @@ import axios from "axios";
                                 cabinDto: this.cabinDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
-                                ownersReportDto: {
-                                badComment: false,
-                                comment: ''
-                              },
+                                ownerWroteAReport: false,
+                              
                                 })
                               .then((response) => {
                                     console.log(response)

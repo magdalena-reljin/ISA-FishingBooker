@@ -19,8 +19,8 @@ public class CabinReservation extends Reservation{
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     protected Set<AdditionalServices> addedAdditionalServices;
 
-    public CabinReservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation, OwnersReport ownersReport, Cabin cabin, Set<AdditionalServices> addedAdditionalServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownersReport);
+    public CabinReservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport, Cabin cabin, Set<AdditionalServices> addedAdditionalServices) {
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport);
         this.cabin = cabin;
         this.addedAdditionalServices = addedAdditionalServices;
     }

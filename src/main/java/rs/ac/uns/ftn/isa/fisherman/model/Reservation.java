@@ -22,35 +22,38 @@ public class Reservation {
     protected Client client;
     @Column(name = "successfull")
     private boolean successfull;
-    @Embedded
-    private OwnersReport ownersReport;
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,OwnersReport ownersReport) {
+    @Column(name = "ownerWroteAReport")
+    private boolean ownerWroteAReport;
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.client = client;
         this.successfull=true;
         this.paymentInformation=paymentInformation;
-        this.ownersReport=ownersReport;
+        this.ownerWroteAReport=ownerWroteAReport;
     }
 
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate,boolean ownerWroteAReport) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.client = new Client();
         this.successfull=true;
+        this.ownerWroteAReport=ownerWroteAReport;
     }
 
-    public OwnersReport getOwnersReport() {
-        return ownersReport;
-    }
 
-    public void setOwnersReport(OwnersReport ownersReport) {
-        this.ownersReport = ownersReport;
-    }
 
     public Reservation(){}
+
+    public boolean isOwnerWroteAReport() {
+        return ownerWroteAReport;
+    }
+
+    public void setOwnerWroteAReport(boolean ownerWroteAReport) {
+        this.ownerWroteAReport = ownerWroteAReport;
+    }
 
     public Long getId() {
         return id;

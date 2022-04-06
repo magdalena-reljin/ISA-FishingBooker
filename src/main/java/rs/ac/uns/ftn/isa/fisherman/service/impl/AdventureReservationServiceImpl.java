@@ -35,7 +35,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(adventureReservation,client)) return false;
         AdventureReservation successfullReservation=new AdventureReservation(adventureReservation.getId(),adventureReservation.getStartDate()
-        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.getOwnersReport(),
+        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.isOwnerWroteAReport(),
                 adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getFishingInstructor());
         successfullReservation.setPaymentInformation(paymentInformation);
@@ -77,8 +77,8 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public void ownerCreatesReview(AdventureReservation reservation, boolean successfull) {
         AdventureReservation adventureReservation = adventureReservationRepository.getById(reservation.getId());
         adventureReservation.setSuccessfull(successfull);
-        adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-        adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+       // adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+      //  adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
         adventureReservationRepository.save(adventureReservation);
     }
 

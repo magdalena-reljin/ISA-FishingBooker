@@ -20,8 +20,8 @@ public class AdventureReservation extends Reservation{
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     protected Set<AdditionalServices> addedAdditionalServices;
 
-    public AdventureReservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,OwnersReport ownersReport, Adventure adventure, FishingInstructor fishingInstructor, Set<AdditionalServices> addedAdditionalServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownersReport);
+    public AdventureReservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport, Adventure adventure, FishingInstructor fishingInstructor, Set<AdditionalServices> addedAdditionalServices) {
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport);
         this.adventure = adventure;
         this.fishingInstructor = fishingInstructor;
         this.addedAdditionalServices = addedAdditionalServices;

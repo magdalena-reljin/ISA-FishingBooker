@@ -38,8 +38,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         if(!validateForReservation(quickReservationCabin)) return false;
 
         QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
-                quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(),
-                quickReservationCabin.getOwnersReport(),quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
+                quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(), quickReservationCabin.isOwnerWroteAReport(),
+                quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
         quickReservationCabinRepository.save(successfullQuickReservation);
         if(quickReservationCabin.getAddedAdditionalServices()!=null){
             successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());
@@ -62,6 +62,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Override
     public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
         return quickReservationCabinRepository.sumProfit(ownerId,start,end);
+    }
+
+    @Override
+    public void save(QuickReservationCabin reservation) {
+        quickReservationCabinRepository.save(reservation);
     }
 
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
@@ -97,6 +102,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
+    public QuickReservationCabin findReservationById(Long id) {
+        return quickReservationCabinRepository.getById(id);
+    }
+
+    @Override
     public Set<QuickReservationCabin> getPastReservations(Long id) {
         return quickReservationCabinRepository.getPastReservations(id,LocalDateTime.now());
     }
@@ -105,8 +115,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     public void ownerCreatesReview(QuickReservationCabin reservation, boolean successfull) {
         QuickReservationCabin quickReservationCabin=quickReservationCabinRepository.getById(reservation.getId());
         quickReservationCabin.setSuccessfull(successfull);
-        quickReservationCabin.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-        quickReservationCabin.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
+       //quickReservationCabin.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
+       //quickReservationCabin.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
         quickReservationCabinRepository.save(quickReservationCabin);
     }
 

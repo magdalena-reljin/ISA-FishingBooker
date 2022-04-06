@@ -13,8 +13,7 @@ public class ReservationDto {
     private boolean evaluated;
     private PaymentInformationDto paymentInformationDto;
     private boolean successfull;
-    private OwnersReportDto ownersReportDto;
-
+    private boolean ownerWroteAReport;
     public boolean isEvaluated() {
         return evaluated;
     }
@@ -23,7 +22,7 @@ public class ReservationDto {
         this.evaluated = evaluated;
     }
 
-    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,OwnersReportDto ownersReportDto) {
+    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -31,18 +30,19 @@ public class ReservationDto {
         this.clientFullName = clientFullName;
         this.paymentInformationDto = paymentInformationDto;
         this.successfull = successfull;
-        this.ownersReportDto=ownersReportDto;
+        this.ownerWroteAReport=ownerWroteAReport;
     }
 
-    public OwnersReportDto getOwnersReportDto() {
-        return ownersReportDto;
-    }
-
-    public void setOwnersReportDto(OwnersReportDto ownersReportDto) {
-        this.ownersReportDto = ownersReportDto;
-    }
 
     public ReservationDto(){}
+
+    public boolean isOwnerWroteAReport() {
+        return ownerWroteAReport;
+    }
+
+    public void setOwnerWroteAReport(boolean ownerWroteAReport) {
+        this.ownerWroteAReport = ownerWroteAReport;
+    }
 
     public Long getId() {
         return id;
