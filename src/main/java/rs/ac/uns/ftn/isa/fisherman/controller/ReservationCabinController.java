@@ -30,6 +30,8 @@ public class ReservationCabinController {
     private CabinEvaluationService cabinEvaluationService;
     @Autowired
     private CabinOwnersReservationReportService cabinOwnersReservationReportService;
+    @Autowired
+    private PenaltyService penaltyService;
 
     private final CabinMapper cabinMapper = new CabinMapper();
     private final CabinReservationMapper cabinReservationMapper=new CabinReservationMapper();
@@ -47,6 +49,8 @@ public class ReservationCabinController {
     @PostMapping("/makeReservation")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> makeReservation (@RequestBody CabinReservationDto cabinReservationDto) {
+        if(penaltyService.isUserBlockedFromReservation(cabinReservationDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
