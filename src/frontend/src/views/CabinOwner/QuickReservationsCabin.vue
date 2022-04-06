@@ -517,8 +517,8 @@ export default ({
                       showConfirmButton: false,
                       timer: 2500
                     })
-                    this.getQuickReservations()
-                    this.getPastQuickReservations()
+                      this.getQuickReservations()
+                      this.getPastQuickReservations()
                       
                 })
                  this.$refs.writeAReview.hide()

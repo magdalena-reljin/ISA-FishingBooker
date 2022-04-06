@@ -122,4 +122,14 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
         return adventureReservationRepository.sumProfit(ownerId,start,end);
     }
+
+    @Override
+    public AdventureReservation findById(Long id) {
+        return adventureReservationRepository.getById(id);
+    }
+
+    @Override
+    public void save(AdventureReservation adventureReservation) {
+        adventureReservationRepository.save(adventureReservation);
+    }
 }

@@ -21,4 +21,7 @@ public interface AdventureReservationService {
     Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
 
     Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+
+    AdventureReservation findById(Long id);
+    void save (AdventureReservation adventureReservation);
 }
