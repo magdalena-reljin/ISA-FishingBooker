@@ -361,7 +361,7 @@ const routes = [
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
-      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.role=='ADMIN' || localStorage.logged == false){
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
            next('/')
          }else {
            next()

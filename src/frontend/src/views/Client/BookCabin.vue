@@ -460,6 +460,7 @@ export default {
     };
   },
   mounted() {
+    this.role= localStorage.role
     this.email = this.$route.params.email;
     this.cabinNameParam = this.$route.params.cabinName;
     this.start = this.startDate;
@@ -693,7 +694,7 @@ export default {
     },
     
     deleteCabin: function(){
-            this.role= localStorage.role
+            
             axios.post("http://localhost:8081/cabins/canBeEditedOrDeleted/"+this.cabinDto.id)
                .then(response => {
                      if(response.data == true){
