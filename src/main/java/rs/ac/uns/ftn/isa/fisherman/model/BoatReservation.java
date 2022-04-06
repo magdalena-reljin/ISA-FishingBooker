@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 
 import javax.persistence.*;
@@ -8,11 +10,12 @@ import java.util.Set;
 
 @Entity
 public class BoatReservation extends Reservation{
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="boat_id")
     protected Boat boat;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(name = "boat_reservation_services",
             joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))

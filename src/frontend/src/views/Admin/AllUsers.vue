@@ -34,7 +34,6 @@
          <div class="row">
             <div class="col "><button @click="setUser(user)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                type="button" class="btn btn-outline-danger" >DELETE</button></div>
-          <div class="col">   <button @click="redirectDeny(user)"   type="button" class="btn btn-outline-danger" >BLOCKED</button></div>
      
         </div>
        
@@ -114,15 +113,8 @@ import axios from "axios";
 
        this.email = this.$route.params.email
     this.pomUserRequestDTO.username=this.email
-         axios.get("http://localhost:8081/userc/getAllUsers")
-            .then(response => {this.userRequestDTO = response.data
-              
-              })
-             .catch(error => {
-                 this.errorMessage = error.message;
-                 console.error("There was an error!", error);
-           });
-
+     
+    this.getAllUsers();
        
    
 
@@ -131,14 +123,33 @@ import axios from "axios";
        setUser: function(user){
            this.selectedUser= user;
        },
+       getAllUsers:function(){
+              axios.get("http://localhost:8081/userc/getAllUsers")
+            .then(response => {this.userRequestDTO = response.data
+              
+              })
+             .catch(error => {
+                 this.errorMessage = error.message;
+                 console.error("There was an error!", error);
+           });
+       },
        deleteUser: function(){
             
              axios
                .post("http://localhost:8081/userc/deleteUser",this.selectedUser)
                .then((response) => {
-                this.$router.go();
+                      console.log(response)
+                      this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'success',
+                      title: 'User has been deleted!',
+                      showConfirmButton: false,
+                      timer: 2500
+                      })
+                      this.getAllUsers();
                    return response; 
                });
+
        }
 
       

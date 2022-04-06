@@ -2,9 +2,9 @@
     <template v-if="!bookCabinOpen">
     <!-- sort -->
    
-    <div class="header" >
-      <form>
-        <h1 style="text-align: left; color: #0b477b;  padding-left: 7.2%;">Sort cabins</h1>
+    <div v-if="role=='CLIENT'" class="header" >
+      <form  >
+        <h1  style="text-align: left; color: #0b477b;  padding-left: 7.2%;">Sort cabins</h1>
         <br>
         <div style="padding-left: 7.2%; padding-right: 7.2%; width: 100%;" class="row" >
           <div class="col">
@@ -186,6 +186,7 @@ export default {
   data() {
     return {
       email: "",
+      role: localStorage.role,
       cabinDtos: [
         {
           id: null,

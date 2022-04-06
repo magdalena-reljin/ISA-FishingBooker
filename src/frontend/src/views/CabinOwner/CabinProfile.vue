@@ -121,8 +121,8 @@
 
         </div>
 
-       <div  class="col" style="margin-top: 3%;">
-           <button @click="editProfile()" style="background-color: #1d7ac9; width: 100%; " type="button" class="btn text-light rounded-pill">EDIT PROFILE</button>
+       <div v-if="role=='CABINOWNER'" class="col" style="margin-top: 3%;">
+           <button   @click="editProfile()" style="background-color: #1d7ac9; width: 100%; " type="button" class="btn text-light rounded-pill">EDIT PROFILE</button>
               <button @click="calendar()" style="background-color: #1d7ac9; width: 100%; margin-top: 10% "  type="button" class="btn text-light rounded-pill">CABIN CALENDAR</button>
        </div>
 
@@ -192,12 +192,15 @@
          cabinLoaded: false,
          currentImageUrl: 'logoF1.png',
          imageIndex: 0,
-         maxImageIndex: 0
+         maxImageIndex: 0,
+         role: ''
+         
 
 
        }
      },
      mounted() {
+       this.role=localStorage.role
        this.email = this.$route.params.email
        this.cabinName= this.$route.params.cabinName
        this.getCabin()

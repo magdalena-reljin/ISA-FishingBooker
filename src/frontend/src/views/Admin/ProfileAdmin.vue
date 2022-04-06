@@ -1,59 +1,84 @@
 <template>
-<AdminNavbar :username=email />
-  <div>
-  
-  </div>
- 
+<AdminNav :username=email />
 
+<ul class="nav justify-content-center" style="background-color: #0f5591;">
+
+      <li class="nav-item">
+      <a style="color: white;" class="nav-link" @click="changeDisplay('cabins')"> CABINS</a>
+      </li>
+
+      <li class="nav-item">
+      <a style="color: white;" class="nav-link" @click="changeDisplay('boats')">  BOATS</a>
+      </li>
+       
+       <li class="nav-item">
+      <a style="color: white;"  class="nav-link" @click="changeDisplay('adventures')"> ADVENTURES</a>
+      </li>
+
+     </ul>
+
+  <template v-if="cabinsShown"> 
+    <ClientCabins :reservationProcess="false" :availableCabins="[]"/>
+  </template>
+  <template v-if="boatsShown"> 
+     <ClientBoats/>
+  </template>
+  <template v-if="adventuresShown"> 
+     <ClientAdventures/>
+  </template>
 </template>
- 
-<script>
-//import axios from "axios";
 
-import AdminNavbar from './AdminNav.vue'
+<script>
+import AdminNav from './AdminNav.vue'
+import ClientCabins from '../Client/ClientCabins'
+import ClientBoats from '../Client/ClientBoats'
+import ClientAdventures from '../Client/ClientAdventures'
 
    export default{
-    components: {
-    AdminNavbar 
-    },
+     components:{
+       AdminNav,
+       ClientCabins,
+       ClientBoats,
+       ClientAdventures
+     },
      data(){
        return{
-         email: ''
-       
+         email: '', 
+         cabinsShown: true,
+         boatsShown: false, 
+         adventuresShown: false,   
+
        }
      },
      mounted() {
        this.email = this.$route.params.email
+
      },
-      
-    
+     methods: {
+     changeDisplay: function(toDisplay){
+       if(toDisplay === 'cabins'){
+         this.cabinsShown = true;
+         this.boatsShown = false;
+         this.adventuresShown = false;
+       }else if(toDisplay === 'boats'){
+         this.cabinsShown = false;
+         this.boatsShown = true;
+         this.adventuresShown = false;
+       }else{
+         this.cabinsShown = false;
+         this.boatsShown = false;
+         this.adventuresShown = true;
+       }
+     }
+
+    },
+    computed: {
+
+  },
   }
 
 </script> 
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
-}
-#logincard{
-  width: 47%;
-  background-image:  url("../../assets/IMG_3872.jpeg"); 
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>

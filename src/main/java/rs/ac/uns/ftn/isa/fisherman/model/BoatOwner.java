@@ -8,11 +8,12 @@ import java.util.Set;
 @DiscriminatorValue("BOATOWNER")
 public class BoatOwner extends User {
     private static final String ROLE_APP = "ROLE_BOATOWNER";
-    @OneToMany(mappedBy = "boatOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "boatOwner",   cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Boat> boats;
 
 
-    @OneToMany(mappedBy = "boatOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "boatOwner", cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE},orphanRemoval = true)
     private Set<AvailableBoatOwnerPeriod> availableBoatOwnerPeriods;
 
     public Set<AvailableBoatOwnerPeriod> getAvailableBoatOwnerPeriods() {

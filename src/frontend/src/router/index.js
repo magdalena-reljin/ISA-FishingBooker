@@ -4,7 +4,6 @@ import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import AccountAlert from '../views/AccountAlert.vue'
 import Activation from '../views/Activation.vue'
-//import ProfileAdmin from '../views/Admin/ProfileAdmin.vue'
 import RequestsFromUsers from '../views/Admin/RequestsFromUsers'
 import ReasonForDenying from '../views/Admin/ReasonForDenying'
 import BoatOwnerHome from '../views/BoatOwner/BoatOwnerHome'
@@ -362,13 +361,14 @@ const routes = [
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
-      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.role=='ADMIN' || localStorage.logged == false){
            next('/')
          }else {
            next()
          }
        } 
   },
+  
   {
     path: '/reservations/:email',
     name: 'ClientReservations',
@@ -390,7 +390,7 @@ const routes = [
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
-      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+      if(localStorage.token == 'empty' || localStorage.role =='CABINOWNER' ||  localStorage.role =='FISHINGINSTRUCTOR' || localStorage.logged == false){
            next('/')
          }else {
            next()
@@ -532,7 +532,7 @@ const routes = [
       // reject the navigation
     
       store.dispatch('refreshToken')
-      if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
+      if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER'   || localStorage.logged == false){
            next('/')
          }else {
            next()
