@@ -43,8 +43,8 @@
           HOME</a
         >
       </li>
-      <li @click="newReservation()" class="nav-item">
-        <a style="color: white" class="nav-link active" href="#"
+      <li class="nav-item">
+        <a @click="newReservation()" style="color: white" class="nav-link active" href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -120,6 +120,9 @@ export default {
     },
     myProfile: function () {
       this.$router.push("/editProfile/" + "client/" + this.email);
+    },
+    penalties: function () {
+      this.$router.push("/penalties/" + this.email);
     },
     logout: function(){
       this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})

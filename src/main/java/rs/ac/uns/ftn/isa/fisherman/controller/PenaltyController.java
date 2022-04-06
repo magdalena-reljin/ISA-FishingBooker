@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.isa.fisherman.dto.PenaltyDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.PenaltyMapper;
-import rs.ac.uns.ftn.isa.fisherman.model.Penalty;
 import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.util.Set;
