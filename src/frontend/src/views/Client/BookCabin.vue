@@ -201,6 +201,7 @@
           </p>
 
           <p>Added additional services:</p>
+          <template v-if="addedAdditionalServices">
           <table class="table" v-show="addedAdditionalServices.length != 0">
             <thead>
               <tr>
@@ -230,8 +231,8 @@
               </tr>
             </tbody>
           </table>
-
-          <p v-show="addedAdditionalServices.length == 0">
+          </template>
+          <p v-show="addedAdditionalServices && addedAdditionalServices.length == 0">
             No additional services added.
           </p>
           <hr />
@@ -631,12 +632,12 @@ export default {
           });
           this.$router.push("/reservations/" + this.email);
         })
-        .catch(() => {
+        .catch((error) => {
           this.loader.hide();
           this.$swal.fire({
             icon: "error",
             title: "Something went wrong!",
-            text: "Unsuccessful reservation! Period already taken.",
+            text: error.response.data,
           });
         });
     },
