@@ -45,7 +45,7 @@
     <!--sort-->
 
 
-   <hr/>
+   <hr v-if="role=='CLIENT'"/>
 
     <template v-if="!cabinsLoaded">
       <h3>Loading...</h3>
