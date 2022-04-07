@@ -163,7 +163,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         if(!validateForReservation(cabinReservation,client)) return false;
         CabinReservation successfullReservation=new CabinReservation(cabinReservation.getId(),cabinReservation.getStartDate(),
                     cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.isOwnerWroteAReport(),
-                    cabinReservation.getOwnersUsername(),cabinReservation.getCabin(),null);
+                    cabinReservation.getOwnersUsername(),cabinReservation.getCabin(),null, false);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getCabin().getCabinOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getCabin().getCabinOwner());
@@ -243,4 +243,10 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return cabinReservationRepository.getById(id);
     }
 
+    @Override
+    public void reservationIsEvaluated(Long id){
+        CabinReservation cabinReservation = cabinReservationRepository.getById(id);
+        cabinReservation.setEvaluated(true);
+        cabinReservationRepository.save(cabinReservation);
+    }
 }

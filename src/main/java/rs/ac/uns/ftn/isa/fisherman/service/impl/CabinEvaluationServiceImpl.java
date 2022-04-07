@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinEvaluationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
+import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -24,13 +26,17 @@ public class CabinEvaluationServiceImpl implements CabinEvaluationService {
     CabinEvaluationRepository cabinEvaluationRepository;
     @Autowired
     CabinService cabinService;
+    @Autowired
+    ReservationCabinService cabinReservationService;
 
     @Override
     public boolean addEvaluation(CabinEvaluationDto cabinEvaluationDto) {
-        if(cabinEvaluationRepository.reservationHasEvaluation(cabinEvaluationDto.getCabinReservationDto().getId())){
+        CabinReservation cabinReservation = cabinReservationService.getById(cabinEvaluationDto.getCabinReservationDto().getId());
+        if(cabinReservation.isEvaluated()){
             return false;
         }
-        cabinEvaluationRepository.save(new CabinEvaluation(null, LocalDateTime.now(), cabinEvaluationDto.getComment(), cabinEvaluationDto.getGrade(), false, clientService.findByUsername(cabinEvaluationDto.getClientUsername()),cabinReservationRepository.getById(cabinEvaluationDto.getCabinReservationDto().getId())));
+        cabinEvaluationRepository.save(new CabinEvaluation(null, LocalDateTime.now(), cabinEvaluationDto.getComment(), cabinEvaluationDto.getGrade(), false, clientService.findByUsername(cabinEvaluationDto.getClientUsername()), cabinReservation.getCabin()));
+        cabinReservationService.reservationIsEvaluated(cabinReservation.getId());
         return true;
     }
 

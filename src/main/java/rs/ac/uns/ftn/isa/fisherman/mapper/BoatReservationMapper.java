@@ -25,7 +25,7 @@ public class BoatReservationMapper {
                 boatReservation.isOwnerWroteAReport(),boatReservation.getOwnersUsername(),
                 boatMapper.boatToBoatDto(boatReservation.getBoat()),
                 additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(boatReservation.getAddedAdditionalServices()),
-                boatReservation.getNeedsCaptainService());
+                boatReservation.getNeedsCaptainService(), boatReservation.isEvaluated());
     }
 
 

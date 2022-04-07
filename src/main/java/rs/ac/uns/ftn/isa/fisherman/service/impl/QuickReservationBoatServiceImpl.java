@@ -29,6 +29,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
                 quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(),quickReservationBoat.isOwnerWroteAReport(),
              quickReservationBoat.getOwnersUsername(),
              quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
+        successfullQuickReservation.setEvaluated(false);
         if(quickReservationBoat.getAddedAdditionalServices()!=null){
             if(quickReservationBoat.getNeedsCaptainServices()) {
                 if (ownerIsNotAvailable(successfullQuickReservation.getBoat().getBoatOwner().getUsername(),

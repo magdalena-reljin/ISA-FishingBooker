@@ -26,7 +26,9 @@ public class Reservation {
     private boolean ownerWroteAReport;
     @JoinColumn(name="owners_username")
     protected String ownersUsername;
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport,String ownersUsername) {
+    @Column(name = "evaluated")
+    protected boolean evaluated;
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport,String ownersUsername, boolean evaluated) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -35,6 +37,7 @@ public class Reservation {
         this.paymentInformation=paymentInformation;
         this.ownerWroteAReport=ownerWroteAReport;
         this.ownersUsername=ownersUsername;
+        this.evaluated=evaluated;
     }
 
     public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate,boolean ownerWroteAReport,String ownersUsername) {
@@ -47,6 +50,13 @@ public class Reservation {
         this.ownersUsername=ownersUsername;
     }
 
+    public boolean isEvaluated() {
+        return evaluated;
+    }
+
+    public void setEvaluated(boolean evaluated) {
+        this.evaluated = evaluated;
+    }
 
     public String getOwnersUsername() {
         return ownersUsername;

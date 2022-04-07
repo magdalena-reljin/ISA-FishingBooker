@@ -28,7 +28,7 @@ public class QuickReservationBoat extends Reservation{
     public QuickReservationBoat(){}
 
     public QuickReservationBoat(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport,String ownersUsername, Boat boat, Integer discount, Set<AdditionalServices> addedAdditionalServices, boolean needsCaptainServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport,ownersUsername);
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport,ownersUsername, false);
         this.boat = boat;
         this.discount = discount;
         this.addedAdditionalServices = addedAdditionalServices;
