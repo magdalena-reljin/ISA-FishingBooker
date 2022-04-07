@@ -51,9 +51,8 @@ public class QuickReservationBoatController {
     @GetMapping("/getByOwnerUsername/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<Set<QuickReservationBoatDto>> getByOwnerUsername (@PathVariable("username") String username) {
-        BoatOwner boatOwner= boatOwnerService.findByUsername(username);
         Set<QuickReservationBoatDto> boatReservationDtos=new HashSet<>();
-        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.findReservationsByOwnerId(boatOwner.getId())){
+        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.findReservationsByOwnerUsername(username)){
             boatReservationDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
@@ -61,9 +60,9 @@ public class QuickReservationBoatController {
     @GetMapping("/getPastQuickReservations/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<Set<QuickReservationBoatDto>> getPastReservations (@PathVariable("username") String username) {
-        BoatOwner boatOwner= boatOwnerService.findByUsername(username);
+
         Set<QuickReservationBoatDto> boatReservationDtos=new HashSet<>();
-        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getPastReservations(boatOwner.getId())){
+        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getPastReservations(username)){
             boatReservationDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);

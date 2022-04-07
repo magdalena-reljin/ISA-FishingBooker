@@ -24,8 +24,8 @@ public class QuickReservationCabin extends Reservation {
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     protected Set<AdditionalServices> addedAdditionalServices;
 
-    public QuickReservationCabin(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport, Cabin cabin, Integer discount, Set<AdditionalServices> addedAdditionalServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport);
+    public QuickReservationCabin(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport,String ownersUsername, Cabin cabin, Integer discount, Set<AdditionalServices> addedAdditionalServices) {
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport,ownersUsername);
         this.cabin = cabin;
         this.discount = discount;
         this.addedAdditionalServices = addedAdditionalServices;

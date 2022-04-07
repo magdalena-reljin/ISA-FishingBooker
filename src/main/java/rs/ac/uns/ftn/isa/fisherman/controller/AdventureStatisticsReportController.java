@@ -43,35 +43,32 @@ public class AdventureStatisticsReportController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<List<Integer>> countQuickReservations (@PathVariable("username") String username) {
         List<Integer> quickReservationCount=new ArrayList<>();
-        Long ownerId=  userService.findByUsername(username).getId();
         List<LocalDateTime> thisWeek=dateService.findWeek();
-        quickReservationCount.add(quickReservationAdventureService.countReservationsInPeriod(thisWeek.get(0),thisWeek.get(1),ownerId));
+        quickReservationCount.add(quickReservationAdventureService.countReservationsInPeriod(thisWeek.get(0),thisWeek.get(1),username));
         List<LocalDateTime> thisMonth=dateService.findMonth();
-        quickReservationCount.add(quickReservationAdventureService.countReservationsInPeriod(thisMonth.get(0),thisMonth.get(1),ownerId));
+        quickReservationCount.add(quickReservationAdventureService.countReservationsInPeriod(thisMonth.get(0),thisMonth.get(1),username));
         List<LocalDateTime> thisYear=dateService.findYear();
-        quickReservationCount.add(quickReservationAdventureService.countReservationsInPeriod(thisYear.get(0),thisYear.get(1),ownerId));
+        quickReservationCount.add(quickReservationAdventureService.countReservationsInPeriod(thisYear.get(0),thisYear.get(1),username));
         return new ResponseEntity<>(quickReservationCount, HttpStatus.OK);
     }
     @GetMapping("/countReservations/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<List<Integer>> countReservations(@PathVariable("username") String username) {
         List<Integer> reservationCount=new ArrayList<>();
-        Long ownerId=  userService.findByUsername(username).getId();
         List<LocalDateTime> thisWeek=dateService.findWeek();
-        reservationCount.add(adventureReservationService.countReservationsInPeriod(thisWeek.get(0),thisWeek.get(1),ownerId));
+        reservationCount.add(adventureReservationService.countReservationsInPeriod(thisWeek.get(0),thisWeek.get(1),username));
         List<LocalDateTime> thisMonth=dateService.findMonth();
-        reservationCount.add(adventureReservationService.countReservationsInPeriod(thisMonth.get(0),thisMonth.get(1),ownerId));
+        reservationCount.add(adventureReservationService.countReservationsInPeriod(thisMonth.get(0),thisMonth.get(1),username));
         List<LocalDateTime> thisYear=dateService.findYear();
-        reservationCount.add(adventureReservationService.countReservationsInPeriod(thisYear.get(0),thisYear.get(1),ownerId));
+        reservationCount.add(adventureReservationService.countReservationsInPeriod(thisYear.get(0),thisYear.get(1),username));
         return new ResponseEntity<>(reservationCount, HttpStatus.OK);
     }
     @PostMapping("/sumProfit/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<List<Double>> sumProfit(@PathVariable("username") String username,@RequestBody List<LocalDateTime> dateRange) {
         List<Double> profit=new ArrayList<>();
-        Long ownerId=  userService.findByUsername(username).getId();
-        profit.add(adventureReservationService.sumProfit(ownerId,dateRange.get(0),dateRange.get(1)));
-        profit.add(quickReservationAdventureService.sumProfit(ownerId,dateRange.get(0),dateRange.get(1)));
+        profit.add(adventureReservationService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(quickReservationAdventureService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
 }

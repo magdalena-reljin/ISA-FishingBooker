@@ -37,11 +37,11 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id=:cabin_id and (:currentDate <= end_date) ",nativeQuery = true)
     boolean futureReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("cabin_id") Long cabinId);
 
-    @Query(value="SELECT * FROM cabin_reservation res join cabin b on res.cabin_id=b.id where b.users_id=:users_id and (:currentDate <= end_date) ",nativeQuery = true)
-    Set<CabinReservation> findReservationsByOwnerId(@Param("users_id")Long id, @Param("currentDate")LocalDateTime currentDate);
+    @Query(value="SELECT * FROM cabin_reservation res where res.owners_username=:ownersUsername and (:currentDate <= end_date) ",nativeQuery = true)
+    Set<CabinReservation> findReservationsByOwnerUsername(@Param("ownersUsername")String ownersUsername, @Param("currentDate")LocalDateTime currentDate);
 
-    @Query(value="SELECT * FROM cabin_reservation res join cabin b on res.cabin_id=b.id  where b.users_id=:users_id and (:currentDate > end_date) ",nativeQuery = true)
-    Set<CabinReservation> getPastReservations(@Param("users_id")Long boatId, @Param("currentDate")LocalDateTime currentDate);
+    @Query(value="SELECT * FROM cabin_reservation res where res.owners_username=:ownersUsername and (:currentDate > end_date) ",nativeQuery = true)
+    Set<CabinReservation> getPastReservations(@Param("ownersUsername")String ownersUsername, @Param("currentDate")LocalDateTime currentDate);
 
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id=:cabin_id and users_id=:users_id",nativeQuery = true)
     boolean clientHasReservationInCabin(@Param("cabin_id")Long cabinId,@Param("users_id")Long usersId);
@@ -52,13 +52,10 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="SELECT id FROM cabin_reservation where cabin_id=:cabin_id and (:currentDate > start_date) ",nativeQuery = true)
     Set<Integer> getCabinReservationsHistory(@Param("cabin_id")Long cabinId,@Param("currentDate")LocalDateTime currentDate);
 
-    @Query(value="SELECT * FROM cabin_reservation where successfull=true and bad_comment=true and comment!='' ",nativeQuery = true)
-    Set<CabinReservation> getAllReports();
+    @Query(value="select count(cr.id) from cabin_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("ownersUsername")String ownersUsername);
 
-    @Query(value="select count(c.id) from cabin c join cabin_reservation cr on c.id=cr.cabin_id where c.users_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
-    Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("users_id") Long ownerId);
-
-    @Query(value="select sum(cr.owners_part) from cabin c join cabin_reservation cr on c.id=cr.cabin_id where c.users_id=:users_id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
-    Double sumProfit(@Param("users_id")  Long ownerId, @Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+    @Query(value="select sum(cr.owners_part) from cabin_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Double sumProfit(@Param("ownersUsername")String ownersUsername, @Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
 
 }

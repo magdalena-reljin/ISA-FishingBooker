@@ -15,15 +15,15 @@ public interface QuickReservationCabinService {
 
     boolean futureQuickReservationsExist(LocalDateTime currentDate, Long id);
 
-    Set<QuickReservationCabin> findReservationsByOwnerId(Long id);
+    Set<QuickReservationCabin> findReservationsByOwnerId(String  ownerUsername);
     QuickReservationCabin findReservationById(Long id);
-    Set<QuickReservationCabin> getPastReservations(Long id);
+    Set<QuickReservationCabin> getPastReservations(String ownerUsername);
 
     void ownerCreatesReview(QuickReservationCabin reservation, boolean successfull);
     Set<QuickReservationCabin> getAllReports();
-    Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId);
+    Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername);
 
-    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+    Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
 
     void save(QuickReservationCabin reservation);
 }

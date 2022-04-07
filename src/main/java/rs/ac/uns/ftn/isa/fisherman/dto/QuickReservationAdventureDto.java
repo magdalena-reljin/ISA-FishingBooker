@@ -8,8 +8,8 @@ public class QuickReservationAdventureDto extends  ReservationDto{
     private Set<AdditionalServicesDto> addedAdditionalServices;
     private Integer discount;
 
-    public QuickReservationAdventureDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport, AdventureDto adventureDto, Set<AdditionalServicesDto> addedAdditionalServices, Integer discount) {
-        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull,ownerWroteAReport);
+    public QuickReservationAdventureDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport,String ownersUsername, AdventureDto adventureDto, Set<AdditionalServicesDto> addedAdditionalServices, Integer discount) {
+        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull,ownerWroteAReport,ownersUsername);
         this.adventureDto = adventureDto;
         this.addedAdditionalServices = addedAdditionalServices;
         this.discount = discount;

@@ -22,7 +22,7 @@ public class QuickReservationCabinMapper {
         return new QuickReservationCabin(quickReservationCabinDto.getId(),quickReservationCabinDto.getStartDate(),
                 quickReservationCabinDto.getEndDate(),null,
                 paymentInformationMapper.dtoToPaymentInformation(quickReservationCabinDto.getPaymentInformationDto()),
-               quickReservationCabinDto.isOwnerWroteAReport(),
+               quickReservationCabinDto.isOwnerWroteAReport(),quickReservationCabinDto.getOwnersUsername(),
                 cabinMapper.cabinDtoEditToCabin(quickReservationCabinDto.getCabinDto()),quickReservationCabinDto.getDiscount(),additionalServicesSet);
     }
     public QuickReservationCabinDto quickReservationToDto(QuickReservationCabin quickReservationCabin) {
@@ -40,6 +40,7 @@ public class QuickReservationCabinMapper {
                 quickReservationCabin.getEndDate(),clientUsername,clientFullName,
                 paymentInformationMapper.paymentInformationToDto(quickReservationCabin.getPaymentInformation()),
                 quickReservationCabin.isSuccessfull(), quickReservationCabin.isOwnerWroteAReport(),
+                quickReservationCabin.getOwnersUsername(),
                 cabinMapper.cabinToCabinDto(quickReservationCabin.getCabin()),
                 additionalServicesSet,quickReservationCabin.getDiscount());
     }

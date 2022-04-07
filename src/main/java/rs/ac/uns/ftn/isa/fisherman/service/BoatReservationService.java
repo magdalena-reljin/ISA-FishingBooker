@@ -11,21 +11,19 @@ public interface BoatReservationService {
 
     boolean reservationExists(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
 
-    boolean ownerIsNotAvailableReservation(Long ownerId, LocalDateTime start, LocalDateTime end);
+    boolean ownerIsNotAvailableReservation(String ownerId, LocalDateTime start, LocalDateTime end);
 
-    Set<BoatReservation> findReservationsByOwnerId(Long id);
+    Set<BoatReservation> findReservationsByOwnerUsername(String username);
 
     boolean futureReservationsExist(LocalDateTime currentDate, Long boatId);
 
-    Set<BoatReservation> getPastReservations(Long id);
+    Set<BoatReservation> getPastReservations(String ownersUsername);
 
     void ownerCreatesReview(BoatReservation boatReservation, boolean successfull);
 
-    Set<BoatReservation> getAllReports();
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String ownerUsername);
 
-    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
-
-    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+    Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
 
     BoatReservation getById(Long reservationId);
 

@@ -2,8 +2,6 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
@@ -27,6 +25,7 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
         QuickReservationAdventure successfullQuickReservation=new QuickReservationAdventure(quickReservationAdventure.getId(),quickReservationAdventure.getStartDate(),
                 quickReservationAdventure.getEndDate(),null,quickReservationAdventure.getPaymentInformation(),quickReservationAdventure.isOwnerWroteAReport(),
+                quickReservationAdventure.getOwnersUsername(),
                 quickReservationAdventure.getAdventure(),quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount(),null);
 
         quickReservationAdventureRepository.save(successfullQuickReservation);
@@ -40,32 +39,28 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     }
 
     @Override
-    public Set<QuickReservationAdventure> getByInstructorId(Long id) {
-        return  quickReservationAdventureRepository.getByInstructorId(id,LocalDateTime.now());
+    public Set<QuickReservationAdventure> getByInstructorUsername(String username) {
+        return  quickReservationAdventureRepository.getByInstructorUsername(username,LocalDateTime.now());
     }
 
     @Override
-    public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
-        return quickReservationAdventureRepository.quickReservationExists(id,startDate,endDate);
+    public boolean quickReservationExists(String username, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationAdventureRepository.quickReservationExists(username,startDate,endDate);
     }
 
     @Override
     public boolean futureQuickReservationsExist(LocalDateTime currentDate,Long id) {
         return quickReservationAdventureRepository.futureQuickReservationsExist(currentDate,id);
     }
+
     @Override
-    public Set<QuickReservationAdventure> getAllReports(){
-        return  quickReservationAdventureRepository.getAllReports();
+    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username) {
+        return quickReservationAdventureRepository.countReservationsInPeriod(start,end,username);
     }
 
     @Override
-    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId) {
-        return quickReservationAdventureRepository.countReservationsInPeriod(start,end,ownerId);
-    }
-
-    @Override
-    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
-        return quickReservationAdventureRepository.sumProfit(ownerId,start,end);
+    public Double sumProfit(String username, LocalDateTime start, LocalDateTime end) {
+        return quickReservationAdventureRepository.sumProfit(username,start,end);
     }
 
     @Override
@@ -80,28 +75,18 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
 
     @Override
-    public Set<QuickReservationAdventure> getPastReservations(Long instructorId) {
-
-        return quickReservationAdventureRepository.getPastReservations(instructorId,LocalDateTime.now());
+    public Set<QuickReservationAdventure> getPastReservations(String username) {
+        return quickReservationAdventureRepository.getPastReservations(username,LocalDateTime.now());
     }
 
-    @Override
-    public void ownerCreatesReview(QuickReservationAdventure reservation, boolean successfull) {
-        QuickReservationAdventure adventureReservation = quickReservationAdventureRepository.getById(reservation.getId());
-        adventureReservation.setSuccessfull(successfull);
-        //adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-      //  adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
-        quickReservationAdventureRepository.save(adventureReservation);
-    }
 
     private boolean validateForReservation(QuickReservationAdventure quickReservationAdventure){
         if(!availableInstructorPeriodService.instructorIsAvailable(quickReservationAdventure.getFishingInstructor()
                 .getId(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
-        if(adventureReservationService.reservationExists(quickReservationAdventure.getFishingInstructor()
-                .getId(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
+        if(adventureReservationService.reservationExists(quickReservationAdventure.getOwnersUsername(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
-        if(quickReservationAdventureRepository.quickReservationExists(quickReservationAdventure.getFishingInstructor().getId()
+        if(quickReservationAdventureRepository.quickReservationExists(quickReservationAdventure.getOwnersUsername()
                 ,quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
         return true;

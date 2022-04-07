@@ -57,11 +57,11 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
     }
 
     private boolean reservationsDontExistInPeriod(AvailableInstructorPeriod availableInstructorPeriod){
-        if(adventureReservationService.reservationExists(availableInstructorPeriod.getFishingInstructor().getId()
+        if(adventureReservationService.reservationExists(availableInstructorPeriod.getFishingInstructor().getUsername()
                 ,availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate())) return false;
 
 
-        if(quickReservationAdventureService.quickReservationExists(availableInstructorPeriod.getFishingInstructor().getId(),
+        if(quickReservationAdventureService.quickReservationExists(availableInstructorPeriod.getFishingInstructor().getUsername(),
                 availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate())) return false;
 
         return true;

@@ -111,9 +111,9 @@ public class ReservationCabinController {
     @GetMapping("/getByOwnerUsername/{username:.+}/")
     @PreAuthorize("hasRole('CABINOWNER')")
     public ResponseEntity<Set<CabinReservationDto>> getByOwnerUsername (@PathVariable("username") String username) {
-        CabinOwner cabinOwner= cabinOwnerService.findByUsername(username);
+
         Set<CabinReservationDto> cabinReservationDtos=new HashSet<>();
-        for(CabinReservation cabinReservation: reservationCabinService.findReservationsByOwnerId(cabinOwner.getId())){
+        for(CabinReservation cabinReservation: reservationCabinService.findReservationsByOwnerUsername(username)){
             cabinReservationDtos.add(cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation));
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
@@ -122,9 +122,9 @@ public class ReservationCabinController {
     @GetMapping("/getPastReservations/{username:.+}/")
     @PreAuthorize("hasRole('CABINOWNER')")
     public ResponseEntity<Set<CabinReservationDto>> getPastReservations (@PathVariable("username") String username) {
-        CabinOwner cabinOwner= cabinOwnerService.findByUsername(username);
+
         Set<CabinReservationDto> cabinReservationDtos=new HashSet<>();
-        for(CabinReservation cabinReservation: reservationCabinService.getPastReservations(cabinOwner.getId())){
+        for(CabinReservation cabinReservation: reservationCabinService.getPastReservations(username)){
             cabinReservationDtos.add(cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation));
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);

@@ -13,7 +13,7 @@ public class BoatReservationMapper {
         Boat boat=boatMapper.boatDtoToBoat(boatReservationDto.getBoatDto());
         return new BoatReservation(boatReservationDto.getId(),boatReservationDto.getStartDate(),
                 boatReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(boatReservationDto.getPaymentInformationDto()),
-                boatReservationDto.isOwnerWroteAReport(),boat,
+                boatReservationDto.isOwnerWroteAReport(),boatReservationDto.getOwnersUsername(),boat,
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatReservationDto.getAddedAdditionalServices()),
                 boatReservationDto.getNeedsCaptainServices());
     }
@@ -22,7 +22,7 @@ public class BoatReservationMapper {
         return new BoatReservationDto(boatReservation.getId(),boatReservation.getStartDate(),
                 boatReservation.getEndDate(),boatReservation.getClient().getUsername(),
                 fullName,paymentInformationMapper.paymentInformationToDto(boatReservation.getPaymentInformation()),boatReservation.isSuccessfull(),
-                boatReservation.isOwnerWroteAReport(),
+                boatReservation.isOwnerWroteAReport(),boatReservation.getOwnersUsername(),
                 boatMapper.boatToBoatDto(boatReservation.getBoat()),
                 additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(boatReservation.getAddedAdditionalServices()),
                 boatReservation.getNeedsCaptainService());

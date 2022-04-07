@@ -113,19 +113,15 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         }
         return false;
     }
+
     @Override
-    public Set<CabinReservation> getAllReports(){
-        return  cabinReservationRepository.getAllReports();
+    public Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername) {
+        return cabinReservationRepository.countReservationsInPeriod(startWeek,endWeek,ownerUsername);
     }
 
     @Override
-    public Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId) {
-        return cabinReservationRepository.countReservationsInPeriod(startWeek,endWeek,ownerId);
-    }
-
-    @Override
-    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
-        return cabinReservationRepository.sumProfit(ownerId,start,end);
+    public Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return cabinReservationRepository.sumProfit(ownerUsername,start,end);
     }
 
     @Override
@@ -166,7 +162,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(cabinReservation,client)) return false;
         CabinReservation successfullReservation=new CabinReservation(cabinReservation.getId(),cabinReservation.getStartDate(),
-                    cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.isOwnerWroteAReport(),cabinReservation.getCabin(),null);
+                    cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.isOwnerWroteAReport(),
+                    cabinReservation.getOwnersUsername(),cabinReservation.getCabin(),null);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getCabin().getCabinOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getCabin().getCabinOwner());
@@ -225,13 +222,13 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
 
     @Override
-    public Set<CabinReservation> findReservationsByOwnerId(Long id) {
-        return cabinReservationRepository.findReservationsByOwnerId(id,LocalDateTime.now());
+    public Set<CabinReservation> findReservationsByOwnerUsername(String ownerUsername) {
+        return cabinReservationRepository.findReservationsByOwnerUsername(ownerUsername,LocalDateTime.now());
     }
 
     @Override
-    public Set<CabinReservation> getPastReservations(Long id) {
-        return cabinReservationRepository.getPastReservations(id,LocalDateTime.now());
+    public Set<CabinReservation> getPastReservations(String ownerUsername) {
+        return cabinReservationRepository.getPastReservations(ownerUsername,LocalDateTime.now());
     }
 
     @Override
@@ -245,4 +242,5 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     public CabinReservation getById(Long id) {
         return cabinReservationRepository.getById(id);
     }
+
 }

@@ -12,7 +12,7 @@ public class AdventureReservationMapper {
        Adventure adventure = adventureMapper.adventureDtoToAdventure(adventureReservationDto.getAdventureDto());
         return new AdventureReservation(adventureReservationDto.getId(),adventureReservationDto.getStartDate(),
                 adventureReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(adventureReservationDto.getPaymentInformationDto()),
-                adventureReservationDto.isOwnerWroteAReport(),
+                adventureReservationDto.isOwnerWroteAReport(),adventureReservationDto.getOwnersUsername(),
                 adventure,fishingInstructor,
                 additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
     }
@@ -21,7 +21,7 @@ public class AdventureReservationMapper {
         return new AdventureReservationDto(adventureReservation.getId(),
                 adventureReservation.getStartDate(),adventureReservation.getEndDate(),adventureReservation.getClient().getUsername(),fullName,
                 paymentInformationMapper.paymentInformationToDto(adventureReservation.getPaymentInformation()),adventureReservation.isSuccessfull(),
-                adventureReservation.isOwnerWroteAReport(),
+                adventureReservation.isOwnerWroteAReport(),adventureReservation.getOwnersUsername(),
                 adventureMapper.adventureToAdventureDto(adventureReservation.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()));
     }

@@ -9,19 +9,16 @@ public interface QuickReservationBoatService {
     boolean ownerCreates(QuickReservationBoat quickReservationBoat);
     Set<QuickReservationBoat> getByBoatId(Long cabinId);
     boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate);
-    boolean ownerIsNotAvailableQuickResrvation(Long ownerId, LocalDateTime start, LocalDateTime end);
+    boolean ownerIsNotAvailableQuickResrvation(String ownerUsername, LocalDateTime start, LocalDateTime end);
 
-    Set<QuickReservationBoat> findReservationsByOwnerId(Long id);
+    Set<QuickReservationBoat> findReservationsByOwnerUsername(String username);
     boolean futureQuickReservationsExist(LocalDateTime currentDate,Long boatId);
 
-    Set<QuickReservationBoat> getPastReservations(Long id);
+    Set<QuickReservationBoat> getPastReservations(String username);
 
-    void ownerCreatesReview(QuickReservationBoat quickReservationBoat, boolean successfull);
-    Set<QuickReservationBoat> getAllReports();
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username);
 
-    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
-
-    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+    Double sumProfit(String username, LocalDateTime start, LocalDateTime end);
 
     QuickReservationBoat getById(Long reservationId);
 

@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinSubscription;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
@@ -39,7 +36,7 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
 
         QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
                 quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(), quickReservationCabin.isOwnerWroteAReport(),
-                quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
+                quickReservationCabin.getOwnersUsername(),quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
         quickReservationCabinRepository.save(successfullQuickReservation);
         if(quickReservationCabin.getAddedAdditionalServices()!=null){
             successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());
@@ -55,13 +52,13 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
-    public Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId) {
-        return quickReservationCabinRepository.countReservationsOfThisWeek(startWeek,endWeek,ownerId);
+    public Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername) {
+        return quickReservationCabinRepository.countReservationsOfThisWeek(startWeek,endWeek,ownerUsername);
     }
 
     @Override
-    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
-        return quickReservationCabinRepository.sumProfit(ownerId,start,end);
+    public Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return quickReservationCabinRepository.sumProfit(ownerUsername,start,end);
     }
 
     @Override
@@ -97,8 +94,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
-    public Set<QuickReservationCabin> findReservationsByOwnerId(Long id) {
-        return quickReservationCabinRepository.findReservationsByOwnerId(id,LocalDateTime.now());
+    public Set<QuickReservationCabin> findReservationsByOwnerId(String ownerUsername) {
+        return quickReservationCabinRepository.findReservationsByOwnerUsername(ownerUsername,LocalDateTime.now());
     }
 
     @Override
@@ -106,9 +103,10 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         return quickReservationCabinRepository.getById(id);
     }
 
+
     @Override
-    public Set<QuickReservationCabin> getPastReservations(Long id) {
-        return quickReservationCabinRepository.getPastReservations(id,LocalDateTime.now());
+    public Set<QuickReservationCabin> getPastReservations(String ownerUsername) {
+        return quickReservationCabinRepository.getPastReservations(ownerUsername,LocalDateTime.now());
     }
 
     @Override
