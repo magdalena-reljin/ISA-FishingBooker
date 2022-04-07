@@ -244,9 +244,14 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
 
     @Override
-    public void reservationIsEvaluated(Long id){
+    public void markThatReservationIsEvaluated(Long id){
         CabinReservation cabinReservation = cabinReservationRepository.getById(id);
         cabinReservation.setEvaluated(true);
         cabinReservationRepository.save(cabinReservation);
+    }
+
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long id){
+        return cabinReservationRepository.getById(id).isEvaluated();
     }
 }

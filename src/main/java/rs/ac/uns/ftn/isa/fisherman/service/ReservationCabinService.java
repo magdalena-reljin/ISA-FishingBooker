@@ -35,5 +35,7 @@ public interface ReservationCabinService {
 
     void save(CabinReservation reservation);
 
-    void reservationIsEvaluated(Long id);
+    void markThatReservationIsEvaluated(Long id);
+
+    boolean checkIfReservationIsEvaluated(Long id);
 }
