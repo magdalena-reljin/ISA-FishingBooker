@@ -8,19 +8,12 @@ public interface QuickReservationAdventureService {
     boolean instructorCreates(QuickReservationAdventure adventureReservation);
 
 
-   Set<QuickReservationAdventure> getByInstructorId(Long id) ;
-
-    boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate);
+   Set<QuickReservationAdventure> getByInstructorUsername(String username) ;
+    boolean quickReservationExists(String username, LocalDateTime startDate, LocalDateTime endDate);
     boolean futureQuickReservationsExist(LocalDateTime currentDate,Long id);
-
-    Set<QuickReservationAdventure> getPastReservations(Long instructorId);
-
-    void ownerCreatesReview(QuickReservationAdventure reservation, boolean successfull);
-    Set<QuickReservationAdventure> getAllReports();
-
-    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId);
-
-    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+    Set<QuickReservationAdventure> getPastReservations(String username);
+    Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username);
+    Double sumProfit(String username, LocalDateTime start, LocalDateTime end);
     void  save(QuickReservationAdventure quickReservationAdventure);
     QuickReservationAdventure findById(Long id);
 }

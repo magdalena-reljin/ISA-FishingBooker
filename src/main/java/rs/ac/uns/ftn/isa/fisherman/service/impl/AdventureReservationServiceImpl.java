@@ -35,7 +35,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         Client client = clientService.findByUsername(clientUsername);
         if(!validateForReservation(adventureReservation,client)) return false;
         AdventureReservation successfullReservation=new AdventureReservation(adventureReservation.getId(),adventureReservation.getStartDate()
-        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.isOwnerWroteAReport(),
+        ,adventureReservation.getEndDate(),client,adventureReservation.getPaymentInformation(),adventureReservation.isOwnerWroteAReport(),adventureReservation.getOwnersUsername(),
                 adventureReservation.getAdventure(),adventureReservation.getFishingInstructor(),null);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getFishingInstructor());
         successfullReservation.setPaymentInformation(paymentInformation);
@@ -51,13 +51,12 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     @Override
-    public Set<AdventureReservation> getPresentByInstructorId(Long id) {
-        LocalDateTime currentDate= LocalDateTime.now();
-        return adventureReservationRepository.getPresentByInstructorId(id,currentDate);
+    public Set<AdventureReservation> getPresentByInstructorId(String username) {
+        return adventureReservationRepository.getPresentByInstructorId(username,LocalDateTime.now());
     }
 
     @Override
-    public boolean reservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+    public boolean reservationExists(String id, LocalDateTime startDate, LocalDateTime endDate) {
         return adventureReservationRepository.reservationExists(id,startDate,endDate);
 
     }
@@ -68,19 +67,11 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     @Override
-    public Set<AdventureReservation> getPastReservations(Long id) {
+    public Set<AdventureReservation> getPastReservations(String username) {
         LocalDateTime currentDate = LocalDateTime.now();
-        return adventureReservationRepository.getPastReservations(id,currentDate);
+        return adventureReservationRepository.getPastReservations(username,currentDate);
     }
 
-    @Override
-    public void ownerCreatesReview(AdventureReservation reservation, boolean successfull) {
-        AdventureReservation adventureReservation = adventureReservationRepository.getById(reservation.getId());
-        adventureReservation.setSuccessfull(successfull);
-       // adventureReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-      //  adventureReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
-        adventureReservationRepository.save(adventureReservation);
-    }
 
     private boolean validateForReservation(AdventureReservation adventureReservation, Client client){
         LocalDateTime currentDate= LocalDateTime.now();
@@ -91,10 +82,10 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         if(!availableInstructorPeriodService.instructorIsAvailable(adventureReservation.getFishingInstructor()
                 .getId(),adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
 
-        if(adventureReservationRepository.reservationExists(adventureReservation.getFishingInstructor().getId()
+        if(adventureReservationRepository.reservationExists(adventureReservation.getOwnersUsername()
                 ,adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
 
-        if(quickReservationAdventureService.quickReservationExists(adventureReservation.getFishingInstructor().getId(),
+        if(quickReservationAdventureService.quickReservationExists(adventureReservation.getOwnersUsername(),
                 adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
 
         return true;
@@ -109,18 +100,14 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         }
     }
 
-    public Set<AdventureReservation>getAllReports(){
-       return adventureReservationRepository.getAllReports();
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username) {
+        return adventureReservationRepository.countReservationsInPeriod(start,end,username);
     }
 
     @Override
-    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId) {
-        return adventureReservationRepository.countReservationsInPeriod(start,end,ownerId);
-    }
-
-    @Override
-    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
-        return adventureReservationRepository.sumProfit(ownerId,start,end);
+    public Double sumProfit(String username, LocalDateTime start, LocalDateTime end) {
+        return adventureReservationRepository.sumProfit(username,start,end);
     }
 
     @Override

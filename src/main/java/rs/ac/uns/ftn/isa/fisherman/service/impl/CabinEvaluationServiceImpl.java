@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 public class CabinEvaluationServiceImpl implements CabinEvaluationService {
@@ -36,5 +37,10 @@ public class CabinEvaluationServiceImpl implements CabinEvaluationService {
     @Override
     public boolean reservationHasEvaluation(Long id) {
         return cabinEvaluationRepository.reservationHasEvaluation(id);
+    }
+
+    @Override
+    public Set<CabinEvaluation> findByCabinId(Long cabinId) {
+        return null;
     }
 }

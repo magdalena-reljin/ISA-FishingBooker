@@ -21,18 +21,17 @@ public interface ReservationCabinService {
 
     boolean futureReservationsExist(LocalDateTime currentDate, Long id);
 
-    Set< CabinReservation> findReservationsByOwnerId(Long id);
-    Set<CabinReservation> getPastReservations(Long id);
+    Set< CabinReservation> findReservationsByOwnerUsername(String ownerUsername);
+    Set<CabinReservation> getPastReservations(String ownersUsername);
 
     void ownerCreatesReview(CabinReservation reservation,boolean isSuccessfull);
 
     CabinReservation getById(Long id);
 
-    Set<CabinReservation> getAllReports();
 
-    Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, Long ownerId);
+    Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername);
 
-    Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end);
+    Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
 
     void save(CabinReservation reservation);
 }

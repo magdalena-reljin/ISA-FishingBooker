@@ -44,9 +44,8 @@ public class AdventureReservationController {
     @GetMapping(value= "/getByInstructorUsername/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<Set<AdventureReservationDto>> getPresentByInstructorId(@PathVariable("username")String username) {
-        Long instructorId= fishingInstructorService.findByUsername(username).getId();
         Set<AdventureReservationDto> adventureReservations= new HashSet<>();
-        for(AdventureReservation adventureReservation: adventureReservationService.getPresentByInstructorId(instructorId))
+        for(AdventureReservation adventureReservation: adventureReservationService.getPresentByInstructorId(username))
         adventureReservations.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
         return new ResponseEntity<>(adventureReservations,HttpStatus.OK);
     }
@@ -54,9 +53,8 @@ public class AdventureReservationController {
     @GetMapping("/getPastReservations/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<Set<AdventureReservationDto>> getPastReservations (@PathVariable("username") String username) {
-        Long instructorId= fishingInstructorService.findByUsername(username).getId();
         Set<AdventureReservationDto> reservationDtos=new HashSet<>();
-        for(AdventureReservation adventureReservation: adventureReservationService.getPastReservations(instructorId)){
+        for(AdventureReservation adventureReservation: adventureReservationService.getPastReservations(username)){
             reservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
         }
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);

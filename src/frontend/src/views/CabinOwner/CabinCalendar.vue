@@ -847,6 +847,7 @@ import axios from "axios";
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
                                 ownerWroteAReport: false,
+                                ownersUsername: this.email,
                                 })
                               .then((response) => {
                                       console.log(response)
@@ -904,6 +905,8 @@ import axios from "axios";
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
                                 ownerWroteAReport: false,
+                                ownersUsername: this.email,
+
                               
                                 })
                               .then((response) => {

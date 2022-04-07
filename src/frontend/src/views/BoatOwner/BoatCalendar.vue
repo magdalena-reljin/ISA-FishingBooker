@@ -937,6 +937,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   ownersPart: 0
                                 },
                                 ownerWroteAReport: false,
+                                ownersUsername: this.email,
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
@@ -993,6 +994,7 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
                                   ownersPart: 0
                                 },
                                 ownerWroteAReport: false,
+                                ownersUsername: this.email,
                                 boatDto: this.boatDto,
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,

@@ -612,6 +612,7 @@ export default {
               ownersPart: 0
              },
              ownerWroteAReport: false,
+              ownersUsername: this.cabinDto.ownerUsername,
             cabinDto: this.cabinDto,
             addedAdditionalServices: this.addedAdditionalServices,
             clientUsername: this.email,

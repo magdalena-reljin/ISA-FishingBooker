@@ -24,7 +24,9 @@ public class Reservation {
     private boolean successfull;
     @Column(name = "ownerWroteAReport")
     private boolean ownerWroteAReport;
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport) {
+    @JoinColumn(name="owners_username")
+    protected String ownersUsername;
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport,String ownersUsername) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -32,18 +34,27 @@ public class Reservation {
         this.successfull=true;
         this.paymentInformation=paymentInformation;
         this.ownerWroteAReport=ownerWroteAReport;
+        this.ownersUsername=ownersUsername;
     }
 
-    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate,boolean ownerWroteAReport) {
+    public Reservation(Long id, LocalDateTime startDate, LocalDateTime endDate,boolean ownerWroteAReport,String ownersUsername) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.client = new Client();
         this.successfull=true;
         this.ownerWroteAReport=ownerWroteAReport;
+        this.ownersUsername=ownersUsername;
     }
 
 
+    public String getOwnersUsername() {
+        return ownersUsername;
+    }
+
+    public void setOwnersUsername(String ownersUsername) {
+        this.ownersUsername = ownersUsername;
+    }
 
     public Reservation(){}
 

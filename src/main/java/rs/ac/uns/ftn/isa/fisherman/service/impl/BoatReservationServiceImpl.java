@@ -36,14 +36,14 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         if(!validateForReservation(boatReservation,client)) return false;
         BoatReservation successfullReservation=new BoatReservation(boatReservation.getId(),boatReservation.getStartDate(),
                 boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.isOwnerWroteAReport(),
-                boatReservation.getBoat(),
+                boatReservation.getOwnersUsername(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getBoat().getBoatOwner());
         if(boatReservation.getAddedAdditionalServices()!=null){
             if(boatReservation.getNeedsCaptainService()) {
-                if (ownerIsNotAvailable(successfullReservation.getBoat().getBoatOwner().getId(),
+                if (ownerIsNotAvailable(successfullReservation.getBoat().getBoatOwner().getUsername(),
                         successfullReservation.getStartDate(), successfullReservation.getEndDate())) return false;
             }
             boatReservationRepository.save(successfullReservation);
@@ -61,9 +61,9 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         LocalDateTime currentDate= LocalDateTime.now();
         return boatReservationRepository.getPresentByBoatId(boatId,currentDate);
     }
-    private boolean ownerIsNotAvailable(Long ownerId, LocalDateTime start, LocalDateTime end){
-        if(boatReservationRepository.ownerIsNotAvailable(ownerId, start, end)) return true;
-        if(quickReservationBoatService.ownerIsNotAvailableQuickResrvation(ownerId, start, end)) return true;
+    private boolean ownerIsNotAvailable(String ownersUsermane, LocalDateTime start, LocalDateTime end){
+        if(boatReservationRepository.ownerIsNotAvailable(ownersUsermane, start, end)) return true;
+        if(quickReservationBoatService.ownerIsNotAvailableQuickResrvation(ownersUsermane, start, end)) return true;
         return false;
     }
     private boolean validateForReservation(BoatReservation boatReservation,Client client){
@@ -88,13 +88,13 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
-    public boolean ownerIsNotAvailableReservation(Long ownerId, LocalDateTime start, LocalDateTime end) {
-        return boatReservationRepository.ownerIsNotAvailable(ownerId, start, end);
+    public boolean ownerIsNotAvailableReservation(String username, LocalDateTime start, LocalDateTime end) {
+        return boatReservationRepository.ownerIsNotAvailable(username, start, end);
     }
 
     @Override
-    public Set<BoatReservation> findReservationsByOwnerId(Long id) {
-        return boatReservationRepository.findReservationsByOwnerId(id,LocalDateTime.now());
+    public Set<BoatReservation> findReservationsByOwnerUsername(String username) {
+        return boatReservationRepository.findReservationsByOwnerUsername(username,LocalDateTime.now());
     }
 
     @Override
@@ -103,8 +103,8 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
-    public Set<BoatReservation> getPastReservations(Long id) {
-        return boatReservationRepository.getPastReservations(id,LocalDateTime.now());
+    public Set<BoatReservation> getPastReservations(String ownersUsername) {
+        return boatReservationRepository.getPastReservations(ownersUsername,LocalDateTime.now());
     }
 
     @Override
@@ -115,20 +115,16 @@ public class BoatReservationServiceImpl implements BoatReservationService {
        // oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
         boatReservationRepository.save(oldReservation);
     }
-    @Override
-    public Set<BoatReservation> getAllReports(){
 
-        return  boatReservationRepository.getAllReports();
+
+    @Override
+    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username) {
+        return boatReservationRepository.countReservationsInPeriod(start,end,username);
     }
 
     @Override
-    public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, Long ownerId) {
-        return boatReservationRepository.countReservationsInPeriod(start,end,ownerId);
-    }
-
-    @Override
-    public Double sumProfit(Long ownerId, LocalDateTime start, LocalDateTime end) {
-        return boatReservationRepository.sumProfit(ownerId,start,end);
+    public Double sumProfit(String username, LocalDateTime start, LocalDateTime end) {
+        return boatReservationRepository.sumProfit(username,start,end);
     }
 
     @Override

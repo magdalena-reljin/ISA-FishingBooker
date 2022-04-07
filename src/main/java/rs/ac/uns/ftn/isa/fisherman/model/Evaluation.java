@@ -76,4 +76,12 @@ public abstract class Evaluation {
     public void setClient(Client client) {
         this.client = client;
     }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
 }

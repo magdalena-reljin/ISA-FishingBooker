@@ -40,9 +40,9 @@ public class QuickReservationAdventureController {
     @GetMapping(value= "/getByInstructorId/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<Set<QuickReservationAdventureDto>> getByInstructorId(@PathVariable ("username")String username) {
-        Long instructorId= fishingInstructorService.findByUsername(username).getId();
+
         Set<QuickReservationAdventureDto> reservationDtos= new HashSet<>();
-        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getByInstructorId(instructorId))
+        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getByInstructorUsername(username))
             reservationDtos.add(quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
     }
@@ -51,9 +51,8 @@ public class QuickReservationAdventureController {
     @GetMapping("/getPastReservations/{username:.+}/")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<Set<QuickReservationAdventureDto>> getPastReservations (@PathVariable("username") String username) {
-        Long instructorId= fishingInstructorService.findByUsername(username).getId();
         Set<QuickReservationAdventureDto> reservationDtos=new HashSet<>();
-        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getPastReservations(instructorId)){
+        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getPastReservations(username)){
             reservationDtos.add(quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
         }
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);

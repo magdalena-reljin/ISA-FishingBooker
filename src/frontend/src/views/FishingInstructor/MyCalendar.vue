@@ -886,6 +886,7 @@ export default {
                                   ownersPart: 0
                                 },
                                 ownerWroteAReport: false,
+                                ownersUsername: this.email,
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,
@@ -940,6 +941,7 @@ export default {
                                   ownersPart: 0
                                 },
                                 ownerWroteAReport: false,
+                                ownersUsername: this.email,
                                 adventureDto: this.adventureDto[this.selected],
                                 addedAdditionalServices: this.additionalServicesToSend,
                                 clientUsername: this.client,

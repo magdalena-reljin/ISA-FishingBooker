@@ -14,4 +14,5 @@ public interface CabinEvaluationRepository extends JpaRepository<CabinEvaluation
 
     @Query(value="SELECT grade  FROM evaluations c where cabin_reservation_id in :cabin_reservation_ids and approved=true",nativeQuery = true)
     Set<Double> getAllApprovedCabinEvaluationsByCabinReservationIds(@Param("cabin_reservation_ids") Set<Integer> cabin_reservation_ids);
+
 }
