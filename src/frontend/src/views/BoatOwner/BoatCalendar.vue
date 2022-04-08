@@ -1042,13 +1042,13 @@ import BoatOwnerNav from './BoatOwnerNav.vue'
 
            },
            calculatePrice: function(start,end,pricePerNight) {
-              let numOfDays = this.getNumberOfHours(start, end);
-              this.totalPrice = numOfDays * pricePerNight;
+              let numOfHours = this.getNumberOfHours(start, end);
+              this.totalPrice = numOfHours * pricePerNight;
               for (let i = 0; i < this.additionalServicesToSend.length; i++) {
                 if(this.additionalServicesToSend[i].name=='Captain service'){
                   this.needsCaptainServices=true
                 }
-                this.totalPrice += this.additionalServicesToSend[i].price;
+                this.totalPrice += this.additionalServicesToSend[i].price*numOfHours;
               }
             },
             getNumberOfHours: function(start,end) {

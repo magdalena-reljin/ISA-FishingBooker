@@ -15,11 +15,12 @@ import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 public class ReservationCabinServiceImpl implements ReservationCabinService {
@@ -120,8 +121,32 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
 
     @Override
-    public Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
-        return cabinReservationRepository.sumProfit(ownerUsername,start,end);
+    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return sumProfitOfPricesCalculatedByDays(cabinReservationRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
+    }
+    @Override
+    public double sumProfitOfPricesCalculatedByDays(List<CabinReservation> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        long numOfDaysForReport= Duration.between(start,end).toDays();
+        long numOfDaysForReportReservation= 0;
+
+        System.out.println("broj dana za izvestaj   "+numOfDaysForReport);
+        for(CabinReservation cabinReservation: reservations){
+            numOfDaysForReportReservation= calculateOverlapingDates(start,end,cabinReservation.getStartDate(),cabinReservation.getEndDate());
+            System.out.println("dana za rez  "+numOfDaysForReportReservation);
+            profit+=(numOfDaysForReportReservation* cabinReservation.getPaymentInformation().getOwnersPart())/Duration.between(cabinReservation.getStartDate(),cabinReservation.getEndDate()).toDays();
+            System.out.println("profit  "+profit);
+
+        }
+        return profit;
+    }
+
+    private long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
+        long numberOfOverlappingDates=0;
+        LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));
+        LocalDate end = Collections.min(Arrays.asList(endReport.toLocalDate(), endReservation.toLocalDate()));
+        numberOfOverlappingDates = ChronoUnit.DAYS.between(start, end);
+        return numberOfOverlappingDates;
     }
 
     @Override

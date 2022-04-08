@@ -10,8 +10,13 @@ import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import javax.mail.MessagingException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -104,11 +109,38 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username) {
         return adventureReservationRepository.countReservationsInPeriod(start,end,username);
     }
-
     @Override
-    public Double sumProfit(String username, LocalDateTime start, LocalDateTime end) {
-        return adventureReservationRepository.sumProfit(username,start,end);
+    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return sumProfitOfPricesCalucatedByHours(adventureReservationRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
     }
+    @Override
+    public double sumProfitOfPricesCalucatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        double numOfHoursForReportReservation= 0.0;
+        double reservationHours=0.0;
+        for(AdventureReservation adventureReservation: reservations){
+            numOfHoursForReportReservation= calculateOverlapingDates(start,end,adventureReservation.getStartDate(),adventureReservation.getEndDate());
+            reservationHours= Duration.between(adventureReservation.getStartDate(),adventureReservation.getEndDate()).toMinutes()/60d;
+            System.out.println("sati ukucano za izvestaj "+numOfHoursForReportReservation);
+            System.out.println("sati u rez "+reservationHours);
+            profit+=(numOfHoursForReportReservation* adventureReservation.getPaymentInformation().getOwnersPart())/reservationHours;
+            System.out.println("profit  "+profit);
+
+        }
+        return profit;
+    }
+
+    private double calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
+        double numberOfOverlappingHours=0;
+        LocalDateTime start = Collections.max(Arrays.asList(startReport, startReservation));
+        LocalDateTime end = Collections.min(Arrays.asList(endReport, endReservation));
+        numberOfOverlappingHours = ChronoUnit.MINUTES.between(start, end);
+
+        System.out.println("Minuta izmedju  "+numberOfOverlappingHours);
+        System.out.println("Sati izmedju  "+numberOfOverlappingHours/60d);
+        return numberOfOverlappingHours/60d;
+    }
+
 
     @Override
     public AdventureReservation findById(Long id) {

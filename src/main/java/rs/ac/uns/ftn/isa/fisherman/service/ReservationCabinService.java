@@ -4,6 +4,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface ReservationCabinService {
@@ -31,7 +32,8 @@ public interface ReservationCabinService {
 
     Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername);
 
-    Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
+    double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalculatedByDays(List<CabinReservation> reservations, LocalDateTime start, LocalDateTime end);
 
     void save(CabinReservation reservation);
 
