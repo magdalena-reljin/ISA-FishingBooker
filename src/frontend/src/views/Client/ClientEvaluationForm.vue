@@ -88,8 +88,33 @@ export default {
     this.reservationId = this.$route.params.reservationId;
   },
   methods: {
+    validateData: function(){
+      if(this.commentEntity==""){
+        this.$swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "You must add comment about " + this.selectedEntity + "!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          return false;
+      }else if(this.commentEntityOwner==""){
+        this.$swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "You must add comment about " + this.selectedEntity + " owner!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          return false;
+      }
+        
+      return true;
+    },
     submitEvaluation: function (event) {
       event.preventDefault();
+      if(!this.validateData())
+        return;
       if (this.selectedEntity === "cabin") {
         axios
           .post(

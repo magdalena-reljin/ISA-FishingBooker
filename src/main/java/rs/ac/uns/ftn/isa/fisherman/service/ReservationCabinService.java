@@ -1,4 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import org.apache.tomcat.jni.Local;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
@@ -40,4 +41,5 @@ public interface ReservationCabinService {
     void markThatReservationIsEvaluated(Long id);
 
     boolean checkIfReservationIsEvaluated(Long id);
+
 }

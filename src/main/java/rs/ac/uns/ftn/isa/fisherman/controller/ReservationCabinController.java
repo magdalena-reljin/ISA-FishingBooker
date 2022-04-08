@@ -49,6 +49,8 @@ public class ReservationCabinController {
     public ResponseEntity<String> makeReservation (@RequestBody CabinReservationDto cabinReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(cabinReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
+            return new ResponseEntity<>("Client has cancellation for cabin in given period!", HttpStatus.BAD_REQUEST);
         if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
