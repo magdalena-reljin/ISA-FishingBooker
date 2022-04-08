@@ -23,7 +23,7 @@ public class ReservationDto {
         this.evaluated = evaluated;
     }
 
-    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport,String ownersUsername) {
+    public ReservationDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport,String ownersUsername, boolean evaluated) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -33,6 +33,7 @@ public class ReservationDto {
         this.successfull = successfull;
         this.ownerWroteAReport=ownerWroteAReport;
         this.ownersUsername=ownersUsername;
+        this.evaluated=evaluated;
     }
 
     public String getOwnersUsername() {

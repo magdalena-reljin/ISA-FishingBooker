@@ -34,4 +34,8 @@ public interface ReservationCabinService {
     Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
 
     void save(CabinReservation reservation);
+
+    void markThatReservationIsEvaluated(Long id);
+
+    boolean checkIfReservationIsEvaluated(Long id);
 }

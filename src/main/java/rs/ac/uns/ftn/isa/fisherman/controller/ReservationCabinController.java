@@ -27,8 +27,6 @@ public class ReservationCabinController {
     @Autowired
     private CabinReservationCancellationService cabinReservationCancellationService;
     @Autowired
-    private CabinEvaluationService cabinEvaluationService;
-    @Autowired
     private CabinOwnersReservationReportService cabinOwnersReservationReportService;
     @Autowired
     private PenaltyService penaltyService;
@@ -93,7 +91,6 @@ public class ReservationCabinController {
         Set<CabinReservationDto> cabinReservationDtos= new HashSet<>();
         for(CabinReservation cabinReservation: reservationCabinService.getClientReservationHistoryByUsername(userRequestDTO.getUsername())){
             CabinReservationDto cabinReservationDto = cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation);
-            cabinReservationDto.setEvaluated(cabinEvaluationService.reservationHasEvaluation(cabinReservation.getId()));
             cabinReservationDtos.add(cabinReservationDto);
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);

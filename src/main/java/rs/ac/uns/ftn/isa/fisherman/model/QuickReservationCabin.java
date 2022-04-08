@@ -25,7 +25,7 @@ public class QuickReservationCabin extends Reservation {
     protected Set<AdditionalServices> addedAdditionalServices;
 
     public QuickReservationCabin(Long id, LocalDateTime startDate, LocalDateTime endDate, Client client, PaymentInformation paymentInformation,boolean ownerWroteAReport,String ownersUsername, Cabin cabin, Integer discount, Set<AdditionalServices> addedAdditionalServices) {
-        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport,ownersUsername);
+        super(id, startDate, endDate, client, paymentInformation,ownerWroteAReport,ownersUsername, false);
         this.cabin = cabin;
         this.discount = discount;
         this.addedAdditionalServices = addedAdditionalServices;

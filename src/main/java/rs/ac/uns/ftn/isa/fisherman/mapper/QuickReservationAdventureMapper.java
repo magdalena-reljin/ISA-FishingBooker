@@ -31,6 +31,6 @@ public class QuickReservationAdventureMapper {
                  quickReservationAdventure.isOwnerWroteAReport(),quickReservationAdventure.getOwnersUsername(),
                 adventureMapper.adventureToAdventureDto(quickReservationAdventure.getAdventure()),additionalServiceMapper
                 .additionalServicesToAdditionalServiceDtoS(quickReservationAdventure.getAddedAdditionalServices())
-,quickReservationAdventure.getDiscount());
+,quickReservationAdventure.getDiscount(), quickReservationAdventure.isEvaluated());
     }
 }

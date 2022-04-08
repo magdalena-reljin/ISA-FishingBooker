@@ -23,7 +23,7 @@ public class AdventureReservationMapper {
                 paymentInformationMapper.paymentInformationToDto(adventureReservation.getPaymentInformation()),adventureReservation.isSuccessfull(),
                 adventureReservation.isOwnerWroteAReport(),adventureReservation.getOwnersUsername(),
                 adventureMapper.adventureToAdventureDto(adventureReservation.getAdventure()),additionalServiceMapper
-                .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()));
+                .additionalServicesToAdditionalServiceDtoS(adventureReservation.getAddedAdditionalServices()), adventureReservation.isEvaluated());
     }
 
 

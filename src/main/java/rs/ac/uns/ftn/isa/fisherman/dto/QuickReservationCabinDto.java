@@ -32,8 +32,8 @@ public class QuickReservationCabinDto extends ReservationDto {
         this.discount = discount;
     }
 
-    public QuickReservationCabinDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport,String ownersUsername, CabinDto cabinDto, Set<AdditionalServicesDto> addedAdditionalServices, Integer discount) {
-        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull,ownerWroteAReport,ownersUsername);
+    public QuickReservationCabinDto(Long id, LocalDateTime startDate, LocalDateTime endDate, String clientUsername, String clientFullName, PaymentInformationDto paymentInformationDto, boolean successfull,boolean ownerWroteAReport,String ownersUsername, CabinDto cabinDto, Set<AdditionalServicesDto> addedAdditionalServices, Integer discount, boolean evaluated) {
+        super(id, startDate, endDate, clientUsername, clientFullName, paymentInformationDto, successfull,ownerWroteAReport,ownersUsername, evaluated);
         this.cabinDto = cabinDto;
         this.addedAdditionalServices = addedAdditionalServices;
         this.discount = discount;

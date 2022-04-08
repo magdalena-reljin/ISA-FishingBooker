@@ -42,6 +42,6 @@ public class QuickReservationCabinMapper {
                 quickReservationCabin.isSuccessfull(), quickReservationCabin.isOwnerWroteAReport(),
                 quickReservationCabin.getOwnersUsername(),
                 cabinMapper.cabinToCabinDto(quickReservationCabin.getCabin()),
-                additionalServicesSet,quickReservationCabin.getDiscount());
+                additionalServicesSet,quickReservationCabin.getDiscount(), quickReservationCabin.isEvaluated());
     }
 }

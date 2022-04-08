@@ -38,6 +38,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
                 boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.isOwnerWroteAReport(),
                 boatReservation.getOwnersUsername(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
+        successfullReservation.setEvaluated(false);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getBoat().getBoatOwner());

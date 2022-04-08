@@ -8,21 +8,21 @@ import java.time.LocalDateTime;
 public class CabinEvaluation extends Evaluation{
 
     @ManyToOne
-    @JoinColumn(name= "cabin_reservation_id")
-    CabinReservation cabinReservation;
+    @JoinColumn(name= "cabin_id")
+    Cabin cabin;
 
-    public CabinEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client, CabinReservation cabinReservation) {
+    public CabinEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client, Cabin cabin) {
         super(id, date, comment, grade, approved, client);
-        this.cabinReservation = cabinReservation;
+        this.cabin = cabin;
     }
 
     public CabinEvaluation() {}
 
-    public CabinReservation getCabinReservation() {
-        return cabinReservation;
+    public Cabin getCabin() {
+        return cabin;
     }
 
-    public void setCabinReservation(CabinReservation cabinReservation) {
-        this.cabinReservation = cabinReservation;
+    public void setCabin(Cabin cabin) {
+        this.cabin = cabin;
     }
 }

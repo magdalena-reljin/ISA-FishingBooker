@@ -9,9 +9,9 @@
             </div>
             <div class="card-body">
               <div style="text-align: left" class="form-group">
-                <label>Comment:</label>
+                <label>Comment for the {{ selectedEntity }}:</label>
                 <textarea
-                  v-model="comment"
+                  v-model="commentEntity"
                   class="form-control"
                   id="exampleFormControlTextarea1"
                   rows="3"
@@ -21,15 +21,33 @@
               <br />
 
               <div style="text-align: left" class="form-group">
-                <label>Grade:</label>
-                <star-rating v-model:rating="grade"></star-rating>
+                <label>Grade for the {{ selectedEntity }}:</label>
+                <star-rating v-model:rating="gradeEntity"></star-rating>
               </div>
 
               <br />
+
+              <div style="text-align: left" class="form-group">
+                <label>Comment for the {{ selectedEntity }} owner:</label>
+                <textarea
+                  v-model="commentEntityOwner"
+                  class="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <br />
+
+              <div style="text-align: left" class="form-group">
+                <label>Grade for the {{ selectedEntity }} owner:</label>
+                <star-rating v-model:rating="gradeEntityOwner"></star-rating>
+              </div>
+
+              <br />
+
               <div class="form-group" style="text-align: right">
                 <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#staticBackdrop"
                   class="btn btn-outline-dark"
                   @click="submitEvaluation"
                 >
@@ -57,8 +75,10 @@ export default {
     return {
       email: "",
       selectedEntity: "",
-      comment: "",
-      grade: 5,
+      commentEntity: "",
+      gradeEntity: 5,
+      commentEntityOwner: "",
+      gradeEntityOwner: 5,
       reservationId: 0,
     };
   },
@@ -70,17 +90,16 @@ export default {
   methods: {
     submitEvaluation: function (event) {
       event.preventDefault();
-
       if (this.selectedEntity === "cabin") {
         axios
           .post(
             "http://localhost:8081/cabinEvaluation/addEvaluation",
             {
-              cabinReservationDto: {
-                id: this.reservationId,
-              },
-              comment: this.comment,
-              grade: this.grade,
+              reservationId: this.reservationId,
+              commentForTheEntity: this.commentEntity,
+              gradeForTheEntity: this.gradeEntity,
+              commentForTheEntityOwner: this.commentEntityOwner,
+              gradeForTheEntityOwner: this.gradeEntityOwner,
               clientUsername: this.email,
             },
             {}
@@ -94,12 +113,11 @@ export default {
             timer: 2500,
           });
           this.$router.push("/reservations/" + this.email);
-          }).catch(() => {
-          this.loader.hide();
+          }).catch((error) => {
           this.$swal.fire({
             icon: "error",
             title: "Something went wrong!",
-            text: "Unsuccessful evaluation submit!",
+            text: error.response.data,
           });
         });
       } else if (this.selectedEntity === "boat") {
