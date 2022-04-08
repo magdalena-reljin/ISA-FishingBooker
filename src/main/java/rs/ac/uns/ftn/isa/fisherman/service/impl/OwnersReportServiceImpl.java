@@ -11,7 +11,9 @@ import rs.ac.uns.ftn.isa.fisherman.repository.OwnersReportRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.OwnersReportService;
 
 import javax.mail.MessagingException;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OwnersReportServiceImpl implements OwnersReportService {
@@ -23,24 +25,42 @@ public class OwnersReportServiceImpl implements OwnersReportService {
  @Autowired
  private OwnersReportRepository ownersReportRepository;
     @Override
-    public Set<OwnersReport> getAllReports() {
-        return  ownersReportRepository.getAllReports();
+    public List<OwnersReport> getAllUnApprovedReports() {
+        List<OwnersReport> unapproved= new ArrayList<>();
+        for(OwnersReport ownersReport: ownersReportRepository.findAll()){
+
+            if(ownersReport.isApproved()== false && ownersReport.isBadComment()==true)
+                unapproved.add(ownersReport);
+        }
+        return unapproved;
     }
+
+
 
     @Override
     public void sendReviewResponse(String clientUsername, String ownersUsername, String comment) {
-        sendMailNotification("dajanazlokapa1@gmail.com",comment);
-        sendMailNotification("reljin.magdalena@gmail.com",comment);
+        sendMailNotification(clientUsername,comment);
+        sendMailNotification(ownersUsername,comment);
     }
 
 
     @Override
-    public void setReviewStatus(Long id){
+    public OwnersReport setReviewStatus(Long id){
        OwnersReport ownersReport= ownersReportRepository.getById(id);
        ownersReport.setApproved(true);
        ownersReportRepository.save(ownersReport);
+       return  ownersReport;
     }
 
+    @Override
+    public List<OwnersReport> findAll() {
+     return  ownersReportRepository.findAll();
+    }
+
+    @Override
+   public  OwnersReport findById(Long id){
+        return  ownersReportRepository.getById(id);
+   }
 
     private void sendMailNotification(String username,String adminMessage) {
         {

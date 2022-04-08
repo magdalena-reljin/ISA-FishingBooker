@@ -7,11 +7,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class JpaExampleApplicationTests //NOSONAR
+public class JpaExampleApplicationTests
 {
 
 	@Test
-	public void contextLoads() //NOSONAR
+	public void contextLoads()
 	{
 	}
 
