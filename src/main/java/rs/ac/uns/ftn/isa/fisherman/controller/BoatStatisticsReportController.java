@@ -71,8 +71,8 @@ public class BoatStatisticsReportController {
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<List<Double>> sumProfit(@PathVariable("username") String username,@RequestBody List<LocalDateTime> dateRange) {
         List<Double> profit=new ArrayList<>();
-        profit.add(boatReservationService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
-        profit.add(quickReservationBoatService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(boatReservationService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(quickReservationBoatService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
 }

@@ -229,6 +229,8 @@ export default ({
                 this.end=""
                 return false;
               }
+          
+              
               return true;
           },
           getStats: function (){
@@ -277,6 +279,19 @@ export default ({
                 })
                  return;
              }
+
+            var dateS1=this.formatDate(this.start).toString()
+            var dateS2=this.formatDate(this.end).toString()
+            var splits1=dateS1.split("T")
+            var splits2=dateS2.split("T")
+            if(splits1[0]==splits2[0]){
+               this.$swal('Prices are calculated by day. Minimum difference between 2 dates must be 1 day.');
+               this.start=""
+               this.end=""
+               return;
+            }
+
+
              var dateRange=[]
              dateRange.push(this.formatDate(this.start))
              dateRange.push(this.formatDate(this.end))

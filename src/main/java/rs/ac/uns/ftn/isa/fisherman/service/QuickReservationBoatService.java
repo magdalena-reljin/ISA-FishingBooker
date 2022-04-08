@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.service;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface QuickReservationBoatService {
@@ -18,8 +19,8 @@ public interface QuickReservationBoatService {
 
     Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username);
 
-    Double sumProfit(String username, LocalDateTime start, LocalDateTime end);
-
+    double findReservationsAndSumProfit(String username, LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalculatedByHours(List<QuickReservationBoat> reservations, LocalDateTime start, LocalDateTime end);
     QuickReservationBoat getById(Long reservationId);
 
     void save(QuickReservationBoat reservation);

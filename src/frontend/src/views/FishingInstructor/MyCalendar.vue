@@ -1049,10 +1049,10 @@ export default {
 
            },
            calculatePrice: function(start,end,pricePerHour) {
-              let numOfDays = this.getNumberOfHours(start, end);
-              this.totalPrice = numOfDays * pricePerHour;
+              let numOfHours = this.getNumberOfHours(start, end);
+              this.totalPrice = numOfHours * pricePerHour;
               for (let i = 0; i < this.additionalServicesToSend.length; i++) {
-                this.totalPrice += this.additionalServicesToSend[i].price;
+                this.totalPrice += this.additionalServicesToSend[i].price*numOfHours;
               }
             },
             getNumberOfHours: function(start,end) {

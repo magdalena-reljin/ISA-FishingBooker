@@ -1,8 +1,10 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface QuickReservationCabinService {
@@ -23,7 +25,7 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> getAllReports();
     Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername);
 
-    Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
-
+    double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
     void save(QuickReservationCabin reservation);
 }

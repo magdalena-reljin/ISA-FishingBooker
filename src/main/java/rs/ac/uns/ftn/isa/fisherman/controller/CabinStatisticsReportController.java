@@ -69,8 +69,8 @@ public class CabinStatisticsReportController {
     @PreAuthorize("hasRole('CABINOWNER')")
     public ResponseEntity<List<Double>> sumProfit(@PathVariable("username") String username,@RequestBody List<LocalDateTime> dateRange) {
         List<Double> profit=new ArrayList<>();
-        profit.add(reservationCabinService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
-        profit.add(quickReservationCabinService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(reservationCabinService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
+       // profit.add(quickReservationCabinService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
 }
