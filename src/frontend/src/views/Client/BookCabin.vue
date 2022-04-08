@@ -472,10 +472,11 @@ export default {
   methods: {
     calculatePrice: function () {
       let numOfDays = this.getNumberOfDays(this.start, this.end);
-      this.totalPrice = numOfDays * this.cabinDto.price;
+      var pricePerDay = this.cabinDto.price;
       for (let i = 0; i < this.addedAdditionalServices.length; i++) {
-        this.totalPrice += this.addedAdditionalServices[i].price;
+        pricePerDay += this.addedAdditionalServices[i].price;
       }
+      this.totalPrice = numOfDays * pricePerDay;
     },
     getNumberOfDays: function (start, end) {
       const date1 = new Date(start);
@@ -488,7 +489,7 @@ export default {
       const diffInTime = date2.getTime() - date1.getTime();
 
       // Calculating the no. of days between two dates
-      const diffInDays = Math.round(diffInTime / oneDay);
+      const diffInDays = Math.ceil(diffInTime / oneDay);
 
       return diffInDays;
     },

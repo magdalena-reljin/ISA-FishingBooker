@@ -35,8 +35,6 @@ public class CabinEvaluationController {
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/addEvaluation")
     public ResponseEntity<String> addEvaluation(@RequestBody AddNewEvaluationDto addNewEvaluationDto){
-        if(addNewEvaluationDto.getCommentForTheEntity().equals("")||addNewEvaluationDto.getCommentForTheEntityOwner().equals(""))
-            return new ResponseEntity<>("Comments can't be empty!", HttpStatus.BAD_REQUEST);
         if(!cabinReservationService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())){
             cabinEvaluationService.addEvaluation(addNewEvaluationDto);
             cabinOwnerEvaluationService.addEvaluation(addNewEvaluationDto);
