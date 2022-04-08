@@ -5,7 +5,7 @@
      
 <h1>ALL REPORTS </h1>
 &nbsp;  
-<h2 v-if="reports.lenght==0" > No reports.</h2>
+<h2 v-if="reports.length == 0" > No reports.</h2>
 <table v-else class="table">
   <thead>
     <tr>

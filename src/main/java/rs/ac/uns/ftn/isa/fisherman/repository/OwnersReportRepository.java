@@ -9,7 +9,7 @@ import java.util.Set;
 public interface OwnersReportRepository extends JpaRepository<OwnersReport,Long> {
 
     @Query(value = "SELECT * FROM owner_reports where approved=false and bad_comment=true", nativeQuery = true)
-    Set<OwnersReport> getAllReports();
+    Set<OwnersReport> getAllUnApprovedReports();
 
     @Query(value = "SELECT * FROM owner_reports where id=:id", nativeQuery = true)
     OwnersReport getById(Long id);

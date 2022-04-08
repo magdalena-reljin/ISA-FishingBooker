@@ -2,14 +2,15 @@ package rs.ac.uns.ftn.isa.fisherman.service;
 
 import rs.ac.uns.ftn.isa.fisherman.model.OwnersReport;
 
+import java.util.List;
 import java.util.Set;
 
 public interface OwnersReportService {
-
-    Set<OwnersReport> getAllReports();
+    List<OwnersReport> getAllUnApprovedReports();
 
     void sendReviewResponse(String clientUsername, String ownersUsername, String comment);
 
-    void setReviewStatus(Long id);
-
+    OwnersReport setReviewStatus(Long id);
+    List<OwnersReport> findAll();
+      OwnersReport findById(Long id);
 }

@@ -7,10 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.OwnersReportMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.OwnersReport;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.service.OwnersReportService;
 
 import java.util.HashSet;
@@ -29,7 +27,7 @@ public class ReportsController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Set<OwnersReportDto>> getAllReports () {
         Set<OwnersReportDto>reports= new HashSet<>();
-        for(OwnersReport ownersReport: ownersReportService.getAllReports())
+        for(OwnersReport ownersReport: ownersReportService.getAllUnApprovedReports())
              reports.add(ownersReportMapper.ownersReportToDto(ownersReport));
         return new ResponseEntity<>(reports, HttpStatus.OK);
     }
