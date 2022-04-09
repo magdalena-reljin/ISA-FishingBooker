@@ -21,25 +21,25 @@ import javax.mail.MessagingException;
 @Service
 public class UserServiceImpl implements UserService {
     private final Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
-    private UserRepository userRepository;
-    private MailService<String> mailService;
-    private AuthorityService authorityService;
-    private PasswordEncoder passwordEncoder;
-    private TokenUtils tokenUtils;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, MailService<String> mailService, AuthorityService authorityService, PasswordEncoder passwordEncoder, TokenUtils tokenUtils){
-        this.userRepository=userRepository;
-        this.mailService=mailService;
-        this.authorityService=authorityService;
-        this.passwordEncoder =passwordEncoder;
-        this.tokenUtils=tokenUtils;
+    private UserRepository userRepository;
+    @Autowired
+    private MailService<String> mailService;
+    @Autowired
+    private AuthorityService authorityService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenUtils tokenUtils;
+
+    public UserServiceImpl() {
     }
 
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
       return userRepository.findByUsername(username);
     }
-    public List<User> findAll() throws AccessDeniedException {
+    public List<User> findAll()  {
         return userRepository.getAll();
     }
 
