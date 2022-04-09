@@ -36,11 +36,7 @@ public class AdventureServiceImpl implements AdventureService {
     }
 
     @Override
-    public boolean addNewAdventure(Adventure adventure, String username,Set<AdditionalServices>additionalServices) {
-      FishingInstructor fishingInstructor= fishingInstructorService.findByUsername(username);
-      if(adventureRepository.findAdventureByName(adventure.getName(),fishingInstructor.getId())!= null)
-          return false;
-      adventure.setFishingInstructor(fishingInstructor);
+    public boolean addNewAdventure(Adventure adventure,Set<AdditionalServices>additionalServices) {
       adventureRepository.save(adventure);
         if(additionalServices!=null) {
             adventure.setAdditionalServices(additionalServices);

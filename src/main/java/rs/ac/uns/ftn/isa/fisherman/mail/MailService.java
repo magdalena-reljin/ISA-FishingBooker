@@ -22,7 +22,7 @@ public class MailService<T> {
     }
 
     @Async
-    public void sendMail(String recipient, T params, MailFormatter<T> mailFormatter) throws MessagingException {
+    public boolean sendMail(String recipient, T params, MailFormatter<T> mailFormatter) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper mail = new MimeMessageHelper(message);
         mail.setTo(recipient);
@@ -30,6 +30,7 @@ public class MailService<T> {
         mail.setSubject(mailFormatter.getSubject());
         mail.setText(mailFormatter.getText(params),true);
         javaMailSender.send(message);
+        return true;
     }
 
 

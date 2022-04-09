@@ -21,10 +21,8 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
     @Override
     public PaymentInformation setTotalPaymentAmount(Reservation reservation,User user){
         PaymentInformation paymentInformation = new PaymentInformation();
-        Double newTotalPrice = calculateClientsDiscount(reservation.getClient(),reservation.getPaymentInformation().getTotalPrice());
+        Double newTotalPrice = getClientsTotalPrice(reservation.getClient(),reservation.getPaymentInformation().getTotalPrice());
         paymentInformation.setTotalPrice(newTotalPrice);
-
-
         Double ownersPart= calculateOwnersPart(newTotalPrice,user);
         paymentInformation.setOwnersPart(ownersPart);
         paymentInformation.setCompanysPart(newTotalPrice-ownersPart);
@@ -35,19 +33,26 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
         ReservationPoints points = reservationPointsService.get();
         Integer instructorsDiscount= rankService.getDiscountByRank(user.getUserRank().getRankType().ordinal());
         Integer appPercentage= points.getAppProfitPercentage();
+       return calculateOwnerPartOfReservationPrice(appPercentage,newTotalPrice,instructorsDiscount);
+    }
+
+
+    public Double getClientsTotalPrice(Client client, Double totalPrice) {
+        Integer clientDiscount= rankService.getDiscountByRank(client.getUserRank().getRankType().ordinal());
+        return  calculateClinetsDiscount(clientDiscount,totalPrice);
+    }
+
+    public Double calculateClinetsDiscount(Integer clientDiscount,Double totalPrice){
+        if(clientDiscount==0)
+            return  totalPrice;
+        return totalPrice-clientDiscount/100.00 * totalPrice;
+    }
+    public Double calculateOwnerPartOfReservationPrice(Integer appPercentage,Double newTotalPrice,Integer instructorsDiscount){
         Double appsPartWithoutDiscount = appPercentage/100.00 * newTotalPrice;
         if(instructorsDiscount==0)
             return newTotalPrice-appsPartWithoutDiscount;
         return  newTotalPrice -(appsPartWithoutDiscount-instructorsDiscount/100.00* appsPartWithoutDiscount);
     }
-
-    private Double calculateClientsDiscount(Client client, Double totalPrice) {
-        Integer clientDiscount= rankService.getDiscountByRank(client.getUserRank().getRankType().ordinal());
-        if(clientDiscount==0)
-            return  totalPrice;
-        return totalPrice-clientDiscount/100.00 * totalPrice;
-    }
-
     @Override
     public void updateUserRankAfterReservation(Client client, User user) {
         ReservationPoints points = reservationPointsService.get();

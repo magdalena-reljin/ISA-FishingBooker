@@ -26,7 +26,7 @@
 
         <div class="form-group">
           <label>Last name:</label>
-          <input class="form-control" type="text" v-model="userRequestDto.lastname" disabled>
+          <input class="form-control" type="text" v-model="userRequestDto.lastname" >
           
         </div>
 

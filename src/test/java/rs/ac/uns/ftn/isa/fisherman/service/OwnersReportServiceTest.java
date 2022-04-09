@@ -54,8 +54,7 @@ public class OwnersReportServiceTest {
 
         when(ownersReportRepository.getById(100L)).thenReturn(ownersReport);
 
-        OwnersReport ownersReportExists = ownersReportService.findById(100L);
-        ownersReportExists.setApproved(true);
+        OwnersReport ownersReportExists = ownersReportService.setReviewStatus(ownersReport.getId());
 
         when(ownersReportRepository.save(ownersReportExists)).thenReturn(ownersReportExists);
 

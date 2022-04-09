@@ -34,10 +34,8 @@ public class LogInServiceImpl implements LoginService {
         User user = (User) authentication.getPrincipal();
         String userType= userRepository.findRoleById(user.getId());
         String accessToken = tokenUtils.generateToken(user.getUsername());
-        System.out.println("DATUUUM"+ tokenUtils.generateExpirationDate());
         int accessExpiresIn = tokenUtils.getExpiredIn();
         return new UserTokenState(userType,accessToken, accessExpiresIn);
-
     }
 
 
