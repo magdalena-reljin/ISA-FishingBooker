@@ -51,6 +51,7 @@ import CabinBusinessReport from '../views/CabinOwner/CabinBusinessReport'
 import InstructorsBusinessReport from '../views/FishingInstructor/InstructorsBusinessReport'
 import BoatOwnerBusinessReport from '../views/BoatOwner/BoatOwnerBusinessReport'
 import ClientPenalties from '../views/Client/ClientPenalties'
+import ClientBoatProfile from '../views/Client/ClientBoatProfile'
 
 const routes = [
   
@@ -402,6 +403,20 @@ const routes = [
     path: '/cabin/:email/:cabinName',
     name: 'Cabin',
     component: ClientCabinProfile,
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role =='CABINOWNER' ||  localStorage.role =='FISHINGINSTRUCTOR' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
+  },
+  {
+    path: '/boat/:email/:boatName',
+    name: 'Boat',
+    component: ClientBoatProfile,
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')

@@ -1,4 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,4 +30,7 @@ public interface BoatReservationService {
     BoatReservation getById(Long reservationId);
 
     void save(BoatReservation reservation);
+
+    Set<Boat> getAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto);
+
 }

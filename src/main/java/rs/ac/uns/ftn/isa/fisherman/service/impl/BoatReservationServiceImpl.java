@@ -3,6 +3,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfullInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
@@ -164,6 +166,32 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         } catch (MessagingException e) {
             logger.error(e.toString());
         }
+    }
+
+    @Override
+    public Set<Boat> getAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        Set<Boat> availableBoats = new HashSet<>();
+        Client client = clientService.findByUsername(searchAvailablePeriodsBoatDto.getUsername());
+        //TODO: List<BoatReservationCancellation> boatReservationCancellations = boatReservationCancellationRepository.getByUsersId(client.getId());
+        for(AvailableBoatPeriod boatPeriod:availableBoatPeriodService.findPeriodsBetweenDates(searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate())){
+            /* TODO: if(periodWasAlreadyReserved(cabinPeriod.getCabin().getId(),searchAvailablePeriodsBoatDto.getStartDate(),searchAvailablePeriodsBoatDto.getEndDate(), boatReservationCancellations))
+            {
+                continue;
+            }*/
+            if(searchAvailablePeriodsBoatDto.getPrice()!=0){
+                if(boatPeriod.getBoat().getPrice()>searchAvailablePeriodsBoatDto.getPrice())
+                    continue;
+            }
+            if(searchAvailablePeriodsBoatDto.getMaxPeople()>boatPeriod.getBoat().getMaxPeople())
+                continue;
+            if(boatNotReservedInPeriod(boatPeriod.getBoat().getId(), searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate()))
+                availableBoats.add(boatPeriod.getBoat());
+        }
+        return availableBoats;
+    }
+
+    private boolean boatNotReservedInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return !boatReservationRepository.boatReservedInPeriod(id, startDate, endDate);
     }
 
 }

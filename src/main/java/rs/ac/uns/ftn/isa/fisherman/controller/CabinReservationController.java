@@ -18,7 +18,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/reservationCabin", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ReservationCabinController {
+public class CabinReservationController {
 
     @Autowired
     private ReservationCabinService reservationCabinService;

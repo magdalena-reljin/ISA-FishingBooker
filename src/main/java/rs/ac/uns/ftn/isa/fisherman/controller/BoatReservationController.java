@@ -5,8 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.*;
+import rs.ac.uns.ftn.isa.fisherman.mapper.BoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
@@ -28,6 +28,7 @@ public class BoatReservationController {
     @Autowired
     private BoatOwnersReservationReportService boatOwnersReservationReportService;
 
+    private final BoatMapper boatMapper = new BoatMapper();
     private final BoatReservationMapper boatReservationMapper=new BoatReservationMapper();
     @PostMapping("/ownerCreates/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
@@ -85,4 +86,13 @@ public class BoatReservationController {
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 
+    @PostMapping("/getAvailableBoats")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatDto>> getAvailableBoats (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        Set<BoatDto> boatsDto= new HashSet<>();
+        for(Boat boat:boatReservationService.getAvailableBoats(searchAvailablePeriodsBoatDto)){
+            boatsDto.add(boatMapper.boatToBoatDto(boat));
+        }
+        return new ResponseEntity<>(boatsDto, HttpStatus.OK);
+    }
 }

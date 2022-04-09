@@ -122,53 +122,55 @@
         </div>
       </div>
     </form>
-  
 
-  <!--search-->
+    <!--search-->
 
-<!-- sort-->
-   
-    
-      <form>
-        <h1 style="text-align: left; color: #0b477b;  padding-left: 2%;">Sort boats</h1>
-        <br>
-        <div style="padding-left: 7.2%; padding-right: 7.2%; width: 100%;" class="row" >
-          <div class="col">
+    <!-- sort-->
+
+    <form>
+      <h1 style="text-align: left; color: #0b477b; padding-left: 2%">
+        Sort boats
+      </h1>
+      <br />
+      <div
+        style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+        class="row"
+      >
+        <div class="col">
           <button class="form-control rounded-pill fa fa-sort">Name</button>
-          </div>
+        </div>
 
-          <div class="col">
+        <div class="col">
           <button class="form-control rounded-pill fa fa-sort">Street</button>
-          </div>
+        </div>
 
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">City</button>
-          </div>
+        <div class="col">
+          <button class="form-control rounded-pill fa fa-sort">City</button>
+        </div>
 
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Country</button>
-          </div>
+        <div class="col">
+          <button class="form-control rounded-pill fa fa-sort">Country</button>
+        </div>
 
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Rating</button>
-          </div>
+        <div class="col">
+          <button class="form-control rounded-pill fa fa-sort">Rating</button>
+        </div>
 
-          <div class="col">
+        <div class="col">
           <button
             @click="resetSort()"
-            style="height: 90%; background-color: #0b477b; color: white;"
+            style="height: 90%; background-color: #0b477b; color: white"
             type="button"
-            class="btn  rounded-pill fa fa-sort"
+            class="btn rounded-pill fa fa-sort"
           >
             RESET SORT
           </button>
-          </div>
-          
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
 
-    <!--sort-->
+  <!--sort-->
 
   <hr />
 
@@ -275,13 +277,27 @@
 
                   <div class="row">
                     <div class="col" style="text-align: right">
-                      <button
-                        @click="seeProfile(boatDto.name)"
-                        type="button"
-                        class="btn btn-outline-dark rounded-pill"
-                      >
-                        SEE PROFILE
-                      </button>
+                      <template v-if="!reservationProcess">
+                        <button
+                          @click="
+                            seeProfile(boatDto.name) &&
+                              showReservationForm(false)
+                          "
+                          type="button"
+                          class="btn btn-outline-dark rounded-pill"
+                        >
+                          SEE PROFILE
+                        </button>
+                      </template>
+                      <template v-if="reservationProcess">
+                        <button
+                          @click="bookBoat(boatDto.name)"
+                          type="button"
+                          class="btn btn-outline-dark rounded-pill"
+                        >
+                          BOOK
+                        </button>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -294,12 +310,33 @@
       </div>
     </div>
   </div>
+
+  <template v-if="bookBoatOpen">
+    <BookBoat
+      :bookingProcess="true"
+      :boatName="boatName"
+      :back="back"
+      :startDate="startDate"
+      :endDate="endDate"
+    ></BookBoat>
+  </template>
 </template>
 
 <script>
 import axios from "axios";
+import BookBoat from "./BookBoat.vue";
 
 export default {
+  components: {
+    BookBoat,
+  },
+  props: {
+    reservationProcess: Boolean,
+    availableBoats: Array,
+    showReservationForm: Function,
+    startDate: Date,
+    endDate: Date,
+  },
   data() {
     return {
       email: "",
@@ -348,6 +385,8 @@ export default {
         username: "",
       },
       boatsLoaded: false,
+      bookBoatOpen: false,
+      boatName: "",
       searchName: "",
       searchRating: "",
       searchAddress: "",
@@ -363,12 +402,21 @@ export default {
     this.getBoats();
   },
   methods: {
+    back() {
+      this.bookBoatOpen = false;
+      this.showReservationForm(true);
+    },
     getBoats: function () {
-      this.user.username = this.email;
-      axios.get("http://localhost:8081/boats/getAll").then((response) => {
-        this.boatDtos = response.data;
+      if (this.reservationProcess) {
+        this.boatDtos = this.availableBoats;
         this.boatsLoaded = true;
-      });
+      } else {
+        this.user.username = this.email;
+        axios.get("http://localhost:8081/boats/getAll").then((response) => {
+          this.boatDtos = response.data;
+          this.boatsLoaded = true;
+        });
+      }
     },
     getImageUrl: function (index) {
       if (this.boatsLoaded == true) {
@@ -388,8 +436,12 @@ export default {
       return "logoF1.png";
     },
     seeProfile: function (boatName) {
-      console.log(boatName);
-      //this.$router.push('/boatProfile/'+ this.email+'/'+boatName);
+      this.$router.push('/boat/'+ this.email+ '/' + boatName);
+    },
+    bookCabin: function (boatName) {
+      this.bookCabinOpen=true;
+      this.boatName=boatName;
+      this.showReservationForm(false);
     },
     resetSearch: function () {
       this.searchName = "";

@@ -21,7 +21,7 @@
     <ClientCabins :reservationProcess="false" :availableCabins="[]"/>
   </template>
   <template v-if="boatsShown"> 
-     <ClientBoats/>
+     <ClientBoats :reservationProcess="false" :availableCabins="[]"/>
   </template>
   <template v-if="adventuresShown"> 
      <ClientAdventures/>
