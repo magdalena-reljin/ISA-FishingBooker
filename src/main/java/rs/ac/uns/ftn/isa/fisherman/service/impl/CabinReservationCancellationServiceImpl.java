@@ -19,8 +19,6 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
     @Autowired
     private CabinReservationCancellationRepository cabinReservationCancellationRepository;
     @Autowired
-    private ClientService clientService;
-    @Autowired
     private CabinReservationRepository cabinReservationRepository;
     @Autowired
     private CabinOwnerService cabinOwnerService;
@@ -28,6 +26,9 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
     private ReservationPaymentService reservationPaymentService;
     @Autowired
     private PenaltyService penaltyService;
+    @Autowired
+    private ClientService clientService;
+
     @Override
     public boolean addCancellation(CabinReservationDto cabinReservationDto) {
         CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
@@ -44,5 +45,10 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
         cabinReservationCancellationRepository.save(cabinReservationCancellation);
         penaltyService.addPenalty(cabinReservation.getClient().getUsername());
         return true;
+    }
+
+    @Override
+    public boolean clientHasCancellationForCabinInPeriod(CabinReservationDto cabinReservation) {
+        return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabinDto().getId(), clientService.findByUsername(cabinReservation.getClientUsername()).getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate());
     }
 }

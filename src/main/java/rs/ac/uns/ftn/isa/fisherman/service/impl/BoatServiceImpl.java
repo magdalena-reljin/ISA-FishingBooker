@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.repository.BoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
-    public Set<Boat> findByOwnersId(Long id) {
+    public List<Boat> findByOwnersId(Long id) {
         return boatRepository.findByOwnersId(id);
     }
 
@@ -124,7 +125,18 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
-    public Double findAvgBoatRatingByOwnerId(Long ownerId) {
-        return boatRepository.findAvgBoatRatingByOwnerId(ownerId);
+    public double findAvgBoatRatingByOwnerId(Long ownerId) {
+        boolean ratingExists=false;
+        double count=0;
+        double sum=0;
+        for(Boat boat: boatRepository.findByOwnersId(ownerId) ){
+            if(boat.getRating()!=0) {
+                ratingExists=true;
+                sum += boat.getRating();
+                count++;
+            }
+        }
+       if (ratingExists) return sum/count;
+       return sum;
     }
 }

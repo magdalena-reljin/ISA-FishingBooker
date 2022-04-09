@@ -13,7 +13,13 @@ import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
 import javax.mail.MessagingException;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -37,6 +43,7 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         QuickReservationCabin successfullQuickReservation=new QuickReservationCabin(quickReservationCabin.getId(),quickReservationCabin.getStartDate(),
                 quickReservationCabin.getEndDate(),null,quickReservationCabin.getPaymentInformation(), quickReservationCabin.isOwnerWroteAReport(),
                 quickReservationCabin.getOwnersUsername(),quickReservationCabin.getCabin(),quickReservationCabin.getDiscount(),null);
+        successfullQuickReservation.setEvaluated(false);
         quickReservationCabinRepository.save(successfullQuickReservation);
         if(quickReservationCabin.getAddedAdditionalServices()!=null){
             successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());
@@ -57,8 +64,26 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
-    public Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
-        return quickReservationCabinRepository.sumProfit(ownerUsername,start,end);
+    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return sumProfitOfPricesCalculatedByDays(quickReservationCabinRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
+    }
+    @Override
+    public double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        long numOfDaysForReportReservation= 0;
+        for(QuickReservationCabin quickReservationCabin: reservations){
+            numOfDaysForReportReservation= calculateOverlapingDates(start,end,quickReservationCabin.getStartDate(),quickReservationCabin.getEndDate());
+            profit+=(numOfDaysForReportReservation* quickReservationCabin.getPaymentInformation().getOwnersPart())/Duration.between(quickReservationCabin.getStartDate(),quickReservationCabin.getEndDate()).toDays();
+        }
+        return profit;
+    }
+
+    private long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
+        long numberOfOverlappingDates=0;
+        LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));
+        LocalDate end = Collections.min(Arrays.asList(endReport.toLocalDate(), endReservation.toLocalDate()));
+        numberOfOverlappingDates = ChronoUnit.DAYS.between(start, end);
+        return numberOfOverlappingDates;
     }
 
     @Override

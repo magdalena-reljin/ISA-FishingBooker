@@ -67,8 +67,8 @@ public class AdventureStatisticsReportController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<List<Double>> sumProfit(@PathVariable("username") String username,@RequestBody List<LocalDateTime> dateRange) {
         List<Double> profit=new ArrayList<>();
-        profit.add(adventureReservationService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
-        profit.add(quickReservationAdventureService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(adventureReservationService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(quickReservationAdventureService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
 }

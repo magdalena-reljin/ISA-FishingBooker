@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface QuickReservationBoatRepository extends JpaRepository<QuickReservationBoat,Long> {
@@ -33,6 +34,6 @@ public interface QuickReservationBoatRepository extends JpaRepository<QuickReser
     @Query(value="select count(cr.id) from quick_reservation_boat cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("ownersUsername") String ownersUsername);
 
-    @Query(value="select sum(cr.owners_part) from quick_reservation_boat cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
-    Double sumProfit(@Param("ownersUsername")String ownersUsername , @Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+    @Query(value="select * from quick_reservation_boat cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
+    List<QuickReservationBoat> findReservationsInPeriodToSumProfit(@Param("ownersUsername")String ownersUsername , @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

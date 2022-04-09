@@ -1,4 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,15 @@ import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
 
 @Service
 public class ReservationCabinServiceImpl implements ReservationCabinService {
@@ -88,11 +93,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public boolean makeReservation(CabinReservationDto cabinReservationDto) {
-        CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
-        CabinReservation cabinReservation = cabinReservationMapper.cabinReservationDtoToCabinReservation(cabinReservationDto);
-        cabinReservation.getCabin().setCabinOwner(cabinOwner);
-        cabinReservation.setClient(clientService.findByUsername(cabinReservationDto.getClientUsername()));
-        if(periodStillAvailable(cabinReservation)&&(!cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabin().getId(), cabinReservation.getClient().getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate()))){
+        CabinReservation cabinReservation = setUpCabinReservationFromDto(cabinReservationDto);
+        if(periodStillAvailable(cabinReservation)&&(!clientHasCancellationForCabinInPeriod(cabinReservation))){
             PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(cabinReservation,cabinReservation.getCabin().getCabinOwner());
             cabinReservation.setPaymentInformation(paymentInformation);
             reservationPaymentService.updateUserRankAfterReservation(cabinReservation.getClient(),cabinReservation.getCabin().getCabinOwner());
@@ -102,16 +104,34 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 cabinReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
                 cabinReservationRepository.save(cabinReservation);
             }
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
-                String message = cabinReservationDto.getCabinDto().getName() + " is booked from " + cabinReservationDto.getStartDate().format(formatter) + " to " + cabinReservationDto.getEndDate().format(formatter) + " .";
-                mailService.sendMail(cabinReservationDto.getClientUsername(), message, new CabinReservationSuccessfulInfo());
-            } catch (MessagingException e) {
-                logger.error(e.toString());
-            }
+            SendReservationMailToClient(cabinReservationDto);
             return true;
         }
         return false;
+    }
+
+    @NotNull
+    private CabinReservation setUpCabinReservationFromDto(CabinReservationDto cabinReservationDto) {
+        CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
+        CabinReservation cabinReservation = cabinReservationMapper.cabinReservationDtoToCabinReservation(cabinReservationDto);
+        cabinReservation.getCabin().setCabinOwner(cabinOwner);
+        cabinReservation.setClient(clientService.findByUsername(cabinReservationDto.getClientUsername()));
+        return cabinReservation;
+    }
+
+    private boolean clientHasCancellationForCabinInPeriod(CabinReservation cabinReservation) {
+        return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabin().getId(), cabinReservation.getClient().getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate());
+    }
+
+
+    private void SendReservationMailToClient(CabinReservationDto cabinReservationDto) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+            String message = cabinReservationDto.getCabinDto().getName() + " is booked from " + cabinReservationDto.getStartDate().format(formatter) + " to " + cabinReservationDto.getEndDate().format(formatter) + " .";
+            mailService.sendMail(cabinReservationDto.getClientUsername(), message, new CabinReservationSuccessfulInfo());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
     }
 
     @Override
@@ -120,8 +140,26 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
 
     @Override
-    public Double sumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
-        return cabinReservationRepository.sumProfit(ownerUsername,start,end);
+    public List<CabinReservation> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return cabinReservationRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end);
+    }
+    @Override
+    public double sumProfitOfPricesCalculatedByDays(List<CabinReservation> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        long numOfDaysForReportReservation= 0;
+        for(CabinReservation cabinReservation: reservations){
+            numOfDaysForReportReservation= calculateOverlapingDates(start,end,cabinReservation.getStartDate(),cabinReservation.getEndDate());
+            profit+=(numOfDaysForReportReservation*cabinReservation.getPaymentInformation().getOwnersPart())/Duration.between(cabinReservation.getStartDate(),cabinReservation.getEndDate()).toDays();
+        }
+        return profit;
+    }
+
+    public long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
+        long numberOfOverlappingDates=0;
+        LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));
+        LocalDate end = Collections.min(Arrays.asList(endReport.toLocalDate(), endReservation.toLocalDate()));
+        numberOfOverlappingDates = DAYS.between(start, end);
+        return numberOfOverlappingDates;
     }
 
     @Override
@@ -163,7 +201,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         if(!validateForReservation(cabinReservation,client)) return false;
         CabinReservation successfullReservation=new CabinReservation(cabinReservation.getId(),cabinReservation.getStartDate(),
                     cabinReservation.getEndDate(),client,cabinReservation.getPaymentInformation(),cabinReservation.isOwnerWroteAReport(),
-                    cabinReservation.getOwnersUsername(),cabinReservation.getCabin(),null);
+                    cabinReservation.getOwnersUsername(),cabinReservation.getCabin(),null, false);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getCabin().getCabinOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getCabin().getCabinOwner());
@@ -199,7 +237,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return cabinReservationRepository.reservationExists(cabinId,startDate,endDate);
     }
 
-    private void sendMailNotification(CabinReservation cabinReservation,String email){
+    public void sendMailNotification(CabinReservation cabinReservation,String email){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
             String message = cabinReservation.getCabin().getName() + " is booked from " + cabinReservation.getStartDate().format(formatter) + " to " + cabinReservation.getEndDate().format(formatter) + " .";
@@ -231,16 +269,20 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return cabinReservationRepository.getPastReservations(ownerUsername,LocalDateTime.now());
     }
 
-    @Override
-    public void ownerCreatesReview(CabinReservation reservation, boolean isSuccessFull) {
-        CabinReservation cabinReservation = cabinReservationRepository.getById(reservation.getId());
-        cabinReservation.setSuccessfull(isSuccessFull);
-        //cabinReservation.getOwnersReport().setComment(reservation.getOwnersReport().getComment());
-        //cabinReservation.getOwnersReport().setBadComment(reservation.getOwnersReport().isBadComment());
-        cabinReservationRepository.save(cabinReservation);
-    }
     public CabinReservation getById(Long id) {
         return cabinReservationRepository.getById(id);
+    }
+
+    @Override
+    public void markThatReservationIsEvaluated(Long id){
+        CabinReservation cabinReservation = cabinReservationRepository.getById(id);
+        cabinReservation.setEvaluated(true);
+        cabinReservationRepository.save(cabinReservation);
+    }
+
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long id){
+        return cabinReservationRepository.getById(id).isEvaluated();
     }
 
 }

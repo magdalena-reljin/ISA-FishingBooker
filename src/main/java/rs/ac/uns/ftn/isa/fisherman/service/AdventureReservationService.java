@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface AdventureReservationService {
@@ -11,7 +13,8 @@ public interface AdventureReservationService {
     boolean futureReservationsExist(LocalDateTime currentDate, Long id);
     Set<AdventureReservation>  getPastReservations(String username);
     Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username);
-    Double sumProfit(String username, LocalDateTime start, LocalDateTime end);
+    double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalucatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end);
     AdventureReservation findById(Long id);
     void save (AdventureReservation adventureReservation);
 }

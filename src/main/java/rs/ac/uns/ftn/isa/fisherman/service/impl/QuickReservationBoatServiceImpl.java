@@ -2,14 +2,18 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,6 +33,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
                 quickReservationBoat.getEndDate(),null,quickReservationBoat.getPaymentInformation(),quickReservationBoat.isOwnerWroteAReport(),
              quickReservationBoat.getOwnersUsername(),
              quickReservationBoat.getBoat(),quickReservationBoat.getDiscount(),null, quickReservationBoat.getNeedsCaptainServices());
+        successfullQuickReservation.setEvaluated(false);
         if(quickReservationBoat.getAddedAdditionalServices()!=null){
             if(quickReservationBoat.getNeedsCaptainServices()) {
                 if (ownerIsNotAvailable(successfullQuickReservation.getBoat().getBoatOwner().getUsername(),
@@ -70,10 +75,6 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         return quickReservationBoatRepository.countReservationsInPeriod(start,end,username);
     }
 
-    @Override
-    public Double sumProfit(String username, LocalDateTime start, LocalDateTime end) {
-        return quickReservationBoatRepository.sumProfit(username,start,end);
-    }
 
     @Override
     public QuickReservationBoat getById(Long reservationId) {
@@ -105,6 +106,33 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     @Override
     public boolean futureQuickReservationsExist(LocalDateTime currentDate,Long boatId){
         return quickReservationBoatRepository.futureQuickReservationsExist(currentDate,boatId);
+    }
+    @Override
+    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+
+        return sumProfitOfPricesCalculatedByHours(quickReservationBoatRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
+    }
+    @Override
+    public double sumProfitOfPricesCalculatedByHours(List<QuickReservationBoat> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        double numOfHoursForReportReservation= 0.0;
+        double reservationHours=0.0;
+        for(QuickReservationBoat boatReservation: reservations){
+            numOfHoursForReportReservation= calculateOverlapingDates(start,end,boatReservation.getStartDate(),boatReservation.getEndDate());
+            reservationHours= Duration.between(boatReservation.getStartDate(),boatReservation.getEndDate()).toMinutes()/60d;
+
+            profit+=(numOfHoursForReportReservation* boatReservation.getPaymentInformation().getOwnersPart())/reservationHours;
+
+        }
+        return profit;
+    }
+
+    private double calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
+        double numberOfOverlappingHours=0;
+        LocalDateTime start = Collections.max(Arrays.asList(startReport, startReservation));
+        LocalDateTime end = Collections.min(Arrays.asList(endReport, endReservation));
+        numberOfOverlappingHours = ChronoUnit.MINUTES.between(start, end);
+        return numberOfOverlappingHours/60d;
     }
 
     @Override

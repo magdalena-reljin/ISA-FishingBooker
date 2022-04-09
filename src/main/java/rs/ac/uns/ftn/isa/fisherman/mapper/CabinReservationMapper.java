@@ -19,7 +19,7 @@ public class CabinReservationMapper {
                 cabinReservationDto.getStartDate(),cabinReservationDto.getEndDate(),
                 new Client(),paymentInformationMapper.dtoToPaymentInformation(cabinReservationDto.getPaymentInformationDto()),
               cabinReservationDto.isOwnerWroteAReport(),cabinReservationDto.getOwnersUsername(),
-              cabin, null);
+              cabin, null, cabinReservationDto.isEvaluated());
 
     }
     public CabinReservation cabinOwnerReservationDtoToCabinReservation(CabinReservationDto cabinReservationDto){
@@ -28,7 +28,7 @@ public class CabinReservationMapper {
                 cabinReservationDto.getStartDate(),cabinReservationDto.getEndDate(),
                 new Client(),paymentInformationMapper.dtoToPaymentInformation(cabinReservationDto.getPaymentInformationDto()),
                 cabinReservationDto.isOwnerWroteAReport(),cabinReservationDto.getOwnersUsername(),
-                cabin, additionalServicesMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
+                cabin, additionalServicesMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()), cabinReservationDto.isEvaluated());
 
     }
 
@@ -41,7 +41,7 @@ public class CabinReservationMapper {
                 cabinReservation.getEndDate(),cabinReservation.getClient().getUsername(),
                 fullName,paymentInformationMapper.paymentInformationToDto(cabinReservation.getPaymentInformation()),
                 cabinReservation.isSuccessfull(),cabinReservation.isOwnerWroteAReport(),cabinReservation.getOwnersUsername()
-                ,cabinMapper.cabinToCabinDto(cabinReservation.getCabin()),additionalServicesDtos);
+                ,cabinMapper.cabinToCabinDto(cabinReservation.getCabin()),additionalServicesDtos, cabinReservation.isEvaluated());
     }
 
 }

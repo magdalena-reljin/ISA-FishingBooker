@@ -952,7 +952,7 @@ import axios from "axios";
               let numOfDays = this.getNumberOfDays(start, end);
               this.totalPrice = numOfDays * pricePerNight;
               for (let i = 0; i < this.additionalServicesToSend.length; i++) {
-                this.totalPrice += this.additionalServicesToSend[i].price;
+                this.totalPrice += this.additionalServicesToSend[i].price*numOfDays;
               }
             },
             getNumberOfDays: function(start,end) {

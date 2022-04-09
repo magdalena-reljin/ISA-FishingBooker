@@ -5,10 +5,10 @@ import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 
 public class CabinEvaluationMapper {
-    private CabinReservationMapper cabinReservationMapper=new CabinReservationMapper();
+    private CabinMapper cabinMapper=new CabinMapper();
     public CabinEvaluationDto cabinEvaluationToDto(CabinEvaluation cabinEvaluation){
         return new CabinEvaluationDto(cabinEvaluation.getId(),cabinEvaluation.getDate(),cabinEvaluation.getComment(),
                 cabinEvaluation.getGrade(),cabinEvaluation.isApproved(),cabinEvaluation.getClient().getUsername(),
-                cabinReservationMapper.cabinReservationToCabinReservationDto(cabinEvaluation.getCabinReservation()));
+                cabinMapper.cabinToCabinDto(cabinEvaluation.getCabin()), null);
     }
 }

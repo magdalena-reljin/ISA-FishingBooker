@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface BoatReservationRepository extends JpaRepository<BoatReservation,Long> {
@@ -28,8 +29,8 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM boat_reservation c where boat_id=:boat_id and (:currentDate <= end_date) ",nativeQuery = true)
     boolean futureReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("boat_id") Long boatId);
 
-    @Query(value="SELECT * FROM boat_reservation res where res.owners_username=:ownersUsername and (:currentDate > end_date) ",nativeQuery = true)
-    Set<BoatReservation> getPastReservations(@Param("ownersUsername")String ownersUsername, @Param("currentDate")LocalDateTime currentDate);
+    @Query(value="SELECT * FROM boat_reservation res where res.owners_username=:ownersUsername",nativeQuery = true)
+    List<BoatReservation> getReservationsByOwnerUsername(@Param("ownersUsername")String ownersUsername);
 
     @Query(value="SELECT * FROM boat_reservation where id=:id",nativeQuery = true)
     BoatReservation getById(@Param("id")Long id);
@@ -38,6 +39,6 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
     @Query(value="select count(cr.boat_id) from boat_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("ownersUsername") String ownersUsername);
 
-    @Query(value="select sum(cr.owners_part) from boat_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
-    Double sumProfit(@Param("ownersUsername")  String ownersUsername, @Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+    @Query(value="select * from boat_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
+    List<BoatReservation> findReservationsInPeriodToSumProfit(@Param("ownersUsername")  String ownersUsername, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

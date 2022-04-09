@@ -6,4 +6,6 @@ public interface CabinReservationCancellationService {
 
     boolean addCancellation(CabinReservationDto cabinReservationDto);
 
+    boolean clientHasCancellationForCabinInPeriod(CabinReservationDto cabinReservation);
+
 }

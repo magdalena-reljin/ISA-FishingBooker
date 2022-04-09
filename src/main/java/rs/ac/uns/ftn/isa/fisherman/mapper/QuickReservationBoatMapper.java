@@ -37,6 +37,6 @@ public class QuickReservationBoatMapper {
                 .paymentInformationToDto(quickReservationBoat.getPaymentInformation()),quickReservationBoat.isSuccessfull(),
                  quickReservationBoat.isOwnerWroteAReport(),quickReservationBoat.getOwnersUsername(),
                 boatMapper.boatToBoatDto(quickReservationBoat.getBoat()),additionalServicesSet,
-                quickReservationBoat.getNeedsCaptainServices(),quickReservationBoat.getDiscount());
+                quickReservationBoat.getNeedsCaptainServices(),quickReservationBoat.getDiscount(), quickReservationBoat.isEvaluated());
     }
 }

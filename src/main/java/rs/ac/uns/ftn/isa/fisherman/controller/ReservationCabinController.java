@@ -27,8 +27,6 @@ public class ReservationCabinController {
     @Autowired
     private CabinReservationCancellationService cabinReservationCancellationService;
     @Autowired
-    private CabinEvaluationService cabinEvaluationService;
-    @Autowired
     private CabinOwnersReservationReportService cabinOwnersReservationReportService;
     @Autowired
     private PenaltyService penaltyService;
@@ -51,6 +49,8 @@ public class ReservationCabinController {
     public ResponseEntity<String> makeReservation (@RequestBody CabinReservationDto cabinReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(cabinReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
+            return new ResponseEntity<>("Client has cancellation for cabin in given period!", HttpStatus.BAD_REQUEST);
         if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
@@ -93,7 +93,6 @@ public class ReservationCabinController {
         Set<CabinReservationDto> cabinReservationDtos= new HashSet<>();
         for(CabinReservation cabinReservation: reservationCabinService.getClientReservationHistoryByUsername(userRequestDTO.getUsername())){
             CabinReservationDto cabinReservationDto = cabinReservationMapper.cabinReservationToCabinReservationDto(cabinReservation);
-            cabinReservationDto.setEvaluated(cabinEvaluationService.reservationHasEvaluation(cabinReservation.getId()));
             cabinReservationDtos.add(cabinReservationDto);
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);

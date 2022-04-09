@@ -10,9 +10,11 @@ import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 public class BoatReservationServiceImpl implements BoatReservationService {
@@ -38,6 +40,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
                 boatReservation.getEndDate(),client,boatReservation.getPaymentInformation(),boatReservation.isOwnerWroteAReport(),
                 boatReservation.getOwnersUsername(),boatReservation.getBoat(),
                 null,boatReservation.getNeedsCaptainService());
+        successfullReservation.setEvaluated(false);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(successfullReservation,successfullReservation.getBoat().getBoatOwner());
         successfullReservation.setPaymentInformation(paymentInformation);
         reservationPaymentService.updateUserRankAfterReservation(client,successfullReservation.getBoat().getBoatOwner());
@@ -103,19 +106,15 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
-    public Set<BoatReservation> getPastReservations(String ownersUsername) {
-        return boatReservationRepository.getPastReservations(ownersUsername,LocalDateTime.now());
+    public List<BoatReservation> getPastReservations(String ownersUsername) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        List<BoatReservation> pastReservations=new ArrayList<>();
+        for(BoatReservation boatReservation: boatReservationRepository.getReservationsByOwnerUsername(ownersUsername)){
+            if(currentDate.isAfter(boatReservation.getEndDate()))
+                pastReservations.add(boatReservation);
+        }
+        return pastReservations;
     }
-
-    @Override
-    public void ownerCreatesReview(BoatReservation boatReservation, boolean successfull) {
-        BoatReservation oldReservation = boatReservationRepository.getById(boatReservation.getId());
-        oldReservation.setSuccessfull(successfull);
-       // oldReservation.getOwnersReport().setComment(boatReservation.getOwnersReport().getComment());
-       // oldReservation.getOwnersReport().setBadComment(boatReservation.getOwnersReport().isBadComment());
-        boatReservationRepository.save(oldReservation);
-    }
-
 
     @Override
     public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username) {
@@ -123,8 +122,28 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
-    public Double sumProfit(String username, LocalDateTime start, LocalDateTime end) {
-        return boatReservationRepository.sumProfit(username,start,end);
+    public List<BoatReservation> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return boatReservationRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end);
+    }
+    @Override
+    public double sumProfitOfPricesCalucatedByHours(List<BoatReservation> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        double numOfHoursForReportReservation= 0.0;
+        double reservationHours=0.0;
+        for(BoatReservation boatReservation: reservations){
+            numOfHoursForReportReservation= calculateOverlapingDates(start,end,boatReservation.getStartDate(),boatReservation.getEndDate());
+            reservationHours=Duration.between(boatReservation.getStartDate(),boatReservation.getEndDate()).toMinutes()/60d;
+            profit+=(numOfHoursForReportReservation* boatReservation.getPaymentInformation().getOwnersPart())/reservationHours;
+        }
+        return profit;
+    }
+
+    private double calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
+        double numberOfOverlappingHours=0;
+        LocalDateTime start = Collections.max(Arrays.asList(startReport, startReservation));
+        LocalDateTime end = Collections.min(Arrays.asList(endReport, endReservation));
+        numberOfOverlappingHours = ChronoUnit.MINUTES.between(start, end);
+        return numberOfOverlappingHours/60d;
     }
 
     @Override
