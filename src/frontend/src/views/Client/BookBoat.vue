@@ -279,7 +279,7 @@
               <p>Total price:</p>
             </div>
             <div class="col">
-              <p>{{ totalPrice }}</p>
+              <p>{{ totalPrice }} $</p>
             </div>
           </div>
 

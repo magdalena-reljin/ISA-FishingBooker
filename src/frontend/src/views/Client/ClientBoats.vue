@@ -1,4 +1,5 @@
 <template>
+<template v-if="!bookBoatOpen">
   <!-- search -->
 
   <div class="header">
@@ -310,7 +311,7 @@
       </div>
     </div>
   </div>
-
+</template>
   <template v-if="bookBoatOpen">
     <BookBoat
       :bookingProcess="true"
@@ -438,8 +439,8 @@ export default {
     seeProfile: function (boatName) {
       this.$router.push('/boat/'+ this.email+ '/' + boatName);
     },
-    bookCabin: function (boatName) {
-      this.bookCabinOpen=true;
+    bookBoat: function (boatName) {
+      this.bookBoatOpen=true;
       this.boatName=boatName;
       this.showReservationForm(false);
     },
