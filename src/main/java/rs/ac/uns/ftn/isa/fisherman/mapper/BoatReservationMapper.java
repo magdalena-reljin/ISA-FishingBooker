@@ -27,6 +27,12 @@ public class BoatReservationMapper {
                 additionalServiceMapper.additionalServicesToAdditionalServiceDtoS(boatReservation.getAddedAdditionalServices()),
                 boatReservation.getNeedsCaptainService(), boatReservation.isEvaluated());
     }
-
+    public BoatReservation boatReservationDtoToBoatReservation(BoatReservationDto boatReservationDto){
+        return new BoatReservation(boatReservationDto.getId(),boatReservationDto.getStartDate(),
+                boatReservationDto.getEndDate(),null,paymentInformationMapper.dtoToPaymentInformation(boatReservationDto.getPaymentInformationDto()),
+                boatReservationDto.isOwnerWroteAReport(),boatReservationDto.getOwnersUsername(),boatMapper.boatDtoToBoat(boatReservationDto.getBoatDto()),
+                null,
+                boatReservationDto.getNeedsCaptainServices());
+    }
 
 }

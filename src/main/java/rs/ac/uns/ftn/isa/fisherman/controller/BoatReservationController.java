@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnersReservationReportService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +28,8 @@ public class BoatReservationController {
     private BoatOwnerService boatOwnerService;
     @Autowired
     private BoatOwnersReservationReportService boatOwnersReservationReportService;
+    @Autowired
+    private PenaltyService penaltyService;
 
     private final BoatMapper boatMapper = new BoatMapper();
     private final BoatReservationMapper boatReservationMapper=new BoatReservationMapper();
@@ -94,5 +97,18 @@ public class BoatReservationController {
             boatsDto.add(boatMapper.boatToBoatDto(boat));
         }
         return new ResponseEntity<>(boatsDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/makeReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> makeReservation (@RequestBody BoatReservationDto boatReservationDto) {
+        if(penaltyService.isUserBlockedFromReservation(boatReservationDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        // TODO: if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
+        //  return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(boatReservationService.makeReservation(boatReservationDto))
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
     }
 }

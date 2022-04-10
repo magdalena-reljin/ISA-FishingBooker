@@ -623,7 +623,7 @@ export default {
       const date = dayjs(formatDate);
       return date.format("YYYY-MM-DDTHH:mm:ss");
     },
-    bookCabin: function () {
+    bookBoat: function () {
       if (!this.dataIsValid()) {
         return;
       }

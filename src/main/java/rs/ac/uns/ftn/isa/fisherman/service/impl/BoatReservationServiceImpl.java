@@ -3,10 +3,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfullInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
@@ -33,7 +39,10 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     private ReservationPaymentService reservationPaymentService;
     @Autowired
     private QuickReservationBoatService quickReservationBoatService;
-
+    @Autowired
+    private BoatOwnerService boatOwnerService;
+    private final BoatReservationMapper boatReservationMapper = new BoatReservationMapper();
+    private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     @Override
     public boolean ownerCreates(BoatReservation boatReservation, String clientUsername) {
         Client client = clientService.findByUsername(clientUsername);
@@ -188,6 +197,48 @@ public class BoatReservationServiceImpl implements BoatReservationService {
                 availableBoats.add(boatPeriod.getBoat());
         }
         return availableBoats;
+    }
+
+    @Override
+    public boolean makeReservation(BoatReservationDto boatReservationDto) {
+        BoatReservation boatReservation = setUpBoatReservationFromDto(boatReservationDto);
+        if(!clientHasCancellationForBoatInPeriod(boatReservation)){
+            PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(boatReservation, boatReservation.getBoat().getBoatOwner());
+            boatReservation.setPaymentInformation(paymentInformation);
+            reservationPaymentService.updateUserRankAfterReservation(boatReservation.getClient(), boatReservation.getBoat().getBoatOwner());
+            boatReservationRepository.save(boatReservation);
+            if(boatReservationDto.getAddedAdditionalServices()!=null)
+            {
+                boatReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatReservationDto.getAddedAdditionalServices()));
+                boatReservationRepository.save(boatReservation);
+            }
+            SendReservationMailToClient(boatReservationDto);
+            return true;
+        }
+        return false;
+    }
+
+    private void SendReservationMailToClient(BoatReservationDto boatReservationDto) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+            String message = boatReservationDto.getBoatDto().getName() + " is booked from " + boatReservationDto.getStartDate().format(formatter) + " to " + boatReservationDto.getEndDate().format(formatter) + " .";
+            mailService.sendMail(boatReservationDto.getClientUsername(), message, new BoatReservationSuccessfulInfo());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
+    }
+
+    private boolean clientHasCancellationForBoatInPeriod(BoatReservation boatReservation){
+        //TODO:
+        return false;
+    }
+
+    private BoatReservation setUpBoatReservationFromDto(BoatReservationDto boatReservationDto) {
+        BoatOwner boatOwner = boatOwnerService.findByUsername(boatReservationDto.getBoatDto().getOwnersUsername());
+        BoatReservation boatReservation = boatReservationMapper.boatReservationDtoToBoatReservation(boatReservationDto);
+        boatReservation.getBoat().setBoatOwner(boatOwner);
+        boatReservation.setClient(clientService.findByUsername(boatReservationDto.getClientUsername()));
+        return boatReservation;
     }
 
     private boolean boatNotReservedInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate) {

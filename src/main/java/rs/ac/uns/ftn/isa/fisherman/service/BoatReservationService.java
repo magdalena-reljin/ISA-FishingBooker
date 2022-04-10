@@ -1,4 +1,5 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
@@ -33,4 +34,5 @@ public interface BoatReservationService {
 
     Set<Boat> getAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto);
 
+    boolean makeReservation(BoatReservationDto boatReservationDto);
 }
