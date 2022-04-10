@@ -27,7 +27,6 @@ public class BoatController {
     private BoatService boatService;
     @Autowired
     private BoatOwnerService boatOwnerService;
-
     private final BoatMapper boatMapper=new BoatMapper();
     private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 

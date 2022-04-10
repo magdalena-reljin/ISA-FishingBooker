@@ -138,8 +138,10 @@ public class AuthenticationController {
 
     @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePassword) {
-        userDetailsService.changePassword(changePassword.getOldPassword(),changePassword.getNewPassword());
-        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        if(userDetailsService.changePassword(changePassword.getOldPassword(),changePassword.getNewPassword()))
+             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        else
+            return new ResponseEntity<>("No authentication manager set. can't change Password", HttpStatus.BAD_REQUEST);
     }
     @PostMapping("/saveDeleteAccountRequest")
     public ResponseEntity<String> saveDeleteAccountRequest( @RequestBody UserRequestDTO userRequest) {

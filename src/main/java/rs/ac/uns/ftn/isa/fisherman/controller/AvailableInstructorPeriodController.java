@@ -40,7 +40,6 @@ public class AvailableInstructorPeriodController {
         return new ResponseEntity<>(periods, HttpStatus.OK);
     }
 
-
     @PostMapping("/setAvailableInstructorPeriod")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<String> setAvailableInstructorPeriod(@RequestBody AvailablePeriodDto availablePeriodDto){
@@ -52,7 +51,6 @@ public class AvailableInstructorPeriodController {
         else
             return new ResponseEntity<>(ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
     }
-
 
     @PostMapping("/deleteAvailableInstructorsPeriod")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -76,9 +74,5 @@ public class AvailableInstructorPeriodController {
         else
             return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
     }
-
-
-
-
 
 }
