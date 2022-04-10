@@ -9,7 +9,9 @@
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined) values ('CLIENT',6,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','micka@gmail.com', true, 'Jana','2022-01-04 15:31:53.899','Todorovic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null);
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined) values ('CLIENT',10,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','jana@gmail.com', true, 'Milica','2022-01-04 15:31:53.899','Pavlovic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null);
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined) values ('CLIENT',11,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','cl@gmail.com', true, 'Rasta','2022-01-04 15:31:53.899','Nikolic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null);
+
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined) values ('CLIENT',12,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','reljin.magdalena@gmail.com', true, 'Magdalena','2022-01-04 15:31:53.899','Reljin','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null);
+
 
 INSERT INTO AUTHORITY (id ,name) VALUES (1, 'ROLE_ADMIN');
 INSERT INTO AUTHORITY (id ,name) VALUES (2, 'ROLE_CABINOWNER');
@@ -34,7 +36,9 @@ INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (8, 3);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (9, 4);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (10, 6);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (11, 6);
+
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (12, 6);
+
 
 /*
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (3, 1);*/
@@ -45,6 +49,7 @@ INSERT INTO cabin (id, city, country, latitude, longitude, street_and_num, beds_
 INSERT INTO cabin (id, city, country, latitude, longitude, street_and_num, beds_per_room, canceling_conditions, description, name, num_of_rooms, price, rating, rules, users_id) VALUES (4, 'Smederevo ', 'Serbia', 20.934652609760892, 44.67288305649467, 'Djure Strugara 11', 1, 'FREE', 'Lots of space for fishing equipment.', 'Little fishing house', 2, 25, 0, 'No smoking. ', 7);
 
 insert into cabin_subscription (id,users_id,cabin_id) values (1,12,2);
+
 INSERT INTO boat (id, city, country, latitude, longitude, street_and_num, canceling_condition, description, engine_code, engine_power, fishing_equipment, length, max_people, max_speed, name, navigation_equipment, price, rating, rules, type, users_id) VALUES (1, 'Belgrade', 'Serbia', 20.449263181052668, 44.81634586374156, 'Dunavski kej 5b', 'NOT FREE', 'Luxury fishing yacht.', 'DF4656', '23452', 'Hooks, lines, sinkers, floats, rods, reels.', 35, 15, '32133', 'Fishing yacht', 'GPS', 300, 0, 'No rules.', 'yacht', 8);
 INSERT INTO boat (id, city, country, latitude, longitude, street_and_num, canceling_condition, description, engine_code, engine_power, fishing_equipment, length, max_people, max_speed, name, navigation_equipment, price, rating, rules, type, users_id) VALUES (2, 'Petrovaradin', 'Serbia', 19.862343371623766, 45.238477211535, 'Ribnjak Donji put 51a', 'NOT FREE', 'The best boat for fishing trips.', 'mercury', '2560', 'Lures, spears, nets, gaffs, traps, waders and tackle boxes.', 35, 5, '3324', 'Boston whaler', 'Radar, gyro compas,echo sounder.', 150, 0, 'No rules.', 'fishing boat', 3);
 INSERT INTO boat (id, city, country, latitude, longitude, street_and_num, canceling_condition, description, engine_code, engine_power, fishing_equipment, length, max_people, max_speed, name, navigation_equipment, price, rating, rules, type, users_id) VALUES (3, 'Smederevo ', 'Serbia', 20.933783791650026, 44.673293602502106, 'Djure Strugara 13', 'NOT FREE', 'The best.', 'A578', '12333', 'Spears, nets, gaffs, traps, waders and tackle boxes.', 18, 6, '3213', 'Jarrett Bay 46', 'GPS, gyro compass, ata', 200, 0, 'No non-swimmers.', 'Jarrett Bay 46', 3);
@@ -107,7 +112,9 @@ INSERT INTO adventure_services (adventure_id, service_id) VALUES (4, 22);
 INSERT INTO available_period (type, id, end_date, start_date, boat_id, cabin_id, users_id) VALUES ('CabinPeriod', 1, '2022-06-16 12:20:00', '2022-04-10 12:21:00', NULL, 1, 2);
 INSERT INTO available_period (type, id, end_date, start_date, boat_id, cabin_id, users_id) VALUES ('BoatPeriod', 2, '2022-07-16 12:22:00', '2022-04-10 12:24:00', 3, NULL, NULL);
 INSERT INTO available_period (type, id, end_date, start_date, boat_id, cabin_id, users_id) VALUES ('InstructorPeriod', 3, '2022-07-16 12:23:00', '2022-04-10 12:24:00', NULL, NULL, 4);
+
 INSERT INTO available_period (type, id, end_date, start_date, boat_id, cabin_id, users_id) VALUES ('CabinPeriod', 4, '2022-07-25 12:23:00', '2022-07-20 12:24:00', NULL, 2, 2);
+
 
 INSERT INTO boat_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, needs_captain_service, users_id, boat_id) VALUES (1, '2022-07-16 12:25:00', false, false, 'bo@gmail.com', 0.10000000000000009, 3.2333333333333334, 3.3333333333333335, '2022-07-14 12:24:00', true, false, 11, 3);
 INSERT INTO boat_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, needs_captain_service, users_id, boat_id) VALUES (4, '2022-04-10 12:25:00', false, false, 'bo@gmail.com', 0.10000000000000009, 3.2333333333333334, 3.3333333333333335, '2022-04-10 12:24:00', true, false, 11, 3);
