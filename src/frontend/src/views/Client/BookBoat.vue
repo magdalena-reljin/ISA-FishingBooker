@@ -254,7 +254,7 @@
             </div>
             <div class="col">
               <Datepicker
-                @change="calculatePrice()"
+                @closed="calculatePrice()"
                 v-model="start"
                 required
               ></Datepicker>
@@ -267,7 +267,7 @@
             </div>
             <div class="col">
               <Datepicker
-                @change="calculatePrice()"
+                @closed="calculatePrice()"
                 v-model="end"
                 required
               ></Datepicker>

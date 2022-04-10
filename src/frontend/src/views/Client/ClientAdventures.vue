@@ -284,14 +284,25 @@
     <!-- Inner -->
   </template>
 
-  <template v-if="bookAdventureOpen"></template>
+  <template v-if="bookAdventureOpen">
+    <BookAdventure
+      :bookingProcess="true"
+      :adventureId="adventureId"
+      :back="back"
+      :startDate="startDate"
+      :endDate="endDate"
+    ></BookAdventure>
+  </template>
 </template>
 
 <script>
 import axios from "axios";
+import BookAdventure from "./BookAdventure.vue"
 
 export default {
-  components: {},
+  components: {
+    BookAdventure
+  },
   props: {
     reservationProcess: Boolean,
     availableAdventures: Array,
@@ -374,6 +385,10 @@ export default {
     this.getAdventures();
   },
   methods: {
+    back() {
+      this.bookAdventureOpen = false;
+      this.showReservationForm(true);
+    },
     getAdventures: function () {
       if (this.reservationProcess) {
         this.adventureDtos = this.availableAdventures;
@@ -408,6 +423,7 @@ export default {
       this.$router.push("/adventure/" + this.email + "/" + adventureId);
     },
     bookAdventure: function (adventureId) {
+      console.log(adventureId);
       this.bookAdventureOpen = true;
       this.adventureId = adventureId;
       this.showReservationForm(false);
