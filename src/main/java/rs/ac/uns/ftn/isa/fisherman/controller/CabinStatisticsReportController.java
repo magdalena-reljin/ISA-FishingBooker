@@ -72,7 +72,13 @@ public class CabinStatisticsReportController {
         profit.add(reservationCabinService.sumProfitOfPricesCalculatedByDays(
                 reservationCabinService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1)),dateRange.get(0),dateRange.get(1)
                 ));
-       // profit.add(quickReservationCabinService.sumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(
+                quickReservationCabinService.sumProfitOfPricesCalculatedByDays(
+                        quickReservationCabinService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1)),
+                        dateRange.get(0),dateRange.get(1)
+                )
+
+        );
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
 }
