@@ -41,4 +41,8 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
 
     @Query(value="select * from boat_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
     List<BoatReservation> findReservationsInPeriodToSumProfit(@Param("ownersUsername")  String ownersUsername, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value="SELECT CASE WHEN  COUNT(res) > 0 THEN true ELSE false END FROM boat_reservation res where res.boat_id=:boat_id and res.start_date<=:endDate and res.end_date>=:startDate",nativeQuery = true)
+    boolean boatReservedInPeriod(@Param("boat_id")Long boatId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }

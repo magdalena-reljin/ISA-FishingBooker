@@ -14,4 +14,6 @@ public interface AvailableBoatPeriodService {
 
     boolean editAvailableBoatsPeriod(AvailableBoatPeriod oldAvailablePeriod, AvailableBoatPeriod newAvailablePeriod);
     boolean deleteAvailableBoatsPeriod(AvailableBoatPeriod availablePeriod);
+
+    Set<AvailableBoatPeriod> findPeriodsBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
 }

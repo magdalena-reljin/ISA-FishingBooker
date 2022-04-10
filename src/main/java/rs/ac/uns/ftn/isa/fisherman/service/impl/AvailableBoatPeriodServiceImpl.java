@@ -76,6 +76,12 @@ public class AvailableBoatPeriodServiceImpl implements AvailableBoatPeriodServic
         availablePeriodService.deleteAvailablePeriod(availableBoatPeriodToDelete.getId());
         return true;
     }
+
+    @Override
+    public Set<AvailableBoatPeriod> findPeriodsBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+        return availableBoatPeriodRepository.findPeriodsBetweenDates(startDate, endDate);
+    }
+
     public boolean boatIsAvailable(Long boatId, LocalDateTime start,  LocalDateTime end){
         if(availableBoatPeriodRepository.boatIsAvailable(boatId,start,end).size()>0) return true;
         return false;
