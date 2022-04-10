@@ -25,7 +25,7 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> getAllReports();
     Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername);
 
-    double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
+    List<QuickReservationCabin> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
     void save(QuickReservationCabin reservation);
 }
