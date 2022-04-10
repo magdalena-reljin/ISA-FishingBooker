@@ -53,6 +53,7 @@ import BoatOwnerBusinessReport from '../views/BoatOwner/BoatOwnerBusinessReport'
 import ClientPenalties from '../views/Client/ClientPenalties'
 import ClientBoatProfile from '../views/Client/ClientBoatProfile'
 import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
+import ClientAdventureProfile from '../views/Client/ClientAdventureProfile'
 
 const routes = [
   
@@ -428,9 +429,23 @@ const routes = [
        } 
   },
   {
-    path: '/boat/:email/:boatName',
+    path: '/boat/:email/:boatId',
     name: 'Boat',
     component: ClientBoatProfile,
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role =='CABINOWNER' ||  localStorage.role =='FISHINGINSTRUCTOR' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
+  },
+  {
+    path: '/adventure/:email/:adventureId',
+    name: 'Adventure',
+    component: ClientAdventureProfile,
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
