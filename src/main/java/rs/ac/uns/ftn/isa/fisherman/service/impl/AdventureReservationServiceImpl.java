@@ -80,11 +80,13 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     private boolean validateForReservation(AdventureReservation adventureReservation, Client client){
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;
-      /*  if(!adventureReservationRepository.clientHasReservation(adventureReservation.getFishingInstructor().
-                getId(),client.getId(),currentDate)) return false;*/
+
+        if(adventureReservationRepository.clientHasReservation(adventureReservation.getOwnersUsername()
+                ,client.getId(),currentDate).size()==0) return false;
 
         if(!availableInstructorPeriodService.instructorIsAvailable(adventureReservation.getFishingInstructor()
                 .getId(),adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
+
 
         if(adventureReservationRepository.reservationExists(adventureReservation.getOwnersUsername()
                 ,adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;

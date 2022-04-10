@@ -46,7 +46,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     // Funkcija pomocu koje korisnik menja svoju lozinku
-    public void changePassword(String oldPassword, String newPassword) {
+    public boolean changePassword(String oldPassword, String newPassword) {
 
         // Ocitavamo trenutno ulogovanog korisnika
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
@@ -59,7 +59,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             logger.debug("No authentication manager set. can't change Password!");
 
-            return;
+            return false;
         }
 
         logger.debug("Changing password for user '" + username + "'");
@@ -77,6 +77,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         // pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
         // ne zelimo da u bazi cuvamo lozinke u plain text formatu
 
-
+        return  true;
     }
 }
