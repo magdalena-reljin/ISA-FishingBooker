@@ -131,6 +131,15 @@
       :endDate="end"
     />
   </template>
+  <template v-if="display === 'ADVENTURES'">
+    <ClientAdventures
+      :reservationProcess="true"
+      :availableAdventures="availableAdventures"
+      :showReservationForm="showReservationForm"
+      :startDate="start"
+      :endDate="end"
+    />
+  </template>
 </template>
 
 <script>
@@ -139,6 +148,7 @@ import ClientNavbar from "./ClientNavbar";
 import Datepicker from "vue3-date-time-picker";
 import ClientCabins from "./ClientCabins.vue";
 import ClientBoats from "./ClientBoats.vue";
+import ClientAdventures from "./ClientAdventures.vue";
 import dayjs from "dayjs";
 
 export default {
@@ -147,6 +157,7 @@ export default {
     Datepicker,
     ClientCabins,
     ClientBoats,
+    ClientAdventures,
   },
   data() {
     return {
@@ -179,6 +190,16 @@ export default {
       const date1 = new Date(this.start);
       const date2 = new Date(this.end);
       const currentDate = new Date();
+      if(this.start==null || this.end==null){
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Date field can't be empty!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
       if (date1.getTime() - date2.getTime() > 0) {
         this.$swal.fire({
           position: "top-end",
@@ -247,7 +268,22 @@ export default {
             this.display = "BOATS";
           });
       } else {
-        console.log("adventures");
+        axios
+          .post(
+            "http://localhost:8081/reservationAdventure/getAvailableAdventures",
+            {
+              startDate: this.formatDate(this.start),
+              endDate: this.formatDate(this.end),
+              price: this.price,
+              maxPeople: this.maxPeople,
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.availableAdventures = response.data;
+            this.display = "ADVENTURES";
+          });
       }
     },
   },

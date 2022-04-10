@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -21,5 +22,6 @@ public interface AdventureRepository extends JpaRepository<Adventure, Long> {
     @Query(value = "SELECT * FROM adventure WHERE id=:id",nativeQuery = true)
     Adventure findByID(@Param("id")Long id);
 
-
+    @Query(value = "SELECT * FROM adventure WHERE users_id in :ids",nativeQuery = true)
+    List<Adventure> findAdventuresByInstructorIds(@Param("ids")List<Long> instructorIds);
 }

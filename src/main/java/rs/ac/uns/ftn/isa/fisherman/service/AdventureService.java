@@ -23,4 +23,5 @@ public interface AdventureService {
     List<Adventure> findAll();
     boolean addNewAdventure(Adventure adventure,Set<AdditionalServices>additionalServices);
     Adventure findById(Long id);
+    List<Adventure> findAdventuresByInstructorIds(List<Long> instructorIds);
 }

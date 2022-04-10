@@ -3,10 +3,12 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
+import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.AvailableInstructorPeriodRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -95,6 +97,11 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
         }
         availableInstructorPeriodRepository.save(availableInstructorPeriodToEdit);
         return true;
+    }
+
+    @Override
+    public List<Long> getAvailableFishingInstructorsIdsForPeriod(LocalDateTime startDate, LocalDateTime endDate) {
+        return availableInstructorPeriodRepository.getAvailableFishingInstructorsForPeriod( startDate, endDate);
     }
 
 }

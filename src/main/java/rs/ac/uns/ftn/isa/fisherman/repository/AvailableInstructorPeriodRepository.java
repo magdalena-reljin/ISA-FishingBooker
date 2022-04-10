@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.AvailableInstructorPeriod;
+import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public interface AvailableInstructorPeriodRepository extends JpaRepository<AvailableInstructorPeriod,Long> {
@@ -24,4 +26,7 @@ public interface AvailableInstructorPeriodRepository extends JpaRepository<Avail
 
     @Query(value="SELECT * FROM available_period where users_id=:users_id and start_date=:startDate and end_date=:endDate",nativeQuery = true)
     AvailableInstructorPeriod findId(@Param("users_id")Long id, @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+
+    @Query(value="SELECT users_id FROM available_period where start_date<=:startDate and end_date>=:endDate and users_id IS NOT NULL",nativeQuery = true)
+    List<Long> getAvailableFishingInstructorsForPeriod(LocalDateTime startDate, LocalDateTime endDate);
 }

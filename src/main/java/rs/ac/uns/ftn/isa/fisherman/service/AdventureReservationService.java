@@ -1,5 +1,10 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 
 import java.time.LocalDateTime;
@@ -17,4 +22,6 @@ public interface AdventureReservationService {
     double sumProfitOfPricesCalucatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end);
     AdventureReservation findById(Long id);
     void save (AdventureReservation adventureReservation);
+    Set<Adventure> getAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto);
+    boolean makeReservation(AdventureReservationDto adventureReservationDto);
 }
