@@ -32,7 +32,7 @@ public class QuickReservationCabinController {
     public ResponseEntity<String> ownerCreates (@RequestBody QuickReservationCabinDto quickReservationCabinDto) {
         QuickReservationCabin quickReservationCabin= quickReservationCabinMapper.dtoToQuickReservation(quickReservationCabinDto);
         if(quickReservationCabinService.ownerCreates(quickReservationCabin)){
-            return new ResponseEntity<>("Success.", HttpStatus.OK);
+            return new ResponseEntity<>("Success.", HttpStatus.CREATED);
         }else{
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
         }

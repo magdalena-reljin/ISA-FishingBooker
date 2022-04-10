@@ -94,4 +94,14 @@ public class BoatController {
     public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
             return new ResponseEntity<>(boatService.canBeEditedOrDeleted(id),HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('CLIENT')|| hasRole('ADMIN')")
+    @PostMapping("/findByNameClient")
+    public ResponseEntity<BoatDto> findByNameClient(@RequestBody BoatDto boatDto){
+        Boat boat = boatService.findByName(boatDto.getName());
+        //TODO: check for users subscription
+        if(boat != null)
+            return new ResponseEntity<>(boatMapper.boatToBoatDto(boat),HttpStatus.OK);
+        else
+            return new ResponseEntity<>(new BoatDto(),HttpStatus.BAD_REQUEST);
+    }
 }

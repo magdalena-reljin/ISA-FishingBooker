@@ -14,8 +14,8 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM boat_reservation c where boat_id=:boat_id and users_id=:users_id and ((:currentDate between start_date and end_date))",nativeQuery = true)
     boolean clientHasReservation(@Param("boat_id")Long boatId, @Param("users_id")Long usersId, @Param("currentDate") LocalDateTime currentDate);
 
-    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM boat_reservation c where boat_id=:boat_id and ((:startDate between start_date and end_date) or (:endDate  between start_date and end_date) or (start_date  between :startDate and :endDate) or (end_date  between :startDate and :endDate)) ",nativeQuery = true)
-    boolean reservationExists(@Param("boat_id")Long boatId,@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query(value="SELECT * FROM boat_reservation c where boat_id=:boat_id and ((:startDate between start_date and end_date) or (:endDate  between start_date and end_date) or (start_date  between :startDate and :endDate) or (end_date  between :startDate and :endDate)) ",nativeQuery = true)
+    List<BoatReservation> reservationExists(@Param("boat_id")Long boatId,@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query(value="SELECT * FROM boat_reservation where boat_id=:boat_id and (:currentDate <= end_date) ",nativeQuery = true)
     Set<BoatReservation> getPresentByBoatId(@Param("boat_id")Long boatId, @Param("currentDate")LocalDateTime currentDate);
@@ -41,4 +41,8 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
 
     @Query(value="select * from boat_reservation cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
     List<BoatReservation> findReservationsInPeriodToSumProfit(@Param("ownersUsername")  String ownersUsername, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value="SELECT CASE WHEN  COUNT(res) > 0 THEN true ELSE false END FROM boat_reservation res where res.boat_id=:boat_id and res.start_date<=:endDate and res.end_date>=:startDate",nativeQuery = true)
+    boolean boatReservedInPeriod(@Param("boat_id")Long boatId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }

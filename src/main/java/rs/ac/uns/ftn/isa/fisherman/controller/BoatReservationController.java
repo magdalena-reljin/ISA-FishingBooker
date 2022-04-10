@@ -5,13 +5,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.*;
+import rs.ac.uns.ftn.isa.fisherman.mapper.BoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnersReservationReportService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +28,10 @@ public class BoatReservationController {
     private BoatOwnerService boatOwnerService;
     @Autowired
     private BoatOwnersReservationReportService boatOwnersReservationReportService;
+    @Autowired
+    private PenaltyService penaltyService;
 
+    private final BoatMapper boatMapper = new BoatMapper();
     private final BoatReservationMapper boatReservationMapper=new BoatReservationMapper();
     @PostMapping("/ownerCreates/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
@@ -44,7 +48,7 @@ public class BoatReservationController {
 
     @GetMapping(value= "/getByBoatId/{boatId}")
     @PreAuthorize("hasRole('BOATOWNER')")
-    public ResponseEntity<Set<BoatReservationDto>> getPresentByCabinId(@PathVariable ("boatId") Long boatId) {
+    public ResponseEntity<Set<BoatReservationDto>> getByBoatId(@PathVariable ("boatId") Long boatId) {
         Set<BoatReservationDto> boatReservationDtos= new HashSet<>();
         for(BoatReservation boatReservation: boatReservationService.getPresentByCabinId(boatId))
             boatReservationDtos.add(boatReservationMapper.boatReservationToBoatReservationDto(boatReservation));
@@ -84,4 +88,26 @@ public class BoatReservationController {
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 
+    @PostMapping("/getAvailableBoats")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatDto>> getAvailableBoats (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        Set<BoatDto> boatsDto= new HashSet<>();
+        for(Boat boat:boatReservationService.getAvailableBoats(searchAvailablePeriodsBoatDto)){
+            boatsDto.add(boatMapper.boatToBoatDto(boat));
+        }
+        return new ResponseEntity<>(boatsDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/makeReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> makeReservation (@RequestBody BoatReservationDto boatReservationDto) {
+        if(penaltyService.isUserBlockedFromReservation(boatReservationDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        // TODO: if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
+        //  return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(boatReservationService.makeReservation(boatReservationDto))
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
+    }
 }

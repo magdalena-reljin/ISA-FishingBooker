@@ -45,7 +45,9 @@ public class AvailableCabinPeriodServiceImpl implements AvailableCabinPeriodServ
 
     @Override
     public boolean cabinIsAvailable(Long cabinId, LocalDateTime start, LocalDateTime end) {
-        return availableCabinPeriodRepository.cabinIsAvailable(cabinId,start,end);
+        if(availableCabinPeriodRepository.cabinIsAvailable(cabinId,start,end).size()>0)
+            return true;
+        return false;
     }
 
     @Override

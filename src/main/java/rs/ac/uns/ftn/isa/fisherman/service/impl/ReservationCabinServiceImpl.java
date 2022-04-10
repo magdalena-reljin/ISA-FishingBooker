@@ -228,13 +228,14 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
 
         if(cabinReservationRepository.reservationExists(cabinReservation.getCabin()
-                .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
+                .getId(),cabinReservation.getStartDate(),cabinReservation.getEndDate()).size()>0) return false;
         if(quickReservationCabinService.quickReservationExists(cabinReservation.getCabin().getId(),
                 cabinReservation.getStartDate(),cabinReservation.getEndDate())) return false;
         return true;
     }
     public boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate){
-        return cabinReservationRepository.reservationExists(cabinId,startDate,endDate);
+        if(cabinReservationRepository.reservationExists(cabinId,startDate,endDate).size()>0) return true;
+        return false;
     }
 
     public void sendMailNotification(CabinReservation cabinReservation,String email){
@@ -256,7 +257,8 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
     @Override
     public boolean futureReservationsExist(LocalDateTime currentDate,Long boatId) {
-        return cabinReservationRepository.futureReservationsExist(currentDate,boatId);
+        if(cabinReservationRepository.futureReservationsExist(currentDate,boatId).size()>0) return true ;
+        return false;
     }
 
     @Override

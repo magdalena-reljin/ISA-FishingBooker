@@ -14,18 +14,17 @@ public class AdditionalServiceMapper {
 
     public Set<AdditionalServices> additionalServicesDtoToAdditionalServices(Set<AdditionalServicesDto> additionalServicesDtoS){
         Set<AdditionalServices> additionalServices = new HashSet<>();
-        if(additionalServicesDtoS != null) {
-            for (AdditionalServicesDto additionalServiceDto : additionalServicesDtoS)
-                additionalServices.add(additionalServiceDtoToAdditionalService(additionalServiceDto));
-        }
+        if(additionalServicesDtoS==null) return additionalServices;
+        for(AdditionalServicesDto additionalServiceDto: additionalServicesDtoS)
+              additionalServices.add(additionalServiceDtoToAdditionalService(additionalServiceDto));
         return additionalServices;
     }
     public Set<AdditionalServicesDto> additionalServicesToAdditionalServiceDtoS(Set<AdditionalServices> additionalServices){
+
         Set<AdditionalServicesDto> additionalServiceDtoS = new HashSet<>();
-        if(additionalServices != null) {
-            for (AdditionalServices additionalService : additionalServices)
-                additionalServiceDtoS.add(additionalServiceToAdditionalServiceDto(additionalService));
-        }
+        if(additionalServices==null) return additionalServiceDtoS;
+        for(AdditionalServices additionalService: additionalServices)
+            additionalServiceDtoS.add(additionalServiceToAdditionalServiceDto(additionalService));
         return additionalServiceDtoS;
     }
 }

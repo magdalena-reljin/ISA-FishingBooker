@@ -88,7 +88,8 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
 
     @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
-        return quickReservationBoatRepository.quickReservationExists(id,startDate,endDate);
+        if(quickReservationBoatRepository.quickReservationExists(id,startDate,endDate).size()>0) return false;
+        return true;
     }
 
     private boolean validateForReservation(QuickReservationBoat quickReservationBoat){
@@ -99,7 +100,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
                 .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
 
         if(quickReservationBoatRepository.quickReservationExists(quickReservationBoat.getBoat()
-                .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
+                .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate()).size()>0) return false;
 
         return true;
     }
