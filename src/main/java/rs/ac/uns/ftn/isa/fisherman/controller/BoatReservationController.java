@@ -36,7 +36,6 @@ public class BoatReservationController {
         BoatOwner boatOwner= boatOwnerService.findByUsername(username);
         boatReservation.getBoat().setBoatOwner(boatOwner);
         if(boatReservationService.ownerCreates(boatReservation,boatReservationDto.getClientUsername())) {
-
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         }else {
             return new ResponseEntity<>("Unsuccessfull reservation.", HttpStatus.BAD_REQUEST);
