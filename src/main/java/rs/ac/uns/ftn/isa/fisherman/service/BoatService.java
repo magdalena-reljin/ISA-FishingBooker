@@ -10,7 +10,7 @@ public interface BoatService {
     void save(Boat boat);
 
     boolean addNewBoat(Boat boat,Set<AdditionalServices> services);
-    @Cacheable("boat")
+
     Boat findById(Long id);
 
     void addNewImage(Boat boat, Image image);

@@ -15,8 +15,8 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id=:cabin_id and users_id=:users_id and ((:currentDate between start_date and end_date))",nativeQuery = true)
     boolean clientHasReservation(@Param("cabin_id")Long cabinId,@Param("users_id")Long usersId, @Param("currentDate") LocalDateTime currentDate);
 
-    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id=:cabin_id and ((:startDate between start_date and end_date) or (:endDate  between start_date and end_date) or (start_date  between :startDate and :endDate) or (end_date  between :startDate and :endDate)) ",nativeQuery = true)
-    boolean reservationExists(@Param("cabin_id")Long cabinId,@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query(value="SELECT * FROM cabin_reservation c where cabin_id=:cabin_id and ((:startDate between start_date and end_date) or (:endDate  between start_date and end_date) or (start_date  between :startDate and :endDate) or (end_date  between :startDate and :endDate)) ",nativeQuery = true)
+    List<CabinReservation> reservationExists(@Param("cabin_id")Long cabinId,@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query(value="SELECT * FROM cabin_reservation where cabin_id=:cabin_id and (:currentDate <= end_date) ",nativeQuery = true)
     Set<CabinReservation> getPresentByCabinId(@Param("cabin_id")Long cabinId,@Param("currentDate")LocalDateTime currentDate);
@@ -35,8 +35,8 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="DELETE FROM cabin_reservation c where c.id=:id",nativeQuery = true)
     void deleteByReservationId(@Param("id")Long id);
 
-    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM cabin_reservation c where cabin_id=:cabin_id and (:currentDate <= end_date) ",nativeQuery = true)
-    boolean futureReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("cabin_id") Long cabinId);
+    @Query(value="SELECT * FROM cabin_reservation c where cabin_id=:cabin_id and (:currentDate <= end_date) ",nativeQuery = true)
+    List<CabinReservation> futureReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("cabin_id") Long cabinId);
 
     @Query(value="SELECT * FROM cabin_reservation res where res.owners_username=:ownersUsername and (:currentDate <= end_date) ",nativeQuery = true)
     Set<CabinReservation> findReservationsByOwnerUsername(@Param("ownersUsername")String ownersUsername, @Param("currentDate")LocalDateTime currentDate);

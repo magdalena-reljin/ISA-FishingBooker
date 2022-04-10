@@ -64,8 +64,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
-    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
-        return sumProfitOfPricesCalculatedByDays(quickReservationCabinRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
+    public List<QuickReservationCabin> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
+        return quickReservationCabinRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end);
     }
     @Override
     public double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end){
@@ -93,6 +93,7 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
 
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
         Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
+
         for(String email: subscriptionEmails) {
             try {
                 String message = cabinName;
@@ -110,12 +111,15 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
 
     @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
-        return quickReservationCabinRepository.quickReservationExists(id,startDate,endDate);
+        if(quickReservationCabinRepository.quickReservationExists(id,startDate,endDate).size()>0)
+            return true;
+        return false;
     }
 
     @Override
     public boolean futureQuickReservationsExist(LocalDateTime currentDate, Long id) {
-        return quickReservationCabinRepository.futureQuickReservationsExist(currentDate,id);
+        if(quickReservationCabinRepository.futureQuickReservationsExist(currentDate,id).size()>0) return true;
+        return false;
     }
 
     @Override
@@ -145,13 +149,24 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
 
     private boolean validateForReservation(QuickReservationCabin cabinQuickReservation){
         if(!availableCabinPeriodService.cabinIsAvailable(cabinQuickReservation.getCabin()
-                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) return false;
+                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) {
+            System.out.println("NEMAM SLOBODAN PERIOD");
+            return false;
+        }
+
 
         if(reservationCabinService.reservationExists(cabinQuickReservation.getCabin()
-                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) return false;
+                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) {
+
+            System.out.println("imam rezervacije");
+            return false;
+        }
 
         if(quickReservationCabinRepository.quickReservationExists(cabinQuickReservation.getCabin()
-                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate())) return false;
+                .getId(),cabinQuickReservation.getStartDate(),cabinQuickReservation.getEndDate()).size()>0) {
+            System.out.println("imam quick rezervacije");
+            return false;
+        }
 
         return true;
     }

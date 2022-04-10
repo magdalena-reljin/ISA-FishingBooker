@@ -33,13 +33,15 @@ public class AdventureController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody AdventureDto adventureDto){
+        FishingInstructor fishingInstructor =  fishingInstructorService.findByUsername(adventureDto.getFishingInstructorUsername());
         Adventure adventure=adventureMapper.adventureDtoToAdventure(adventureDto);
+        adventure.setFishingInstructor(fishingInstructor);
         Set<AdditionalServices> services = new HashSet<>();
         if(adventureDto.getAdditionalServices()!= null){
                  services = additionalServiceMapper
                 .additionalServicesDtoToAdditionalServices(adventureDto.getAdditionalServices());
         }
-        if(adventureService.addNewAdventure(adventure,adventureDto.getFishingInstructorUsername(),services))
+        if(adventureService.addNewAdventure(adventure,services))
             return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
 
         else

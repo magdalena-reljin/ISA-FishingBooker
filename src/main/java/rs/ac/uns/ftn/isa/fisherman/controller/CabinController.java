@@ -50,10 +50,10 @@ public class CabinController {
     }
 
     @PreAuthorize("hasRole('CABINOWNER')")
-    @PostMapping("/findCabinsByOwnersUsername")
-    public ResponseEntity<Set<CabinDto>> getByOwnerId(@RequestBody UserRequestDTO owner){
+    @GetMapping("/findCabinsByOwnersUsername/{username:.+}/")
+    public ResponseEntity<Set<CabinDto>> getByOwnerId(@PathVariable("username") String username){
         Set<CabinDto> cabins=new HashSet<>();
-        for(Cabin cabin: cabinService.findByOwnersId(cabinOwnerService.findByUsername(owner.getUsername()).getId()))
+        for(Cabin cabin: cabinService.findByOwnersId(cabinOwnerService.findByUsername(username).getId()))
             cabins.add(cabinMapper.cabinToCabinDto(cabin));
         return new ResponseEntity<>(cabins,HttpStatus.OK);
     }

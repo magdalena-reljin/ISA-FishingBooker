@@ -267,8 +267,8 @@ export default {
     getOwnersCabins: function () {
       this.user.username = this.email;
       axios
-        .post(
-          "http://localhost:8081/cabins/findCabinsByOwnersUsername",this.user)
+        .get(
+          "http://localhost:8081/cabins/findCabinsByOwnersUsername/"+this.email+"/")
         .then((response) => {
           this.cabinDtos = response.data;
           this.cabinsLoaded = true;

@@ -87,18 +87,28 @@ public class BoatReservationServiceImpl implements BoatReservationService {
                 getId(),client.getId(),currentDate)) return false;
 */
         if(!availableBoatPeriodService.boatIsAvailable(boatReservation.getBoat()
-                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
+                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) {
+            System.out.println("nemam slobodan period");
+            return false;
+        };
 
         if(boatReservationRepository.reservationExists(boatReservation.getBoat()
-                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
+                .getId(),boatReservation.getStartDate(),boatReservation.getEndDate()).size()>0) {
+            System.out.println("imam rez");
+            return false;
+        }
         if(quickReservationBoatService.quickReservationExists(boatReservation.getBoat().getId(),
-                boatReservation.getStartDate(),boatReservation.getEndDate())) return false;
+                boatReservation.getStartDate(),boatReservation.getEndDate())) {
+            System.out.println("imam q rez");
+            return false;
+        }
         return true;
     }
 
     @Override
     public boolean reservationExists(Long boatId, LocalDateTime startDate, LocalDateTime endDate){
-        return boatReservationRepository.reservationExists(boatId,startDate,endDate);
+        if(boatReservationRepository.reservationExists(boatId,startDate,endDate).size()>0) return false;
+        return  true;
     }
 
     @Override

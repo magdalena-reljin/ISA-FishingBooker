@@ -30,7 +30,8 @@ public class AvailableBoatPeriodServiceImpl implements AvailableBoatPeriodServic
     @Override
     public boolean setAvailableBoatPeriod(AvailableBoatPeriod availablePeriod) {
         if(availableBoatPeriodRepository.availablePeriodAlreadyExists(availablePeriod.getBoat().getId(),
-                availablePeriod.getStartDate(),availablePeriod.getEndDate())) return false;
+                availablePeriod.getStartDate(),availablePeriod.getEndDate()).size()>0) return false;
+
         availableBoatPeriodRepository.save(availablePeriod);
         return true;
     }
@@ -82,7 +83,8 @@ public class AvailableBoatPeriodServiceImpl implements AvailableBoatPeriodServic
     }
 
     public boolean boatIsAvailable(Long boatId, LocalDateTime start,  LocalDateTime end){
-        return availableBoatPeriodRepository.boatIsAvailable(boatId,start,end);
+        if(availableBoatPeriodRepository.boatIsAvailable(boatId,start,end).size()>0) return true;
+        return false;
     }
     private boolean reservationsDontExistInPeriod(AvailableBoatPeriod availablePeriod){
         if(boatReservationService.reservationExists(availablePeriod.getBoat().getId()

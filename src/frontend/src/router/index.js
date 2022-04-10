@@ -52,6 +52,7 @@ import InstructorsBusinessReport from '../views/FishingInstructor/InstructorsBus
 import BoatOwnerBusinessReport from '../views/BoatOwner/BoatOwnerBusinessReport'
 import ClientPenalties from '../views/Client/ClientPenalties'
 import ClientBoatProfile from '../views/Client/ClientBoatProfile'
+import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
 
 const routes = [
   
@@ -109,6 +110,19 @@ const routes = [
     path: '/requests/:email',
     name: 'RequestsFromUsers',
     component: RequestsFromUsers,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }
+  },
+  {
+    path: '/reports/:email',
+    name: 'AdminBusinessReport',
+    component: AdminBusinessReport,
     beforeEnter: (to, from, next) => {
       store.dispatch('refreshToken')
      if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
