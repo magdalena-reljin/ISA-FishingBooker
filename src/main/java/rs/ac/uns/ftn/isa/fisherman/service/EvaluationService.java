@@ -8,4 +8,6 @@ public interface EvaluationService {
     List<Evaluation> getAll();
 
     void setEvaluationStatus(Long id);
+
+    void deleteUnapprovedEvaluation(Long id);
 }

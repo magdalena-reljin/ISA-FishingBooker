@@ -38,4 +38,11 @@ public class EvaluationController {
         evaluationService.setEvaluationStatus(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
+    @GetMapping("/unapproved/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteUnapprovedEvaluation(@PathVariable("id")Long id) {
+        evaluationService.deleteUnapprovedEvaluation(id);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 }

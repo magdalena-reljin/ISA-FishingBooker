@@ -35,12 +35,12 @@
         <tr>
          <div class="row">
             <div class="col "><button @click="accept(rep)"
-               type="button" class="btn btn-outline-success" >ACCEPT</button>
+               type="button" class="btn btn-outline-success" >APPROVED</button>
                
             </div>
 
                <div class="col "><button @click="deny(rep)"
-               type="button" class="btn btn-outline-danger" >DENY</button>
+               type="button" class="btn btn-outline-danger" >UNAPPROVED</button>
                </div>
                
    
@@ -138,6 +138,32 @@ import dayjs from 'dayjs';
        },
         deny: function(res){
            this.id= res.id;
+                  this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    onCancel: this.onCancel,
+                   });
+                    axios.get("http://localhost:8081/evaluations/unapproved/"+this.id)
+            .then(response => {
+                console.log(response)
+                    this.$swal.fire({
+                                          position: 'top-end',
+                                          icon: 'success',
+                                          title: 'Successfully reviewed evaluation',
+                                          showConfirmButton: false,
+                                           timer: 2500
+                                       })
+                                       
+                                         this.loader.hide();
+                                this.loader=null
+                                       this.getAllEvaluations();
+
+              
+              })
+             .catch(error => {
+                 this.errorMessage = error.message;
+                 console.error("There was an error!", error);
+           });
        },
          
    
