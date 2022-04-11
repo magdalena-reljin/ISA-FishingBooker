@@ -155,8 +155,8 @@ import dayjs from 'dayjs';
                                        })
                                        
                                          this.loader.hide();
-                                this.loader=null
-                                       this.getAllEvaluations();
+                                         this.loader=null
+                                         this.getAllEvaluations();
 
               
               })
