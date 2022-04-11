@@ -13,4 +13,7 @@ public interface EvaluationRepository extends JpaRepository<Evaluation,Long> {
 
     @Query(value="SELECT * FROM evaluations where approved=false",nativeQuery = true)
     List<Evaluation> getAll();
+
+    @Query(value="SELECT * FROM evaluations where id=:id",nativeQuery = true)
+    Evaluation getById(@Param("id")Long id);
 }

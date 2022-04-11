@@ -204,4 +204,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findRatingByUsername(username);
     }
 
+    @Override
+    public void updateOwnersRating(String username,Double grade) {
+        User user = userRepository.findByUsername(username);
+        Double newGrade= user.getRating()+grade;
+        double rating = newGrade/2.0;
+        user.setRating(rating);
+        userRepository.save(user);
+    }
+
+
 }

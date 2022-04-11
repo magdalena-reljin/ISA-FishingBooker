@@ -39,4 +39,6 @@ public interface UserService {
     void save(User user);
 
     Double findRatingByUsername(String username);
+
+    void updateOwnersRating(String username,Double grade);
 }

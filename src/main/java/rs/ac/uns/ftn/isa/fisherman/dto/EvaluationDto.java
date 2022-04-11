@@ -4,20 +4,34 @@ import java.time.LocalDateTime;
 
 public class EvaluationDto {
     protected Long id;
+    protected String type;
     protected LocalDateTime date;
     protected String comment;
     protected Double grade;
     protected boolean approved;
     protected String clientUsername;
+    protected String ownersUsername;
 
-    public EvaluationDto(Long id, LocalDateTime date, String comment, Double grade, boolean approved, String clientUsername) {
+    public EvaluationDto(Long id, String type, LocalDateTime date, String comment, Double grade, boolean approved, String clientUsername,String ownersUsername) {
         this.id = id;
+        this.type = type;
         this.date = date;
         this.comment = comment;
         this.grade = grade;
         this.approved = approved;
         this.clientUsername = clientUsername;
+        this.ownersUsername= ownersUsername;
     }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public EvaluationDto(){}
 
     public Long getId() {
@@ -66,5 +80,13 @@ public class EvaluationDto {
 
     public void setClientUsername(String clientUsername) {
         this.clientUsername = clientUsername;
+    }
+
+    public String getOwnersUsername() {
+        return ownersUsername;
+    }
+
+    public void setOwnersUsername(String ownersUsername) {
+        this.ownersUsername = ownersUsername;
     }
 }

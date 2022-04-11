@@ -13,8 +13,8 @@ public class BoatEvaluation extends Evaluation {
     @JoinColumn(name= "boat_reservation_id")
     BoatReservation boatReservation;
 
-    public BoatEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client, BoatReservation boatReservation) {
-        super(id, date, comment, grade, approved, client);
+    public BoatEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client,String ownersUsername, BoatReservation boatReservation) {
+        super(id, date, comment, grade, approved, client,ownersUsername);
         this.boatReservation = boatReservation;
     }
 
