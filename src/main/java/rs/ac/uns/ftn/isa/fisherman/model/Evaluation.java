@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Evaluation {
 
+    private static final String TYPE = "";
     @Id
     @SequenceGenerator(name = "period_sequence_generator", sequenceName = "period_sequence", initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "period_sequence_generator")
@@ -25,18 +26,27 @@ public abstract class Evaluation {
     @ManyToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name="users_id")
     protected Client client;
+    @Column(name="ownersUsername")
+    protected String ownersUsername;
 
-    public Evaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client) {
+    public Evaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client,String ownersUsername) {
         this.id = id;
         this.date = date;
         this.comment = comment;
         this.grade = grade;
         this.approved = approved;
         this.client = client;
+        this.ownersUsername= ownersUsername;
     }
 
     public Evaluation(){}
+    public String getOwnersUsername() {
+        return ownersUsername;
+    }
 
+    public void setOwnersUsername(String ownersUsername) {
+        this.ownersUsername = ownersUsername;
+    }
     public Long getId() {
         return id;
     }
@@ -83,5 +93,9 @@ public abstract class Evaluation {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public  String getType() {
+        return TYPE;
     }
 }

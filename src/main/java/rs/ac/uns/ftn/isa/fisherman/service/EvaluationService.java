@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface EvaluationService {
     List<Evaluation> getAll();
+
+    void setEvaluationStatus(Long id);
 }

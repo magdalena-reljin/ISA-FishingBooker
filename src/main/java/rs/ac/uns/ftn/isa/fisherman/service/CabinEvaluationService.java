@@ -11,4 +11,6 @@ public interface CabinEvaluationService {
     void addEvaluation(AddNewEvaluationDto addNewEvaluationDto);
 
     Set<CabinEvaluation> findByCabinId(Long cabinId);
+
+    CabinEvaluation getById(Long id);
 }
