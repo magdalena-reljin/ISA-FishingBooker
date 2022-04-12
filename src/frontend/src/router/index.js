@@ -52,6 +52,7 @@ import InstructorsBusinessReport from '../views/FishingInstructor/InstructorsBus
 import BoatOwnerBusinessReport from '../views/BoatOwner/BoatOwnerBusinessReport'
 import ClientPenalties from '../views/Client/ClientPenalties'
 import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
+import CabinOwnerProfile from '../views/CabinOwner/CabinOwnerProfile'
 
 const routes = [
   
@@ -176,6 +177,22 @@ const routes = [
     path: '/cabinOwnerHome/:email',
     name: 'CabinOwnerHome',
     component: CabinOwnerHome,
+    beforeEnter: (to, from,next) => {
+      // reject the navigation
+  
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                            
+ 
+  },
+  {
+    path: '/cabinOwnerProfile/:email',
+    name: 'CabinOwnerProfile',
+    component: CabinOwnerProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
   

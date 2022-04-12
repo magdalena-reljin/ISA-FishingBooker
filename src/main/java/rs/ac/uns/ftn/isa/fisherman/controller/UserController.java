@@ -56,5 +56,10 @@ public class UserController {
             users.add(userMapper.userToDeleteUserRequestDTO(user));
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+    @GetMapping("/getUserByUsername/{username:.+}/")
+    public ResponseEntity<UserRequestDTO> getUserByUsername(@PathVariable("username") String username) {
+        UserRequestDTO user= userMapper.userToUserRequestDTO(userService.findByUsername(username));
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
 }

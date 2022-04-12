@@ -39,6 +39,7 @@
     "stylus-loader": "^6.2.0",
     "v-calendar": "^3.0.0-alpha.6",
     "vue": "^3.0.0",
+    "vue-boring-avatars": "^1.1.0",
     "vue-chart-3": "^3.1.8",
     "vue-loading-overlay": "5.0",
     "vue-modality-v3": "^1.0.2",

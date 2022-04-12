@@ -41,6 +41,7 @@
             <p>{{boatDto.description}}</p>
             <p>Engine code: {{boatDto.engineCode}} Engine Power: {{boatDto.enginePower}} Max speed: {{boatDto.maxSpeed}}</p>
             <p>Fishing equipment:{{boatDto.fishingEquipment}}</p>
+            <p>Length:{{boatDto.length}}</p>
             <p>Navigation equipment:{{boatDto.navigationEquipment}}</p>
             <p>Rules: {{boatDto.rules}}</p>
         </div>

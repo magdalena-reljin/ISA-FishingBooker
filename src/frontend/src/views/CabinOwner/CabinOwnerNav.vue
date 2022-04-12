@@ -13,6 +13,7 @@
             {{username}}
           </a>
           <ul class="dropdown-menu" style="width: 100%" aria-labelledby="navbarDropdownMenuLink">
+            <li><a @click="cabinOwnerProfile()" class="dropdown-item" href="#">My profile</a></li>
             <li><a @click="myProfile()" class="dropdown-item" href="#">Edit profile</a></li>
             <li><a @click="logout()" class="dropdown-item" href="#">Log out</a></li>
           </ul>
@@ -120,14 +121,17 @@ export default ({
       this.$router.push("/cabinOwnerHome/" + this.$props.username);
     },
     reservations: function(){
-          this.$router.push('/reservationsCabinOwner/'+ this.$props.username);
+      this.$router.push('/reservationsCabinOwner/'+ this.$props.username);
     },
     quickReservations: function(){
-          this.$router.push('/quickReservationsCabinOwner/'+ this.$props.username);
+      this.$router.push('/quickReservationsCabinOwner/'+ this.$props.username);
     },
     statistics: function(){
-          this.$router.push('/cabinBusinessReport/'+ this.$props.username);
-    }  
+      this.$router.push('/cabinBusinessReport/'+ this.$props.username);
+    },
+    cabinOwnerProfile: function(){
+      this.$router.push('/cabinOwnerProfile/'+ this.$props.username);
+    } 
   }, 
 });
 </script>

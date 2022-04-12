@@ -907,7 +907,6 @@ import axios from "axios";
                                 ownerWroteAReport: false,
                                 ownersUsername: this.email,
 
-                              
                                 })
                               .then((response) => {
                                     console.log(response)
