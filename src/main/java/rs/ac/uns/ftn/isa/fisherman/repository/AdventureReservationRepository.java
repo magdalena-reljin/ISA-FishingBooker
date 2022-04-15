@@ -35,6 +35,7 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
     @Query(value="select count(cr.instructors_id) from adventure_reservation cr where cr.owners_username=:username and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("username") String username);
 
-
+    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM adventure_reservation c where c.owners_username=:username and c.start_date<=:endDate and c.end_date>=:startDate",nativeQuery = true)
+    boolean instructorHasReservationInPeriod(@Param("username")String username, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
 }

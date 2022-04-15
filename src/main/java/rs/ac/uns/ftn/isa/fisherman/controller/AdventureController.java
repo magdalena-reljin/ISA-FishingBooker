@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.BoatDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.FishingInstructorDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
+import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
@@ -64,7 +66,11 @@ public class AdventureController {
     public ResponseEntity<Set<AdventureDto>> getAll(){
         Set<AdventureDto> adventures=new HashSet<>();
         for(Adventure adventure: adventureService.findAll())
-            adventures.add(adventureMapper.adventureToAdventureDto(adventure));
+        {
+            AdventureDto adventureDto = adventureMapper.adventureToAdventureDto(adventure);
+            adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
+            adventures.add(adventureDto);
+        }
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
 
@@ -107,5 +113,17 @@ public class AdventureController {
         return new ResponseEntity<>(adventureService.canBeEditedOrDeleted(id),HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('CLIENT')|| hasRole('ADMIN')")
+    @PostMapping("/findById")
+    public ResponseEntity<AdventureDto> findById(@RequestBody AdventureDto adventureDto){
+        Adventure adventure = adventureService.findById(adventureDto.getId());
+        //TODO: check for users subscription
+        if(adventure != null){
+            adventureDto = adventureMapper.adventureToAdventureDto(adventure);
+            adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
+            return new ResponseEntity<>(adventureDto,HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(new AdventureDto(),HttpStatus.BAD_REQUEST);
+    }
 }

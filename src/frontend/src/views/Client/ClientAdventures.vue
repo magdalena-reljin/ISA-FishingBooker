@@ -1,187 +1,188 @@
 <template>
-  
-  <!-- search-->
-   
-    <div class="header" >
+  <template v-if="!bookAdventureOpen">
+    <!-- search-->
+
+    <div class="header">
       <form>
-        <h1 style="text-align: left; color: #0b477b;  padding-left: 7.2%;">Search adventures</h1>
-        <br>
-        <div style="padding-left: 7.2%; width: 100%;" class="row" >
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Search adventures
+        </h1>
+        <br />
+        <div style="padding-left: 7.2%; width: 100%" class="row">
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            id="search-field"
-            placeholder="NAME"
-            :value="searchName" 
-            @input="searchName = $event.target.value.toUpperCase()"
-          />
-          </div>
-
-          <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            placeholder="ADDRESS"
-            :value="searchAddress"
-            @input="searchAddress = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              id="search-field"
+              placeholder="NAME"
+              :value="searchName"
+              @input="searchName = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            type="text"
-            placeholder="CITY"
-            :value="searchCity"
-            @input="searchCity = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="ADDRESS"
+              :value="searchAddress"
+              @input="searchAddress = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            placeholder="COUNTRY"
-            :value="searchCountry"
-            @input="searchCountry = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              type="text"
+              placeholder="CITY"
+              :value="searchCity"
+              @input="searchCity = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            placeholder="PRICE"
-            :value="searchPrice"
-            @input="searchPrice = $event.target.value"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="COUNTRY"
+              :value="searchCountry"
+              @input="searchCountry = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            id="search-field"
-            placeholder="MAX PEOPLE"
-            :value="searchMaxPeople" 
-            @input="searchMaxPeople = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="PRICE"
+              :value="searchPrice"
+              @input="searchPrice = $event.target.value"
+            />
           </div>
 
-          
-
-          <div class="col" >
-          <button
-            @click="resetSearch()"
-            style="height: 90%; background-color: #0b477b; color: white;"
-            type="button"
-            class="btn  rounded-pill"
-          >
-            RESET SEARCH
-          </button>
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              id="search-field"
+              placeholder="MAX PEOPLE"
+              :value="searchMaxPeople"
+              @input="searchMaxPeople = $event.target.value.toUpperCase()"
+            />
           </div>
-          
+
+          <div class="col">
+            <button
+              @click="resetSearch()"
+              style="height: 90%; background-color: #0b477b; color: white"
+              type="button"
+              class="btn rounded-pill"
+            >
+              RESET SEARCH
+            </button>
+          </div>
         </div>
       </form>
 
-    <!--search-->
-  
-  <!-- sort -->
+      <!--search-->
 
-    <form>
-      <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
-        Sort adventures
-      </h1>
-      <br />
-      <div
-        style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
-        class="row"
-      >
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Name</button>
-        </div>
+      <!-- sort -->
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Street</button>
-        </div>
+      <form>
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Sort adventures
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
+          <div class="col">
+            <button class="form-control rounded-pill fa fa-sort">Name</button>
+          </div>
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">City</button>
-        </div>
+          <div class="col">
+            <button class="form-control rounded-pill fa fa-sort">Street</button>
+          </div>
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Country</button>
-        </div>
+          <div class="col">
+            <button class="form-control rounded-pill fa fa-sort">City</button>
+          </div>
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Rating</button>
-        </div>
+          <div class="col">
+            <button class="form-control rounded-pill fa fa-sort">
+              Country
+            </button>
+          </div>
 
-        <div class="col">
-          <button
-            @click="resetSort()"
-            style="height: 90%; background-color: #0b477b; color: white"
-            type="button"
-            class="btn rounded-pill fa fa-sort"
-          >
-            RESET SORT
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+          <div class="col">
+            <button class="form-control rounded-pill fa fa-sort">Rating</button>
+          </div>
 
-  <!--sort-->
-
-  <hr />
-
-  <template v-if="!adventureLoaded">
-    <h3>Loading...</h3>
-  </template>
-
-  <template v-if="sortedAdventures.length == 0">
-    <h3>No adventures to show.</h3>
-  </template>
-
-  <!-- Carousel wrapper -->
-  <div
-    v-if="adventureLoaded == true"
-    id="carouselMultiItemExample"
-    class="carousel slide carousel-dark text-center"
-    data-mdb-ride="carousel"
-  >
-    <!-- Inner -->
-    <div class="carousel-inner py-4">
-      <!-- Single item -->
-      <div class="carousel-item active">
-        <div class="container">
-          <div class="row">
-            <div
-              v-for="(adventureDto, index) in sortedAdventures"
-              :key="index"
-              class="col-lg-4"
+          <div class="col">
+            <button
+              @click="resetSort()"
+              style="height: 90%; background-color: #0b477b; color: white"
+              type="button"
+              class="btn rounded-pill fa fa-sort"
             >
-              <div style="width: 100%; height: 95%" class="card">
-                <img
-                  style="width: 100%; height: 100%"
-                  :src="require('@/assets/' + getImageUrl(index))"
-                />
+              RESET SORT
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
 
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h2 style="text-align: left" class="card-title">
-                        {{ adventureDto.name.toUpperCase() }}
-                      </h2>
-                    </div>
-                    <div style="text-align: right" class="col">
+    <!--sort-->
+
+    <hr />
+
+    <template v-if="!adventureLoaded">
+      <h3>Loading...</h3>
+    </template>
+
+    <template v-if="sortedAdventures.length == 0">
+      <h3>No adventures to show.</h3>
+    </template>
+
+    <!-- Carousel wrapper -->
+    <div
+      v-if="adventureLoaded == true"
+      id="carouselMultiItemExample"
+      class="carousel slide carousel-dark text-center"
+      data-mdb-ride="carousel"
+    >
+      <!-- Inner -->
+      <div class="carousel-inner py-4">
+        <!-- Single item -->
+        <div class="carousel-item active">
+          <div class="container">
+            <div class="row">
+              <div
+                v-for="(adventureDto, index) in sortedAdventures"
+                :key="index"
+                class="col-lg-4"
+              >
+                <div style="width: 100%; height: 95%" class="card">
+                  <img
+                    style="width: 100%; height: 100%"
+                    :src="require('@/assets/' + getImageUrl(index))"
+                  />
+
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h2 style="text-align: left" class="card-title">
+                          {{ adventureDto.name.toUpperCase() }}
+                        </h2>
+                      </div>
+                      <div style="text-align: right;" class="col">
                       <span class="badge bg-warning text-light"
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -195,83 +196,120 @@
                             d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
                           />
                         </svg>
-                        {{
-                          getInstructorRating(
-                            adventureDto.fishingInstructorUsername
-                          )
-                        }}</span
+                        {{ adventureDto.instructorRating }}</span
                       >
                     </div>
-                  </div>
-                  <hr />
-                  <h6 style="text-align: left; color: gray">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-geo-alt"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"
-                      />
-                      <path
-                        d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-                      />
-                    </svg>
-                    {{ getFullAddress(index) }}
-                  </h6>
-
-                  <h6 style="text-align: left">
-                    {{ adventureDto.description }}
-                  </h6>
-                  <h6 style="text-align: left">
-                    Free equipment: {{ adventureDto.equipment }}
-                  </h6>
-                  <h6 style="text-align: left">
-                    Canceling condition: {{ adventureDto.cancelingCondition }}
-                  </h6>
-                  <div class="row">
-                    <div class="col-sm-2">
-                      <h6 style="text-align: left; color: green">
-                        {{ adventureDto.price }} $
-                      </h6>
                     </div>
-                    <div class="col">
-                      <h6 style="text-align: left; color: black">
-                        People limit: {{ adventureDto.maxPeople }}
-                      </h6>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col" style="text-align: right">
-                      <button
-                        @click="seeProfile(adventureDto.name)"
-                        type="button"
-                        class="btn btn-outline-dark rounded-pill"
+                    <hr />
+                    <h6 style="text-align: left; color: gray">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-geo-alt"
+                        viewBox="0 0 16 16"
                       >
-                        SEE PROFILE
-                      </button>
+                        <path
+                          d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"
+                        />
+                        <path
+                          d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                        />
+                      </svg>
+                      {{ getFullAddress(index) }}
+                    </h6>
+
+                    <h6 style="text-align: left">
+                      {{ adventureDto.description }}
+                    </h6>
+                    <h6 style="text-align: left">
+                      Free equipment: {{ adventureDto.equipment }}
+                    </h6>
+                    <h6 style="text-align: left">
+                      Canceling condition: {{ adventureDto.cancelingCondition }}
+                    </h6>
+                    <div class="row">
+                      <div class="col">
+                        <h6 style="text-align: left; color: black">
+                          People limit: {{ adventureDto.maxPeople }}
+                        </h6>
+                      </div>
+                      <div class="col">
+                        <div class="row">
+                          <div class="col">
+                            <h6 style="text-align: left">Price:</h6>
+                          </div>
+                          <div class="col">
+                            <h6 style="text-align: left; color: green">
+                              {{ adventureDto.price }}$
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col" style="text-align: right">
+                        <template v-if="!reservationProcess">
+                          <button
+                            @click="seeProfile(adventureDto.id)"
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            SEE PROFILE
+                          </button>
+                        </template>
+                        <template v-if="reservationProcess">
+                          <button
+                            @click="bookAdventure(adventureDto.id)"
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            BOOK
+                          </button>
+                        </template>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <hr style="color: white" />
+                <hr style="color: white" />
               </div>
-              <hr style="color: white" />
-              <hr style="color: white" />
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Inner -->
+    <!-- Inner -->
+  </template>
+
+  <template v-if="bookAdventureOpen">
+    <BookAdventure
+      :bookingProcess="true"
+      :adventureId="adventureId"
+      :back="back"
+      :startDate="startDate"
+      :endDate="endDate"
+    ></BookAdventure>
+  </template>
 </template>
 
 <script>
 import axios from "axios";
+import BookAdventure from "./BookAdventure.vue"
+
 export default {
+  components: {
+    BookAdventure
+  },
+  props: {
+    reservationProcess: Boolean,
+    availableAdventures: Array,
+    showReservationForm: Function,
+    startDate: Date,
+    endDate: Date,
+  },
   data() {
     return {
       email: "",
@@ -307,7 +345,7 @@ export default {
             },
           ],
           cancelingCondition: "",
-
+          instructorRating: "",
           fishingInstructorUsername: "",
         },
       ],
@@ -332,6 +370,8 @@ export default {
         rating: 0.0,
       },
       adventureLoaded: false,
+      bookAdventureOpen: false,
+      adventureId: "",
       searchName: "",
       searchAddress: "",
       searchPrice: "",
@@ -345,25 +385,22 @@ export default {
     this.getAdventures();
   },
   methods: {
-    getAdventures: function () {
-      axios.get("http://localhost:8081/adventures/getAll").then((response) => {
-        this.adventureDtos = response.data;
-        this.adventureLoaded = true;
-      });
+    back() {
+      this.bookAdventureOpen = false;
+      this.showReservationForm(true);
     },
-    getInstructorRating: function (username) {
-      this.fishingInstructorDto.username = username;
-      axios
-        .post(
-          "http://localhost:8081/instructors/findInstructorRatingByUsername",
-          this.fishingInstructorDto
-        )
-        .then((response) => {
-          return response.data;
-        })
-        .catch(() => {
-          return 0.0;
-        });
+    getAdventures: function () {
+      if (this.reservationProcess) {
+        this.adventureDtos = this.availableAdventures;
+        this.adventureLoaded = true;
+      } else {
+        axios
+          .get("http://localhost:8081/adventures/getAll")
+          .then((response) => {
+            this.adventureDtos = response.data;
+            this.adventureLoaded = true;
+          });
+      }
     },
     getImageUrl: function (index) {
       if (this.adventureLoaded == true) {
@@ -382,10 +419,24 @@ export default {
         );
       return "logoF1.png";
     },
-    seeProfile: function (adventureName) {
-      this.$router.push(
-        "/adventureProfile/" + this.email + "/" + adventureName
-      );
+    seeProfile: function (adventureId) {
+      this.$router.push("/adventure/" + this.email + "/" + adventureId);
+    },
+    bookAdventure: function (adventureId) {
+      console.log(adventureId);
+      this.bookAdventureOpen = true;
+      this.adventureId = adventureId;
+      this.showReservationForm(false);
+    },
+    resetSearch: function () {
+      this.searchName = "";
+      this.searchRating = "";
+      this.searchAddress = "";
+      this.searchCity = "";
+      this.searchCountry = "";
+      this.searchPrice = "";
+      this.searchType = "";
+      this.searchMaxPeople = "";
     },
   },
   computed: {

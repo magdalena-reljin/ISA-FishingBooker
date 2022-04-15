@@ -17,6 +17,15 @@ public class AdventureDto {
     private Set<AdditionalServicesDto> additionalServices;
     private String cancelingCondition;
     private String fishingInstructorUsername;
+    private Double instructorRating;
+
+    public Double getInstructorRating() {
+        return instructorRating;
+    }
+
+    public void setInstructorRating(Double instructorRating) {
+        this.instructorRating = instructorRating;
+    }
 
     public Long getId() {
         return id;

@@ -3,7 +3,9 @@
     <div style="margin-top: 1%; width: 100%; height: 100" class="row">
       <div style="padding-left: 3%" class="col-sm-6">
         <div class="row" style="padding-top: 2%">
-          <h1 style="text-align: left">{{ boatDto.name.toUpperCase() }}</h1>
+          <h1 style="text-align: left">
+            {{ adventureDto.name.toUpperCase() }}
+          </h1>
           <h6 style="text-align: left; color: gray">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +27,7 @@
         </div>
 
         <div
-          style="height: 60%; width: 100%"
+          style="height: 70%; width: 100%"
           id="carouselExampleControls"
           class="carousel slide"
           data-bs-ride="carousel"
@@ -34,7 +36,7 @@
             <button
               class="active"
               @click="clickedImage(index)"
-              v-for="(image, index) in boatDto.images"
+              v-for="(image, index) in adventureDto.images"
               :key="index"
               type="button"
               data-bs-target="#carouselExampleIndicators"
@@ -72,21 +74,12 @@
         </div>
 
         <div
-          style="
-            text-align: left;
-            padding-left: 1%;
-            padding-top: 1%;
-            border: 2px solid #bfbfbf;
-          "
+          style="text-align: left; padding-left: 1%; border: 2px solid #bfbfbf"
         >
-          <p>{{ boatDto.description }}</p>
-          <p>
-            Engine code: {{ boatDto.engineCode }} Engine Power:
-            {{ boatDto.enginePower }} Max speed: {{ boatDto.maxSpeed }}
-          </p>
-          <p>Fishing equipment:{{ boatDto.fishingEquipment }}</p>
-          <p>Navigation equipment:{{ boatDto.navigationEquipment }}</p>
-          <p>Rules: {{ boatDto.rules }}</p>
+          <p>Instructor biography: {{ adventureDto.instructorsBiography }}</p>
+          <p>{{ adventureDto.description }}</p>
+          <p>Free equipment: {{ adventureDto.equipment }}</p>
+          <p>Rules: {{ adventureDto.rules }}</p>
         </div>
       </div>
 
@@ -114,7 +107,7 @@
                   d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
                 />
               </svg>
-              {{ boatDto.rating }}</span
+              {{ adventureDto.insturctorRating }}</span
             >
           </div>
           <div class="col">
@@ -127,45 +120,40 @@
         <hr />
         <div class="row">
           <div class="col">
-            <p>Owner:</p>
+            <p>Fishing instructor:</p>
           </div>
           <div class="col">
             <p>
-              <b>{{ boatDto.ownersUsername }}</b>
+              <b>{{ adventureDto.fishingInstructorUsername }}</b>
             </p>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <p>Price per hour:</p>
+            <p>Price:</p>
           </div>
           <div class="col" style="color: green">
             <p>
-              <b>{{ boatDto.price }}$</b>
+              <b>{{ adventureDto.price }}$</b>
             </p>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <p>Max people:</p>
+            <p>People limit:</p>
           </div>
           <div class="col">
-            <p>
-              <b>{{ boatDto.maxPeople }}</b>
-            </p>
+            <p>{{ adventureDto.maxPeople }}</p>
           </div>
         </div>
-
         <div class="row">
           <div class="col">
-            <p>Canceling conditions:</p>
+            <p>Canceling condition:</p>
           </div>
           <div class="col">
-            <p>
-              <b>{{ boatDto.cancelingCondition }}</b>
-            </p>
+            <p>{{ adventureDto.cancelingCondition }}</p>
           </div>
         </div>
 
@@ -174,12 +162,12 @@
 
           <p>Additional services:</p>
 
-          <table class="table" v-show="boatDto.additionalServices != 0">
+          <table class="table" v-show="adventureDto.additionalServices != 0">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Service</th>
-                <th scope="col">Price per hour ($) </th>
+                <th scope="col">Price per hour ($)</th>
                 <th scope="col">&nbsp;</th>
               </tr>
             </thead>
@@ -215,7 +203,7 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Service</th>
-                  <th scope="col">Price per hour ($) </th>
+                  <th scope="col">Price per hour ($)</th>
                   <th scope="col">&nbsp;</th>
                 </tr>
               </thead>
@@ -287,7 +275,7 @@
             style="background-color: #1d7ac9; width: 100%"
             type="button"
             class="btn text-light rounded-pill"
-            @click="bookBoat()"
+            @click="bookAdventure()"
           >
             BOOK
           </button>
@@ -296,7 +284,7 @@
         <template v-if="!bookingProcess">
           <p>Additional services:</p>
           <div
-            v-for="(service, index) in boatDto.additionalServices"
+            v-for="(service, index) in adventureDto.additionalServices"
             :key="index"
             class="group"
             role="group"
@@ -312,8 +300,8 @@
               v-else
               style="background-color: #703636"
               class="badge rounded-pill text-light"
-              >{{ service.name }} - {{ service.price }}$ per hour</span
-            >
+              >{{ service.name }} - {{ service.price }}$
+            </span>
           </div>
         </template>
       </div>
@@ -331,8 +319,8 @@
         </div>
       </template>
       <template v-if="!bookingProcess && role == 'CLIENT'">
-        <template v-if="boatDto.subscription">
-          <template v-if="!boatDto.subscription && role == 'CLIENT'">
+        <template v-if="adventureDto.subscription">
+          <template v-if="!adventureDto.subscription && role == 'CLIENT'">
             <div class="col" style="margin-top: 3%">
               <button
                 @click="subscribe()"
@@ -344,7 +332,7 @@
               </button>
             </div>
           </template>
-          <template v-if="boatDto.subscription && role == 'CLIENT'">
+          <template v-if="adventureDto.subscription && role == 'CLIENT'">
             <div class="col" style="margin-top: 3%">
               <button
                 @click="unsubscribe()"
@@ -361,12 +349,12 @@
       <template v-if="role == 'ADMIN'">
         <div class="col" style="margin-top: 3%">
           <button
-            @click="deleteBoat()"
+            @click="deleteAdventure()"
             style="background-color: #1d7ac9; width: 100%"
             type="button"
             class="btn text-light rounded-pill"
           >
-            DELETE BOAT
+            DELETE ADVENTURE
           </button>
         </div>
       </template>
@@ -384,8 +372,8 @@
       >
         <OpenLayersMap
           :coordinates="[
-            boatDto.addressDto.latitude,
-            boatDto.addressDto.longitude,
+            adventureDto.address.latitude,
+            adventureDto.address.longitude,
           ]"
         />
       </div>
@@ -395,13 +383,13 @@
 
 <script>
 import axios from "axios";
-import OpenLayersMap from "../../components/OpenLayersMap";
+import OpenLayersMap from "../../components/OpenLayersMap.vue";
 import Datepicker from "vue3-date-time-picker";
 import dayjs from "dayjs";
 
 export default {
   props: {
-    boatId: String,
+    adventureId: String,
     back: Function,
     startDate: Date,
     endDate: Date,
@@ -415,17 +403,10 @@ export default {
     return {
       email: "",
       role: localStorage.role,
-      boatDto: {
+      adventureDto: {
         id: null,
-        ownersUsername: "",
         name: "",
-        type: "",
-        length: "",
-        engineCode: "",
-        enginePower: "",
-        maxSpeed: "",
-        navigationEquipment: "",
-        addressDto: {
+        address: {
           longitude: 0.0,
           latitude: 0.0,
           country: "",
@@ -433,6 +414,7 @@ export default {
           streetAndNum: "",
         },
         description: "",
+        instructorsBiography: "",
         images: [
           {
             id: null,
@@ -441,9 +423,9 @@ export default {
           },
         ],
         maxPeople: 1,
+        price: 1,
         rules: "",
-        fishingEquipment: "",
-        price: 1.0,
+        equipment: "",
         additionalServices: [
           {
             id: null,
@@ -452,7 +434,8 @@ export default {
           },
         ],
         cancelingCondition: "",
-        rating: "",
+
+        fishingInstructorUsername: "",
       },
       addedAdditionalServices: [
         {
@@ -468,41 +451,33 @@ export default {
           price: 0.0,
         },
       ],
-      prices: "",
-      names: "",
-      idx: 0,
-      tableHidden: true,
-      selectedFile: null,
-      imagesSelected: false,
-      imagesSelectedEvent: null,
-      additionalServicesAdded: false,
-      loader: null,
-      user: {
-        username: "",
-      },
-      boatLoaded: false,
+      adventureLoaded: false,
       currentImageUrl: "logoF1.png",
       imageIndex: 0,
       maxImageIndex: 0,
+      fishingInstructorDto: {
+        username: "",
+        rating: 0.0,
+      },
       start: null,
       end: null,
       totalPrice: 0,
-      boatIdParam: "",
+      adventureIdParam: "",
     };
   },
   mounted() {
     this.role = localStorage.role;
     this.email = this.$route.params.email;
-    this.boatIdParam = this.$route.params.boatId;
+    this.adventureIdParam = this.$route.params.adventureId;
     this.start = this.startDate;
     this.end = this.endDate;
-    this.getBoat();
+    this.getAdventure();
     if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
     calculatePrice: function () {
       let numOfHours = this.getNumberOfHours(this.start, this.end);
-      var pricePerHour = this.boatDto.price;
+      var pricePerHour = this.adventureDto.price;
       for (let i = 0; i < this.addedAdditionalServices.length; i++) {
         pricePerHour += this.addedAdditionalServices[i].price;
       }
@@ -549,47 +524,47 @@ export default {
       this.addedAdditionalServices = newList;
       this.calculatePrice();
     },
-    getBoat: function () {
+    getAdventure: function () {
       if (this.bookingProcess) {
-        this.boatDto.id = this.boatId;
+        this.adventureDto.id = this.adventureId;
       } else {
-        this.boatDto.id = this.boatIdParam;
+        this.adventureDto.id = this.adventureIdParam;
       }
       axios
-        .post("http://localhost:8081/boats/findById", this.boatDto, {})
+        .post("http://localhost:8081/adventures/findById", this.adventureDto)
         .then((response) => {
           this.addedAdditionalServices = [];
-          this.boatDto = response.data;
-          this.boatLoaded = true;
-          this.currentImageUrl = this.boatDto.images[0].url;
-          this.maxImageIndex = this.boatDto.images.length - 1;
-          this.availableAdditionalServices = this.boatDto.additionalServices;
+          this.adventureDto = response.data;
+          this.adventureLoaded = true;
+          this.currentImageUrl = this.adventureDto.images[0].url;
+          this.maxImageIndex = this.adventureDto.images.length - 1;
+          this.availableAdditionalServices = this.adventureDto.additionalServices;
           if (this.bookingProcess) this.calculatePrice();
         });
     },
     previousImage: function () {
       if (this.imageIndex > 0) {
         this.imageIndex--;
-        this.currentImageUrl = this.boatDto.images[this.imageIndex].url;
+        this.currentImageUrl = this.adventureDto.images[this.imageIndex].url;
       }
     },
     nextImage: function () {
       if (this.imageIndex < this.maxImageIndex) {
         this.imageIndex++;
-        this.currentImageUrl = this.boatDto.images[this.imageIndex].url;
+        this.currentImageUrl = this.adventureDto.images[this.imageIndex].url;
       }
     },
     clickedImage: function (index) {
       this.imageIndex = index;
-      this.currentImageUrl = this.boatDto.images[this.imageIndex].url;
+      this.currentImageUrl = this.adventureDto.images[this.imageIndex].url;
     },
     getFullAddress: function () {
       return (
-        this.boatDto.addressDto.streetAndNum +
+        this.adventureDto.address.streetAndNum +
         ", " +
-        this.boatDto.addressDto.city +
+        this.adventureDto.address.city +
         ", " +
-        this.boatDto.addressDto.country
+        this.adventureDto.address.country
       );
     },
     dataIsValid() {
@@ -622,7 +597,7 @@ export default {
       const date = dayjs(formatDate);
       return date.format("YYYY-MM-DDTHH:mm:ss");
     },
-    bookBoat: function () {
+    bookAdventure: function () {
       if (!this.dataIsValid()) {
         return;
       }
@@ -640,7 +615,7 @@ export default {
 
       axios
         .post(
-          "http://localhost:8081/reservationBoat/makeReservation",
+          "http://localhost:8081/reservationAdventure/makeReservation",
           {
             id: null,
             startDate: this.formatDate(this.start),
@@ -650,9 +625,8 @@ export default {
               companysPart: 0,
               ownersPart: 0,
             },
-            ownerWroteAReport: false,
-            ownersUsername: this.boatDto.ownersUsername,
-            boatDto: this.boatDto,
+            ownersUsername: this.adventureDto.fishingInstructorUsername,
+            adventureDto: this.adventureDto,
             addedAdditionalServices: this.addedAdditionalServices,
             clientUsername: this.email,
           },
@@ -663,7 +637,7 @@ export default {
           this.$swal.fire({
             position: "top-end",
             icon: "success",
-            title: "Boat reservation successful!",
+            title: "Adventure reservation successful!",
             showConfirmButton: false,
             timer: 2000,
           });
@@ -681,9 +655,9 @@ export default {
     subscribe: function () {
       axios
         .post(
-          "http://localhost:8081/boatSubscription/addSubscription",
+          "http://localhost:8081/adventureSubscription/addSubscription",
           {
-            boatDto: this.boatDto,
+            adventureDto: this.adventureDto,
             clientUsername: this.email,
           },
           {}
@@ -696,15 +670,15 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           });
-          this.getBoat();
+          this.getAdventure();
         });
     },
     unsubscribe: function () {
       axios
         .post(
-          "http://localhost:8081/boatSubscription/removeSubscription",
+          "http://localhost:8081/adventureSubscription/removeSubscription",
           {
-            boatDto: this.boatDto,
+            adventureDto: this.adventureDto,
             clientUsername: this.email,
           },
           {}
@@ -717,7 +691,7 @@ export default {
             showConfirmButton: false,
             timer: 2000,
           });
-          this.getBoat();
+          this.getAdventure();
         });
     },
   },

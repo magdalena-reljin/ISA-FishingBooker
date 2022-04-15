@@ -281,7 +281,7 @@
                       <template v-if="!reservationProcess">
                         <button
                           @click="
-                            seeProfile(boatDto.name) &&
+                            seeProfile(boatDto.id) &&
                               showReservationForm(false)
                           "
                           type="button"
@@ -292,7 +292,7 @@
                       </template>
                       <template v-if="reservationProcess">
                         <button
-                          @click="bookBoat(boatDto.name)"
+                          @click="bookBoat(boatDto.id)"
                           type="button"
                           class="btn btn-outline-dark rounded-pill"
                         >
@@ -315,7 +315,7 @@
   <template v-if="bookBoatOpen">
     <BookBoat
       :bookingProcess="true"
-      :boatName="boatName"
+      :boatId="boatId"
       :back="back"
       :startDate="startDate"
       :endDate="endDate"
@@ -387,7 +387,7 @@ export default {
       },
       boatsLoaded: false,
       bookBoatOpen: false,
-      boatName: "",
+      boatId: "",
       searchName: "",
       searchRating: "",
       searchAddress: "",
@@ -436,12 +436,12 @@ export default {
         );
       return "logoF1.png";
     },
-    seeProfile: function (boatName) {
-      this.$router.push('/boat/'+ this.email+ '/' + boatName);
+    seeProfile: function (boatId) {
+      this.$router.push('/boat/'+ this.email+ '/' + boatId);
     },
-    bookBoat: function (boatName) {
+    bookBoat: function (boatId) {
       this.bookBoatOpen=true;
-      this.boatName=boatName;
+      this.boatId=boatId;
       this.showReservationForm(false);
     },
     resetSearch: function () {

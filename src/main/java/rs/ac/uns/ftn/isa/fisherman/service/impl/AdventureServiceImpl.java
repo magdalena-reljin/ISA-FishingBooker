@@ -46,6 +46,16 @@ public class AdventureServiceImpl implements AdventureService {
     }
 
     @Override
+    public Adventure findById(Long id) {
+        return adventureRepository.findByID(id);
+    }
+
+    @Override
+    public List<Adventure> findAdventuresByInstructorIds(List<Long> instructorIds) {
+        return adventureRepository.findAdventuresByInstructorIds(instructorIds);
+    }
+
+    @Override
     public Adventure findByName(String adventureName) {
         return adventureRepository.findByName(adventureName);
     }

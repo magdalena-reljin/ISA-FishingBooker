@@ -190,7 +190,6 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     @Override
     public Set<Boat> getAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
         Set<Boat> availableBoats = new HashSet<>();
-        Client client = clientService.findByUsername(searchAvailablePeriodsBoatDto.getUsername());
         //TODO: List<BoatReservationCancellation> boatReservationCancellations = boatReservationCancellationRepository.getByUsersId(client.getId());
         for(AvailableBoatPeriod boatPeriod:availableBoatPeriodService.findPeriodsBetweenDates(searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate())){
             /* TODO: if(periodWasAlreadyReserved(cabinPeriod.getCabin().getId(),searchAvailablePeriodsBoatDto.getStartDate(),searchAvailablePeriodsBoatDto.getEndDate(), boatReservationCancellations))

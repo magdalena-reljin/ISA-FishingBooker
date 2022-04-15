@@ -5,13 +5,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.*;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.InstructorReservationReportService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,10 @@ public class AdventureReservationController {
  private FishingInstructorService fishingInstructorService;
  @Autowired
  private InstructorReservationReportService instructorReservationReportService;
+ @Autowired
+ private PenaltyService penaltyService;
  private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
+ private final AdventureMapper adventureMapper = new AdventureMapper();
 
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -72,5 +76,30 @@ public class AdventureReservationController {
         reservation.setOwnerWroteAReport(true);
         adventureReservationService.save(reservation);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
+    }
+
+    @PostMapping("/getAvailableAdventures")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<AdventureDto>> getAvailableAdventures (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        Set<AdventureDto> adventuresDto= new HashSet<>();
+        for(Adventure adventure:adventureReservationService.getAvailableAdventures(searchAvailablePeriodsBoatDto)){
+            AdventureDto adventureDto = adventureMapper.adventureToAdventureDto(adventure);
+            adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
+            adventuresDto.add(adventureDto);
+        }
+        return new ResponseEntity<>(adventuresDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/makeReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> makeReservation (@RequestBody AdventureReservationDto adventureReservationDto) {
+        if(penaltyService.isUserBlockedFromReservation(adventureReservationDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        // TODO: if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
+        //  return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(adventureReservationService.makeReservation(adventureReservationDto))
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
     }
 }
