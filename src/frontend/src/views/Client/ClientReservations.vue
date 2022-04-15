@@ -53,6 +53,9 @@
     <template v-if="selectedEntity=='boats'">
       <ClientBoatReservationsList :upcomingReservations="true" />
     </template>
+    <template v-if="selectedEntity=='adventures'">
+      <ClientAdventureReservationsList :upcomingReservations="true" />
+    </template>
   </template>
   <template v-if="!upcomingReservationsShown">
     <template v-if="selectedEntity=='cabins'">
@@ -61,6 +64,9 @@
     <template v-if="selectedEntity=='boats'">
       <ClientBoatReservationsList :upcomingReservations="false" />
     </template>
+    <template v-if="selectedEntity=='adventures'">
+      <ClientAdventureReservationsList :upcomingReservations="false" />
+    </template>
   </template>
 </template>
 
@@ -68,12 +74,14 @@
 import ClientNavbar from "./ClientNavbar";
 import ClientCabinReservationsList from "./ClientCabinReservationsList";
 import ClientBoatReservationsList from "./ClientBoatReservationsList";
+import ClientAdventureReservationsList from "./ClientAdventureReservationsList";
 
 export default {
   components: {
     ClientNavbar,
     ClientCabinReservationsList,
     ClientBoatReservationsList,
+    ClientAdventureReservationsList,
   },
   data() {
     return {

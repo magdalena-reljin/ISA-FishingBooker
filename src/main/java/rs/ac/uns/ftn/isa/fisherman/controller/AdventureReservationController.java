@@ -102,4 +102,23 @@ public class AdventureReservationController {
         else
             return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<AdventureReservationDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<AdventureReservationDto> adventureReservationDtos = new HashSet<>();
+        for(AdventureReservation adventureReservation: adventureReservationService.getUpcomingClientReservationsByUsername(userRequestDTO.getUsername()))
+            adventureReservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
+        return new ResponseEntity<>(adventureReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<AdventureReservationDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<AdventureReservationDto> adventureReservationDtos = new HashSet<>();
+        for(AdventureReservation adventureReservation: adventureReservationService.getClientReservationHistoryByUsername(userRequestDTO.getUsername())){
+            adventureReservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
+        }
+        return new ResponseEntity<>(adventureReservationDtos,HttpStatus.OK);
+    }
 }

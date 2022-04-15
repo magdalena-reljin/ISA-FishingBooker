@@ -24,4 +24,6 @@ public interface AdventureReservationService {
     void save (AdventureReservation adventureReservation);
     Set<Adventure> getAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto);
     boolean makeReservation(AdventureReservationDto adventureReservationDto);
+    Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username);
+    Set<AdventureReservation> getClientReservationHistoryByUsername(String username);
 }

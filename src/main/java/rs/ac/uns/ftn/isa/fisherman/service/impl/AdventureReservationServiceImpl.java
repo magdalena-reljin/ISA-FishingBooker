@@ -201,6 +201,16 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return false;
     }
 
+    @Override
+    public Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username) {
+        return adventureReservationRepository.getUpcomingClientReservations(clientService.findByUsername(username).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public Set<AdventureReservation> getClientReservationHistoryByUsername(String username) {
+        return adventureReservationRepository.getClientReservationsHistory(clientService.findByUsername(username).getId(), LocalDateTime.now());
+    }
+
     private void SendReservationMailToClient(AdventureReservationDto adventureReservationDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
