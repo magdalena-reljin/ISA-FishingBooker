@@ -597,7 +597,7 @@ export default {
       const date = dayjs(formatDate);
       return date.format("YYYY-MM-DDTHH:mm:ss");
     },
-    bookBoat: function () {
+    bookAdventure: function () {
       if (!this.dataIsValid()) {
         return;
       }

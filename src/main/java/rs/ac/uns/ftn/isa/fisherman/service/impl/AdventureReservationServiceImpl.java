@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
-import rs.ac.uns.ftn.isa.fisherman.mail.AdventureReservationSuccessfullInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.AdventureReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
-import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import javax.mail.MessagingException;
 import java.time.Duration;
@@ -39,7 +40,10 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     private AdventureService adventureService;
     @Autowired
     private FishingInstructorRepository fishingInstructorRepository;
-
+    @Autowired
+    private FishingInstructorService fishingInstructorService;
+    private AdventureReservationMapper adventureReservationMapper = new AdventureReservationMapper();
+    private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     @Override
     public boolean instructorCreates(AdventureReservation adventureReservation, String clientUsername) {
         Client client = clientService.findByUsername(clientUsername);
@@ -103,7 +107,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
             String message = adventureReservation.getAdventure().getName() + " is booked from " + adventureReservation.getStartDate().format(formatter) + " to " + adventureReservation.getEndDate().format(formatter) + " .";
-            mailService.sendMail(email, message, new AdventureReservationSuccessfullInfo());
+            mailService.sendMail(email, message, new AdventureReservationSuccessfulInfo());
         } catch (MessagingException e) {
             logger.error(e.toString());
         }
@@ -178,6 +182,42 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
     @Override
     public boolean makeReservation(AdventureReservationDto adventureReservationDto) {
+        AdventureReservation adventureReservation = setUpAdventureReservationFromDto(adventureReservationDto);
+        if(!clientHasCancellationWithInstructorInPeriod()){
+            PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(adventureReservation, adventureReservation.getFishingInstructor());
+            adventureReservation.setPaymentInformation(paymentInformation);
+            reservationPaymentService.updateUserRankAfterReservation(adventureReservation.getClient(), adventureReservation.getFishingInstructor());
+            adventureReservationRepository.save(adventureReservation);
+            if(adventureReservationDto.getAddedAdditionalServices()!=null)
+            {
+                adventureReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
+                adventureReservationRepository.save(adventureReservation);
+            }
+            SendReservationMailToClient(adventureReservationDto);
+            return true;
+        }
         return false;
+    }
+
+    private void SendReservationMailToClient(AdventureReservationDto adventureReservationDto) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+            String message = adventureReservationDto.getAdventureDto().getName() + " is booked from " + adventureReservationDto.getStartDate().format(formatter) + " to " + adventureReservationDto.getEndDate().format(formatter) + " .";
+            mailService.sendMail(adventureReservationDto.getClientUsername(), message, new AdventureReservationSuccessfulInfo());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
+    }
+
+    private boolean clientHasCancellationWithInstructorInPeriod(){
+        //TODO:
+        return false;
+    }
+
+    private AdventureReservation setUpAdventureReservationFromDto(AdventureReservationDto adventureReservationDto) {
+        FishingInstructor fishingInstructor = fishingInstructorService.findByUsername(adventureReservationDto.getAdventureDto().getFishingInstructorUsername());
+        AdventureReservation adventureReservation = adventureReservationMapper.adventureReservationDtoToAdventureReservation(adventureReservationDto, fishingInstructor);
+        adventureReservation.setClient(clientService.findByUsername(adventureReservationDto.getClientUsername()));
+        return adventureReservation;
     }
 }

@@ -13,7 +13,7 @@ public class BoatReservationSuccessfulInfo implements MailFormatter<String>{
                 "</head>\n" +
                 "<body>\n" +
                 "    <h1> Successful reservation for boat!</h1>\n" +
-                "    <h2>Your request for reservation has been successfull. </h2>\n" +
+                "    <h2>Your request for reservation has been successful. </h2>\n" +
                 "    <br>\n" +
                 "<h2>" + message + "<h2>\n" +
                 "    <h2>Sincerely,</h2>\n" +
