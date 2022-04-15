@@ -227,6 +227,16 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return false;
     }
 
+    @Override
+    public Set<BoatReservation> getUpcomingClientReservationsByUsername(String clientUsername) {
+        return boatReservationRepository.getUpcomingClientReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public Set<BoatReservation> getClientReservationHistoryByUsername(String clientUsername) {
+        return boatReservationRepository.getClientReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
     private void SendReservationMailToClient(BoatReservationDto boatReservationDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");

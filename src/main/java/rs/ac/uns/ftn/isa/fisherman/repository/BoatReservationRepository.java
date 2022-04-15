@@ -45,4 +45,9 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
     @Query(value="SELECT CASE WHEN  COUNT(res) > 0 THEN true ELSE false END FROM boat_reservation res where res.boat_id=:boat_id and res.start_date<=:endDate and res.end_date>=:startDate",nativeQuery = true)
     boolean boatReservedInPeriod(@Param("boat_id")Long boatId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    @Query(value="SELECT * FROM boat_reservation where users_id=:user_id and (:currentDate <= start_date) ",nativeQuery = true)
+    Set<BoatReservation> getUpcomingClientReservations(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT * FROM boat_reservation where users_id=:user_id and (:currentDate > start_date) ",nativeQuery = true)
+    Set<BoatReservation> getClientReservationsHistory(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
 }

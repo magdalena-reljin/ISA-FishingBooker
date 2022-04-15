@@ -110,4 +110,23 @@ public class BoatReservationController {
         else
             return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatReservationDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<BoatReservationDto> boatReservationDtos= new HashSet<>();
+        for(BoatReservation boatReservation: boatReservationService.getUpcomingClientReservationsByUsername(userRequestDTO.getUsername()))
+            boatReservationDtos.add(boatReservationMapper.boatReservationToBoatReservationDto(boatReservation));
+        return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatReservationDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<BoatReservationDto> boatReservationDtos= new HashSet<>();
+        for(BoatReservation boatReservation: boatReservationService.getClientReservationHistoryByUsername(userRequestDTO.getUsername())){
+            boatReservationDtos.add(boatReservationMapper.boatReservationToBoatReservationDto(boatReservation));
+        }
+        return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
+    }
 }

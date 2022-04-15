@@ -1,14 +1,13 @@
 <template>
-  <template v-if="!bookCabinOpen">
     <!-- header -->
 
     <div class="header">
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
-          <template v-if="upcomingCabinReservations">
+          <template v-if="upcomingReservations">
             Upcoming reservations
           </template>
-          <template v-if="!upcomingCabinReservations">
+          <template v-if="!upcomingReservations">
             Reservation history
           </template>
         </h1>
@@ -19,22 +18,22 @@
 
     <hr />
 
-    <template v-if="!cabinReservationsLoaded">
+    <template v-if="!reservationsLoaded">
       <h3>Loading...</h3>
     </template>
 
-    <template v-if="sortedCabinReservations">
-      <template v-if="sortedCabinReservations.length == 0">
+    <template v-if="sortedReservations">
+      <template v-if="sortedReservations.length == 0">
         <h3>
           No
-          <template v-if="upcomingCabinReservations">upcoming</template> cabin
+          <template v-if="upcomingReservations">upcoming</template> cabin
           reservations to show.
         </h3>
       </template>
     </template>
     <!-- Carousel wrapper -->
     <div
-      v-if="cabinReservationsLoaded == true"
+      v-if="reservationsLoaded == true"
       id="carouselMultiItemExample"
       class="carousel slide carousel-dark text-center"
       data-mdb-ride="carousel"
@@ -46,7 +45,7 @@
           <div class="container">
             <div class="row">
               <div
-                v-for="(cabinReservationDto, index) in sortedCabinReservations"
+                v-for="(cabinReservationDto, index) in sortedReservations"
                 :key="index"
                 class="col-lg-4"
               >
@@ -109,25 +108,21 @@
                       </svg>
                       {{ getFullAddress(index) }}
                     </h6>
-
-                    <h6 style="text-align: left">
-                      {{ cabinReservationDto.cabinDto.description }}
-                    </h6>
                     <h6 style="text-align: left; color: green">
-                      {{ cabinReservationDto.cabinDto.price }} $ per night
+                      {{ cabinReservationDto.paymentInformationDto.totalPrice }} $
                     </h6>
                     <div class="row">
                       <div class="col" style="text-align: right">
-                          <button
-                            @click="writeComplaint(cabinReservationDto)"
-                            type="button"
-                            class="btn btn-outline-dark rounded-pill"
-                          >
-                            WRITE COMPLAINT
-                          </button>
+                        <button
+                          @click="writeComplaint(cabinReservationDto)"
+                          type="button"
+                          class="btn btn-outline-dark rounded-pill"
+                        >
+                          WRITE COMPLAINT
+                        </button>
                       </div>
                       <div class="col" style="text-align: right">
-                        <template v-if="upcomingCabinReservations">
+                        <template v-if="upcomingReservations">
                           <button
                             @click="cancelReservation(cabinReservationDto)"
                             type="button"
@@ -141,7 +136,12 @@
                             CANCEL
                           </button>
                         </template>
-                        <template v-if="(!upcomingCabinReservations) && !cabinReservationDto.evaluated">
+                        <template
+                          v-if="
+                            !upcomingReservations &&
+                            !cabinReservationDto.evaluated
+                          "
+                        >
                           <button
                             @click="evaluateReservation(cabinReservationDto)"
                             type="button"
@@ -163,7 +163,6 @@
       </div>
     </div>
     <!-- Inner -->
-  </template>
 </template>
 
 <script>
@@ -173,7 +172,7 @@ import dayjs from "dayjs";
 export default {
   components: {},
   props: {
-    upcomingCabinReservations: Boolean,
+    upcomingReservations: Boolean,
   },
   data() {
     return {
@@ -215,14 +214,13 @@ export default {
       user: {
         username: "",
       },
-      cabinReservationsLoaded: false,
-      bookCabinOpen: false,
+      reservationsLoaded: false,
       cabinName: "",
     };
   },
   mounted() {
     this.email = this.$route.params.email;
-    this.getCabinReservations();
+    this.getReservations();
   },
   methods: {
     getNumberOfDays: function (start, end) {
@@ -246,8 +244,8 @@ export default {
         return false;
       return true;
     },
-    getCabinReservations: function () {
-      if (!this.upcomingCabinReservations) {
+    getReservations: function () {
+      if (!this.upcomingReservations) {
         axios
           .post(
             "http://localhost:8081/reservationCabin/getReservationsHistory",
@@ -258,7 +256,7 @@ export default {
           )
           .then((response) => {
             this.cabinReservationDtos = response.data;
-            this.cabinReservationsLoaded = true;
+            this.reservationsLoaded = true;
           });
       } else {
         this.user.username = this.email;
@@ -272,7 +270,7 @@ export default {
           )
           .then((response) => {
             this.cabinReservationDtos = response.data;
-            this.cabinReservationsLoaded = true;
+            this.reservationsLoaded = true;
           });
       }
     },
@@ -293,32 +291,36 @@ export default {
       );
     },
     getImageUrl: function (index) {
-      if (this.cabinReservationsLoaded == true) {
-        return this.sortedCabinReservations[index].cabinDto.images[0].url;
+      if (this.reservationsLoaded == true) {
+        return this.sortedReservations[index].cabinDto.images[0].url;
       }
       return "logoF1.png";
     },
     getFullAddress: function (index) {
-      if (this.cabinReservationsLoaded == true)
+      if (this.reservationsLoaded == true)
         return (
-          this.sortedCabinReservations[index].cabinDto.addressDto.streetAndNum +
+          this.sortedReservations[index].cabinDto.addressDto.streetAndNum +
           ", " +
-          this.sortedCabinReservations[index].cabinDto.addressDto.city +
+          this.sortedReservations[index].cabinDto.addressDto.city +
           ", " +
-          this.sortedCabinReservations[index].cabinDto.addressDto.country
+          this.sortedReservations[index].cabinDto.addressDto.country
         );
       return "logoF1.png";
     },
     seeProfile: function (cabinName) {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
-    evaluateReservation: function (cabinReservationDto) {
-      this.$router.push("/evaluation/" + this.email + "/" + "cabin/" + cabinReservationDto.id);
+    evaluateReservation: function (reservationDto) {
+      this.$router.push(
+        "/evaluation/" + this.email + "/" + "cabin/" + reservationDto.id
+      );
     },
-    writeComplaint: function (cabinReservationDto) {
-      this.$router.push("/complaint/" + this.email + "/" + "cabin/" + cabinReservationDto.id);
+    writeComplaint: function (reservationDto) {
+      this.$router.push(
+        "/complaint/" + this.email + "/" + "cabin/" + reservationDto.id
+      );
     },
-    cancelReservation: function (cabinReservationDto) {
+    cancelReservation: function (reservationDto) {
       this.loader = this.$loading.show({
         // Optional parameters
         container: this.fullPage ? null : this.$refs.formContainer,
@@ -328,12 +330,10 @@ export default {
       axios
         .post(
           "http://localhost:8081/reservationCabin/cancelReservation",
-          cabinReservationDto,
+          reservationDto,
           {}
         )
-        .then((response) => {
-          this.availableCabins = response.data;
-          this.display = "CABINS";
+        .then(() => {
           this.loader.hide();
           this.$swal.fire({
             position: "top-end",
@@ -342,7 +342,7 @@ export default {
             showConfirmButton: false,
             timer: 2500,
           });
-          this.getCabinReservations();
+          this.getReservations();
         })
         .catch(() => {
           this.loader.hide();
@@ -351,12 +351,12 @@ export default {
             title: "Something went wrong!",
             text: "Unsuccessful cancellation! Less then 3 days left to start date.",
           });
-           this.getCabinReservations();
+          this.getReservations();
         });
     },
   },
   computed: {
-    sortedCabinReservations: function () {
+    sortedReservations: function () {
       return this.cabinReservationDtos;
     },
   },

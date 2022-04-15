@@ -3,6 +3,8 @@ import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -35,4 +37,8 @@ public interface BoatReservationService {
     Set<Boat> getAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto);
 
     boolean makeReservation(BoatReservationDto boatReservationDto);
+
+    Set<BoatReservation> getUpcomingClientReservationsByUsername(String clientUsername);
+
+    Set<BoatReservation> getClientReservationHistoryByUsername(String clientUsername);
 }
