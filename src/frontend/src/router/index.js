@@ -54,6 +54,7 @@ import ClientPenalties from '../views/Client/ClientPenalties'
 import ClientBoatProfile from '../views/Client/ClientBoatProfile'
 import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
 import ClientAdventureProfile from '../views/Client/ClientAdventureProfile'
+import Evaluations from '../views/Admin/Evaluations'
 
 const routes = [
   
@@ -137,6 +138,19 @@ const routes = [
     path: '/reviews/:email',
     name: 'Review',
     component: Review,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }
+  },
+  {
+    path: '/evaluations/:email',
+    name: 'Evaluations',
+    component: Evaluations,
     beforeEnter: (to, from, next) => {
       store.dispatch('refreshToken')
      if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){

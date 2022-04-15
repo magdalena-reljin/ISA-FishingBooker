@@ -6,8 +6,8 @@ public class CabinEvaluationDto extends EvaluationDto{
     private CabinDto cabinDto;
     private CabinReservationDto cabinReservationDto;
 
-    public CabinEvaluationDto(Long id, LocalDateTime date, String comment, Double grade, boolean approved, String clientUsername, CabinDto cabinDto, CabinReservationDto cabinReservationDto) {
-        super(id, date, comment, grade, approved, clientUsername);
+    public CabinEvaluationDto(Long id,String type, LocalDateTime date, String comment, Double grade, boolean approved, String clientUsername,String ownersUsername, CabinDto cabinDto, CabinReservationDto cabinReservationDto) {
+        super(id, type,date, comment, grade, approved, clientUsername,ownersUsername);
         this.cabinDto = cabinDto;
         this.cabinReservationDto = cabinReservationDto;
     }

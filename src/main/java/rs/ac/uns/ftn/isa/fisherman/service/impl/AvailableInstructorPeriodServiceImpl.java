@@ -42,7 +42,9 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
 
     @Override
     public boolean instructorIsAvailable(Long id, LocalDateTime startDate, LocalDateTime endDate) {
-        return availableInstructorPeriodRepository.instructorIsAvailable(id,startDate,endDate);
+        if(availableInstructorPeriodRepository.instructorIsAvailable(id,startDate,endDate).size()>0)
+            return false;
+        return  true;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
         AvailableInstructorPeriod availableInstructorPeriodToDelete= availableInstructorPeriodRepository
                 .findId(availableInstructorPeriod.getFishingInstructor().getId(),
                 availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate());
-        if(availableInstructorPeriodToDelete == null) return false;
+        if(availableInstructorPeriodToDelete == null)return false;
 
         if(!reservationsDontExistInPeriod(availableInstructorPeriodToDelete)) return false;
 
@@ -60,7 +62,11 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
 
     private boolean reservationsDontExistInPeriod(AvailableInstructorPeriod availableInstructorPeriod){
         if(adventureReservationService.reservationExists(availableInstructorPeriod.getFishingInstructor().getUsername()
-                ,availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate())) return false;
+                ,availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate())) {
+
+            System.out.println("AAAAAAA PERIODDD  NULL OBICNEE");
+            return false;
+        }
 
 
         if(quickReservationAdventureService.quickReservationExists(availableInstructorPeriod.getFishingInstructor().getUsername(),

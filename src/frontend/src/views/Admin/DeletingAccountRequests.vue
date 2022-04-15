@@ -4,7 +4,7 @@
   
 <h1>ALL REQUESTS </h1>
 &nbsp;  
-<h2 v-if="!userRequestDTO.length"> No requests.</h2>
+<h2 v-if="userRequestDTO.length==0"> No requests.</h2>
 <table v-else class="table">
   <thead>
     <tr>

@@ -33,11 +33,17 @@ public class CabinEvaluationServiceImpl implements CabinEvaluationService {
     @Override
     public void addEvaluation(AddNewEvaluationDto addNewEvaluationDto) {
         CabinReservation cabinReservation = cabinReservationService.getById(addNewEvaluationDto.getReservationId());
-        cabinEvaluationRepository.save(new CabinEvaluation(null, LocalDateTime.now(), addNewEvaluationDto.getCommentForTheEntity(), addNewEvaluationDto.getGradeForTheEntity(), false, clientService.findByUsername(addNewEvaluationDto.getClientUsername()), cabinReservation.getCabin()));
+        cabinEvaluationRepository.save(new CabinEvaluation(null, LocalDateTime.now(), addNewEvaluationDto.getCommentForTheEntity(), addNewEvaluationDto.getGradeForTheEntity(), false, clientService.findByUsername(addNewEvaluationDto.getClientUsername()), cabinReservation.getCabin().getCabinOwner().getUsername(), cabinReservation.getCabin()));
+
     }
 
     @Override
     public Set<CabinEvaluation> findByCabinId(Long cabinId) {
         return null;
+    }
+
+    @Override
+    public CabinEvaluation getById(Long id) {
+       return cabinEvaluationRepository.getById(id);
     }
 }

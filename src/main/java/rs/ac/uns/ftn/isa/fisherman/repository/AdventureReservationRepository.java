@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface AdventureReservationRepository extends JpaRepository<AdventureReservation,Long> {
-   @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM adventure_reservation c where users_id=:usersId and owners_username=:username and ((:currentDate between start_date and end_date))",nativeQuery = true)
-    boolean clientHasReservation(@Param("username") String username,@Param("usersId")Long usersId, @Param("currentDate") LocalDateTime currentDate);
+   @Query(value="SELECT * FROM adventure_reservation c where users_id=:usersId and owners_username=:username and ((:currentDate between start_date and end_date))",nativeQuery = true)
+    List<AdventureReservation>clientHasReservation(@Param("username") String username,@Param("usersId")Long usersId, @Param("currentDate") LocalDateTime currentDate);
 
     @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM adventure_reservation c where owners_username=:username and ((:startDate between start_date and end_date) or (:endDate  between start_date and end_date) or (start_date  between :startDate and :endDate) or (end_date  between :startDate and :endDate)) ",nativeQuery = true)
     boolean reservationExists(@Param("username") String username,@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);

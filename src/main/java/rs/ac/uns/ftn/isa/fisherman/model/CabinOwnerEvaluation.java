@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("CABINOWNEREVALUATION")
 public class CabinOwnerEvaluation extends Evaluation{
 
+    private static final String TYPE = "CABIN OWNER EVALUATION";
     @ManyToOne
     @JoinColumn(name= "cabin_owner_id")
     private CabinOwner cabinOwner;
 
-    public CabinOwnerEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client, CabinOwner cabinOwner) {
-        super(id, date, comment, grade, approved, client);
+    public CabinOwnerEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client,String ownersUsername, CabinOwner cabinOwner) {
+        super(id, date, comment, grade, approved, client,ownersUsername);
         this.cabinOwner = cabinOwner;
     }
 
@@ -27,5 +28,9 @@ public class CabinOwnerEvaluation extends Evaluation{
 
     public void setCabinOwner(CabinOwner cabinOwner) {
         this.cabinOwner = cabinOwner;
+    }
+
+    public String getType() {
+        return TYPE;
     }
 }

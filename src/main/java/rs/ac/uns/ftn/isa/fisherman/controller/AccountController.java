@@ -45,7 +45,6 @@ public class AccountController {
     public ResponseEntity<String> activate(@RequestBody VerificationDTO verificationDTO) {
         String email = verificationDTO.getEmail();
         String code = verificationDTO.getActivationCode();
-
         if(this.userService.activateAccount(email, code) != null){
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
@@ -69,6 +68,7 @@ public class AccountController {
     @PostMapping("/sendAcceptReasonForDeletingAccount")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> sendAcceptReasonForDeletingAccount(@RequestBody MailDto mailDto) throws MessagingException {
+       System.out.println("AAA"+mailDto.getRecipient()+"*"+mailDto.getResponse());
         userService.sendAcceptReason(mailDto.getResponse(),mailDto.getRecipient());
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
