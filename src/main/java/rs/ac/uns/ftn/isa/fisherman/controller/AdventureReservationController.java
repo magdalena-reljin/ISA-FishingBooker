@@ -9,10 +9,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.*;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
-import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
-import rs.ac.uns.ftn.isa.fisherman.service.InstructorReservationReportService;
-import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +25,8 @@ public class AdventureReservationController {
  private InstructorReservationReportService instructorReservationReportService;
  @Autowired
  private PenaltyService penaltyService;
+ @Autowired
+ private AdventureReservationCancellationService adventureReservationCancellationService;
  private AdventureReservationMapper adventureReservationMapper= new AdventureReservationMapper();
  private final AdventureMapper adventureMapper = new AdventureMapper();
 
@@ -120,5 +119,14 @@ public class AdventureReservationController {
             adventureReservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
         }
         return new ResponseEntity<>(adventureReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation (@RequestBody AdventureReservationDto adventureReservationDto) {
+        if(adventureReservationCancellationService.addCancellation(adventureReservationDto))
+            return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
     }
 }
