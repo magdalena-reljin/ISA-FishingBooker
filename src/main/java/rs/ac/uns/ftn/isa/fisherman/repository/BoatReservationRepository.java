@@ -1,11 +1,13 @@
 package rs.ac.uns.ftn.isa.fisherman.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -45,4 +47,17 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
     @Query(value="SELECT CASE WHEN  COUNT(res) > 0 THEN true ELSE false END FROM boat_reservation res where res.boat_id=:boat_id and res.start_date<=:endDate and res.end_date>=:startDate",nativeQuery = true)
     boolean boatReservedInPeriod(@Param("boat_id")Long boatId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    @Query(value="SELECT * FROM boat_reservation where users_id=:user_id and (:currentDate <= start_date) ",nativeQuery = true)
+    Set<BoatReservation> getUpcomingClientReservations(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT * FROM boat_reservation where users_id=:user_id and (:currentDate > start_date) ",nativeQuery = true)
+    Set<BoatReservation> getClientReservationsHistory(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Transactional
+    @Modifying
+    @Query(value="DELETE FROM boat_reservation c where c.id=:id",nativeQuery = true)
+    void deleteByReservationId(@Param("id")Long id);
+
+    @Query(value="SELECT CASE WHEN  COUNT(b) > 0 THEN true ELSE false END FROM boat_reservation b where b.id=:id ",nativeQuery = true)
+    boolean reservationExists(@Param("id") Long id);
 }

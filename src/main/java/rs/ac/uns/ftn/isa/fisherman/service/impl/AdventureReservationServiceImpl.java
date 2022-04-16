@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
+import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
@@ -42,6 +43,9 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     private FishingInstructorRepository fishingInstructorRepository;
     @Autowired
     private FishingInstructorService fishingInstructorService;
+    @Autowired
+    private AdventureReservationCancellationRepository adventureReservationCancellationRepository;
+
     private AdventureReservationMapper adventureReservationMapper = new AdventureReservationMapper();
     private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     @Override
@@ -157,7 +161,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
     @Override
     public Set<Adventure> getAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
-        List<Long> availableInstructorsIds = getAvailableInstructors(searchAvailablePeriodsAdventureDto.getStartDate(), searchAvailablePeriodsAdventureDto.getEndDate());
+        List<Long> availableInstructorsIds = getAvailableInstructors(clientService.findByUsername(searchAvailablePeriodsAdventureDto.getUsername()).getId(), searchAvailablePeriodsAdventureDto.getStartDate(), searchAvailablePeriodsAdventureDto.getEndDate());
         Set<Adventure> availableAdventures = new HashSet<>();
         for(Adventure adventure:adventureService.findAdventuresByInstructorIds(availableInstructorsIds)){
             if(searchAvailablePeriodsAdventureDto.getPrice()!=0){
@@ -171,34 +175,57 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return availableAdventures;
     }
 
-    private List<Long> getAvailableInstructors(LocalDateTime startDate, LocalDateTime endDate){
-        //TODO: check if user has cancellation in that period with some instructor
+    private List<Long> getAvailableInstructors(Long clientId, LocalDateTime startDate, LocalDateTime endDate){
         List<Long> availableInstructorsIds = new ArrayList<>();
         for(Long id:availableInstructorPeriodService.getAvailableFishingInstructorsIdsForPeriod(startDate, endDate)){
             if(!adventureReservationRepository.instructorHasReservationInPeriod(fishingInstructorRepository.findByID(id).getUsername(), startDate, endDate)){
-                availableInstructorsIds.add(id);
+                if(!clientHasCancellationWithInstructorInPeriod(clientId, id, startDate, endDate)){
+                    availableInstructorsIds.add(id);
+                }
             }
         }
         return availableInstructorsIds;
     }
 
+    private boolean clientHasCancellationWithInstructorInPeriod(Long clientId, Long fishingInstructorId, LocalDateTime startDate, LocalDateTime endDate) {
+        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorId, clientId, startDate, endDate);
+    }
+
     @Override
     public boolean makeReservation(AdventureReservationDto adventureReservationDto) {
+        if(fishingInstructorNotFree(adventureReservationDto))
+            return false;
         AdventureReservation adventureReservation = setUpAdventureReservationFromDto(adventureReservationDto);
-        if(!clientHasCancellationWithInstructorInPeriod()){
-            PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(adventureReservation, adventureReservation.getFishingInstructor());
-            adventureReservation.setPaymentInformation(paymentInformation);
-            reservationPaymentService.updateUserRankAfterReservation(adventureReservation.getClient(), adventureReservation.getFishingInstructor());
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(adventureReservation, adventureReservation.getFishingInstructor());
+        adventureReservation.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(adventureReservation.getClient(), adventureReservation.getFishingInstructor());
+        adventureReservationRepository.save(adventureReservation);
+        if(adventureReservationDto.getAddedAdditionalServices()!=null)
+        {
+            adventureReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
             adventureReservationRepository.save(adventureReservation);
-            if(adventureReservationDto.getAddedAdditionalServices()!=null)
-            {
-                adventureReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(adventureReservationDto.getAddedAdditionalServices()));
-                adventureReservationRepository.save(adventureReservation);
-            }
-            SendReservationMailToClient(adventureReservationDto);
-            return true;
         }
-        return false;
+        SendReservationMailToClient(adventureReservationDto);
+        return true;
+    }
+
+    private boolean fishingInstructorNotFree(AdventureReservationDto adventureReservationDto) {
+        return adventureReservationRepository.instructorHasReservationInPeriod(adventureReservationDto.getOwnersUsername(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate());
+    }
+
+    @Override
+    public Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username) {
+        return adventureReservationRepository.getUpcomingClientReservations(clientService.findByUsername(username).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public Set<AdventureReservation> getClientReservationHistoryByUsername(String username) {
+        return adventureReservationRepository.getClientReservationsHistory(clientService.findByUsername(username).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public boolean reservationExists(Long id) {
+        return adventureReservationRepository.reservationExists(id);
     }
 
     private void SendReservationMailToClient(AdventureReservationDto adventureReservationDto) {
@@ -209,11 +236,6 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         } catch (MessagingException e) {
             logger.error(e.toString());
         }
-    }
-
-    private boolean clientHasCancellationWithInstructorInPeriod(){
-        //TODO:
-        return false;
     }
 
     private AdventureReservation setUpAdventureReservationFromDto(AdventureReservationDto adventureReservationDto) {

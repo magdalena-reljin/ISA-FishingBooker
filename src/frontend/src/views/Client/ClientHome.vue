@@ -4,15 +4,15 @@
 <ul class="nav justify-content-center" style="background-color: #0f5591;">
 
       <li class="nav-item">
-      <a style="color: white;" class="nav-link" @click="changeDisplay('cabins')"> CABINS</a>
+      <a style="color: white;" class="nav-link" href="#" @click="changeDisplay('cabins')"> CABINS</a>
       </li>
 
       <li class="nav-item">
-      <a style="color: white;" class="nav-link" @click="changeDisplay('boats')">  BOATS</a>
+      <a style="color: white;" class="nav-link" href="#" @click="changeDisplay('boats')">  BOATS</a>
       </li>
        
        <li class="nav-item">
-      <a style="color: white;"  class="nav-link" @click="changeDisplay('adventures')"> ADVENTURES</a>
+      <a style="color: white;"  class="nav-link" href="#" @click="changeDisplay('adventures')"> ADVENTURES</a>
       </li>
 
      </ul>

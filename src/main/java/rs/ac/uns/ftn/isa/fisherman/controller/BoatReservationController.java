@@ -9,11 +9,9 @@ import rs.ac.uns.ftn.isa.fisherman.dto.*;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnersReservationReportService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
-import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +28,8 @@ public class BoatReservationController {
     private BoatOwnersReservationReportService boatOwnersReservationReportService;
     @Autowired
     private PenaltyService penaltyService;
+    @Autowired
+    private BoatReservationCancellationService boatReservationCancellationService;
 
     private final BoatMapper boatMapper = new BoatMapper();
     private final BoatReservationMapper boatReservationMapper=new BoatReservationMapper();
@@ -103,11 +103,43 @@ public class BoatReservationController {
     public ResponseEntity<String> makeReservation (@RequestBody BoatReservationDto boatReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(boatReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
-        // TODO: if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
-        //  return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(boatReservationDto))
+            return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
         if(boatReservationService.makeReservation(boatReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Boat already reserved in period!", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatReservationDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<BoatReservationDto> boatReservationDtos= new HashSet<>();
+        for(BoatReservation boatReservation: boatReservationService.getUpcomingClientReservationsByUsername(userRequestDTO.getUsername()))
+            boatReservationDtos.add(boatReservationMapper.boatReservationToBoatReservationDto(boatReservation));
+        return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatReservationDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<BoatReservationDto> boatReservationDtos= new HashSet<>();
+        for(BoatReservation boatReservation: boatReservationService.getClientReservationHistoryByUsername(userRequestDTO.getUsername())){
+            boatReservationDtos.add(boatReservationMapper.boatReservationToBoatReservationDto(boatReservation));
+        }
+        return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation (@RequestBody BoatReservationDto boatReservationDto) {
+        if(boatReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Less than 3 days left until start!", HttpStatus.BAD_REQUEST);
+        if(!boatReservationService.reservationExists(boatReservationDto.getId()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Reservation doesn't exist or it is already cancelled!", HttpStatus.BAD_REQUEST);
+        if(boatReservationCancellationService.addCancellation(boatReservationDto))
+            return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
     }
 }

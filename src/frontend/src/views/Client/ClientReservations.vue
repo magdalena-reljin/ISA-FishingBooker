@@ -1,12 +1,47 @@
 <template>
   <ClientNavbar />
+  <ul class="nav justify-content-center" style="background-color: #0f5591">
+    <li class="nav-item">
+      <a
+        style="color: white"
+        class="nav-link"
+        href="#"
+        @click="changeEntityDisplay('cabins')"
+      >
+        CABIN RESERVATIONS</a
+      >
+    </li>
+
+    <li class="nav-item">
+      <a
+        style="color: white"
+        class="nav-link"
+        href="#"
+        @click="changeEntityDisplay('boats')"
+      >
+        BOAT RESERVATIONS</a
+      >
+    </li>
+
+    <li class="nav-item">
+      <a
+        style="color: white"
+        class="nav-link"
+        href="#"
+        @click="changeEntityDisplay('adventures')"
+      >
+        ADVENTURE RESERVATIONS</a
+      >
+    </li>
+  </ul>
 
   <ul class="nav justify-content-center" style="background-color: #0f5591">
     <li class="nav-item">
       <a
         style="color: white"
         class="nav-link"
-        @click="changeDisplay('upcoming')"
+        href="#"
+        @click="changeReservationDisplay('upcoming')"
       >
         UPCOMING</a
       >
@@ -16,7 +51,8 @@
       <a
         style="color: white"
         class="nav-link"
-        @click="changeDisplay('history')"
+        href="#"
+        @click="changeReservationDisplay('history')"
       >
         HISTORY</a
       >
@@ -24,40 +60,62 @@
   </ul>
 
   <template v-if="upcomingReservationsShown">
-    <ClientReservationsList :upcomingCabinReservations="true" />
+    <template v-if="selectedEntity == 'cabins'">
+      <ClientCabinReservationsList :upcomingReservations="true" />
+    </template>
+    <template v-if="selectedEntity == 'boats'">
+      <ClientBoatReservationsList :upcomingReservations="true" />
+    </template>
+    <template v-if="selectedEntity == 'adventures'">
+      <ClientAdventureReservationsList :upcomingReservations="true" />
+    </template>
   </template>
-  <template v-if="reservationHistoryShown">
-    <ClientReservationsList :upcomingCabinReservations="false" />
+  <template v-if="!upcomingReservationsShown">
+    <template v-if="selectedEntity == 'cabins'">
+      <ClientCabinReservationsList :upcomingReservations="false" />
+    </template>
+    <template v-if="selectedEntity == 'boats'">
+      <ClientBoatReservationsList :upcomingReservations="false" />
+    </template>
+    <template v-if="selectedEntity == 'adventures'">
+      <ClientAdventureReservationsList :upcomingReservations="false" />
+    </template>
   </template>
 </template>
 
 <script>
 import ClientNavbar from "./ClientNavbar";
-import ClientReservationsList from "./ClientReservationsList.vue";
+import ClientCabinReservationsList from "./ClientCabinReservationsList";
+import ClientBoatReservationsList from "./ClientBoatReservationsList";
+import ClientAdventureReservationsList from "./ClientAdventureReservationsList";
 
 export default {
   components: {
     ClientNavbar,
-    ClientReservationsList,
+    ClientCabinReservationsList,
+    ClientBoatReservationsList,
+    ClientAdventureReservationsList,
   },
   data() {
     return {
       email: "",
+      selectedEntity: "cabins",
       upcomingReservationsShown: true,
-      reservationHistoryShown: false,
     };
   },
   mounted() {
     this.email = this.$route.params.email;
   },
   methods: {
-    changeDisplay: function (toDisplay) {
+    changeEntityDisplay: function (toDisplay) {
+      this.selectedEntity = toDisplay;
+      this.upcomingReservationsShown = true;
+    },
+    changeReservationDisplay: function (toDisplay) {
       if (toDisplay === "upcoming") {
         this.upcomingReservationsShown = true;
-        this.reservationHistoryShown = false;
       } else {
         this.upcomingReservationsShown = false;
-        this.reservationHistoryShown = true;
       }
     },
   },

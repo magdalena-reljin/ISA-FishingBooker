@@ -25,6 +25,6 @@ public interface AvailableBoatPeriodRepository extends JpaRepository<AvailableBo
     @Query(value="SELECT CASE WHEN  COUNT(ap) > 0 THEN true ELSE false END FROM available_period ap where id=:id and ((:startDate between start_date and end_date) and (:endDate between start_date and end_date))",nativeQuery = true)
     boolean availablePeriodIncludesUnavailable(@Param("id")Long id, @Param("startDate")LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query(value="SELECT * FROM available_period where start_date<=:startDate and end_date>=:endDate",nativeQuery = true)
+    @Query(value="SELECT * FROM available_period where start_date<=:startDate and end_date>=:endDate and type='BoatPeriod'",nativeQuery = true)
     Set<AvailableBoatPeriod> findPeriodsBetweenDates(@Param("startDate")LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

@@ -44,4 +44,5 @@ public interface ReservationCabinService {
 
     boolean checkIfReservationIsEvaluated(Long id);
 
+    boolean reservationExists(Long id);
 }
