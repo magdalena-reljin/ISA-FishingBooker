@@ -20,11 +20,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.HOURS;
 
 @Service
 public class ReservationCabinServiceImpl implements ReservationCabinService {
@@ -93,21 +91,24 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public boolean makeReservation(CabinReservationDto cabinReservationDto) {
+        if(cabinNotFreeInPeriod(cabinReservationDto))
+            return false;
         CabinReservation cabinReservation = setUpCabinReservationFromDto(cabinReservationDto);
-        if(periodStillAvailable(cabinReservation)&&(!clientHasCancellationForCabinInPeriod(cabinReservation))){
-            PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(cabinReservation,cabinReservation.getCabin().getCabinOwner());
-            cabinReservation.setPaymentInformation(paymentInformation);
-            reservationPaymentService.updateUserRankAfterReservation(cabinReservation.getClient(),cabinReservation.getCabin().getCabinOwner());
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(cabinReservation,cabinReservation.getCabin().getCabinOwner());
+        cabinReservation.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(cabinReservation.getClient(),cabinReservation.getCabin().getCabinOwner());
+        cabinReservationRepository.save(cabinReservation);
+        if(cabinReservationDto.getAddedAdditionalServices()!=null)
+        {
+            cabinReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
             cabinReservationRepository.save(cabinReservation);
-            if(cabinReservationDto.getAddedAdditionalServices()!=null)
-            {
-                cabinReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(cabinReservationDto.getAddedAdditionalServices()));
-                cabinReservationRepository.save(cabinReservation);
-            }
-            SendReservationMailToClient(cabinReservationDto);
-            return true;
         }
-        return false;
+        SendReservationMailToClient(cabinReservationDto);
+        return true;
+    }
+
+    private boolean cabinNotFreeInPeriod(CabinReservationDto cabinReservationDto) {
+        return cabinReservationRepository.cabinReservedInPeriod(cabinReservationDto.getCabinDto().getId(), cabinReservationDto.getStartDate(), cabinReservationDto.getEndDate());
     }
 
     @NotNull

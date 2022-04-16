@@ -103,12 +103,12 @@ public class BoatReservationController {
     public ResponseEntity<String> makeReservation (@RequestBody BoatReservationDto boatReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(boatReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
-        // TODO: if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
-        //  return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(boatReservationDto))
+            return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
         if(boatReservationService.makeReservation(boatReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Boat already reserved in period!", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value= "/getUpcomingReservations")

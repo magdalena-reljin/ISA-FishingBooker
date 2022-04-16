@@ -95,12 +95,12 @@ public class AdventureReservationController {
     public ResponseEntity<String> makeReservation (@RequestBody AdventureReservationDto adventureReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(adventureReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
-        // TODO: if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(cabinReservationDto))
-        //  return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(adventureReservationDto))
+            return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
         if(adventureReservationService.makeReservation(adventureReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Fishing instructor already reserved in period!", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value= "/getUpcomingReservations")

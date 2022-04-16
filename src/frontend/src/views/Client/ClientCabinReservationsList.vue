@@ -124,7 +124,7 @@
                       <div class="col" style="text-align: right">
                         <template v-if="upcomingReservations">
                           <button
-                            @click="cancelReservation(cabinReservationDto)"
+                            @click="cancelReservationModal(cabinReservationDto)"
                             type="button"
                             class="btn btn-outline-dark rounded-pill"
                             :disabled="
@@ -163,14 +163,109 @@
       </div>
     </div>
     <!-- Inner -->
+      <vue-modality
+    ref="cancellation"
+    title="Reservation cancellation"
+    hide-footer
+    centered
+    width="900px"
+  >
+    <br />
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Cabin</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ cabinForCancellation.cabinDto.name }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker v-model="startDate" disabled>
+            </Datepicker>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker
+              v-model="endDate"
+              disabled
+            ></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Cancelling condition</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{
+                cabinForCancellation.cabinDto.cancellingConditions
+              }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Total price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b
+                >{{
+                  cabinForCancellation.paymentInformationDto.totalPrice
+                }}
+                $</b
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <button type="button" @click="cancelReservation()" class="btn btn-success">
+      Cancel reservation
+    </button>
+  </vue-modality>
 </template>
 
 <script>
 import axios from "axios";
 import dayjs from "dayjs";
+import VueModality from "vue-modality-v3";
+import Datepicker from "vue3-date-time-picker";
 
 export default {
-  components: {},
+  components: {
+    VueModality,
+    Datepicker,
+  },
   props: {
     upcomingReservations: Boolean,
   },
@@ -216,6 +311,9 @@ export default {
       },
       reservationsLoaded: false,
       cabinName: "",
+      cabinForCancellation: {},
+      startDate: null,
+      endDate: null
     };
   },
   mounted() {
@@ -320,7 +418,13 @@ export default {
         "/complaint/" + this.email + "/" + "cabin/" + reservationDto.id
       );
     },
-    cancelReservation: function (reservationDto) {
+    cancelReservationModal: function (reservationDto) {
+      this.cabinForCancellation = reservationDto;
+      this.startDate = this.setDate(reservationDto.startDate);
+      this.endDate = this.setDate(reservationDto.endDate);
+      this.$refs.cancellation.open();
+    },
+    cancelReservation: function () {
       this.loader = this.$loading.show({
         // Optional parameters
         container: this.fullPage ? null : this.$refs.formContainer,
@@ -330,10 +434,11 @@ export default {
       axios
         .post(
           "http://localhost:8081/reservationCabin/cancelReservation",
-          reservationDto,
+          this.cabinForCancellation,
           {}
         )
         .then(() => {
+          this.$refs.cancellation.hide();
           this.loader.hide();
           this.$swal.fire({
             position: "top-end",
@@ -344,12 +449,13 @@ export default {
           });
           this.getReservations();
         })
-        .catch(() => {
+        .catch((error) => {
+          this.$refs.cancellation.hide();
           this.loader.hide();
           this.$swal.fire({
             icon: "error",
             title: "Something went wrong!",
-            text: "Unsuccessful cancellation! Less then 3 days left to start date.",
+            text: error.response.data,
           });
           this.getReservations();
         });

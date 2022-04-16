@@ -12,28 +12,29 @@
             role="tabpanel"
             aria-labelledby="home-tab"
           >
-          <template v-if="!penaltiesLoaded">
+            <template v-if="!penaltiesLoaded">
               <h3>Loading...</h3>
             </template>
-
-            <template v-if="penalties.length == 0">
-              <h3>No penalties to show.</h3>
-            </template>
-            <template v-if="penalties.length != 0">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(penalty, index) in penalties" :key="index">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ setandFormatDate(penalty.date) }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <template v-if="penaltiesLoaded">
+              <template v-if="penalties.length == 0">
+                <h3>No penalties to show.</h3>
+              </template>
+              <template v-if="penalties.length != 0">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(penalty, index) in penalties" :key="index">
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>{{ setandFormatDate(penalty.date) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </template>
             </template>
           </div>
         </div>

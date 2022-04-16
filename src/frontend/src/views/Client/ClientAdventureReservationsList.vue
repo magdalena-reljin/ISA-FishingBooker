@@ -22,7 +22,7 @@
     <template v-if="sortedReservations.length == 0">
       <h3>
         No
-        <template v-if="upcomingReservations">upcoming</template> boat
+        <template v-if="upcomingReservations">upcoming</template> adventure
         reservations to show.
       </h3>
     </template>
@@ -52,13 +52,26 @@
                 />
 
                 <div class="card-body">
-                    <div class="row">
-                      <div class="col">
-                        <h2 style="text-align: left" class="card-title">
-                          {{ adventureReservationDto.adventureDto.name.toUpperCase() }}
-                        </h2>
-                      </div>
-                      <div style="text-align: right;" class="col">
+                  <div class="row">
+                    <div class="col">
+                      <h2 style="text-align: left" class="card-title">
+                        {{
+                          adventureReservationDto.adventureDto.name.toUpperCase()
+                        }}
+                      </h2>
+                    </div>
+                    <div class="col-10">
+                      <h4 style="text-align: left" class="card-title">
+                        {{
+                          formatDate(setDate(adventureReservationDto.startDate))
+                        }}
+                        -
+                        {{
+                          formatDate(setDate(adventureReservationDto.endDate))
+                        }}
+                      </h4>
+                    </div>
+                    <div style="text-align: right" class="col">
                       <span class="badge bg-warning text-light"
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -72,100 +85,112 @@
                             d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
                           />
                         </svg>
-                        {{ adventureReservationDto.adventureDto.instructorRating }}</span
+                        {{
+                          adventureReservationDto.adventureDto.instructorRating
+                        }}</span
                       >
                     </div>
-                    </div>
-                    <hr />
-                    <h6 style="text-align: left; color: gray">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-geo-alt"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"
-                        />
-                        <path
-                          d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-                        />
-                      </svg>
-                      {{ getFullAddress(index) }}
-                    </h6>
+                  </div>
+                  <hr />
+                  <h6 style="text-align: left; color: gray">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-geo-alt"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"
+                      />
+                      <path
+                        d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                      />
+                    </svg>
+                    {{ getFullAddress(index) }}
+                  </h6>
 
-                    <h6 style="text-align: left">
-                      {{ adventureReservationDto.adventureDto.description }}
-                    </h6>
-                    <h6 style="text-align: left">
-                      Free equipment: {{ adventureReservationDto.adventureDto.equipment }}
-                    </h6>
-                    <h6 style="text-align: left">
-                      Canceling condition: {{ adventureReservationDto.adventureDto.cancelingCondition }}
-                    </h6>
-                    <div class="row">
-                      <div class="col">
-                        <h6 style="text-align: left; color: black">
-                          People limit: {{ adventureReservationDto.adventureDto.maxPeople }}
-                        </h6>
-                      </div>
-                      <div class="col">
-                        <div class="row">
-                          <div class="col">
-                            <h6 style="text-align: left">Price:</h6>
-                          </div>
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">
-                              {{ adventureReservationDto.paymentInformationDto.totalPrice }}$
-                            </h6>
-                          </div>
+                  <h6 style="text-align: left">
+                    {{ adventureReservationDto.adventureDto.description }}
+                  </h6>
+                  <h6 style="text-align: left">
+                    Free equipment:
+                    {{ adventureReservationDto.adventureDto.equipment }}
+                  </h6>
+                  <h6 style="text-align: left">
+                    Canceling condition:
+                    {{
+                      adventureReservationDto.adventureDto.cancelingCondition
+                    }}
+                  </h6>
+                  <div class="row">
+                    <div class="col">
+                      <h6 style="text-align: left; color: black">
+                        People limit:
+                        {{ adventureReservationDto.adventureDto.maxPeople }}
+                      </h6>
+                    </div>
+                    <div class="col">
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left">Price:</h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            {{
+                              adventureReservationDto.paymentInformationDto
+                                .totalPrice
+                            }}$
+                          </h6>
                         </div>
                       </div>
                     </div>
+                  </div>
 
                   <div class="row">
-                      <div class="col" style="text-align: right">
+                    <div class="col" style="text-align: right">
+                      <button
+                        @click="writeComplaint(adventureReservationDto)"
+                        type="button"
+                        class="btn btn-outline-dark rounded-pill"
+                      >
+                        WRITE COMPLAINT
+                      </button>
+                    </div>
+                    <div class="col" style="text-align: right">
+                      <template v-if="upcomingReservations">
                         <button
-                          @click="writeComplaint(adventureReservationDto)"
+                          @click="
+                            cancelReservationModal(adventureReservationDto)
+                          "
+                          type="button"
+                          class="btn btn-outline-dark rounded-pill"
+                          :disabled="
+                            !possibleCancellation(
+                              adventureReservationDto.startDate
+                            )
+                          "
+                        >
+                          CANCEL
+                        </button>
+                      </template>
+                      <template
+                        v-if="
+                          !upcomingReservations &&
+                          !adventureReservationDto.evaluated
+                        "
+                      >
+                        <button
+                          @click="evaluateReservation(adventureReservationDto)"
                           type="button"
                           class="btn btn-outline-dark rounded-pill"
                         >
-                          WRITE COMPLAINT
+                          EVALUATE
                         </button>
-                      </div>
-                      <div class="col" style="text-align: right">
-                        <template v-if="upcomingReservations">
-                          <button
-                            @click="cancelReservation(adventureReservationDto)"
-                            type="button"
-                            class="btn btn-outline-dark rounded-pill"
-                            :disabled="
-                              !possibleCancellation(
-                                adventureReservationDto.startDate
-                              )
-                            "
-                          >
-                            CANCEL
-                          </button>
-                        </template>
-                        <template
-                          v-if="
-                            !upcomingReservations &&
-                            !adventureReservationDto.evaluated
-                          "
-                        >
-                          <button
-                            @click="evaluateReservation(adventureReservationDto)"
-                            type="button"
-                            class="btn btn-outline-dark rounded-pill"
-                          >
-                            EVALUATE
-                          </button>
-                        </template>
-                      </div>
+                      </template>
                     </div>
+                  </div>
                 </div>
               </div>
               <hr style="color: white" />
@@ -177,14 +202,109 @@
     </div>
   </div>
   <!-- Inner -->
+  <vue-modality
+    ref="cancellation"
+    title="Reservation cancellation"
+    hide-footer
+    centered
+    width="900px"
+  >
+    <br />
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Adventure</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ adventureForCancellation.adventureDto.name }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker v-model="startDate" disabled>
+            </Datepicker>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker
+              v-model="endDate"
+              disabled
+            ></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Cancelling condition</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{
+                adventureForCancellation.adventureDto.cancelingCondition
+              }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Total price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b
+                >{{
+                  adventureForCancellation.paymentInformationDto.totalPrice
+                }}
+                $</b
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <button type="button" @click="cancelReservation()" class="btn btn-success">
+      Cancel reservation
+    </button>
+  </vue-modality>
 </template>
 
 <script>
 import axios from "axios";
 import dayjs from "dayjs";
+import VueModality from "vue-modality-v3";
+import Datepicker from "vue3-date-time-picker";
 
 export default {
-  components: {},
+  components: {
+    VueModality,
+    Datepicker,
+  },
   props: {
     upcomingReservations: Boolean,
   },
@@ -229,6 +349,9 @@ export default {
         username: "",
       },
       reservationsLoaded: false,
+      adventureForCancellation: {},
+      startDate: null,
+      endDate: null
     };
   },
   mounted() {
@@ -333,7 +456,13 @@ export default {
         "/complaint/" + this.email + "/" + "adventure/" + reservationDto.id
       );
     },
-    cancelReservation: function (reservationDto) {
+    cancelReservationModal: function (reservationDto) {
+      this.adventureForCancellation = reservationDto;
+      this.startDate = this.setDate(reservationDto.startDate);
+      this.endDate = this.setDate(reservationDto.endDate);
+      this.$refs.cancellation.open();
+    },
+    cancelReservation: function () {
       this.loader = this.$loading.show({
         // Optional parameters
         container: this.fullPage ? null : this.$refs.formContainer,
@@ -343,10 +472,11 @@ export default {
       axios
         .post(
           "http://localhost:8081/reservationAdventure/cancelReservation",
-          reservationDto,
+          this.adventureForCancellation,
           {}
         )
         .then(() => {
+          this.$refs.cancellation.hide();
           this.loader.hide();
           this.$swal.fire({
             position: "top-end",
@@ -357,12 +487,13 @@ export default {
           });
           this.getReservations();
         })
-        .catch(() => {
+        .catch((error) => {
+          this.$refs.cancellation.hide();
           this.loader.hide();
           this.$swal.fire({
             icon: "error",
             title: "Something went wrong!",
-            text: "Unsuccessful cancellation! Less then 3 days left to start date.",
+            text: error.response.data,
           });
           this.getReservations();
         });

@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
+import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
@@ -41,6 +42,8 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     private QuickReservationBoatService quickReservationBoatService;
     @Autowired
     private BoatOwnerService boatOwnerService;
+    @Autowired
+    private BoatReservationCancellationRepository boatReservationCancellationRepository;
     private final BoatReservationMapper boatReservationMapper = new BoatReservationMapper();
     private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
     @Override
@@ -190,17 +193,14 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     @Override
     public Set<Boat> getAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
         Set<Boat> availableBoats = new HashSet<>();
-        //TODO: List<BoatReservationCancellation> boatReservationCancellations = boatReservationCancellationRepository.getByUsersId(client.getId());
         for(AvailableBoatPeriod boatPeriod:availableBoatPeriodService.findPeriodsBetweenDates(searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate())){
-            /* TODO: if(periodWasAlreadyReserved(cabinPeriod.getCabin().getId(),searchAvailablePeriodsBoatDto.getStartDate(),searchAvailablePeriodsBoatDto.getEndDate(), boatReservationCancellations))
-            {
-                continue;
-            }*/
             if(searchAvailablePeriodsBoatDto.getPrice()!=0){
                 if(boatPeriod.getBoat().getPrice()>searchAvailablePeriodsBoatDto.getPrice())
                     continue;
             }
             if(searchAvailablePeriodsBoatDto.getMaxPeople()>boatPeriod.getBoat().getMaxPeople())
+                continue;
+            if(boatWasAlreadyReservedInPeriod(boatPeriod.getBoat().getId(),searchAvailablePeriodsBoatDto))
                 continue;
             if(boatNotReservedInPeriod(boatPeriod.getBoat().getId(), searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate()))
                 availableBoats.add(boatPeriod.getBoat());
@@ -208,23 +208,30 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return availableBoats;
     }
 
+    private boolean boatWasAlreadyReservedInPeriod(Long boatId, SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        return boatReservationCancellationRepository.clientHasCancellationForBoatInPeriod(boatId,clientService.findByUsername(searchAvailablePeriodsBoatDto.getUsername()).getId(), searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate());
+    }
+
     @Override
     public boolean makeReservation(BoatReservationDto boatReservationDto) {
+        if(boatNotFreeInPeriod(boatReservationDto))
+            return false;
         BoatReservation boatReservation = setUpBoatReservationFromDto(boatReservationDto);
-        if(!clientHasCancellationForBoatInPeriod(boatReservation)){
-            PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(boatReservation, boatReservation.getBoat().getBoatOwner());
-            boatReservation.setPaymentInformation(paymentInformation);
-            reservationPaymentService.updateUserRankAfterReservation(boatReservation.getClient(), boatReservation.getBoat().getBoatOwner());
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(boatReservation, boatReservation.getBoat().getBoatOwner());
+        boatReservation.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(boatReservation.getClient(), boatReservation.getBoat().getBoatOwner());
+        boatReservationRepository.save(boatReservation);
+        if(boatReservationDto.getAddedAdditionalServices()!=null)
+        {
+            boatReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatReservationDto.getAddedAdditionalServices()));
             boatReservationRepository.save(boatReservation);
-            if(boatReservationDto.getAddedAdditionalServices()!=null)
-            {
-                boatReservation.setAddedAdditionalServices(additionalServiceMapper.additionalServicesDtoToAdditionalServices(boatReservationDto.getAddedAdditionalServices()));
-                boatReservationRepository.save(boatReservation);
-            }
-            SendReservationMailToClient(boatReservationDto);
-            return true;
         }
-        return false;
+        SendReservationMailToClient(boatReservationDto);
+        return true;
+    }
+
+    private boolean boatNotFreeInPeriod(BoatReservationDto boatReservationDto) {
+        return boatReservationRepository.boatReservedInPeriod(boatReservationDto.getBoatDto().getId(), boatReservationDto.getStartDate(), boatReservationDto.getEndDate());
     }
 
     @Override

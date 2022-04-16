@@ -2,13 +2,23 @@
   <ClientNavbar />
   <ul class="nav justify-content-center" style="background-color: #0f5591">
     <li class="nav-item">
-      <a style="color: white" class="nav-link" @click="changeEntityDisplay('cabins')">
+      <a
+        style="color: white"
+        class="nav-link"
+        href="#"
+        @click="changeEntityDisplay('cabins')"
+      >
         CABIN RESERVATIONS</a
       >
     </li>
 
     <li class="nav-item">
-      <a style="color: white" class="nav-link" @click="changeEntityDisplay('boats')">
+      <a
+        style="color: white"
+        class="nav-link"
+        href="#"
+        @click="changeEntityDisplay('boats')"
+      >
         BOAT RESERVATIONS</a
       >
     </li>
@@ -17,6 +27,7 @@
       <a
         style="color: white"
         class="nav-link"
+        href="#"
         @click="changeEntityDisplay('adventures')"
       >
         ADVENTURE RESERVATIONS</a
@@ -29,6 +40,7 @@
       <a
         style="color: white"
         class="nav-link"
+        href="#"
         @click="changeReservationDisplay('upcoming')"
       >
         UPCOMING</a
@@ -39,6 +51,7 @@
       <a
         style="color: white"
         class="nav-link"
+        href="#"
         @click="changeReservationDisplay('history')"
       >
         HISTORY</a
@@ -47,24 +60,24 @@
   </ul>
 
   <template v-if="upcomingReservationsShown">
-    <template v-if="selectedEntity=='cabins'">
+    <template v-if="selectedEntity == 'cabins'">
       <ClientCabinReservationsList :upcomingReservations="true" />
     </template>
-    <template v-if="selectedEntity=='boats'">
+    <template v-if="selectedEntity == 'boats'">
       <ClientBoatReservationsList :upcomingReservations="true" />
     </template>
-    <template v-if="selectedEntity=='adventures'">
+    <template v-if="selectedEntity == 'adventures'">
       <ClientAdventureReservationsList :upcomingReservations="true" />
     </template>
   </template>
   <template v-if="!upcomingReservationsShown">
-    <template v-if="selectedEntity=='cabins'">
+    <template v-if="selectedEntity == 'cabins'">
       <ClientCabinReservationsList :upcomingReservations="false" />
     </template>
-    <template v-if="selectedEntity=='boats'">
+    <template v-if="selectedEntity == 'boats'">
       <ClientBoatReservationsList :upcomingReservations="false" />
     </template>
-    <template v-if="selectedEntity=='adventures'">
+    <template v-if="selectedEntity == 'adventures'">
       <ClientAdventureReservationsList :upcomingReservations="false" />
     </template>
   </template>
@@ -86,7 +99,7 @@ export default {
   data() {
     return {
       email: "",
-      selectedEntity: 'cabins',
+      selectedEntity: "cabins",
       upcomingReservationsShown: true,
     };
   },

@@ -39,7 +39,7 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
     }
 
     @Override
-    public boolean clientHasCancellationForAdventureInPeriod(AdventureReservationDto adventureReservationDto) {
-        return adventureReservationCancellationRepository.clientHasCancellationForInstructorInPeriod(fishingInstructorService.findByUsername(adventureReservationDto.getOwnersUsername()).getId(), clientService.findByUsername(adventureReservationDto.getClientUsername()).getId(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate());
+    public boolean clientHasCancellationWithInstructorInPeriod(AdventureReservationDto adventureReservationDto) {
+        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorService.findByUsername(adventureReservationDto.getOwnersUsername()).getId(), clientService.findByUsername(adventureReservationDto.getClientUsername()).getId(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate());
     }
 }

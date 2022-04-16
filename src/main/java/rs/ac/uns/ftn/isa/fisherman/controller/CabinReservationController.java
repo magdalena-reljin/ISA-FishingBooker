@@ -55,7 +55,7 @@ public class CabinReservationController {
         if(reservationCabinService.makeReservation(cabinReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Unsuccessful reservation.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Cabin already reserved in period!", HttpStatus.BAD_REQUEST);
     }
     @PostMapping("/ownerCreates")
     @PreAuthorize("hasRole('CABINOWNER')")

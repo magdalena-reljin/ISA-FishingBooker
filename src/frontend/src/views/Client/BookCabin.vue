@@ -645,9 +645,7 @@ export default {
           },
           {}
         )
-        .then((response) => {
-          this.availableCabins = response.data;
-          this.display = "CABINS";
+        .then(() => {
           this.loader.hide();
           this.$swal.fire({
             position: "top-end",
