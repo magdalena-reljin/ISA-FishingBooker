@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.CabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -101,6 +102,10 @@ public class CabinReservationController {
     @PostMapping("/cancelReservation")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> cancelReservation (@RequestBody CabinReservationDto cabinReservationDto) {
+        if(cabinReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Less than 3 days left until start!", HttpStatus.BAD_REQUEST);
+        if(!reservationCabinService.reservationExists(cabinReservationDto.getId()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Reservation doesn't exist or it is already cancelled!", HttpStatus.BAD_REQUEST);
         if(cabinReservationCancellationService.addCancellation(cabinReservationDto))
             return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
         else

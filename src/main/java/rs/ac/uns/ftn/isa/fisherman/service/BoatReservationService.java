@@ -41,4 +41,6 @@ public interface BoatReservationService {
     Set<BoatReservation> getUpcomingClientReservationsByUsername(String clientUsername);
 
     Set<BoatReservation> getClientReservationHistoryByUsername(String clientUsername);
+
+    boolean reservationExists(Long id);
 }

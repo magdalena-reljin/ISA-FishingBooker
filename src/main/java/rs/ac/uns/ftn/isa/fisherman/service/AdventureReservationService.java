@@ -26,4 +26,5 @@ public interface AdventureReservationService {
     boolean makeReservation(AdventureReservationDto adventureReservationDto);
     Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username);
     Set<AdventureReservation> getClientReservationHistoryByUsername(String username);
+    boolean reservationExists(Long id);
 }

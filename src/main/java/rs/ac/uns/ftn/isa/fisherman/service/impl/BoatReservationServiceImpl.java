@@ -237,6 +237,11 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return boatReservationRepository.getClientReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
     }
 
+    @Override
+    public boolean reservationExists(Long id) {
+        return boatReservationRepository.reservationExists(id);
+    }
+
     private void SendReservationMailToClient(BoatReservationDto boatReservationDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");

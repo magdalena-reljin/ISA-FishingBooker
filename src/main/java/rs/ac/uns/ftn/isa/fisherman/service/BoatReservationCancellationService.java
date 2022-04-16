@@ -6,6 +6,6 @@ public interface BoatReservationCancellationService {
 
     boolean addCancellation(BoatReservationDto boatReservationDto);
 
-    boolean clientHasCancellationForAdventureInPeriod(BoatReservationDto boatReservationDto);
+    boolean clientHasCancellationForBoatInPeriod(BoatReservationDto boatReservationDto);
 
 }

@@ -211,6 +211,11 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return adventureReservationRepository.getClientReservationsHistory(clientService.findByUsername(username).getId(), LocalDateTime.now());
     }
 
+    @Override
+    public boolean reservationExists(Long id) {
+        return adventureReservationRepository.reservationExists(id);
+    }
+
     private void SendReservationMailToClient(AdventureReservationDto adventureReservationDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");

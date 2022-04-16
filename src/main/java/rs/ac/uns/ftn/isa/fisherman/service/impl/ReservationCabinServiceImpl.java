@@ -287,4 +287,9 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return cabinReservationRepository.getById(id).isEvaluated();
     }
 
+    @Override
+    public boolean reservationExists(Long id) {
+        return cabinReservationRepository.reservationExists(id);
+    }
+
 }

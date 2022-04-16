@@ -31,15 +31,10 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
 
     @Override
     public boolean addCancellation(CabinReservationDto cabinReservationDto) {
-        CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
-        if(cabinReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now())||
-                (cabinReservationCancellationRepository.findById(cabinReservationDto.getId()).isPresent()))
-            return false;
-
         CabinReservation cabinReservation = cabinReservationRepository.getById(cabinReservationDto.getId());
         CabinReservationCancellation cabinReservationCancellation = new CabinReservationCancellation(null, cabinReservation.getClient(), cabinReservation.getStartDate(), cabinReservation.getEndDate(), cabinReservation.getCabin());
         cabinReservation.setAddedAdditionalServices(new HashSet<>());
-        reservationPaymentService.resetLoyaltyStatusAfterCancellation(cabinReservation.getClient(),cabinOwner);
+        reservationPaymentService.resetLoyaltyStatusAfterCancellation(cabinReservation.getClient(), cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername()));
         cabinReservationRepository.save(cabinReservation);
         cabinReservationRepository.deleteByReservationId(cabinReservation.getId());
         cabinReservationCancellationRepository.save(cabinReservationCancellation);
