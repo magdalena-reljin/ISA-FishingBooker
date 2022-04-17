@@ -8,6 +8,7 @@
               <h3 style="text-align: center" class="mb-0">Evaluation</h3>
             </div>
             <div class="card-body">
+              <template v-if="selectedEntity!='adventure'">
               <div style="text-align: left" class="form-group">
                 <label>Comment for the {{ selectedEntity }}:</label>
                 <textarea
@@ -43,9 +44,30 @@
                 <label>Grade for the {{ selectedEntity }} owner:</label>
                 <star-rating v-model:rating="gradeEntityOwner"></star-rating>
               </div>
+             
+              <br />
+               </template>
+               <template v-if="selectedEntity=='adventure'">
+
+              <div style="text-align: left" class="form-group">
+                <label>Comment for the fishing instructor:</label>
+                <textarea
+                  v-model="commentEntityOwner"
+                  class="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                ></textarea>
+              </div>
 
               <br />
 
+              <div style="text-align: left" class="form-group">
+                <label>Grade for the fishing instructor:</label>
+                <star-rating v-model:rating="gradeEntityOwner"></star-rating>
+              </div>
+             
+              <br />
+               </template>
               <div class="form-group" style="text-align: right">
                 <button
                   class="btn btn-outline-dark"
@@ -89,7 +111,7 @@ export default {
   },
   methods: {
     validateData: function(){
-      if(this.commentEntity==""){
+      if(this.commentEntity==""&&this.selectedEntity!="adventure"){
         this.$swal.fire({
             position: "top-end",
             icon: "error",
@@ -99,10 +121,13 @@ export default {
           });
           return false;
       }else if(this.commentEntityOwner==""){
+        var message = "You must add comment about " + this.selectedEntity + " owner!";
+        if(this.selectedEntity=="adventure")
+          message = "You must add comment about fishing instructor!"
         this.$swal.fire({
             position: "top-end",
             icon: "error",
-            title: "You must add comment about " + this.selectedEntity + " owner!",
+            title: message,
             showConfirmButton: false,
             timer: 2500,
           });
@@ -148,7 +173,33 @@ export default {
       } else if (this.selectedEntity === "boat") {
         console.log("Boats");
       } else {
-        console.log("adventures");
+        axios
+          .post(
+            "http://localhost:8081/instructors/addEvaluation",
+            {
+              reservationId: this.reservationId,
+              commentForTheFishingInstructor: this.commentEntityOwner,
+              gradeForTheFishingInstructor: this.gradeEntityOwner,
+              clientUsername: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: response.data,
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.$router.push("/reservations/" + this.email);
+          }).catch((error) => {
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: error.response.data,
+          });
+        });
       }
     },
   },
