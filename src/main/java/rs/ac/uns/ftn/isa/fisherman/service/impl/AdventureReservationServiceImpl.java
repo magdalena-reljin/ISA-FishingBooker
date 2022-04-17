@@ -228,6 +228,18 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return adventureReservationRepository.reservationExists(id);
     }
 
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long reservationId) {
+        return adventureReservationRepository.getById(reservationId).isEvaluated();
+    }
+
+    @Override
+    public void markThatReservationIsEvaluated(Long reservationId) {
+        AdventureReservation adventureReservation = adventureReservationRepository.getById(reservationId);
+        adventureReservation.setEvaluated(true);
+        adventureReservationRepository.save(adventureReservation);
+    }
+
     private void SendReservationMailToClient(AdventureReservationDto adventureReservationDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");

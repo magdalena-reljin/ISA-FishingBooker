@@ -175,7 +175,7 @@ export default {
       } else {
         axios
           .post(
-            "http://localhost:8081/adventureEvaluation/addEvaluation",
+            "http://localhost:8081/instructors/addEvaluation",
             {
               reservationId: this.reservationId,
               commentForTheFishingInstructor: this.commentEntityOwner,

@@ -27,4 +27,6 @@ public interface AdventureReservationService {
     Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username);
     Set<AdventureReservation> getClientReservationHistoryByUsername(String username);
     boolean reservationExists(Long id);
+    boolean checkIfReservationIsEvaluated(Long reservationId);
+    void markThatReservationIsEvaluated(Long reservationId);
 }

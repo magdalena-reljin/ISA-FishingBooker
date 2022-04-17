@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.*;
 import rs.ac.uns.ftn.isa.fisherman.mapper.FishingInstructorMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
+import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
+import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 
 @RestController
@@ -18,7 +20,10 @@ public class FishingInstructorController {
 
     @Autowired
     private FishingInstructorService fishingInstructorService;
-
+    @Autowired
+    private AdventureReservationService adventureReservationService;
+    @Autowired
+    private FishingInstructorEvaluationService fishingInstructorEvaluationService;
     private final FishingInstructorMapper fishingInstructorMapper=new FishingInstructorMapper();
 
     @PreAuthorize("hasRole('CLIENT') || hasRole('FISHING_INSTRUCTOR')")
@@ -36,7 +41,17 @@ public class FishingInstructorController {
        return new ResponseEntity<>(fishingInstructorDto, HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("/addEvaluation")
+    public ResponseEntity<String> addEvaluation(@RequestBody AddNewFishingInstructorEvaluationDto addNewFishingInstructorEvaluationDto){
+        if(!adventureReservationService.checkIfReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId())){
+            fishingInstructorEvaluationService.addEvaluation(addNewFishingInstructorEvaluationDto);
+            adventureReservationService.markThatReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId());
+            return new ResponseEntity<>("Evaluation successfully added.", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Reservation already has evaluation!", HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 
