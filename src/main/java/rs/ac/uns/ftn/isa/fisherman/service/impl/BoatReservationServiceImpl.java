@@ -249,6 +249,18 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return boatReservationRepository.reservationExists(id);
     }
 
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long reservationId) {
+        return boatReservationRepository.getById(reservationId).isEvaluated();
+    }
+
+    @Override
+    public void markThatReservationIsEvaluated(Long reservationId) {
+        BoatReservation boatReservation = boatReservationRepository.getById(reservationId);
+        boatReservation.setEvaluated(true);
+        boatReservationRepository.save(boatReservation);
+    }
+
     private void SendReservationMailToClient(BoatReservationDto boatReservationDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");

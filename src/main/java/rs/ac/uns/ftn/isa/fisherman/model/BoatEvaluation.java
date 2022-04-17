@@ -10,21 +10,21 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("BOATEVALUATION")
 public class BoatEvaluation extends Evaluation {
     @ManyToOne
-    @JoinColumn(name= "boat_reservation_id")
-    BoatReservation boatReservation;
+    @JoinColumn(name= "boat_id")
+    private Boat boat;
 
-    public BoatEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client,String ownersUsername, BoatReservation boatReservation) {
+    public BoatEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client,String ownersUsername, Boat boat) {
         super(id, date, comment, grade, approved, client,ownersUsername);
-        this.boatReservation = boatReservation;
+        this.boat = boat;
     }
 
     public BoatEvaluation() {}
 
-    public BoatReservation getBoatReservation() {
-        return boatReservation;
+    public Boat getBoat() {
+        return boat;
     }
 
-    public void setBoatReservation(BoatReservation boatReservation) {
-        this.boatReservation = boatReservation;
+    public void setBoat(Boat boat) {
+        this.boat = boat;
     }
 }
