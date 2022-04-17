@@ -14,6 +14,7 @@
                 v-model="subjectRole"
                 class="form-select form-select-sm"
                 aria-label=".form-select-sm example"
+                :disabled="selectedEntity='Adventure'"
               >
                 <option
                   v-for="(item, index) in options"
@@ -84,9 +85,13 @@ export default {
   },
   methods: {
     addOptions: function () {
-      this.options.push(this.capitalizeFirstLetter(this.selectedEntity));
-      if (this.selectedEntity !== "Adventure")
+      if (this.selectedEntity !== "Adventure"){
+        this.options.push(this.capitalizeFirstLetter(this.selectedEntity));
         this.options.push(this.capitalizeFirstLetter(this.selectedEntity + " owner"));
+      }else{
+        this.options.push("Fishing instructor");
+        this.subjectRole = "Fishing instructor";
+      }
     },
     capitalizeFirstLetter: function (string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
