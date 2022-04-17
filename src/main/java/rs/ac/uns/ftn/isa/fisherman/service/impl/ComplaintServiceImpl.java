@@ -19,6 +19,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     private BoatReservationRepository boatReservationRepository;
     @Autowired
+    private AdventureReservationRepository adventureReservationRepository;
+    @Autowired
     private CabinRepository cabinRepository;
     @Autowired
     private BoatRepository boatRepository;
@@ -30,6 +32,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     private BoatComplaintRepository boatComplaintRepository;
     @Autowired
     private BoatOwnerComplaintRepository boatOwnerComplaintRepository;
+    @Autowired
+    private FishingInstructorComplaintRepository fishingInstructorComplaintRepository;
     @Autowired
     private ClientService clientService;
     @Autowired
@@ -58,6 +62,10 @@ public class ComplaintServiceImpl implements ComplaintService {
             BoatReservation boatReservation = boatReservationRepository.getById(newComplaintDto.getReservationId());
             BoatOwner boatOwner = boatReservation.getBoat().getBoatOwner();
             return boatReservationRepository.clientHasReservationInOwnersBoat(boatRepository.findBoatsIdByOwnersId(boatOwner.getId()), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
+        }else if(newComplaintDto.getSubjectRole().equals("fishing instructor")){
+            AdventureReservation adventureReservation = adventureReservationRepository.getById(newComplaintDto.getReservationId());
+            FishingInstructor fishingInstructor = adventureReservation.getFishingInstructor();
+            return adventureReservationRepository.clientHasReservationWithInstructor(fishingInstructor.getId(), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
         }
         return false;
     }
@@ -74,6 +82,10 @@ public class ComplaintServiceImpl implements ComplaintService {
         }else if(newComplaintDto.getSubjectRole().equals("boat owner")){
             BoatReservation boatReservation = boatReservationRepository.getById(newComplaintDto.getReservationId());
             boatOwnerComplaintRepository.save(new BoatOwnerComplaint(null, newComplaintDto.getText(), LocalDateTime.now(), false, clientService.findByUsername(newComplaintDto.getClientUsername()), boatReservation.getBoat().getBoatOwner()));
+        }
+        else if(newComplaintDto.getSubjectRole().equals("fishing instructor")){
+            AdventureReservation adventureReservation = adventureReservationRepository.getById(newComplaintDto.getReservationId());
+            fishingInstructorComplaintRepository.save(new FishingInstructorComplaint(null, newComplaintDto.getText(), LocalDateTime.now(), false, clientService.findByUsername(newComplaintDto.getClientUsername()), adventureReservation.getFishingInstructor()));
         }
     }
 }
