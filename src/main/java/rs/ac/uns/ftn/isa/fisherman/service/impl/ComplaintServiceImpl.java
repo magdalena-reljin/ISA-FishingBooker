@@ -3,12 +3,9 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.NewComplaintDto;
+import rs.ac.uns.ftn.isa.fisherman.repository.*;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.repository.CabinComplaintRepository;
-import rs.ac.uns.ftn.isa.fisherman.repository.CabinOwnerComplaintRepository;
-import rs.ac.uns.ftn.isa.fisherman.repository.CabinRepository;
-import rs.ac.uns.ftn.isa.fisherman.repository.CabinReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.ComplaintService;
 
@@ -20,11 +17,19 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     private CabinReservationRepository cabinReservationRepository;
     @Autowired
+    private BoatReservationRepository boatReservationRepository;
+    @Autowired
     private CabinRepository cabinRepository;
+    @Autowired
+    private BoatRepository boatRepository;
     @Autowired
     private CabinComplaintRepository cabinComplaintRepository;
     @Autowired
     private CabinOwnerComplaintRepository cabinOwnerComplaintRepository;
+    @Autowired
+    private BoatComplaintRepository boatComplaintRepository;
+    @Autowired
+    private BoatOwnerComplaintRepository boatOwnerComplaintRepository;
     @Autowired
     private ClientService clientService;
     @Autowired
@@ -46,6 +51,13 @@ public class ComplaintServiceImpl implements ComplaintService {
             CabinReservation cabinReservation = cabinReservationRepository.getById(newComplaintDto.getReservationId());
             CabinOwner cabinOwner = cabinReservation.getCabin().getCabinOwner();
             return cabinReservationRepository.clientHasReservationInOwnersCabin(cabinRepository.findCabinsIdByOwnersId(cabinOwnerService.findByUsername(cabinOwner.getUsername()).getId()), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
+        }else if(newComplaintDto.getSubjectRole().equals("boat")){
+            BoatReservation boatReservation = boatReservationRepository.getById(newComplaintDto.getReservationId());
+            return boatReservationRepository.clientHasReservationInBoat(boatReservation.getBoat().getId(), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
+        }else if(newComplaintDto.getSubjectRole().equals("boat owner")){
+            BoatReservation boatReservation = boatReservationRepository.getById(newComplaintDto.getReservationId());
+            BoatOwner boatOwner = boatReservation.getBoat().getBoatOwner();
+            return boatReservationRepository.clientHasReservationInOwnersBoat(boatRepository.findBoatsIdByOwnersId(boatOwner.getId()), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
         }
         return false;
     }
@@ -56,6 +68,12 @@ public class ComplaintServiceImpl implements ComplaintService {
         }else if(newComplaintDto.getSubjectRole().equals("cabin owner")){
             CabinReservation cabinReservation = cabinReservationRepository.getById(newComplaintDto.getReservationId());
            cabinOwnerComplaintRepository.save(new CabinOwnerComplaint(null, newComplaintDto.getText(), LocalDateTime.now(), false, clientService.findByUsername(newComplaintDto.getClientUsername()), cabinReservation.getCabin().getCabinOwner()));
+        }else if(newComplaintDto.getSubjectRole().equals("boat")){
+            BoatReservation boatReservation = boatReservationRepository.getById(newComplaintDto.getReservationId());
+            boatComplaintRepository.save(new BoatComplaint(null, newComplaintDto.getText(), LocalDateTime.now(), false, clientService.findByUsername(newComplaintDto.getClientUsername()), boatReservation.getBoat()));
+        }else if(newComplaintDto.getSubjectRole().equals("boat owner")){
+            BoatReservation boatReservation = boatReservationRepository.getById(newComplaintDto.getReservationId());
+            boatOwnerComplaintRepository.save(new BoatOwnerComplaint(null, newComplaintDto.getText(), LocalDateTime.now(), false, clientService.findByUsername(newComplaintDto.getClientUsername()), boatReservation.getBoat().getBoatOwner()));
         }
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 
 import javax.transaction.Transactional;
@@ -60,4 +61,10 @@ public interface BoatReservationRepository extends JpaRepository<BoatReservation
 
     @Query(value="SELECT CASE WHEN  COUNT(b) > 0 THEN true ELSE false END FROM boat_reservation b where b.id=:id ",nativeQuery = true)
     boolean reservationExists(@Param("id") Long id);
+
+    @Query(value="SELECT CASE WHEN  COUNT(b) > 0 THEN true ELSE false END FROM boat_reservation b where boat_id=:boat_id and users_id=:users_id",nativeQuery = true)
+    boolean clientHasReservationInBoat(@Param("boat_id")Long boatId,@Param("users_id")Long usersId);
+
+    @Query(value="SELECT CASE WHEN  COUNT(b) > 0 THEN true ELSE false END FROM boat_reservation b where boat_id in :owners_boats and users_id=:users_id",nativeQuery = true)
+    boolean clientHasReservationInOwnersBoat(@Param("owners_boats")Set<Integer> owners_boats, @Param("users_id")Long id);
 }
