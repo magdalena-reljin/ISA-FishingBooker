@@ -171,7 +171,35 @@ export default {
           });
         });
       } else if (this.selectedEntity === "boat") {
-        console.log("Boats");
+        axios
+          .post(
+            "http://localhost:8081/boatEvaluation/addEvaluation",
+            {
+              reservationId: this.reservationId,
+              commentForTheEntity: this.commentEntity,
+              gradeForTheEntity: this.gradeEntity,
+              commentForTheEntityOwner: this.commentEntityOwner,
+              gradeForTheEntityOwner: this.gradeEntityOwner,
+              clientUsername: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: response.data,
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.$router.push("/reservations/" + this.email);
+          }).catch((error) => {
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: error.response.data,
+          });
+        });
       } else {
         axios
           .post(

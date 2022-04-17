@@ -43,4 +43,8 @@ public interface BoatReservationService {
     Set<BoatReservation> getClientReservationHistoryByUsername(String clientUsername);
 
     boolean reservationExists(Long id);
+
+    boolean checkIfReservationIsEvaluated(Long reservationId);
+
+    void markThatReservationIsEvaluated(Long reservationId);
 }
