@@ -331,7 +331,6 @@
         </div>
       </template>
       <template v-if="!bookingProcess && role == 'CLIENT'">
-        <template v-if="boatDto.subscription">
           <template v-if="!boatDto.subscription && role == 'CLIENT'">
             <div class="col" style="margin-top: 3%">
               <button
@@ -356,7 +355,6 @@
               </button>
             </div>
           </template>
-        </template>
       </template>
       <template v-if="role == 'ADMIN'">
         <div class="col" style="margin-top: 3%">
@@ -550,6 +548,7 @@ export default {
       this.calculatePrice();
     },
     getBoat: function () {
+      this.boatDto.ownersUsername = this.email;
       if (this.bookingProcess) {
         this.boatDto.id = this.boatId;
       } else {
