@@ -56,5 +56,5 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
     boolean reservationExists(@Param("id") Long id);
 
     @Query(value="SELECT CASE WHEN  COUNT(a) > 0 THEN true ELSE false END FROM adventure_reservation a where instructors_id=:instructors_id and users_id=:users_id",nativeQuery = true)
-    boolean clientHasReservationWithInstructor(@Param("instructors_id")Long instructors_id, @Param("users_id")Long id);
+    boolean clientHasReservationWithInstructor(@Param("instructors_id")Long instructorsId, @Param("users_id")Long id);
 }

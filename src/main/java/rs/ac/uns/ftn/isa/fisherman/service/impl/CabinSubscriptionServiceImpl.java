@@ -35,17 +35,13 @@ public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
 
     @Override
     public void removeSubscription(String username, Long cabinId) {
-        Client client = clientService.findByUsername(username);
-        CabinSubscription cabinSubscription = cabinSubscriptionRepository.getSubscriptionOnCabin(cabinId, client.getId());
+        CabinSubscription cabinSubscription = cabinSubscriptionRepository.getSubscriptionOnCabin(cabinId, clientService.findByUsername(username).getId());
         cabinSubscriptionRepository.deleteById(cabinSubscription.getId());
     }
 
     @Override
     public boolean checkIfUserIsSubscribed(String username, Long cabinId) {
-        Client client = clientService.findByUsername(username);
-        if(cabinSubscriptionRepository.subscriptionExists(cabinId, client.getId()))
-            return true;
-        return false;
+        return cabinSubscriptionRepository.subscriptionExists(cabinId, clientService.findByUsername(username).getId());
     }
 
     @Override

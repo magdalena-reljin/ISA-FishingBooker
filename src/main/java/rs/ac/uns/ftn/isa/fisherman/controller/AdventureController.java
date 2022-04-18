@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
+import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,8 @@ public class AdventureController {
     private FishingInstructorService fishingInstructorService;
     @Autowired
     private AdventureService adventureService;
+    @Autowired
+    private AdventureSubscriptionService adventureSubscriptionService;
 
     private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
     private final AdventureMapper adventureMapper=new AdventureMapper();
@@ -119,8 +122,10 @@ public class AdventureController {
         Adventure adventure = adventureService.findById(adventureDto.getId());
         //TODO: check for users subscription
         if(adventure != null){
+            String clientUsername = adventureDto.getFishingInstructorUsername();
             adventureDto = adventureMapper.adventureToAdventureDto(adventure);
             adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
+            adventureDto.setSubscription(adventureSubscriptionService.checkIfUserIsSubscribed(clientUsername, adventureDto.getId()));
             return new ResponseEntity<>(adventureDto,HttpStatus.OK);
         }
         else

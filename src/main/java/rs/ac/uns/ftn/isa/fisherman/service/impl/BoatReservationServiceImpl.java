@@ -271,11 +271,6 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         }
     }
 
-    private boolean clientHasCancellationForBoatInPeriod(BoatReservation boatReservation){
-        //TODO:
-        return false;
-    }
-
     private BoatReservation setUpBoatReservationFromDto(BoatReservationDto boatReservationDto) {
         BoatOwner boatOwner = boatOwnerService.findByUsername(boatReservationDto.getBoatDto().getOwnersUsername());
         BoatReservation boatReservation = boatReservationMapper.boatReservationDtoToBoatReservation(boatReservationDto);
