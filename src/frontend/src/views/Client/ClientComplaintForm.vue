@@ -41,8 +41,6 @@
             <br />
             <div class="form-group" style="text-align: right">
               <button
-                data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop"
                 class="btn btn-outline-dark"
                 :disabled= "text.length==0"
                 @click="submitComplaint"

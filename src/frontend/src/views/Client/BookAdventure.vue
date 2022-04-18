@@ -319,7 +319,6 @@
         </div>
       </template>
       <template v-if="!bookingProcess && role == 'CLIENT'">
-        <template v-if="adventureDto.subscription">
           <template v-if="!adventureDto.subscription && role == 'CLIENT'">
             <div class="col" style="margin-top: 3%">
               <button
@@ -344,7 +343,6 @@
               </button>
             </div>
           </template>
-        </template>
       </template>
       <template v-if="role == 'ADMIN'">
         <div class="col" style="margin-top: 3%">
@@ -525,6 +523,7 @@ export default {
       this.calculatePrice();
     },
     getAdventure: function () {
+      this.adventureDto.fishingInstructorUsername = this.email;
       if (this.bookingProcess) {
         this.adventureDto.id = this.adventureId;
       } else {

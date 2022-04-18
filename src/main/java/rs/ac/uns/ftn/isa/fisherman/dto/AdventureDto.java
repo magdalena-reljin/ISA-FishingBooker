@@ -18,6 +18,7 @@ public class AdventureDto {
     private String cancelingCondition;
     private String fishingInstructorUsername;
     private Double instructorRating;
+    private Boolean subscription;
 
     public Double getInstructorRating() {
         return instructorRating;
@@ -152,6 +153,13 @@ public class AdventureDto {
         this.price = price;
     }
 
-    public AdventureDto() {
+    public AdventureDto() {}
+
+    public Boolean getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Boolean subscription) {
+        this.subscription = subscription;
     }
 }
