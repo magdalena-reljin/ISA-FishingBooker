@@ -45,6 +45,11 @@ public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
     }
 
     @Override
+    public Set<CabinSubscription> findSubscriptionsByClientUsername(String username) {
+        return cabinSubscriptionRepository.getClientSubscriptions(clientService.findByUsername(username).getId());
+    }
+
+    @Override
     public Set<String> findCabinSubscribers(Long cabinId) {
         return cabinSubscriptionRepository.findCabinSubscribers(cabinId);
     }

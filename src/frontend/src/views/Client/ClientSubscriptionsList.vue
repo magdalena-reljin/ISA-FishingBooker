@@ -254,7 +254,7 @@ export default {
     getSubscriptions: function () {
         this.getAdventureSubscriptions();
         //this.getBoatSubscriptions();
-        //this.getCabinSubscriptions();
+        this.getCabinSubscriptions();
     },
     getAdventureSubscriptions: function () {
       axios
@@ -301,6 +301,11 @@ export default {
     unsubscribeAdventure: function (adventureSub) {
       this.entityForCanceling = adventureSub.adventureDto;
       this.typeOfEntityForCancelling = "adventure";
+      this.$refs.cancellation.open();
+    },
+    unsubscribeCabin: function (cabinSub) {
+      this.entityForCanceling = cabinSub.cabinDto;
+      this.typeOfEntityForCancelling = "cabin";
       this.$refs.cancellation.open();
     },
     cancelSubscription: function () {
