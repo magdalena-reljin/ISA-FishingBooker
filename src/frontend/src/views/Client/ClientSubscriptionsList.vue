@@ -3,201 +3,220 @@
   <div>
     <h1>SUBSCRIPTIONS</h1>
     <hr />
-    <div style="padding: 2%">
-      <div style="padding-left: 2%; padding-right: 2%">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button
-              @click="changeView(1)"
-              class="nav-link active"
-              id="home-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#home"
-              type="button"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
+    <template v-if="!loaded">
+      <h3>Loading...</h3>
+    </template>
+    <template v-if="loaded">
+      <div style="padding: 2%">
+        <div style="padding-left: 2%; padding-right: 2%">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                @click="changeView(1)"
+                class="nav-link active"
+                id="home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#home"
+                type="button"
+                role="tab"
+                aria-controls="home"
+                aria-selected="true"
+              >
+                <b>Adventures</b>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                @click="changeView(2)"
+                class="nav-link"
+                id="contact-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#contact"
+                type="button"
+                role="tab"
+                aria-controls="contact"
+                aria-selected="false"
+              >
+                <b>Boats</b>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                @click="changeView(3)"
+                class="nav-link"
+                id="cabins-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#cabins"
+                type="button"
+                role="tab"
+                aria-controls="cabins"
+                aria-selected="false"
+              >
+                <b>Cabins</b>
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="home"
+              role="tabpanel"
+              aria-labelledby="home-tab"
             >
-              <b>Adventures</b>
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              @click="changeView(2)"
-              class="nav-link"
-              id="contact-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#contact"
-              type="button"
-              role="tab"
-              aria-controls="contact"
-              aria-selected="false"
-            >
-              <b>Boats</b>
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              @click="changeView(3)"
-              class="nav-link"
-              id="cabins-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#cabins"
-              type="button"
-              role="tab"
-              aria-controls="cabins"
-              aria-selected="false"
-            >
-              <b>Cabins</b>
-            </button>
-          </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-          <div
-            class="tab-pane fade show active"
-            id="home"
-            role="tabpanel"
-            aria-labelledby="home-tab"
-          >
-          <template v-if="adventureSubs.length==0">
-              <h3>No adventure subscriptions to show.</h3>
-          </template>
-          <template v-if="adventureSubs.length!=0">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Adventure name</th>
-                  <th scope="col">&nbsp;</th>
-                  <th scope="col">&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(adventureSub, index) in adventureSubs" :key="index">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ adventureSub.adventureDto.name }}</td>
-                  <td>
-                    <button
-                      @click="adventureProfile(adventureSub.adventureDto.id)"
-                      type="button"
-                      class="btn btn-info"
+              <template v-if="adventureSubs.length == 0">
+                <h3>No adventure subscriptions to show.</h3>
+              </template>
+              <template v-if="adventureSubs.length != 0">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Adventure name</th>
+                      <th scope="col">Fishing instructor</th>
+                      <th scope="col">Profile page</th>
+                      <th scope="col">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(adventureSub, index) in adventureSubs"
+                      :key="index"
                     >
-                      Profile
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      @click="unsubscribeAdventure(adventureSub)"
-                      type="button"
-                      class="btn btn-primary"
-                    >
-                      Unsubscribe
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </template>
-          </div>
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>{{ adventureSub.adventureDto.name }}</td>
+                      <td>
+                        {{
+                          adventureSub.adventureDto.fishingInstructorUsername
+                        }}
+                      </td>
+                      <td>
+                        <button
+                          @click="
+                            adventureProfile(adventureSub.adventureDto.id)
+                          "
+                          type="button"
+                          class="btn btn-info"
+                        >
+                          Profile
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          @click="unsubscribeAdventure(adventureSub)"
+                          type="button"
+                          class="btn btn-primary"
+                        >
+                          Unsubscribe
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </template>
+            </div>
 
-          <div
-            class="tab-pane fade"
-            id="contact"
-            role="tabpanel"
-            aria-labelledby="conact-tab"
-          >
-          <template v-if="boatSubs.length==0">
-              <h3>No boat subscriptions to show.</h3>
-          </template>
-          <template v-if="boatSubs.length!=0">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Boat name</th>
-                  <th scope="col">&nbsp;</th>
-                  <th scope="col">&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(boatSub, index) in boatSubs" :key="index">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ boatSub.boatDto.name }}</td>
-                  <td>
-                    <button
-                      @click="boatProfile(boatSub.boatDto.id)"
-                      type="button"
-                      class="btn btn-info"
-                    >
-                      Profile
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      @click="unsubscribeBoat(boatSub)"
-                      type="button"
-                      class="btn btn-primary"
-                    >
-                      Unsubscribe
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </template>
-          </div>
+            <div
+              class="tab-pane fade"
+              id="contact"
+              role="tabpanel"
+              aria-labelledby="conact-tab"
+            >
+              <template v-if="boatSubs.length == 0">
+                <h3>No boat subscriptions to show.</h3>
+              </template>
+              <template v-if="boatSubs.length != 0">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Boat name</th>
+                      <th scope="col">Owner</th>
+                      <th scope="col">Profile page</th>
+                      <th scope="col">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(boatSub, index) in boatSubs" :key="index">
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>{{ boatSub.boatDto.name }}</td>
+                      <td>{{ boatSub.boatDto.ownersUsername }}</td>
+                      <td>
+                        <button
+                          @click="boatProfile(boatSub.boatDto.id)"
+                          type="button"
+                          class="btn btn-info"
+                        >
+                          Profile
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          @click="unsubscribeBoat(boatSub)"
+                          type="button"
+                          class="btn btn-primary"
+                        >
+                          Unsubscribe
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </template>
+            </div>
 
-          <div
-            class="tab-pane fade"
-            id="cabins"
-            role="tabpanel"
-            aria-labelledby="cabins-tab"
-          >
-          <template v-if="cabinSubs.length==0">
-              <h3>No cabin subscriptions to show.</h3>
-          </template>
-          <template v-if="cabinSubs.length!=0">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Cabin name</th>
-                  <th scope="col">&nbsp;</th>
-                  <th scope="col">&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(cabinSub, index) in cabinSubs" :key="index">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ cabinSub.cabinDto.name }}</td>
-                  <td>
-                    <button
-                      @click="cabinProfile(cabinSub.cabinDto.name)"
-                      type="button"
-                      class="btn btn-info"
-                    >
-                      Profile
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      @click="unsubscribeCabin(cabinSub)"
-                      type="button"
-                      class="btn btn-primary"
-                    >
-                      Unsubscribe
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            </template>
+            <div
+              class="tab-pane fade"
+              id="cabins"
+              role="tabpanel"
+              aria-labelledby="cabins-tab"
+            >
+              <template v-if="cabinSubs.length == 0">
+                <h3>No cabin subscriptions to show.</h3>
+              </template>
+              <template v-if="cabinSubs.length != 0">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Cabin name</th>
+                      <th scope="col">Owner</th>
+                      <th scope="col">Profile page</th>
+                      <th scope="col">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(cabinSub, index) in cabinSubs" :key="index">
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>{{ cabinSub.cabinDto.name }}</td>
+                      <td>{{ cabinSub.cabinDto.ownerUsername }}</td>
+                      <td>
+                        <button
+                          @click="cabinProfile(cabinSub.cabinDto.name)"
+                          type="button"
+                          class="btn btn-info"
+                        >
+                          Profile
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          @click="unsubscribeCabin(cabinSub)"
+                          type="button"
+                          class="btn btn-primary"
+                        >
+                          Unsubscribe
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </template>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
-
   <vue-modality
     ref="cancellation"
     title="Unsubscribe?"
@@ -207,19 +226,21 @@
   >
     <br />
     <div class="row">
-          <div
-            class="sm-3"
-            style="padding-top: 1%; text-align: center; color: gray"
-          >
-            <h5>Are you sure you want to cancel subscription for {{ entityForCanceling.name }}?</h5>
-      </div>   
-    </div>   
+      <div
+        class="sm-3"
+        style="padding-top: 1%; text-align: center; color: gray"
+      >
+        <h5>
+          Are you sure you want to cancel subscription for
+          {{ entityForCanceling.name }} {{ typeOfEntityForCancelling }}?
+        </h5>
+      </div>
+    </div>
     <hr />
     <button type="button" @click="cancelSubscription()" class="btn btn-success">
       Cancel subscription
     </button>
   </vue-modality>
-
 </template>
 
 <script>
@@ -240,7 +261,8 @@ export default {
       cabinSubs: [],
       entityForCanceling: {},
       typeOfEntityForCancelling: "",
-      activePage:1,
+      activePage: 1,
+      loaded: false,
     };
   },
   mounted() {
@@ -248,13 +270,13 @@ export default {
     this.getSubscriptions();
   },
   methods: {
-    changeView: function(num){
-        this.activePage=num;
+    changeView: function (num) {
+      this.activePage = num;
     },
     getSubscriptions: function () {
-        this.getAdventureSubscriptions();
-        //this.getBoatSubscriptions();
-        this.getCabinSubscriptions();
+      this.getAdventureSubscriptions();
+      this.getBoatSubscriptions();
+      this.getCabinSubscriptions();
     },
     getAdventureSubscriptions: function () {
       axios
@@ -265,6 +287,7 @@ export default {
         )
         .then((response) => {
           this.adventureSubs = response.data;
+          this.loaded = true;
         });
     },
     getBoatSubscriptions: function () {
@@ -303,6 +326,11 @@ export default {
       this.typeOfEntityForCancelling = "adventure";
       this.$refs.cancellation.open();
     },
+    unsubscribeBoat: function (boatSub) {
+      this.entityForCanceling = boatSub.boatDto;
+      this.typeOfEntityForCancelling = "boat";
+      this.$refs.cancellation.open();
+    },
     unsubscribeCabin: function (cabinSub) {
       this.entityForCanceling = cabinSub.cabinDto;
       this.typeOfEntityForCancelling = "cabin";
@@ -328,12 +356,14 @@ export default {
       }
       axios
         .post(
-          "http://localhost:8081/" + this.typeOfEntityForCancelling + "Subscription/removeSubscription",
+          "http://localhost:8081/" +
+            this.typeOfEntityForCancelling +
+            "Subscription/removeSubscription",
           dtoForPostRequest,
           {}
         )
         .then((response) => {
-            this.getSubscriptions();
+          this.getSubscriptions();
           this.$refs.cancellation.hide();
           this.$swal.fire({
             position: "top-end",
@@ -344,7 +374,7 @@ export default {
           });
         })
         .catch((error) => {
-            this.getSubscriptions();
+          this.getSubscriptions();
           this.$refs.cancellation.hide();
           this.loader.hide();
           this.$swal.fire({

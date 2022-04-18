@@ -7,10 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureSubscriptionDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureSubscriptionMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureSubscription;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
 
 import java.util.HashSet;

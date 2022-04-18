@@ -6,10 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureSubscriptionDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinSubscriptionDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinSubscriptionMapper;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureSubscription;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinSubscription;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
 
