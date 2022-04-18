@@ -127,6 +127,9 @@ export default {
     logout: function(){
       this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
     },
+    subscriptions: function(){
+      this.$router.push("/subscriptions/" + this.email);
+    }
   },
 };
 </script> 
