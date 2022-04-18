@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwner;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatSubscriptionService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +28,9 @@ public class BoatController {
     private BoatService boatService;
     @Autowired
     private BoatOwnerService boatOwnerService;
+    @Autowired
+    private BoatSubscriptionService boatSubscriptionService;
+
     private final BoatMapper boatMapper=new BoatMapper();
     private final AdditionalServiceMapper additionalServiceMapper=new AdditionalServiceMapper();
 
@@ -99,8 +103,12 @@ public class BoatController {
     public ResponseEntity<BoatDto> findById(@RequestBody BoatDto boatDto){
         Boat boat = boatService.findById(boatDto.getId());
         //TODO: check for users subscription
-        if(boat != null)
-            return new ResponseEntity<>(boatMapper.boatToBoatDto(boat),HttpStatus.OK);
+        if(boat != null){
+            String clientUsername = boatDto.getOwnersUsername();
+            boatDto = boatMapper.boatToBoatDto(boat);
+            boatDto.setSubscription(boatSubscriptionService.checkIfUserIsSubscribed(clientUsername, boatDto.getId()));
+            return new ResponseEntity<>(boatDto, HttpStatus.OK);
+        }
         else
             return new ResponseEntity<>(new BoatDto(),HttpStatus.BAD_REQUEST);
     }

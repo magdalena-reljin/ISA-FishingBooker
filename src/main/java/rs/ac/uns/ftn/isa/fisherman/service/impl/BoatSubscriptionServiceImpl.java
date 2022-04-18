@@ -1,0 +1,40 @@
+package rs.ac.uns.ftn.isa.fisherman.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.model.BoatSubscription;
+import rs.ac.uns.ftn.isa.fisherman.model.Client;
+import rs.ac.uns.ftn.isa.fisherman.repository.BoatSubscriptionRepository;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatService;
+import rs.ac.uns.ftn.isa.fisherman.service.BoatSubscriptionService;
+import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
+
+@Service
+public class BoatSubscriptionServiceImpl implements BoatSubscriptionService {
+
+    @Autowired
+    private ClientService clientService;
+    @Autowired
+    private BoatService boatService;
+    @Autowired
+    private BoatSubscriptionRepository boatSubscriptionRepository;
+
+    @Override
+    public void addSubscription(String clientUsername, Long boatId) {
+        Client client = clientService.findByUsername(clientUsername);
+        if(boatSubscriptionRepository.subscriptionExists(boatId, client.getId()))
+            return;
+        boatSubscriptionRepository.save(new BoatSubscription(null, client, boatService.findById(boatId)));
+    }
+
+    @Override
+    public void removeSubscription(String username, Long boatId) {
+        BoatSubscription boatSubscription = boatSubscriptionRepository.getSubscriptionOnBoat(boatId, clientService.findByUsername(username).getId());
+        boatSubscriptionRepository.deleteById(boatSubscription.getId());
+    }
+
+    @Override
+    public boolean checkIfUserIsSubscribed(String username, Long boatId) {
+        return boatSubscriptionRepository.subscriptionExists(boatId, clientService.findByUsername(username).getId());
+    }
+}

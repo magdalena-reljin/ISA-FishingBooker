@@ -120,7 +120,6 @@ public class AdventureController {
     @PostMapping("/findById")
     public ResponseEntity<AdventureDto> findById(@RequestBody AdventureDto adventureDto){
         Adventure adventure = adventureService.findById(adventureDto.getId());
-        //TODO: check for users subscription
         if(adventure != null){
             String clientUsername = adventureDto.getFishingInstructorUsername();
             adventureDto = adventureMapper.adventureToAdventureDto(adventure);

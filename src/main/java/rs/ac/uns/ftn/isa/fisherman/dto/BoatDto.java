@@ -22,6 +22,7 @@ public class BoatDto {
     private Set<AdditionalServicesDto> additionalServices;
     private String cancelingCondition;
     private double rating;
+    private boolean subscription;
 
     public BoatDto(){}
 
@@ -45,6 +46,14 @@ public class BoatDto {
         this.additionalServices = additionalServices;
         this.cancelingCondition = cancelingCondition;
         this.rating = rating;
+    }
+
+    public boolean isSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(boolean subscription) {
+        this.subscription = subscription;
     }
 
     public String getOwnersUsername() {
