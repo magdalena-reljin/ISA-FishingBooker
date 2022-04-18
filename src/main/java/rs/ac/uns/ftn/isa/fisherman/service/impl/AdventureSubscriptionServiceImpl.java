@@ -9,6 +9,8 @@ import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureService;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 
+import java.util.Set;
+
 @Service
 public class AdventureSubscriptionServiceImpl implements AdventureSubscriptionService {
 
@@ -36,5 +38,10 @@ public class AdventureSubscriptionServiceImpl implements AdventureSubscriptionSe
     @Override
     public boolean checkIfUserIsSubscribed(String username, Long adventureId) {
         return adventureSubscriptionRepository.subscriptionExists(adventureId, clientService.findByUsername(username).getId());
+    }
+
+    @Override
+    public Set<AdventureSubscription> findSubscriptionsByClientUsername(String username) {
+        return adventureSubscriptionRepository.findSubscriptionsByClientId(clientService.findByUsername(username).getId());
     }
 }

@@ -46,11 +46,11 @@ public class EvaluationServiceImpl implements EvaluationService {
      Evaluation evaluation=  evaluationRepository.getById(id);
      evaluation.setApproved(true);
      evaluationRepository.save(evaluation);
-        if(evaluation.getType()=="CABIN EVALUATION"){
+        if(evaluation.getType().equals("CABIN EVALUATION")){
           Cabin cabin= cabinEvaluationService.getById(evaluation.getId()).getCabin();
           cabinService.updateCabinGrade(cabin.getId());
             sendMailNotificationForCabinAndBoat(evaluation,cabin.getName(),"cabin",false);
-        }else if(evaluation.getType()=="BOAT EVALUATION"){
+        }else if(evaluation.getType().equals("BOAT EVALUATION")){
         //to do
         }else {
             userService.updateOwnersRating(evaluation.getOwnersUsername(),evaluation.getGrade());
@@ -62,10 +62,10 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Override
     public void deleteUnapprovedEvaluation(Long id) {
         Evaluation evaluation=  evaluationRepository.getById(id);
-        if(evaluation.getType()=="CABIN EVALUATION"){
+        if(evaluation.getType().equals("CABIN EVALUATION")){
             Cabin cabin= cabinEvaluationService.getById(evaluation.getId()).getCabin();
             sendMailNotificationForCabinAndBoat(evaluation,cabin.getName(),"cabin",true);
-        }else if(evaluation.getType()=="BOAT EVALUATION"){
+        }else if(evaluation.getType().equals("BOAT EVALUATION")){
             //to do
         }else {
             userService.updateOwnersRating(evaluation.getOwnersUsername(),evaluation.getGrade());
