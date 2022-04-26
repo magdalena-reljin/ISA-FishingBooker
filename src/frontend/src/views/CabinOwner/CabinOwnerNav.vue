@@ -136,9 +136,6 @@ export default ({
           this.$router.push('/cabinBusinessReport/'+ this.$props.username);
     },
     viewProfile: function(){
-          /*this.$router.clear();
-          this.$router.push('http://localhost:8080/cabinOwner/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
-           */
           window.location.replace('http://localhost:8080/cabinOwner/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
     } 
   }, 

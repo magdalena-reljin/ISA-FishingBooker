@@ -10,6 +10,7 @@
             {{username}}
           </a>
           <ul class="dropdown-menu" style="width: 100%" aria-labelledby="navbarDropdownMenuLink">
+            <li><a @click="viewProfile()" class="dropdown-item" href="#">My profile</a></li>
             <li><a @click="myProfile()" class="dropdown-item" href="#">Edit profile</a></li>
             <li><a @click="logout()" class="dropdown-item" href="#">Log out</a></li>
           </ul>
@@ -92,7 +93,10 @@
        },
        statistics: function(){
          this.$router.push('/insctructorsBusinessReport/'+ this.$props.username); 
-       }
+       },
+       viewProfile: function(){
+          window.location.replace('http://localhost:8080/instructor/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
+       } 
 
     },
   }

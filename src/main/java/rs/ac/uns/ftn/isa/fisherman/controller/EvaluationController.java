@@ -6,15 +6,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.EvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.EvaluationMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.model.Evaluation;
 import rs.ac.uns.ftn.isa.fisherman.service.EvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/evaluations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,4 +78,15 @@ public class EvaluationController {
             evaluations.add(evaluationMapper.evaluationToDto(evaluation));
         return new ResponseEntity<>(evaluations, HttpStatus.OK);
     }
+    @GetMapping("/boat/{id}")
+    @PreAuthorize("hasRole('BOATOWNER') || hasRole('CLIENT')")
+    public ResponseEntity<List<EvaluationDto>> getBoatEvaluations(@PathVariable("id")Long boatId) {
+        List<EvaluationDto> evaluations = new ArrayList<>();
+
+        for(Evaluation evaluation : evaluationService.getBoatEvaluations(boatId))
+            evaluations.add(evaluationMapper.evaluationToDto(evaluation));
+
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+
 }

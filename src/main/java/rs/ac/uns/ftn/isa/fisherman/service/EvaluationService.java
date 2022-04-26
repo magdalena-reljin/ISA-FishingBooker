@@ -16,4 +16,6 @@ public interface EvaluationService {
     List<Evaluation> findBoatOwnerEvaluations(Long id);
 
     List<Evaluation>  findInstructorEvaluations(Long id);
+
+    List<Evaluation>  getBoatEvaluations(Long boatId);
 }
