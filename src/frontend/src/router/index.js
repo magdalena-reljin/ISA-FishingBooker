@@ -56,7 +56,7 @@ import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
 import ClientAdventureProfile from '../views/Client/ClientAdventureProfile'
 import Evaluations from '../views/Admin/Evaluations'
 import ClientSubscriptionsList from '../views/Client/ClientSubscriptionsList'
-
+import CabinOwnerProfile from '../views/CabinOwner/CabinOwnerProfile'
 const routes = [
   
   {
@@ -193,6 +193,22 @@ const routes = [
     path: '/cabinOwnerHome/:email',
     name: 'CabinOwnerHome',
     component: CabinOwnerHome,
+    beforeEnter: (to, from,next) => {
+      // reject the navigation
+  
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                            
+ 
+  },
+  {
+    path: '/cabinOwner/viewProfile/:email/:personsProfile',
+    name: 'CabinOwnerProfile',
+    component: CabinOwnerProfile,
     beforeEnter: (to, from,next) => {
       // reject the navigation
   

@@ -18,4 +18,7 @@ public interface CabinEvaluationRepository extends JpaRepository<CabinEvaluation
 
     @Query(value="SELECT *  FROM evaluations c where id=:id",nativeQuery = true)
     CabinEvaluation getById(@Param("id") Long id);
+
+    @Query(value="SELECT *  FROM evaluations c where cabin_id=:id",nativeQuery = true)
+    Set<CabinEvaluation> findByCabinId(@Param("id")Long cabinId);
 }
