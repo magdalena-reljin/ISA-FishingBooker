@@ -359,10 +359,9 @@
       <template v-if="role == 'ADMIN'">
         <div class="col" style="margin-top: 3%">
           <button
-            @click="deleteCabin()"
-            style="background-color: #1d7ac9; width: 100%"
-            type="button"
-            class="btn text-light rounded-pill"
+           class="btn btn-lg btn-danger rounded-pill" 
+           data-bs-toggle="modal" 
+           data-bs-target="#staticBackdrop"
           >
             DELETE CABIN
           </button>
@@ -387,6 +386,28 @@
         />
       </div>
     </div>
+
+    
+   <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete cabin?</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button @click="
+          deleteCabin()" type="button" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
@@ -719,6 +740,14 @@ export default {
             axios
               .post("http://localhost:8081/cabins/delete", this.cabinDto)
               .then((response) => {
+                   this.$swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title:
+                        "Successfully  deleted!",
+                      showConfirmButton: false,
+                      timer: 2500,
+                    });
                 this.$router.push("/profileAdmin/" + this.email);
                 return response;
               });

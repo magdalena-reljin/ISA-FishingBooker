@@ -2,7 +2,7 @@
 <template v-if="!bookBoatOpen">
   <!-- search -->
 
-  <div class="header">
+  <div v-if="role=='CLIENT'" class="header">
     <form>
       <h1 style="text-align: left; color: #0b477b; padding-left: 2%">
         Search boats
@@ -173,7 +173,7 @@
 
   <!--sort-->
 
-  <hr />
+  <hr v-if="role=='CLIENT'" />
 
   <template v-if="!boatsLoaded">
     <h3>Loading...</h3>
