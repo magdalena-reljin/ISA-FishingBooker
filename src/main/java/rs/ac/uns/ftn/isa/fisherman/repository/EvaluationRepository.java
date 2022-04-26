@@ -34,4 +34,5 @@ public interface EvaluationRepository extends JpaRepository<Evaluation,Long> {
 
     @Query(value="SELECT * FROM evaluations where fishing_instructor_id=:id and approved=true",nativeQuery = true)
     List<Evaluation> findInstructorEvaluations(Long id);
+
 }

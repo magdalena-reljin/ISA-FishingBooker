@@ -89,6 +89,11 @@ public class EvaluationServiceImpl implements EvaluationService {
         return evaluationRepository.findInstructorEvaluations(id);
     }
 
+    @Override
+    public List<Evaluation> getBoatEvaluations(Long boatId) {
+        return evaluationRepository.findBoatEvaluations(boatId);
+    }
+
     private void sendMailNotificationForCabinAndBoat(Evaluation evaluation,String name,String type,boolean delete){
         try {
             String message = "Your "+ type+" "+ name+" is rated: " + evaluation.getGrade() + " by client: " + evaluation.getClient().getUsername()
