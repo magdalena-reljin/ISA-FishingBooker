@@ -67,7 +67,7 @@ public class BoatController {
         else
             return new ResponseEntity<>(BAD_REQUEST,HttpStatus.BAD_REQUEST);
     }
-    @PreAuthorize("hasRole('BOATOWNER')")
+    @PreAuthorize("hasRole('BOATOWNER')  || hasRole('ADMIN')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody BoatDto boatDto){
         Boat boat=boatMapper.boatDtoToBoat(boatDto);
@@ -85,7 +85,7 @@ public class BoatController {
         else
             return new ResponseEntity<>(new BoatDto(),HttpStatus.BAD_REQUEST);
     }
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('CLIENT') || hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<Set<BoatDto>> getAll(){
         Set<BoatDto> boats=new HashSet<>();
@@ -93,7 +93,7 @@ public class BoatController {
             boats.add(boatMapper.boatToBoatDto(boat));
         return new ResponseEntity<>(boats,HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('BOATOWNER')")
+    @PreAuthorize("hasRole('BOATOWNER')  || hasRole('ADMIN')")
     @PostMapping("/canBeEditedOrDeleted/{id}")
     public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
             return new ResponseEntity<>(boatService.canBeEditedOrDeleted(id),HttpStatus.OK);
