@@ -104,7 +104,7 @@ public class UserServiceTest {
         UserRequestDTO userRequestDTO=new UserRequestDTO(1L,"milica@gmail.com","123",
                 "Milica","Jovanovic", "021/345-345",
                 new AddressDTO(	19.833549,45.267136,"Serbia",
-                "Novi Sad","Novosadska 1"),"reason","CABINOWNER",3.4);
+                "Novi Sad","Novosadska 1"),"reason","CABINOWNER",3.4,"",0);
         User user=new CabinOwner(1L,"Milica","Petrovic","milica@gmail.com",
                 "123","011/345-345",new Address(20.457273,44.787197,"Serbia",
                 "Beograd","Beogradska 1"),"reason",3.4);

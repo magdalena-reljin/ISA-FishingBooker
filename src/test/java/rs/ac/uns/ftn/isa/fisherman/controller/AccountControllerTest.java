@@ -14,12 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import rs.ac.uns.ftn.isa.fisherman.dto.ChangePasswordDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.MailDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
-import rs.ac.uns.ftn.isa.fisherman.dto.VerificationDTO;
-
-import java.beans.Transient;
 import java.nio.charset.Charset;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,7 +43,7 @@ public class AccountControllerTest {
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void testActiveAccount() throws Exception {
-        UserRequestDTO userRequestDTO = new UserRequestDTO("reljin.magdalena@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0);
+        UserRequestDTO userRequestDTO = new UserRequestDTO("reljin.magdalena@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0,"",0);
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String json=objectMapper.writeValueAsString(userRequestDTO);
@@ -58,7 +54,7 @@ public class AccountControllerTest {
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void testDenyAccount() throws Exception {
-        UserRequestDTO userRequestDTO = new UserRequestDTO("reljin.magdalena@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0);
+        UserRequestDTO userRequestDTO = new UserRequestDTO("reljin.magdalena@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0,"",0);
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String json=objectMapper.writeValueAsString(userRequestDTO);
@@ -67,7 +63,6 @@ public class AccountControllerTest {
     }
 
     @Test
-    @Transient
     @Rollback(true)
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void testAcceptReasonForDeletingAccount() throws Exception {
