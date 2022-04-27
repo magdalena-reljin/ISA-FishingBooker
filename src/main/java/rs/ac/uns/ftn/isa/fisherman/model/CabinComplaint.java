@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("CABIN")
 public class CabinComplaint extends Complaint{
 
-    @ManyToOne(cascade= CascadeType.MERGE)
-    @JoinColumn(name="cabin_id")
-    protected Cabin cabin;
 
-    public CabinComplaint(Long id, String text, LocalDateTime date, boolean responded, Client client, Cabin cabin) {
-        super(id, text, date, responded, client);
+    private static final String COMPLAINT_TYPE = "CABIN_COMPLAINT";
+
+    @ManyToOne
+    @JoinColumn(name="cabin_id")
+    private Cabin cabin;
+
+    public CabinComplaint(Long id, String text, LocalDateTime date, boolean responded, Client client,String ownersUsername, Cabin cabin) {
+        super(id, text, date, responded, client,ownersUsername);
         this.cabin = cabin;
     }
 
@@ -24,5 +27,9 @@ public class CabinComplaint extends Complaint{
 
     public void setCabin(Cabin cabin) {
         this.cabin = cabin;
+    }
+
+    public  String getComplaintType() {
+        return COMPLAINT_TYPE;
     }
 }

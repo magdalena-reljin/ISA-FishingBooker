@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @DiscriminatorValue("BOATEVALUATION")
 public class BoatEvaluation extends Evaluation {
+
+    private static final String TYPE = "BOAT EVALUATION";
     @ManyToOne
     @JoinColumn(name= "boat_id")
     private Boat boat;
@@ -26,5 +28,9 @@ public class BoatEvaluation extends Evaluation {
 
     public void setBoat(Boat boat) {
         this.boat = boat;
+    }
+
+    public  String getTYPE() {
+        return TYPE;
     }
 }

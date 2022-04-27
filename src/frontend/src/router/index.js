@@ -56,9 +56,11 @@ import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
 import ClientAdventureProfile from '../views/Client/ClientAdventureProfile'
 import Evaluations from '../views/Admin/Evaluations'
 import ClientSubscriptionsList from '../views/Client/ClientSubscriptionsList'
+import Complaints from '../views/Admin/Complaints'
 import CabinOwnerProfile from '../views/CabinOwner/CabinOwnerProfile'
 import BoatOwnerProfile from '../views/BoatOwner/BoatOwnerProfile'
 import FishingInstructorProfile from '../views/FishingInstructor/FishingInstructorProfile'
+
 const routes = [
   
   {
@@ -102,6 +104,20 @@ const routes = [
     name: 'ProfileAdmin',
     component: () =>
         import ('../views/Admin/ProfileAdmin.vue'),
+    beforeEnter: (to, from, next) => {
+      store.dispatch('refreshToken')
+     if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){
+          next('/')
+        }else {
+          next()
+        }
+      }
+  },
+  {
+   
+    path: '/complaints/:email',
+    name: 'Complaints',
+    component: Complaints,
     beforeEnter: (to, from, next) => {
       store.dispatch('refreshToken')
      if(localStorage.token == 'empty' || localStorage.role !='ADMIN' || localStorage.logged == false){

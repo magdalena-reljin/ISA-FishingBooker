@@ -1,18 +1,23 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
-import javax.persistence.*;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
 @DiscriminatorValue("CABINOWNER")
 public class CabinOwnerComplaint extends Complaint {
 
-    @ManyToOne(cascade= CascadeType.MERGE)
+    private static final String COMPLAINT_TYPE = "CABIN_OWNER_COMPLAINT";
+    @ManyToOne
     @JoinColumn(name="cabin_owner_id")
-    protected CabinOwner cabinOwner;
+    private CabinOwner cabinOwner;
 
-    public CabinOwnerComplaint(Long id, String text, LocalDateTime date, boolean responded, Client client, CabinOwner cabinOwner) {
-        super(id, text, date, responded, client);
+    public CabinOwnerComplaint(Long id, String text, LocalDateTime date, boolean responded, Client client,String ownersUsername, CabinOwner cabinOwner) {
+        super(id, text, date, responded, client,ownersUsername);
         this.cabinOwner = cabinOwner;
     }
 
@@ -24,5 +29,10 @@ public class CabinOwnerComplaint extends Complaint {
 
     public void setCabinOwner(CabinOwner cabinOwner) {
         this.cabinOwner = cabinOwner;
+    }
+
+    @Override
+    public  String getComplaintType() {
+        return COMPLAINT_TYPE;
     }
 }
