@@ -17,4 +17,7 @@ public interface AdventureSubscriptionRepository extends JpaRepository<Adventure
 
     @Query(value="SELECT * FROM adventure_subscription where users_id=:users_id",nativeQuery = true)
     Set<AdventureSubscription> findSubscriptionsByClientId(@Param("users_id")Long usersId);
+
+    @Query(value="SELECT u.username FROM adventure_subscription c join users u on c.users_id=u.id where adventure_id=:adventure_id",nativeQuery = true)
+    Set<String> findAdventureSubscribers(@Param("adventure_id")Long adventureId);
 }

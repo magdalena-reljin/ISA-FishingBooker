@@ -44,4 +44,9 @@ public class AdventureSubscriptionServiceImpl implements AdventureSubscriptionSe
     public Set<AdventureSubscription> findSubscriptionsByClientUsername(String username) {
         return adventureSubscriptionRepository.findSubscriptionsByClientId(clientService.findByUsername(username).getId());
     }
+
+    @Override
+    public Set<String> findAdventureSubscribers(Long adventureId) {
+        return adventureSubscriptionRepository.findAdventureSubscribers(adventureId);
+    }
 }

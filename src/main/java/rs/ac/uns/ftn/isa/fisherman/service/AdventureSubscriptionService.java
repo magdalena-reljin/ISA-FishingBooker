@@ -9,4 +9,5 @@ public interface AdventureSubscriptionService {
     void removeSubscription(String username, Long adventureId);
     boolean checkIfUserIsSubscribed(String username, Long adventureId);
     Set<AdventureSubscription> findSubscriptionsByClientUsername(String username);
+    Set<String> findAdventureSubscribers(Long adventureId);
 }

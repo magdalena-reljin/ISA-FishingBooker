@@ -1,14 +1,21 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
+import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionAdventureInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
+import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
 
+import javax.mail.MessagingException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,12 +26,18 @@ import java.util.Set;
 
 @Service
 public class QuickReservationAdventureImpl implements QuickReservationAdventureService {
+
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Autowired
     private QuickReservationAdventureRepository quickReservationAdventureRepository;
     @Autowired
     private AvailableInstructorPeriodService availableInstructorPeriodService;
     @Autowired
     private AdventureReservationService adventureReservationService;
+    @Autowired
+    private AdventureSubscriptionService adventureSubscriptionService;
+    @Autowired
+    private MailService mailService;
     @Override
     public boolean instructorCreates(QuickReservationAdventure quickReservationAdventure) {
         if(!validateForReservation(quickReservationAdventure)) return false;
@@ -39,8 +52,7 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
             successfullQuickReservation.setAddedAdditionalServices(quickReservationAdventure.getAddedAdditionalServices());
             quickReservationAdventureRepository.save(successfullQuickReservation);
         }
-        //TO DO: poslati mejl onima koji su pretplaceni na akcije od tog cabina
-
+        sendMailNotificationToSubscribedUsers(successfullQuickReservation.getAdventure().getId(),successfullQuickReservation.getAdventure().getName());
         return true;
     }
 
@@ -88,8 +100,10 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
         if(adventureReservationService.reservationExists(quickReservationAdventure.getOwnersUsername(),quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
 
+
         if(quickReservationAdventureRepository.quickReservationExists(quickReservationAdventure.getOwnersUsername()
                 ,quickReservationAdventure.getStartDate(),quickReservationAdventure.getEndDate())) return false;
+
 
         return true;
     }
@@ -118,5 +132,18 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         System.out.println("Minuta izmedju  "+numberOfOverlappingHours);
         System.out.println("Sati izmedju  "+numberOfOverlappingHours/60d);
         return numberOfOverlappingHours/60d;
+    }
+
+
+    private void sendMailNotificationToSubscribedUsers(Long adventureId,String adventureName){
+        Set<String> subscriptionEmails=adventureSubscriptionService.findAdventureSubscribers(adventureId);
+        for(String email: subscriptionEmails) {
+            try {
+                String message = adventureName;
+                mailService.sendMail(email, message, new QuickActionAdventureInfo());
+            } catch (MessagingException e) {
+                logger.error(e.toString());
+            }
+        }
     }
 }
