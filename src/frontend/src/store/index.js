@@ -38,8 +38,8 @@ const store = createStore({
             
                 console.log(error)
            }
+            
         
-
         },
         async attempt ({commit},token){
             try {
@@ -86,4 +86,6 @@ const store = createStore({
     }
   
 })
-export default store;
+export default 
+    store
+

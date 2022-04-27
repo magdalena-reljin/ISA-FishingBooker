@@ -118,7 +118,7 @@ export default ({
       this.$router.push("/editProfile/" + "cabinOwner/" + this.$props.username);
     },
     logout: function(){
-      this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
+      this.$store.dispatch('logOut').then(()=> {location.replace('/');})
     },
     addNewCabin: function () {
       this.$router.push("/addNewCabin/" + this.$props.username);

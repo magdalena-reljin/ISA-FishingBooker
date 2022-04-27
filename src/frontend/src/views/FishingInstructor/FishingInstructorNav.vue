@@ -74,7 +74,7 @@
           this.$router.push('/editProfile/'+'fishingInstructor/'+ this.$props.username);
        },
        logout: function(){
-          this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
+          this.$store.dispatch('logOut').then(()=> {location.replace('/');})
        },
        addNewAdventure: function(){
           this.$router.push('/addNewAdventure/'+ this.$props.username);
