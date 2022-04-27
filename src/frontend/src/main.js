@@ -38,8 +38,10 @@ const firebaseConfig = {
   
   // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-
+if(localStorage.token!='empty'&& localStorage.logged!=false)
   axios.defaults.headers['Authorization']="Bearer "+ localStorage.token
+
+
 
 
 

@@ -125,7 +125,7 @@ export default {
       this.$router.push("/penalties/" + this.email);
     },
     logout: function(){
-      this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
+      this.$store.dispatch('logOut').then(()=> {location.replace('/');})
     },
     subscriptions: function(){
       this.$router.push("/subscriptions/" + this.email);

@@ -120,7 +120,7 @@ import axios from "axios";
            this.$router.push('/editProfile/'+'admin/'+this.$props.username );
        },
        logout: function(){
-          this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
+          this.$store.dispatch('logOut').then(()=> {location.replace('/');})
        },
        home: function(){
           this.$router.push('/profileAdmin/'+ this.$props.username );
