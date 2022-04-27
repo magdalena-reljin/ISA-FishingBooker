@@ -171,12 +171,18 @@ import axios from "axios";
                    })
        },
        denyDelete: function(){
-
+         this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    onCancel: this.onCancel,
+                   });
            this.mailDto.response= this.reasonDeny;
            this.mailDto.recipient= this.userRequest.username;
              axios.post("http://localhost:8081/account/sendDenyReasonForDeletingAccount",this.mailDto)
                   .then(response => {
-                    this.$router.go();
+                      this.loader.hide();
+                      this.loader=null
+                      this.getAllRequests();
                     return response;
                      
                    })
@@ -190,7 +196,11 @@ import axios from "axios";
              this.userRequest=user
        },
        acceptDelete: function(){
-           
+            this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    onCancel: this.onCancel,
+                   });
            this.mailDto.response= this.reasonAccept;
            this.mailDto.recipient= this.userRequest.username;
             axios.post("http://localhost:8081/account/sendAcceptReasonForDeletingAccount",this.mailDto)
@@ -201,7 +211,11 @@ import axios from "axios";
                             'User has been deleted!',
                             'success'
                          )
-                        this.$router.go();
+                          this.loader.hide();
+                          this.loader=null
+                           this.getAllRequests();
+
+                       
 
                         return response
                      

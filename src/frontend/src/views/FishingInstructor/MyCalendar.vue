@@ -924,10 +924,15 @@ export default {
                       return;
                     }
 
-
+                  
                     if(this.startQuickReservation != null && this.startQuickReservation!=null){
                                  this.additionalServicesAdded()
                                  this.calculatePrice(this.startQuickReservation,this.endQuickReservation,this.adventureDto[this.selected].price)
+                                   this.loader = this.$loading.show({
+                                    container: this.fullPage ? null : this.$refs.formContainer,
+                                    canCancel: true,
+                                    onCancel: this.onCancel,
+                                  });
                                 axios
                                 .post(
                                 "http://localhost:8081/quickReservationAdventure/instructorCreates/",
@@ -957,6 +962,8 @@ export default {
                                           showConfirmButton: false,
                                            timer: 1500
                                        })
+                                           this.loader.hide();
+                                          this.loader=null
                                          this.clearModalQuick()
                                 })
                               .catch((err) =>{

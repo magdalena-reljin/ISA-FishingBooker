@@ -182,6 +182,7 @@
 import FishingInstructorNavbar from './FishingInstructorNav.vue'
 import OpenLayersMap from '../../components/OpenLayersMap.vue'
 import axios from "axios";
+import dayjs from 'dayjs';
 export default{
     components: {
        FishingInstructorNavbar,

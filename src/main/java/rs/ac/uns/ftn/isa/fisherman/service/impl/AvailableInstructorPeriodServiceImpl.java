@@ -43,8 +43,8 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
     @Override
     public boolean instructorIsAvailable(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         if(availableInstructorPeriodRepository.instructorIsAvailable(id,startDate,endDate).size()>0)
-            return false;
-        return  true;
+            return true;
+        return  false;
     }
 
     @Override
@@ -64,7 +64,6 @@ public class AvailableInstructorPeriodServiceImpl implements AvailableInstructor
         if(adventureReservationService.reservationExists(availableInstructorPeriod.getFishingInstructor().getUsername()
                 ,availableInstructorPeriod.getStartDate(),availableInstructorPeriod.getEndDate())) {
 
-            System.out.println("AAAAAAA PERIODDD  NULL OBICNEE");
             return false;
         }
 
