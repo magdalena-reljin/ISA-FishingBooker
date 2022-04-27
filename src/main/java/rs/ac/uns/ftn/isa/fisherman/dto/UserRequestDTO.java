@@ -18,6 +18,8 @@ public class UserRequestDTO {
     private String role;
     private String reasonForDeleting;
     private Double rating;
+    private String rankType;
+    private Integer points;
 
     public Double getRating() {
         return rating;
@@ -27,7 +29,8 @@ public class UserRequestDTO {
         this.rating = rating;
     }
 
-    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, Double rating) {
+    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role, Double rating
+    ,String rankType,Integer points) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -39,8 +42,11 @@ public class UserRequestDTO {
         this.role=role;
         this.reasonForDeleting="";
         this.rating=rating;
+        this.rankType=rankType;
+        this.points=points;
     }
-    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role,String reasonForDeleting,Double rating) {
+    public UserRequestDTO(Long id, String username, String password, String firstname, String lastname, String phoneNum, AddressDTO address, String registrationReason, String role,String reasonForDeleting,Double rating
+    ,String rankType,Integer points) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -52,8 +58,11 @@ public class UserRequestDTO {
         this.role=role;
         this.reasonForDeleting=reasonForDeleting;
         this.rating=rating;
+        this.rankType=rankType;
+        this.points=points;
     }
-    public UserRequestDTO(String username, String firstname, String lastname, String role, String registrationReason,Double rating) {
+    public UserRequestDTO(String username, String firstname, String lastname, String role, String registrationReason,Double rating
+            ,String rankType,Integer points) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -61,6 +70,24 @@ public class UserRequestDTO {
         this.registrationReason=registrationReason;
         this.reasonForDeleting="";
         this.rating=rating;
+        this.rankType=rankType;
+        this.points=points;
+    }
+
+    public String getRankType() {
+        return rankType;
+    }
+
+    public void setRankType(String rankType) {
+        this.rankType = rankType;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
     public UserRequestDTO(){}

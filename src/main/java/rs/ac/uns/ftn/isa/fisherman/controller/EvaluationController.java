@@ -6,19 +6,27 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.EvaluationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.EvaluationMapper;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.model.Evaluation;
 import rs.ac.uns.ftn.isa.fisherman.service.EvaluationService;
+import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/evaluations", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EvaluationController {
     @Autowired
     private EvaluationService evaluationService;
+    @Autowired
+    private UserService userService;
 
     private EvaluationMapper evaluationMapper= new EvaluationMapper();
     @GetMapping("/getAllEvaluations")
@@ -45,4 +53,40 @@ public class EvaluationController {
         evaluationService.deleteUnapprovedEvaluation(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
+    @GetMapping("/cabinOwner/{username:.+}/")
+    @PreAuthorize("hasRole('CABINOWNER') || hasRole('CLIENT')")
+    public ResponseEntity<List<EvaluationDto>> getCabinOwnerEvaluations(@PathVariable("username")String username) {
+        List<EvaluationDto> evaluations=new ArrayList<>();
+        for(Evaluation evaluation : evaluationService.findCabinOwnerEvaluations(userService.findByUsername(username).getId()))
+            evaluations.add(evaluationMapper.evaluationToDto(evaluation));
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+    @GetMapping("/boatOwner/{username:.+}/")
+    @PreAuthorize("hasRole('BOATOWNER') || hasRole('CLIENT')")
+    public ResponseEntity<List<EvaluationDto>> getBoatOwnerEvaluations(@PathVariable("username")String username) {
+        List<EvaluationDto> evaluations=new ArrayList<>();
+        for(Evaluation evaluation : evaluationService.findBoatOwnerEvaluations(userService.findByUsername(username).getId()))
+            evaluations.add(evaluationMapper.evaluationToDto(evaluation));
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+    @GetMapping("/instructor/{username:.+}/")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR') || hasRole('CLIENT')")
+    public ResponseEntity<List<EvaluationDto>> getInstructorEvaluations(@PathVariable("username")String username) {
+        List<EvaluationDto> evaluations=new ArrayList<>();
+        for(Evaluation evaluation : evaluationService.findInstructorEvaluations(userService.findByUsername(username).getId()))
+            evaluations.add(evaluationMapper.evaluationToDto(evaluation));
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+    @GetMapping("/boat/{id}")
+    @PreAuthorize("hasRole('BOATOWNER') || hasRole('CLIENT')")
+    public ResponseEntity<List<EvaluationDto>> getBoatEvaluations(@PathVariable("id")Long boatId) {
+        List<EvaluationDto> evaluations = new ArrayList<>();
+
+        for(Evaluation evaluation : evaluationService.getBoatEvaluations(boatId))
+            evaluations.add(evaluationMapper.evaluationToDto(evaluation));
+
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+
 }

@@ -77,6 +77,26 @@ public class EvaluationServiceImpl implements EvaluationService {
         evaluationRepository.deleteById(id);
     }
 
+    @Override
+    public List<Evaluation> findCabinOwnerEvaluations(Long id) {
+        return evaluationRepository.findCabinOwnerEvaluations(id);
+    }
+
+    @Override
+    public List<Evaluation> findBoatOwnerEvaluations(Long id) {
+        return evaluationRepository.findBoatOwnerEvaluations(id);
+    }
+
+    @Override
+    public List<Evaluation> findInstructorEvaluations(Long id) {
+        return evaluationRepository.findInstructorEvaluations(id);
+    }
+
+    @Override
+    public List<Evaluation> getBoatEvaluations(Long boatId) {
+        return evaluationRepository.findBoatEvaluations(boatId);
+    }
+
     private void sendMailNotificationForCabinAndBoat(Evaluation evaluation,String name,String type,boolean delete){
         try {
             String message = "Your "+ type+" "+ name+" is rated: " + evaluation.getGrade() + " by client: " + evaluation.getClient().getUsername()

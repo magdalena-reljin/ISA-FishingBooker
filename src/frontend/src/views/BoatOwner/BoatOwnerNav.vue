@@ -10,6 +10,7 @@
             {{username}}
           </a>
           <ul class="dropdown-menu" style="width: 100%" aria-labelledby="navbarDropdownMenuLink">
+            <li><a @click="visitProfile()" class="dropdown-item" href="#">My profile</a></li>
             <li><a @click="myProfile()" class="dropdown-item" href="#">Edit profile</a></li>
             <li><a @click="logout()" class="dropdown-item" href="#">Log out</a></li>
           </ul>
@@ -94,6 +95,10 @@ export default ({
        },
        statistics: function(){
           this.$router.push('/boatOwnerBusinessReport/'+ this.$props.username);
+       },
+       visitProfile: function(){
+          window.location.replace('http://localhost:8080/boatOwner/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
+
        }  
     }
 })

@@ -56,5 +56,10 @@ public class UserController {
             users.add(userMapper.userToDeleteUserRequestDTO(user));
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+    @GetMapping("/userByUsername/{username:.+}/")
+    @PreAuthorize("hasRole('CABINOWNER') || hasRole('BOATOWNER') || hasRole('FISHING_INSTRUCTOR') || hasRole('CLIENT')")
+    public ResponseEntity<UserRequestDTO> getUserByUsername(@PathVariable("username")String username) {
+        return new ResponseEntity<>(userMapper.userToUserRequestDTO(userService.findByUsername(username)), HttpStatus.OK);
+    }
 
 }

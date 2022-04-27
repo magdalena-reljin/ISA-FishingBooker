@@ -11,6 +11,6 @@ public class AdminMapper {
     }
 
     public  UserRequestDTO adminToUserRequestDTO(Admin admin){
-        return new UserRequestDTO(admin.getId(), admin.getUsername(),admin.getPassword(),admin.getName(),admin.getLastName(),admin.getPhoneNum(),addressMapper.addressToDTO(admin.getAddress()),"",admin.getRoleApp(),null);
+        return new UserRequestDTO(admin.getId(), admin.getUsername(),admin.getPassword(),admin.getName(),admin.getLastName(),admin.getPhoneNum(),addressMapper.addressToDTO(admin.getAddress()),"",admin.getRoleApp(),null,"",0);
     }
 }
