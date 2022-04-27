@@ -10,7 +10,7 @@ public class CabinEvaluation extends Evaluation{
     private static final String TYPE = "CABIN EVALUATION";
     @ManyToOne
     @JoinColumn(name= "cabin_id")
-    Cabin cabin;
+    private Cabin cabin;
 
     public CabinEvaluation(Long id, LocalDateTime date, String comment, Double grade, boolean approved, Client client,String ownersUsername, Cabin cabin) {
         super(id, date, comment, grade, approved, client,ownersUsername);

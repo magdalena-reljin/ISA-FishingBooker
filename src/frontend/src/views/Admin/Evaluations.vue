@@ -35,12 +35,12 @@
         <tr>
          <div class="row">
             <div class="col "><button @click="accept(rep)"
-               type="button" class="btn btn-outline-success" >APPROVED</button>
+               type="button" class="btn btn-outline-success" >APPROVE</button>
                
             </div>
 
                <div class="col "><button @click="deny(rep)"
-               type="button" class="btn btn-outline-danger" >UNAPPROVED</button>
+               type="button" class="btn btn-outline-danger" >UNAPPROVE</button>
                </div>
                
    
