@@ -614,8 +614,9 @@ export default {
     },
     getDiscountedPrice: function (quickReservationDto) {
       return (
-        quickReservationDto.paymentInformationDto.totalPrice *
-        (100 - quickReservationDto.discount)
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 - quickReservationDto.discount)) /
+        100
       );
     },
     seeProfile: function (boatId) {

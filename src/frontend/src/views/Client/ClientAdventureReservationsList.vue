@@ -446,17 +446,17 @@
               >
             </p>
           </div>
-            <div
-              class="col-sm-3"
-              style="padding-top: 1%; text-align: left; color: gray"
-            >
-              <p>Discounted price</p>
-            </div>
-            <div class="col-sm-9" style="padding: 1%; text-align: left">
-              <p>
-                <b>{{ getDiscountedPrice(quickReservationAdventure) }} $</b>
-              </p>
-            </div>
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Discounted price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ getDiscountedPrice(quickReservationAdventure) }} $</b>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -469,7 +469,7 @@
       Confirm quick reservation
     </button>
   </vue-modality>
-   <!-- Quick reservation modal -->
+  <!-- Quick reservation modal -->
 </template>
 
 <script>
@@ -641,8 +641,9 @@ export default {
     },
     getDiscountedPrice: function (quickReservationDto) {
       return (
-        quickReservationDto.paymentInformationDto.totalPrice *
-        (100 - quickReservationDto.discount)
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 - quickReservationDto.discount)) /
+        100
       );
     },
     seeProfile: function (boatId) {
