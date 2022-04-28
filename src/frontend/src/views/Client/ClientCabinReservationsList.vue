@@ -118,12 +118,15 @@
                   </h6>
                   </template>
                   <template v-if="availableQuickReservations">
-                  <h6 style="text-align: left; color: red, text-decoration: line-through">
-                    Previous price: {{ cabinReservationDto.paymentInformationDto.totalPrice }} $
+                  <h6 style="color: red; text-align: left;" >
+                    Previous price: <a style="text-decoration: line-through">{{ cabinReservationDto.paymentInformationDto.totalPrice }} $ </a>
                   </h6>
                   <h6 style="text-align: left; color: green">
-                    Discounted price: {{ getDiscountedPrice(adventureReservationDto) }}
-                    $
+                    Discount: <i>-{{cabinReservationDto.discount}}%</i>
+                  </h6>
+                  <h6 style="text-align: left; color: green">
+                    Discounted price: <b>{{ getDiscountedPrice(cabinReservationDto) }}
+                    $</b>
                   </h6>
                   </template>
                   <div class="row">

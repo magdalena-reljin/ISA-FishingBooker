@@ -143,10 +143,9 @@
                         {{ adventureReservationDto.adventureDto.maxPeople }}
                       </h6>
                     </div>
-                    <div class="col">
                       <div class="row">
                         <div class="col">
-                          <h6 style="text-align: left">
+                          <h6 v-bind:style="[availableQuickReservations ? 'color: red;' : 'color: green;', 'text-align: left;']">
                             <template v-if="!availableQuickReservations"
                               >Total</template
                             >
@@ -157,28 +156,36 @@
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 style="text-align: left; color: green">
+                          <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
                             {{
                               adventureReservationDto.paymentInformationDto
                                 .totalPrice
-                            }}$
-                          </h6>
+                            }}$ </h6>                         
                         </div>
                       </div>
                       <template v-if="availableQuickReservations">
                         <div class="row">
                           <div class="col">
-                            <h6 style="text-align: left">Discounted price:</h6>
+                            <h6 style="text-align: left; color: green">Discount:</h6>
                           </div>
                           <div class="col">
                             <h6 style="text-align: left; color: green">
-                              {{ getDiscountedPrice(adventureReservationDto) }}
-                              $
+                              <i>-{{adventureReservationDto.discount}}%</i>
+                            </h6>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h6 style="text-align: left;  color: green">Discounted price:</h6>
+                          </div>
+                          <div class="col">
+                            <h6 style="text-align: left; color: green">
+                              <b>{{ getDiscountedPrice(adventureReservationDto) }}
+                              $</b>
                             </h6>
                           </div>
                         </div>
                       </template>
-                    </div>
                   </div>
 
                   <div class="row">
@@ -382,7 +389,7 @@
             <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="quickReservationAdventure.addedAdditionalServices.length!=0">
           <div
             class="col"
             style="padding-top: 2%; text-align: left; color: gray"

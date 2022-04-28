@@ -128,7 +128,7 @@
                     <div class="col">
                       <div class="row">
                         <div class="col">
-                          <h6 style="text-align: left">
+                          <h6 v-bind:class="[availableQuickReservations ? 'color: red;' : 'color: green;', 'text-align: left']">
                             <template v-if="!availableQuickReservations"
                               >Total</template
                             >
@@ -139,7 +139,7 @@
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 style="text-align: left; color: green">
+                          <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
                             {{
                               boatReservationDto.paymentInformationDto
                                 .totalPrice
@@ -151,12 +151,22 @@
                       <template v-if="availableQuickReservations">
                         <div class="row">
                           <div class="col">
+                            <h6 style="text-align: left; color: green">Discount:</h6>
+                          </div>
+                          <div class="col">
+                            <h6 style="text-align: left; color: green">
+                              <i>-{{boatReservationDto.discount}}%</i>
+                            </h6>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
                             <h6 style="text-align: left">Discounted price:</h6>
                           </div>
                           <div class="col">
                             <h6 style="text-align: left; color: green">
-                              {{ getDiscountedPrice(boatReservationDto) }}
-                              $
+                              <b>{{ getDiscountedPrice(boatReservationDto) }}
+                              $</b>
                             </h6>
                           </div>
                         </div>
