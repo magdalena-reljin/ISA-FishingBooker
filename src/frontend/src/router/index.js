@@ -56,6 +56,7 @@ import AdminBusinessReport from '../views/Admin/AdminBusinessReport'
 import ClientAdventureProfile from '../views/Client/ClientAdventureProfile'
 import Evaluations from '../views/Admin/Evaluations'
 import ClientSubscriptionsList from '../views/Client/ClientSubscriptionsList'
+import ClientAvailableQuickReservations from '../views/Client/ClientAvailableQuickReservations'
 
 const routes = [
   
@@ -433,6 +434,20 @@ const routes = [
     path: '/reservations/:email',
     name: 'ClientReservations',
     component: ClientReservations,
+    props: true,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
+  },
+  {
+    path: '/availableQuickReservations/:email',
+    name: 'ClientAvailableQuickReservations',
+    component: ClientAvailableQuickReservations,
     props: true,
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')

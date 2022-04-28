@@ -4,8 +4,17 @@
   <div class="header">
     <form>
       <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
-        <template v-if="upcomingReservations"> Upcoming reservations </template>
-        <template v-if="!upcomingReservations"> Reservation history </template>
+        <template v-if="!availableQuickReservations">
+          <template v-if="upcomingReservations">
+            Upcoming reservations
+          </template>
+          <template v-if="!upcomingReservations">
+            Reservation history
+          </template>
+        </template>
+        <template v-if="availableQuickReservations"
+          >Available quick reservations</template
+        >
       </h1>
     </form>
   </div>
@@ -22,8 +31,9 @@
     <template v-if="sortedReservations.length == 0">
       <h3>
         No
-        <template v-if="upcomingReservations">upcoming</template> adventure
-        reservations to show.
+        <template v-if="upcomingReservations">upcoming</template>
+        <template v-if="availableQuickReservations">available quick</template>
+        adventure reservations to show.
       </h3>
     </template>
   </template>
@@ -118,12 +128,14 @@
                     Free equipment:
                     {{ adventureReservationDto.adventureDto.equipment }}
                   </h6>
-                  <h6 style="text-align: left">
-                    Canceling condition:
-                    {{
-                      adventureReservationDto.adventureDto.cancelingCondition
-                    }}
-                  </h6>
+                  <template>
+                    <h6 style="text-align: left">
+                      Canceling condition:
+                      {{
+                        adventureReservationDto.adventureDto.cancelingCondition
+                      }}
+                    </h6>
+                  </template>
                   <div class="row">
                     <div class="col">
                       <h6 style="text-align: left; color: black">
@@ -149,47 +161,60 @@
                   </div>
 
                   <div class="row">
-                    <div class="col" style="text-align: right">
+                    <template v-if="!availableQuickReservations">
+                      <div class="col" style="text-align: right">
+                        <button
+                          @click="writeComplaint(adventureReservationDto)"
+                          type="button"
+                          class="btn btn-outline-dark rounded-pill"
+                        >
+                          WRITE COMPLAINT
+                        </button>
+                      </div>
+                      <div class="col" style="text-align: right">
+                        <template v-if="upcomingReservations">
+                          <button
+                            @click="
+                              cancelReservationModal(adventureReservationDto)
+                            "
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                            :disabled="
+                              !possibleCancellation(
+                                adventureReservationDto.startDate
+                              )
+                            "
+                          >
+                            CANCEL
+                          </button>
+                        </template>
+                        <template
+                          v-if="
+                            !upcomingReservations &&
+                            !adventureReservationDto.evaluated
+                          "
+                        >
+                          <button
+                            @click="
+                              evaluateReservation(adventureReservationDto)
+                            "
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            EVALUATE
+                          </button>
+                        </template>
+                      </div>
+                    </template>
+                    <template v-if="availableQuickReservations">
                       <button
-                        @click="writeComplaint(adventureReservationDto)"
+                        @click="quickReservationModal(adventureReservationDto)"
                         type="button"
                         class="btn btn-outline-dark rounded-pill"
                       >
-                        WRITE COMPLAINT
+                        BOOK
                       </button>
-                    </div>
-                    <div class="col" style="text-align: right">
-                      <template v-if="upcomingReservations">
-                        <button
-                          @click="
-                            cancelReservationModal(adventureReservationDto)
-                          "
-                          type="button"
-                          class="btn btn-outline-dark rounded-pill"
-                          :disabled="
-                            !possibleCancellation(
-                              adventureReservationDto.startDate
-                            )
-                          "
-                        >
-                          CANCEL
-                        </button>
-                      </template>
-                      <template
-                        v-if="
-                          !upcomingReservations &&
-                          !adventureReservationDto.evaluated
-                        "
-                      >
-                        <button
-                          @click="evaluateReservation(adventureReservationDto)"
-                          type="button"
-                          class="btn btn-outline-dark rounded-pill"
-                        >
-                          EVALUATE
-                        </button>
-                      </template>
-                    </div>
+                    </template>
                   </div>
                 </div>
               </div>
@@ -202,6 +227,7 @@
     </div>
   </div>
   <!-- Inner -->
+  <!-- Cancellation modal -->
   <vue-modality
     ref="cancellation"
     title="Reservation cancellation"
@@ -233,8 +259,7 @@
             <p>Start</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker v-model="startDate" disabled>
-            </Datepicker>
+            <Datepicker v-model="startDate" disabled> </Datepicker>
           </div>
         </div>
         <br />
@@ -246,10 +271,7 @@
             <p>End</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker
-              v-model="endDate"
-              disabled
-            ></Datepicker>
+            <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -292,6 +314,117 @@
       Cancel reservation
     </button>
   </vue-modality>
+  <!-- Quick reservation modal -->
+  <vue-modality
+    ref="quickReservation"
+    title="Quick reservation"
+    hide-footer
+    centered
+    width="900px"
+  >
+    <br />
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Adventure</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ quickReservationAdventure.adventureDto.name }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker v-model="startDate" disabled> </Datepicker>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker v-model="endDate" disabled></Datepicker>
+          </div>
+        </div>
+        <template v-if="!availableQuickReservations">
+          <div class="row">
+            <div
+              class="col-sm-3"
+              style="padding-top: 1%; text-align: left; color: gray"
+            >
+              <p>Cancelling condition</p>
+            </div>
+            <div class="col-sm-9" style="padding: 1%; text-align: left">
+              <p>
+                <b>{{
+                  quickReservationAdventure.adventureDto.cancelingCondition
+                }}</b>
+              </p>
+            </div>
+          </div>
+        </template>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>
+              <template v-if="!availableQuickReservations">Total price</template
+              ><template v-if="availableQuickReservations"
+                >Previous price</template
+              >
+            </p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b
+                >{{
+                  quickReservationAdventure.paymentInformationDto.totalPrice
+                }}
+                $</b
+              >
+            </p>
+          </div>
+          <template v-if="availableQuickReservations">
+            <div
+              class="col-sm-3"
+              style="padding-top: 1%; text-align: left; color: gray"
+            >
+              <p>Discounted price</p>
+            </div>
+            <div class="col-sm-9" style="padding: 1%; text-align: left">
+              <p>
+                <b>{{ getDiscountedPrice(quickReservationAdventure) }} $</b>
+              </p>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <button
+      type="button"
+      @click="quickReservationConfirm()"
+      class="btn btn-success"
+    >
+      Confirm quick reservation
+    </button>
+  </vue-modality>
 </template>
 
 <script>
@@ -307,6 +440,7 @@ export default {
   },
   props: {
     upcomingReservations: Boolean,
+    availableQuickReservations: Boolean,
   },
   data() {
     return {
@@ -350,13 +484,18 @@ export default {
       },
       reservationsLoaded: false,
       adventureForCancellation: {},
+      quickReservationAdventure: {},
       startDate: null,
-      endDate: null
+      endDate: null,
     };
   },
   mounted() {
     this.email = this.$route.params.email;
-    this.getReservations();
+    if (this.availableQuickReservations) {
+      this.getAvailableQuickReservations();
+    } else {
+      this.getReservations();
+    }
   },
   methods: {
     getNumberOfDays: function (start, end) {
@@ -410,6 +549,18 @@ export default {
           });
       }
     },
+    getAvailableQuickReservations: function () {
+      axios
+        .get(
+          "http://localhost:8081/quickReservationAdventure/getAvailableReservations",
+          {},
+          {}
+        )
+        .then((response) => {
+          this.adventureReservationDtos = response.data;
+          this.reservationsLoaded = true;
+        });
+    },
     formatDate(formatDate) {
       const date = dayjs(formatDate);
       return date.format("DD.MM.YYYY. HH:mm");
@@ -443,6 +594,12 @@ export default {
         );
       return "logoF1.png";
     },
+    getDiscountedPrice: function (quickReservationDto) {
+      return (
+        quickReservationDto.paymentInformationDto.totalPrice *
+        (100 - quickReservationDto.discount)
+      );
+    },
     seeProfile: function (boatId) {
       this.$router.push("/adventureProfile/" + this.email + "/" + boatId);
     },
@@ -461,6 +618,15 @@ export default {
       this.startDate = this.setDate(reservationDto.startDate);
       this.endDate = this.setDate(reservationDto.endDate);
       this.$refs.cancellation.open();
+    },
+    quickReservationModal: function (reservationDto) {
+      this.quickReservationAdventure = reservationDto;
+      this.startDate = this.setDate(reservationDto.startDate);
+      this.endDate = this.setDate(reservationDto.endDate);
+      this.$refs.quickReservation.open();
+    },
+    quickReservationConfirm: function () {
+      //TODO: method for quick reservation
     },
     cancelReservation: function () {
       this.loader = this.$loading.show({

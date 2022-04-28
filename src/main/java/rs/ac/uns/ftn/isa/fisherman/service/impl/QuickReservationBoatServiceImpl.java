@@ -87,8 +87,8 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
-    public Set<QuickReservationBoat> getIncomingReservations() {
-        return quickReservationBoatRepository.findIncomingReservations(LocalDateTime.now());
+    public Set<QuickReservationBoat> getAvailableReservations() {
+        return quickReservationBoatRepository.getAvailableReservations(LocalDateTime.now());
     }
 
     @Override

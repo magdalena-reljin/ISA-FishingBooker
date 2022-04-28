@@ -80,11 +80,11 @@ public class QuickReservationBoatController {
         quickReservationBoatService.save(reservation);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
-    @GetMapping("/getIncomingReservations")
+    @GetMapping("/getAvailableReservations")
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<Set<QuickReservationBoatDto>> getIncomingReservations () {
+    public ResponseEntity<Set<QuickReservationBoatDto>> getAvailableReservations () {
         Set<QuickReservationBoatDto> boatReservationDtos=new HashSet<>();
-        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getIncomingReservations()){
+        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getAvailableReservations()){
             boatReservationDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         }
         return new ResponseEntity<>(boatReservationDtos,HttpStatus.OK);

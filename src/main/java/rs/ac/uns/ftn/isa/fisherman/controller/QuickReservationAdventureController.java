@@ -72,11 +72,11 @@ public class QuickReservationAdventureController {
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
 
-    @GetMapping("/getIncomingReservations")
+    @GetMapping("/getAvailableReservations")
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<Set<QuickReservationAdventureDto>> getIncomingReservations () {
+    public ResponseEntity<Set<QuickReservationAdventureDto>> getAvailableReservations () {
         Set<QuickReservationAdventureDto> reservationDtos=new HashSet<>();
-        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getIncomingReservations()){
+        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getAvailableReservations()){
             reservationDtos.add(quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure));
         }
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);

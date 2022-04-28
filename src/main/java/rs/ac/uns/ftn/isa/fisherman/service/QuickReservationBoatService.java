@@ -24,5 +24,5 @@ public interface QuickReservationBoatService {
     QuickReservationBoat getById(Long reservationId);
 
     void save(QuickReservationBoat reservation);
-    Set<QuickReservationBoat> getIncomingReservations();
+    Set<QuickReservationBoat> getAvailableReservations();
 }

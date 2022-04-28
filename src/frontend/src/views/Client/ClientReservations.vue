@@ -61,24 +61,24 @@
 
   <template v-if="upcomingReservationsShown">
     <template v-if="selectedEntity == 'cabins'">
-      <ClientCabinReservationsList :upcomingReservations="true" />
+      <ClientCabinReservationsList :upcomingReservations="true" :availableQuickReservations="false"/>
     </template>
     <template v-if="selectedEntity == 'boats'">
-      <ClientBoatReservationsList :upcomingReservations="true" />
+      <ClientBoatReservationsList :upcomingReservations="true" :availableQuickReservations="false"/>
     </template>
     <template v-if="selectedEntity == 'adventures'">
-      <ClientAdventureReservationsList :upcomingReservations="true" />
+      <ClientAdventureReservationsList :upcomingReservations="true" :availableQuickReservations="false"/>
     </template>
   </template>
   <template v-if="!upcomingReservationsShown">
     <template v-if="selectedEntity == 'cabins'">
-      <ClientCabinReservationsList :upcomingReservations="false" />
+      <ClientCabinReservationsList :upcomingReservations="false" :availableQuickReservations="false"/>
     </template>
     <template v-if="selectedEntity == 'boats'">
-      <ClientBoatReservationsList :upcomingReservations="false" />
+      <ClientBoatReservationsList :upcomingReservations="false" :availableQuickReservations="false"/>
     </template>
     <template v-if="selectedEntity == 'adventures'">
-      <ClientAdventureReservationsList :upcomingReservations="false" />
+      <ClientAdventureReservationsList :upcomingReservations="false" :availableQuickReservations="false"/>
     </template>
   </template>
 </template>

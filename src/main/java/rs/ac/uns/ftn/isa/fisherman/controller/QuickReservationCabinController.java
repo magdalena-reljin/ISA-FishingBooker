@@ -75,11 +75,11 @@ public class QuickReservationCabinController {
         quickReservationCabinService.save(reservation);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
-    @GetMapping("/getIncomingReservations")
+    @GetMapping("/getAvailableReservations")
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<Set<QuickReservationCabinDto>> getIncomingReservations () {
+    public ResponseEntity<Set<QuickReservationCabinDto>> getAvailableReservations () {
         Set<QuickReservationCabinDto> cabinReservationDtos=new HashSet<>();
-        for(QuickReservationCabin quickReservationCabin: quickReservationCabinService.getIncomingReservations()){
+        for(QuickReservationCabin quickReservationCabin: quickReservationCabinService.getAvailableReservations()){
             cabinReservationDtos.add(quickReservationCabinMapper.quickReservationToDto(quickReservationCabin));
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);

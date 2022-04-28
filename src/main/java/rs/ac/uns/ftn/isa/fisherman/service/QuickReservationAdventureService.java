@@ -18,5 +18,5 @@ public interface QuickReservationAdventureService {
     double sumProfitOfPricesCalucatedByHours(List<QuickReservationAdventure> reservations, LocalDateTime start, LocalDateTime end);
     void  save(QuickReservationAdventure quickReservationAdventure);
     QuickReservationAdventure findById(Long id);
-    Set<QuickReservationAdventure> getIncomingReservations();
+    Set<QuickReservationAdventure> getAvailableReservations();
 }

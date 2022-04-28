@@ -26,5 +26,5 @@ public interface QuickReservationCabinService {
     List<QuickReservationCabin> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
     void save(QuickReservationCabin reservation);
-    Set<QuickReservationCabin> getIncomingReservations();
+    Set<QuickReservationCabin> getAvailableReservations();
 }

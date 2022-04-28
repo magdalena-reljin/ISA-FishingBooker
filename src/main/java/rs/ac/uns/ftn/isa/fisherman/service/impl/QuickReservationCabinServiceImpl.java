@@ -92,8 +92,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
-    public Set<QuickReservationCabin> getIncomingReservations() {
-        return quickReservationCabinRepository.findIncomingReservations(LocalDateTime.now());
+    public Set<QuickReservationCabin> getAvailableReservations() {
+        return quickReservationCabinRepository.getAvailableReservations(LocalDateTime.now());
     }
 
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
