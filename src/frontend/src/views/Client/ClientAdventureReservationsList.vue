@@ -128,7 +128,7 @@
                     Free equipment:
                     {{ adventureReservationDto.adventureDto.equipment }}
                   </h6>
-                  <template>
+                  <template v-if="!availableQuickReservations">
                     <h6 style="text-align: left">
                       Canceling condition:
                       {{
@@ -146,7 +146,15 @@
                     <div class="col">
                       <div class="row">
                         <div class="col">
-                          <h6 style="text-align: left">Price:</h6>
+                          <h6 style="text-align: left">
+                            <template v-if="!availableQuickReservations"
+                              >Total</template
+                            >
+                            <template v-if="availableQuickReservations"
+                              >Previous</template
+                            >
+                            price:
+                          </h6>
                         </div>
                         <div class="col">
                           <h6 style="text-align: left; color: green">
@@ -157,6 +165,19 @@
                           </h6>
                         </div>
                       </div>
+                      <template v-if="availableQuickReservations">
+                        <div class="row">
+                          <div class="col">
+                            <h6 style="text-align: left">Discounted price:</h6>
+                          </div>
+                          <div class="col">
+                            <h6 style="text-align: left; color: green">
+                              {{ getDiscountedPrice(adventureReservationDto) }}
+                              $
+                            </h6>
+                          </div>
+                        </div>
+                      </template>
                     </div>
                   </div>
 
@@ -361,34 +382,59 @@
             <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
-        <template v-if="!availableQuickReservations">
-          <div class="row">
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>Added additional services:</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
             <div
-              class="col-sm-3"
-              style="padding-top: 1%; text-align: left; color: gray"
+              v-for="(
+                service, index
+              ) in quickReservationAdventure.addedAdditionalServices"
+              :key="index"
+              class="group"
+              role="group"
+              aria-label="Basic outlined example"
             >
-              <p>Cancelling condition</p>
-            </div>
-            <div class="col-sm-9" style="padding: 1%; text-align: left">
-              <p>
-                <b>{{
-                  quickReservationAdventure.adventureDto.cancelingCondition
-                }}</b>
-              </p>
+              <span
+                v-if="service.price == 0"
+                style="background-color: #59d47a"
+                class="badge rounded-pill text-light"
+                >{{ service.name }} - Free</span
+              >
+              <span
+                v-else
+                style="background-color: #703636"
+                class="badge rounded-pill text-light"
+                >{{ service.name }} - {{ service.price }}$ per day</span
+              >
             </div>
           </div>
-        </template>
+        </div>
         <div class="row">
           <div
             class="col-sm-3"
             style="padding-top: 1%; text-align: left; color: gray"
           >
+            <p>Cancelling condition</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
-              <template v-if="!availableQuickReservations">Total price</template
-              ><template v-if="availableQuickReservations"
-                >Previous price</template
-              >
+              <b>{{
+                quickReservationAdventure.adventureDto.cancelingCondition
+              }}</b>
             </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Previous price</p>
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
@@ -400,7 +446,6 @@
               >
             </p>
           </div>
-          <template v-if="availableQuickReservations">
             <div
               class="col-sm-3"
               style="padding-top: 1%; text-align: left; color: gray"
@@ -412,7 +457,6 @@
                 <b>{{ getDiscountedPrice(quickReservationAdventure) }} $</b>
               </p>
             </div>
-          </template>
         </div>
       </div>
     </div>
@@ -425,6 +469,7 @@
       Confirm quick reservation
     </button>
   </vue-modality>
+   <!-- Quick reservation modal -->
 </template>
 
 <script>

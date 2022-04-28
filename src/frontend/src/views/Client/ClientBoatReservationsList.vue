@@ -4,8 +4,17 @@
   <div class="header">
     <form>
       <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
-        <template v-if="upcomingReservations"> Upcoming reservations </template>
-        <template v-if="!upcomingReservations"> Reservation history </template>
+        <template v-if="!availableQuickReservations">
+          <template v-if="upcomingReservations">
+            Upcoming reservations
+          </template>
+          <template v-if="!upcomingReservations">
+            Reservation history
+          </template>
+        </template>
+        <template v-if="availableQuickReservations"
+          >Available quick reservations</template
+        >
       </h1>
     </form>
   </div>
@@ -22,8 +31,9 @@
     <template v-if="sortedReservations.length == 0">
       <h3>
         No
-        <template v-if="upcomingReservations">upcoming</template> boat
-        reservations to show.
+        <template v-if="upcomingReservations">upcoming</template>
+        <template v-if="availableQuickReservations">available quick</template>
+        boat reservations to show.
       </h3>
     </template>
   </template>
@@ -59,14 +69,12 @@
                       </h2>
                     </div>
                     <div class="col-10">
-                        <h4 style="text-align: left" class="card-title">
-                          {{
-                            formatDate(setDate(boatReservationDto.startDate))
-                          }}
-                          -
-                          {{ formatDate(setDate(boatReservationDto.endDate)) }}
-                        </h4>
-                      </div>
+                      <h4 style="text-align: left" class="card-title">
+                        {{ formatDate(setDate(boatReservationDto.startDate)) }}
+                        -
+                        {{ formatDate(setDate(boatReservationDto.endDate)) }}
+                      </h4>
+                    </div>
                     <div style="vertical-align: bottom" class="col">
                       <span class="badge bg-warning text-light"
                         ><svg
@@ -105,7 +113,9 @@
                     {{ getFullAddress(index) }}
                   </h6>
 
-                  <h6 style="text-align: left">{{ boatReservationDto.boatDto.description }}</h6>
+                  <h6 style="text-align: left">
+                    {{ boatReservationDto.boatDto.description }}
+                  </h6>
                   <h6 style="text-align: left">
                     {{ boatReservationDto.boatDto.type.toUpperCase() }}
                   </h6>
@@ -118,18 +128,44 @@
                     <div class="col">
                       <div class="row">
                         <div class="col">
-                          <h6 style="text-align: left">Total price:</h6>
+                          <h6 style="text-align: left">
+                            <template v-if="!availableQuickReservations"
+                              >Total</template
+                            >
+                            <template v-if="availableQuickReservations"
+                              >Previous</template
+                            >
+                            price:
+                          </h6>
                         </div>
                         <div class="col">
                           <h6 style="text-align: left; color: green">
-                            {{ boatReservationDto.paymentInformationDto.totalPrice }} $
+                            {{
+                              boatReservationDto.paymentInformationDto
+                                .totalPrice
+                            }}
+                            $
                           </h6>
                         </div>
                       </div>
+                      <template v-if="availableQuickReservations">
+                        <div class="row">
+                          <div class="col">
+                            <h6 style="text-align: left">Discounted price:</h6>
+                          </div>
+                          <div class="col">
+                            <h6 style="text-align: left; color: green">
+                              {{ getDiscountedPrice(boatReservationDto) }}
+                              $
+                            </h6>
+                          </div>
+                        </div>
+                      </template>
                     </div>
                   </div>
 
                   <div class="row">
+                    <template v-if="!availableQuickReservations">
                       <div class="col" style="text-align: right">
                         <button
                           @click="writeComplaint(boatReservationDto)"
@@ -169,7 +205,17 @@
                           </button>
                         </template>
                       </div>
-                    </div>
+                    </template>
+                    <template v-if="availableQuickReservations">
+                      <button
+                        @click="quickReservationModal(boatReservationDto)"
+                        type="button"
+                        class="btn btn-outline-dark rounded-pill"
+                      >
+                        BOOK
+                      </button>
+                    </template>
+                  </div>
                 </div>
               </div>
               <hr style="color: white" />
@@ -181,7 +227,8 @@
     </div>
   </div>
   <!-- Inner -->
-    <vue-modality
+  <!-- Cancellation modal -->
+  <vue-modality
     ref="cancellation"
     title="Reservation cancellation"
     hide-footer
@@ -212,8 +259,7 @@
             <p>Start</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker v-model="startDate" disabled>
-            </Datepicker>
+            <Datepicker v-model="startDate" disabled> </Datepicker>
           </div>
         </div>
         <br />
@@ -225,10 +271,7 @@
             <p>End</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker
-              v-model="endDate"
-              disabled
-            ></Datepicker>
+            <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -240,9 +283,7 @@
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
-              <b>{{
-                boatForCancellation.boatDto.cancelingCondition
-              }}</b>
+              <b>{{ boatForCancellation.boatDto.cancelingCondition }}</b>
             </p>
           </div>
         </div>
@@ -256,10 +297,7 @@
           <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
               <b
-                >{{
-                  boatForCancellation.paymentInformationDto.totalPrice
-                }}
-                $</b
+                >{{ boatForCancellation.paymentInformationDto.totalPrice }} $</b
               >
             </p>
           </div>
@@ -271,6 +309,140 @@
       Cancel reservation
     </button>
   </vue-modality>
+  <!-- Cancellation modal -->
+  <!-- Quick reservation modal -->
+  <vue-modality
+    ref="quickReservation"
+    title="Quick reservation"
+    hide-footer
+    centered
+    width="900px"
+  >
+    <br />
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Boat</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ quickReservationBoat.boatDto.name }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>Start</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker v-model="startDate" disabled> </Datepicker>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>End</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <Datepicker v-model="endDate" disabled></Datepicker>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col"
+            style="padding-top: 2%; text-align: left; color: gray"
+          >
+            <p>Added additional services:</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%">
+            <div
+              v-for="(
+                service, index
+              ) in quickReservationBoat.addedAdditionalServices"
+              :key="index"
+              class="group"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+              <span
+                v-if="service.price == 0"
+                style="background-color: #59d47a"
+                class="badge rounded-pill text-light"
+                >{{ service.name }} - Free</span
+              >
+              <span
+                v-else
+                style="background-color: #703636"
+                class="badge rounded-pill text-light"
+                >{{ service.name }} - {{ service.price }}$ per day</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Cancelling condition</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ quickReservationBoat.boatDto.cancelingCondition }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Previous price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b
+                >{{
+                  quickReservationBoat.paymentInformationDto.totalPrice
+                }}
+                $</b
+              >
+            </p>
+          </div>
+          <div
+            class="col-sm-3"
+            style="padding-top: 1%; text-align: left; color: gray"
+          >
+            <p>Discounted price</p>
+          </div>
+          <div class="col-sm-9" style="padding: 1%; text-align: left">
+            <p>
+              <b>{{ getDiscountedPrice(quickReservationBoat) }} $</b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <button
+      type="button"
+      @click="quickReservationConfirm()"
+      class="btn btn-success"
+    >
+      Confirm quick reservation
+    </button>
+  </vue-modality>
+  <!-- Quick reservation modal -->
 </template>
 
 <script>
@@ -286,6 +458,7 @@ export default {
   },
   props: {
     upcomingReservations: Boolean,
+    availableQuickReservations: Boolean,
   },
   data() {
     return {
@@ -329,13 +502,18 @@ export default {
       },
       reservationsLoaded: false,
       boatForCancellation: {},
+      quickReservationBoat: {},
       startDate: null,
-      endDate: null
+      endDate: null,
     };
   },
   mounted() {
     this.email = this.$route.params.email;
-    this.getReservations();
+    if (this.availableQuickReservations) {
+      this.getAvailableQuickReservations();
+    } else {
+      this.getReservations();
+    }
   },
   methods: {
     getNumberOfDays: function (start, end) {
@@ -389,6 +567,18 @@ export default {
           });
       }
     },
+    getAvailableQuickReservations: function () {
+      axios
+        .get(
+          "http://localhost:8081/quickReservationBoat/getAvailableReservations",
+          {},
+          {}
+        )
+        .then((response) => {
+          this.boatReservationDtos = response.data;
+          this.reservationsLoaded = true;
+        });
+    },
     formatDate(formatDate) {
       const date = dayjs(formatDate);
       return date.format("DD.MM.YYYY. HH:mm");
@@ -422,6 +612,12 @@ export default {
         );
       return "logoF1.png";
     },
+    getDiscountedPrice: function (quickReservationDto) {
+      return (
+        quickReservationDto.paymentInformationDto.totalPrice *
+        (100 - quickReservationDto.discount)
+      );
+    },
     seeProfile: function (boatId) {
       this.$router.push("/boatProfile/" + this.email + "/" + boatId);
     },
@@ -440,6 +636,15 @@ export default {
       this.startDate = this.setDate(reservationDto.startDate);
       this.endDate = this.setDate(reservationDto.endDate);
       this.$refs.cancellation.open();
+    },
+    quickReservationModal: function (reservationDto) {
+      this.quickReservationBoat = reservationDto;
+      this.startDate = this.setDate(reservationDto.startDate);
+      this.endDate = this.setDate(reservationDto.endDate);
+      this.$refs.quickReservation.open();
+    },
+    quickReservationConfirm: function () {
+      //TODO: method for quick reservation
     },
     cancelReservation: function () {
       this.loader = this.$loading.show({
