@@ -91,6 +91,11 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public Set<QuickReservationBoat> getAvailableReservations() {
+        return quickReservationBoatRepository.getAvailableReservations(LocalDateTime.now());
+    }
+
+    @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         if(quickReservationBoatRepository.quickReservationExists(id,startDate,endDate).size()>0) return false;
         return true;

@@ -87,6 +87,11 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return quickReservationAdventureRepository.getById(id);
     }
 
+    @Override
+    public Set<QuickReservationAdventure> getAvailableReservations() {
+        return quickReservationAdventureRepository.getAvailableReservations(LocalDateTime.now());
+    }
+
 
     @Override
     public Set<QuickReservationAdventure> getPastReservations(String username) {

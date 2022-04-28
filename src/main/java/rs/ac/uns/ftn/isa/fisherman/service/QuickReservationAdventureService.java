@@ -1,5 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,4 +18,5 @@ public interface QuickReservationAdventureService {
     double sumProfitOfPricesCalucatedByHours(List<QuickReservationAdventure> reservations, LocalDateTime start, LocalDateTime end);
     void  save(QuickReservationAdventure quickReservationAdventure);
     QuickReservationAdventure findById(Long id);
+    Set<QuickReservationAdventure> getAvailableReservations();
 }

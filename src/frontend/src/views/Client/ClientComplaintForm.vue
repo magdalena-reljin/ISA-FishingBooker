@@ -14,7 +14,7 @@
                 v-model="subjectRole"
                 class="form-select form-select-sm"
                 aria-label=".form-select-sm example"
-                :disabled="selectedEntity='Adventure'"
+                :disabled="selectedEntity=='Adventure'"
               >
                 <option
                   v-for="(item, index) in options"
