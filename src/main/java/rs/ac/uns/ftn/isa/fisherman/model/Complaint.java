@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -21,7 +24,8 @@ public abstract class Complaint {
     protected LocalDateTime date;
     @Column(name="responded")
     protected boolean responded;
-    @ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.MERGE)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="users_id")
     protected Client client;
     @Column(name="ownersUsername")
