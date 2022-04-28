@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,7 +19,8 @@ public class Penalty {
     @Column(name="date")
     protected LocalDateTime date;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "users_id")
     protected Client client;
 

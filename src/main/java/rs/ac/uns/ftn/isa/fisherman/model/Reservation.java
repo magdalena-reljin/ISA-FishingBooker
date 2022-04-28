@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,7 +20,8 @@ public class Reservation {
     private LocalDateTime endDate;
     @Embedded
     private PaymentInformation paymentInformation;
-    @ManyToOne(cascade=CascadeType.MERGE)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="users_id")
     protected Client client;
     @Column(name = "successfull")

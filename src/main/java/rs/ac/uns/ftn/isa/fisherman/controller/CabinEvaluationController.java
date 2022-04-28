@@ -8,15 +8,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AddNewEvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.EvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinEvaluationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwnerEvaluation;
+import rs.ac.uns.ftn.isa.fisherman.model.Evaluation;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -29,6 +33,7 @@ public class CabinEvaluationController {
     private CabinEvaluationService cabinEvaluationService;
     @Autowired
     private CabinOwnerEvaluationService cabinOwnerEvaluationService;
+
 
     private final CabinEvaluationMapper cabinEvaluationMapper=new CabinEvaluationMapper();
 
@@ -44,12 +49,13 @@ public class CabinEvaluationController {
             return new ResponseEntity<>("Reservation already has evaluations!", HttpStatus.BAD_REQUEST);
         }
     }
-    @PreAuthorize("hasRole('CABINOWNER')")
+    @PreAuthorize("hasRole('CABINOWNER') || hasRole('CLIENT')")
     @GetMapping("/findByCabinId/{cabinId}")
     public ResponseEntity<Set<CabinEvaluationDto>> findByCabinId(@PathVariable("cabinId")Long cabinId){
         Set<CabinEvaluationDto> cabinEvaluations=new HashSet<>();
         for(CabinEvaluation cabinEvaluation: cabinEvaluationService.findByCabinId(cabinId))
             cabinEvaluations.add(cabinEvaluationMapper.cabinEvaluationToDto(cabinEvaluation));
-        return new ResponseEntity<>(cabinEvaluations, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(cabinEvaluations, HttpStatus.OK);
     }
+
 }

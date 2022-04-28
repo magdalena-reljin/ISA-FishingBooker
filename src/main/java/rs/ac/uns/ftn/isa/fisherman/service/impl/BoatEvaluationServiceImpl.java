@@ -25,4 +25,9 @@ public class BoatEvaluationServiceImpl implements BoatEvaluationService {
         BoatReservation boatReservation = boatReservationService.getById(addNewEvaluationDto.getReservationId());
         boatEvaluationRepository.save(new BoatEvaluation(null, LocalDateTime.now(), addNewEvaluationDto.getCommentForTheEntity(), addNewEvaluationDto.getGradeForTheEntity(), false, boatReservation.getClient(), boatReservation.getOwnersUsername(), boatReservation.getBoat()));
     }
+
+    @Override
+    public BoatEvaluation findById(Long Id) {
+        return boatEvaluationRepository.getById(Id);
+    }
 }

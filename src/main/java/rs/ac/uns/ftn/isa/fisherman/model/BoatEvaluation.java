@@ -1,15 +1,18 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @DiscriminatorValue("BOATEVALUATION")
 public class BoatEvaluation extends Evaluation {
-    @ManyToOne
+
+    private static final String TYPE = "BOAT EVALUATION";
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name= "boat_id")
     private Boat boat;
 
@@ -26,5 +29,9 @@ public class BoatEvaluation extends Evaluation {
 
     public void setBoat(Boat boat) {
         this.boat = boat;
+    }
+
+    public  String getTYPE() {
+        return TYPE;
     }
 }

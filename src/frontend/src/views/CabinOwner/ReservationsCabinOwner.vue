@@ -482,8 +482,8 @@ export default ({
                       showConfirmButton: false,
                       timer: 2500
                     })
-                    this.getQuickReservations()
-                    this.getPastQuickReservations()
+                    this.getReservations()
+                    this.getPastReservations()
                       
                 })
 

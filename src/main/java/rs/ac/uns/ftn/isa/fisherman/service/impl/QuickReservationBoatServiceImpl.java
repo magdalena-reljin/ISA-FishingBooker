@@ -2,12 +2,15 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
+import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
 import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
 
+import javax.mail.MessagingException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +27,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     private BoatReservationService boatReservationService;
     @Autowired
     private QuickReservationBoatRepository quickReservationBoatRepository;
+
 
     @Override
     public boolean ownerCreates(QuickReservationBoat quickReservationBoat) {

@@ -13,6 +13,7 @@
             {{username}}
           </a>
           <ul class="dropdown-menu" style="width: 100%" aria-labelledby="navbarDropdownMenuLink">
+            <li><a @click="viewProfile()" class="dropdown-item" href="#">My profile</a></li>
             <li><a @click="myProfile()" class="dropdown-item" href="#">Edit profile</a></li>
             <li><a @click="logout()" class="dropdown-item" href="#">Log out</a></li>
           </ul>
@@ -103,15 +104,21 @@
 
 <script>
 export default ({
+  data(){
+    return{
+
+    }
+  },
   props: {
     username: String,
+  
   },
   methods: {
     myProfile: function () {
       this.$router.push("/editProfile/" + "cabinOwner/" + this.$props.username);
     },
     logout: function(){
-      this.$store.dispatch('logOut').then(()=> {this.$router.push('/');})
+      this.$store.dispatch('logOut').then(()=> {location.replace('/');})
     },
     addNewCabin: function () {
       this.$router.push("/addNewCabin/" + this.$props.username);
@@ -127,7 +134,10 @@ export default ({
     },
     statistics: function(){
           this.$router.push('/cabinBusinessReport/'+ this.$props.username);
-    }  
+    },
+    viewProfile: function(){
+          window.location.replace('http://localhost:8080/cabinOwner/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
+    } 
   }, 
 });
 </script>

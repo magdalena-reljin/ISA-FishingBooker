@@ -10,4 +10,12 @@ public interface EvaluationService {
     void setEvaluationStatus(Long id);
 
     void deleteUnapprovedEvaluation(Long id);
+
+    List<Evaluation> findCabinOwnerEvaluations(Long id);
+
+    List<Evaluation> findBoatOwnerEvaluations(Long id);
+
+    List<Evaluation>  findInstructorEvaluations(Long id);
+
+    List<Evaluation>  getBoatEvaluations(Long boatId);
 }

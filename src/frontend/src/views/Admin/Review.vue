@@ -156,6 +156,11 @@ import VueModality from 'vue-modality-v3'
          if(this.selectedPenalty ==0){
            //SETOVATI PENAL KLIJENTUUUU
          }
+                 this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    onCancel: this.onCancel,
+                   });
                axios.post("http://localhost:8081/reports/sendReviewResponse",{
                      id:this.id,
                     comment: this.comment,
@@ -177,6 +182,8 @@ import VueModality from 'vue-modality-v3'
                                        })
                                        this.comment= ''
                                        this.selectedPenalty= null
+                                      this.loader.hide();
+                                       this.loader=null
                                        this.getAllReports()
 
             }

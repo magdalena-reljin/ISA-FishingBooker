@@ -39,7 +39,7 @@ public class CabinEvaluationServiceImpl implements CabinEvaluationService {
 
     @Override
     public Set<CabinEvaluation> findByCabinId(Long cabinId) {
-        return null;
+        return cabinEvaluationRepository.findByCabinId(cabinId);
     }
 
     @Override

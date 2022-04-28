@@ -64,7 +64,7 @@ public class AdventureController {
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('CLIENT') || hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<Set<AdventureDto>> getAll(){
         Set<AdventureDto> adventures=new HashSet<>();
@@ -86,7 +86,7 @@ public class AdventureController {
         return new ResponseEntity<>(adventureMapper.adventureToAdventureDto(adventure), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')  || hasRole('ADMIN')")
     @PostMapping("/deleteAdventure")
     public ResponseEntity<String> deleteAdventure(@RequestBody AdventureDto adventureDto){
         adventureService.delete(adventureDto.getId());
@@ -110,7 +110,7 @@ public class AdventureController {
             adventures.add(adventureMapper.adventureToAdventureDto(adventure));
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
+    @PreAuthorize("hasRole('FISHING_INSTRUCTOR')  || hasRole('ADMIN')")
     @PostMapping("/canBeEditedOrDeleted/{id}")
     public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
         return new ResponseEntity<>(adventureService.canBeEditedOrDeleted(id),HttpStatus.OK);

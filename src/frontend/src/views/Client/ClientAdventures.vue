@@ -2,7 +2,7 @@
   <template v-if="!bookAdventureOpen">
     <!-- search-->
 
-    <div class="header">
+    <div v-if="role=='CLIENT'" class="header">
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Search adventures
@@ -141,7 +141,7 @@
 
     <!--sort-->
 
-    <hr />
+    <hr v-if="role=='CLIENT'" />
 
     <template v-if="!adventureLoaded">
       <h3>Loading...</h3>

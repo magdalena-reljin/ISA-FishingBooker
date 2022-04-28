@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 @Entity
 @Table(name="rooms")
@@ -13,7 +16,8 @@ public class Room {
     @Column(name="bedsPerRoom")
     protected Integer bedsPerRoom;
 
-    @ManyToOne()
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="cabin_id")
     protected Cabin cabin;
 
