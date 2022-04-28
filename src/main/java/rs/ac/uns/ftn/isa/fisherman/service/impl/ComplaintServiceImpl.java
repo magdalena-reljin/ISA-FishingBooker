@@ -73,9 +73,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaint.setResponded(true);
         complaintRepository.save(complaint);
         if(complaint.getComplaintType().equals("CABIN_COMPLAINT")){
-            System.out.println("AAAAAAAAAAA-------------------");
             String name= cabinComplaintRepository.getById(complaint.getId()).getCabin().getName();
-            System.out.println("AAAAAAAAAAA"+name);
             sendMailNotificationForCabinAndBoat(complaint,name,"cabin",response);
             sendMailNotificationForClient(complaint,name,response);
         }else if(complaint.getComplaintType().equals("BOAT_COMPLAINT")){
@@ -138,15 +136,13 @@ public class ComplaintServiceImpl implements ComplaintService {
     private void sendMailNotificationForCabinAndBoat(Complaint complaint,String name,String type,String response) {
 
         {
-            System.out.println("AAAA responsee" + response);
             try {
                 String message = "Client " + complaint.getClient().getUsername() + " complained on your " + type + " " + name + " "
                         + ". \n" +
                         "Client comment: " + complaint.getText() + "."
                         + ". \n" +
                         "Admin's response: " + response + ".";
-                System.out.println("ZAVRSIO MESSAGE");
-                mailService.sendMail("dajanazlokapa1@gmail.com", message, new ComplaintOwnersInfo());
+                mailService.sendMail(complaint.getOwnersUsername(), message, new ComplaintOwnersInfo());
 
             } catch (MessagingException e) {
                 logger.error(e.toString());
@@ -161,7 +157,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                         + ". \n" +
                         "Admin's response: " + response + ".";
 
-                mailService.sendMail("dajanazlokapa1@gmail.com", message, new ComplaintOwnersInfo());
+                mailService.sendMail(complaint.getOwnersUsername(), message, new ComplaintOwnersInfo());
 
             } catch (MessagingException e) {
                 logger.error(e.toString());

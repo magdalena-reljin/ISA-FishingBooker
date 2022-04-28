@@ -1,9 +1,9 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 public class CabinOwnerEvaluation extends Evaluation{
 
     private static final String TYPE = "CABIN OWNER EVALUATION";
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name= "cabin_owner_id")
     private CabinOwner cabinOwner;
 

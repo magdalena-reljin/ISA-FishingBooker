@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -8,7 +11,8 @@ import java.time.LocalDateTime;
 public class CabinEvaluation extends Evaluation{
 
     private static final String TYPE = "CABIN EVALUATION";
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name= "cabin_id")
     private Cabin cabin;
 

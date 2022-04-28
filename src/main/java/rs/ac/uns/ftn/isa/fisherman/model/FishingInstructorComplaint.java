@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -10,7 +13,8 @@ public class FishingInstructorComplaint extends Complaint {
 
     private static final String COMPLAINT_TYPE = "FISHING_INSTRUCTOR_COMPLAINT";
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name= "fishing_instructor_id")
     private FishingInstructor fishingInstructor;
 
