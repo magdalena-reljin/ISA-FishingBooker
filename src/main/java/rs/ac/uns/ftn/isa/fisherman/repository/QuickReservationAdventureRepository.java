@@ -3,7 +3,6 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 
 import java.time.LocalDateTime;
@@ -32,6 +31,9 @@ public interface QuickReservationAdventureRepository extends JpaRepository<Quick
 
     @Query(value="select count(cr.instructors_id) from quick_reservation_adventure cr where cr.owners_username=:username and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     Integer countReservationsInPeriod(@Param("start")LocalDateTime startWeek, @Param("end") LocalDateTime endWeek, @Param("username") String username);
+
+    @Query(value="select * from quick_reservation_adventure r where :currentDate <= r.start_date",nativeQuery = true)
+    Set<QuickReservationAdventure> findIncomingReservations(@Param("start") LocalDateTime currentDate);
 
 }
 

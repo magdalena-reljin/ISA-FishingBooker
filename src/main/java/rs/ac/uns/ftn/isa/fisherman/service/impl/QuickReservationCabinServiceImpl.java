@@ -91,6 +91,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         quickReservationCabinRepository.save(reservation);
     }
 
+    @Override
+    public Set<QuickReservationCabin> getIncomingReservations() {
+        return quickReservationCabinRepository.findIncomingReservations(LocalDateTime.now());
+    }
+
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
         Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
 

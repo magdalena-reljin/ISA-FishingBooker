@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 
 import java.time.LocalDateTime;
@@ -36,4 +35,7 @@ public interface QuickReservationBoatRepository extends JpaRepository<QuickReser
 
     @Query(value="select * from quick_reservation_boat cr where cr.owners_username=:ownersUsername and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
     List<QuickReservationBoat> findReservationsInPeriodToSumProfit(@Param("ownersUsername")String ownersUsername , @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value="select * from quick_reservation_boat r where :currentDate <= r.start_date",nativeQuery = true)
+    Set<QuickReservationBoat> findIncomingReservations(@Param("start") LocalDateTime currentDate);
 }
