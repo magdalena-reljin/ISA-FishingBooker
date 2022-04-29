@@ -124,7 +124,7 @@
           </div>
           <div class="col">
             <p>
-              <b>{{ adventureDto.fishingInstructorUsername }}</b>
+              <a href="#" @click="viewProfile()"><b>{{ adventureDto.fishingInstructorUsername }}</b></a>
             </p>
           </div>
         </div>
@@ -494,6 +494,9 @@ export default {
     if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
+    viewProfile: function () {
+      this.$router.push("/client/viewProfile/" + this.email + "/" + this.adventureDto.fishingInstructorUsername);
+    },
     calculatePrice: function () {
       let numOfHours = this.getNumberOfHours(this.start, this.end);
       var pricePerHour = this.adventureDto.price;

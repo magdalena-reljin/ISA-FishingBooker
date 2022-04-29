@@ -28,11 +28,11 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <p class="m-b-10 f-w-600">Location</p>
-                                        <h6 class="text-muted f-w-400">{{MyUser.address.city}},{{MyUser.address.country}}</h6>
+                                        <h6 class="text-muted f-w-400">{{MyUser.address.city}}, {{MyUser.address.country}}</h6>
                                     </div>
                                     <div class="col-sm-6">
                                         <p class="m-b-10 f-w-600">Account type</p>
-                                        <h6 class="text-muted f-w-400">{{MyUser.role}}</h6>
+                                        <h6 v-if="MyUser.role" class="text-muted f-w-400">{{getRoleWithoutPrefix(MyUser.role)}}</h6>
                                     </div>
                                 </div>
                                 <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Account rank</h6>
@@ -61,6 +61,8 @@
 <div v-if="showComments==true" style="text-align: left; padding-left: 13%; padding-right: 11%;">
     <h1>Comments about user</h1>
     <hr>
+    <h3 v-if="comments.length==0">No comments to show.</h3>
+    <template v-if="comments.length!=0">  
       <div v-for="(comment,index) in comments" :key="index" class="row">
             <div class="col-sm-1">
               <svg viewBox="0 0 36 36" fill="none" role="img" xmlns="http://www.w3.org/2000/svg" width="80" height="80"><title>Coretta Scott</title><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="#FFFFFF"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#737777"></rect><rect x="0" y="0" width="36" height="36" transform="translate(5 -1) rotate(55 18 18) scale(1.1)" fill="#0e0043" rx="6"></rect><g transform="translate(7 -6) rotate(-5 18 18)"><path d="M15 20c2 1 4 1 6 0" stroke="#FFFFFF" fill="none" stroke-linecap="round"></path><rect x="14" y="14" width="1.5" height="2" rx="1" stroke="none" fill="#FFFFFF"></rect><rect x="20" y="14" width="1.5" height="2" rx="1" stroke="none" fill="#FFFFFF"></rect></g></g></svg>                
@@ -89,6 +91,7 @@
             <hr> 
               <br>
      </div>
+    </template>
       
 </div>
 </template>
@@ -128,6 +131,16 @@ export default {
     //this.getUser()
   },
   methods: {
+        getRoleWithoutPrefix: function(role){
+            if(role.substring(5)=="FISHING_INSTRUCTOR")
+                return "FISHING INSTRUCTOR";
+            else if(role.substring(5)=="CABINOWNER")
+                return "CABIN OWNER";
+            else if(role.substring(5)=="BOATOWNER")
+                return "BOAT OWNER";
+            else
+                return role.substring(5);
+        },
         getUser: function(username){
  
             this.email=username

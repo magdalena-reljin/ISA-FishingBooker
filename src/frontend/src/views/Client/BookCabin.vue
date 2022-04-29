@@ -126,7 +126,7 @@
           </div>
           <div class="col">
             <p>
-              <b>{{ cabinDto.ownerUsername }}</b>
+              <a href="#" @click="viewProfile()"><b>{{ cabinDto.ownerUsername }}</b></a>
             </p>
           </div>
         </div>
@@ -503,6 +503,9 @@ export default {
     if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
+    viewProfile: function () {
+      this.$router.push("/client/viewProfile/" + this.email + "/" + this.cabinDto.ownerUsername);
+    },
     calculatePrice: function () {
       let numOfDays = this.getNumberOfDays(this.start, this.end);
       var pricePerDay = this.cabinDto.price;
