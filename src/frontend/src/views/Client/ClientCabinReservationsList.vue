@@ -112,9 +112,48 @@
                     </svg>
                     {{ getFullAddress(index) }}
                   </h6>
+                  <div
+                      class="row"
+                      v-if="
+                        cabinReservationDto.addedAdditionalServices
+                          .length != 0
+                      "
+                    >
+                      <div
+                        class="col"
+                        style="padding-top: 2%; text-align: left; color: black"
+                      >
+                        <p>Added additional services:</p>
+                      </div>
+                      <div class="col-sm-9" style="padding: 1%; text-align: left;">
+                        <template
+                          v-for="(
+                            service, index
+                          ) in cabinReservationDto.addedAdditionalServices"
+                          :key="index"
+                          class="group"
+                          role="group"
+                          aria-label="Basic outlined example"
+                        >
+                          <span
+                            v-if="service.price == 0"
+                            style="background-color: #59d47a"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - Free</span
+                          >
+                          <span
+                            v-else
+                            style="background-color: #703636"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - {{ service.price }}$ per
+                            day</span
+                          >
+                        </template>
+                      </div>
+                    </div>
                   <template v-if="(!availableQuickReservations)&&(!cabinReservationDto.discount)">
                   <h6 style="text-align: left; color: green">
-                    {{ cabinReservationDto.paymentInformationDto.totalPrice }} $
+                    Total price: {{ cabinReservationDto.paymentInformationDto.totalPrice }} $
                   </h6>
                   </template>
                   <template v-if="availableQuickReservations || cabinReservationDto.discount">
@@ -122,7 +161,7 @@
                     Previous price: <a style="text-decoration: line-through">{{ twoDecimales(cabinReservationDto.paymentInformationDto.totalPrice) }} $ </a>
                   </h6>
                   <h6 style="text-align: left; color: green">
-                    Discount: <i>-{{twoDecimales(cabinReservationDto.discount)}}%</i>
+                    Discount: <i>-{{cabinReservationDto.discount}}%</i>
                   </h6>
                   <h6 style="text-align: left; color: green">
                     Discounted price: <b>{{ twoDecimales(getDiscountedPrice(cabinReservationDto)) }}

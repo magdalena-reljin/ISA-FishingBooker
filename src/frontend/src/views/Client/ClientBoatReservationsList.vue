@@ -125,7 +125,45 @@
                         Max people: {{ boatReservationDto.boatDto.maxPeople }}
                       </h6>
                     </div>
-
+<div
+                      class="row"
+                      v-if="
+                        boatReservationDto.addedAdditionalServices
+                          .length != 0
+                      "
+                    >
+                      <div
+                        class="col"
+                        style="padding-top: 2%; text-align: left; color: black"
+                      >
+                        <p>Added additional services:</p>
+                      </div>
+                      <div class="col-sm-9" style="padding: 1%; text-align: left;">
+                        <template
+                          v-for="(
+                            service, index
+                          ) in boatReservationDto.addedAdditionalServices"
+                          :key="index"
+                          class="group"
+                          role="group"
+                          aria-label="Basic outlined example"
+                        >
+                          <span
+                            v-if="service.price == 0"
+                            style="background-color: #59d47a"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - Free</span
+                          >
+                          <span
+                            v-else
+                            style="background-color: #703636"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - {{ service.price }}$ per
+                            day</span
+                          >
+                        </template>
+                      </div>
+                    </div>
                     <div class="row">
                       <div class="col">
                         <h6
@@ -190,7 +228,7 @@
                           <h6 style="text-align: left; color: green">
                             <i
                               >-{{
-                                twoDecimales(boatReservationDto.discount)
+                                boatReservationDto.discount
                               }}%</i
                             >
                           </h6>

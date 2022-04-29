@@ -128,7 +128,7 @@
                     Free equipment:
                     {{ adventureReservationDto.adventureDto.equipment }}
                   </h6>
-                  <template v-if="!availableQuickReservations">
+                  <template v-if="(!availableQuickReservations)&&(!adventureReservationDto.discount)&&possibleCancellation(adventureReservationDto.startDate)">
                     <h6 style="text-align: left">
                       Canceling condition:
                       {{
@@ -143,49 +143,134 @@
                         {{ adventureReservationDto.adventureDto.maxPeople }}
                       </h6>
                     </div>
+                    <div
+                      class="row"
+                      v-if="
+                        adventureReservationDto.addedAdditionalServices
+                          .length != 0
+                      "
+                    >
+                      <div
+                        class="col"
+                        style="padding-top: 2%; text-align: left; color: black"
+                      >
+                        <p>Added additional services:</p>
+                      </div>
+                      <div class="col-sm-9" style="padding: 1%; text-align: left;">
+                        <template
+                          v-for="(
+                            service, index
+                          ) in adventureReservationDto.addedAdditionalServices"
+                          :key="index"
+                          class="group"
+                          role="group"
+                          aria-label="Basic outlined example"
+                        >
+                          <span
+                            v-if="service.price == 0"
+                            style="background-color: #59d47a"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - Free</span
+                          >
+                          <span
+                            v-else
+                            style="background-color: #703636"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - {{ service.price }}$ per
+                            day</span
+                          >
+                        </template>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <h6
+                          v-bind:style="[
+                            availableQuickReservations ||
+                            adventureReservationDto.discount
+                              ? 'color: red;'
+                              : 'color: green;',
+                            'text-align: left;',
+                          ]"
+                        >
+                          <template
+                            v-if="
+                              availableQuickReservations ||
+                              adventureReservationDto.discount
+                            "
+                            >Previous</template
+                          >
+                          <template
+                            v-if="
+                              !availableQuickReservations &&
+                              !adventureReservationDto.discount
+                            "
+                            >Total</template
+                          >
+                          price:
+                        </h6>
+                      </div>
+                      <div class="col">
+                        <h6
+                          v-bind:style="[
+                            availableQuickReservations ||
+                            adventureReservationDto.discount
+                              ? 'color: red; text-decoration: line-through;'
+                              : 'color: green;',
+                            'text-align: left;',
+                          ]"
+                        >
+                          {{
+                            twoDecimales(
+                              adventureReservationDto.paymentInformationDto
+                                .totalPrice
+                            )
+                          }}$
+                        </h6>
+                      </div>
+                    </div>
+                    <template
+                      v-if="
+                        availableQuickReservations ||
+                        adventureReservationDto.discount
+                      "
+                    >
                       <div class="row">
                         <div class="col">
-                          <h6 v-bind:style="[availableQuickReservations || adventureReservationDto.discount ? 'color: red;' : 'color: green;', 'text-align: left;']">
-                            <template v-if="availableQuickReservations || adventureReservationDto.discount"
-                              >Previous</template
-                            >
-                            <template v-if="(!availableQuickReservations)&&(!adventureReservationDto.discount)"
-                              >Total</template
-                            >
-                            price:
+                          <h6 style="text-align: left; color: green">
+                            Discount:
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 v-bind:style="[availableQuickReservations || adventureReservationDto.discount ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
-                            {{
-                              twoDecimales(adventureReservationDto.paymentInformationDto
-                                .totalPrice)
-                            }}$ </h6>                         
+                          <h6 style="text-align: left; color: green">
+                            <i
+                              >-{{
+                                adventureReservationDto.discount
+                              }}%</i
+                            >
+                          </h6>
                         </div>
                       </div>
-                      <template v-if="availableQuickReservations || adventureReservationDto.discount">
-                        <div class="row">
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">Discount:</h6>
-                          </div>
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">
-                              <i>-{{twoDecimales(adventureReservationDto.discount)}}%</i>
-                            </h6>
-                          </div>
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            Discounted price:
+                          </h6>
                         </div>
-                        <div class="row">
-                          <div class="col">
-                            <h6 style="text-align: left;  color: green">Discounted price:</h6>
-                          </div>
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">
-                              <b>{{ twoDecimales(getDiscountedPrice(adventureReservationDto)) }}
-                              $</b>
-                            </h6>
-                          </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <b
+                              >{{
+                                twoDecimales(
+                                  getDiscountedPrice(adventureReservationDto)
+                                )
+                              }}
+                              $</b
+                            >
+                          </h6>
                         </div>
-                      </template>
+                      </div>
+                    </template>
                   </div>
 
                   <div class="row">
@@ -210,8 +295,7 @@
                             :disabled="
                               !possibleCancellation(
                                 adventureReservationDto.startDate
-                              )
-                              || adventureReservationDto.discount
+                              ) || adventureReservationDto.discount
                             "
                           >
                             CANCEL
@@ -329,7 +413,9 @@
             <p>
               <b
                 >{{
-                  twoDecimales(adventureForCancellation.paymentInformationDto.totalPrice)
+                  twoDecimales(
+                    adventureForCancellation.paymentInformationDto.totalPrice
+                  )
                 }}
                 $</b
               >
@@ -390,7 +476,10 @@
             <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
-        <div class="row" v-if="quickReservationAdventure.addedAdditionalServices.length!=0">
+        <div
+          class="row"
+          v-if="quickReservationAdventure.addedAdditionalServices.length != 0"
+        >
           <div
             class="col"
             style="padding-top: 2%; text-align: left; color: gray"
@@ -444,11 +533,21 @@
           >
             <p>Previous price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; color: red; text-decoration: line-through;">
+          <div
+            class="col-sm-9"
+            style="
+              padding: 1%;
+              text-align: left;
+              color: red;
+              text-decoration: line-through;
+            "
+          >
             <p>
               <b
                 >{{
-                  twoDecimales(quickReservationAdventure.paymentInformationDto.totalPrice)
+                  twoDecimales(
+                    quickReservationAdventure.paymentInformationDto.totalPrice
+                  )
                 }}
                 $</b
               >
@@ -460,9 +559,17 @@
           >
             <p>Discounted price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; color: green">
+          <div
+            class="col-sm-9"
+            style="padding: 1%; text-align: left; color: green"
+          >
             <p>
-              <b>{{ twoDecimales(getDiscountedPrice(quickReservationAdventure)) }} $</b>
+              <b
+                >{{
+                  twoDecimales(getDiscountedPrice(quickReservationAdventure))
+                }}
+                $</b
+              >
             </p>
           </div>
         </div>
@@ -584,10 +691,11 @@ export default {
             {}
           )
           .then((response) => {
-            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
+            this.adventureReservationDtos =
+              this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
-          axios
+        axios
           .post(
             "http://localhost:8081/quickReservationAdventure/getReservationsHistory",
             {
@@ -596,7 +704,8 @@ export default {
             {}
           )
           .then((response) => {
-            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
+            this.adventureReservationDtos =
+              this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       } else {
@@ -610,7 +719,8 @@ export default {
             {}
           )
           .then((response) => {
-            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
+            this.adventureReservationDtos =
+              this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
         axios
@@ -622,7 +732,8 @@ export default {
             {}
           )
           .then((response) => {
-            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
+            this.adventureReservationDtos =
+              this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       }
@@ -679,7 +790,7 @@ export default {
         100
       );
     },
-    twoDecimales: function(number){
+    twoDecimales: function (number) {
       return number.toFixed(2);
     },
     seeProfile: function (boatId) {
