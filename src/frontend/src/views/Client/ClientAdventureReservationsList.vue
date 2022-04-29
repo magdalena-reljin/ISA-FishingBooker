@@ -145,25 +145,25 @@
                     </div>
                       <div class="row">
                         <div class="col">
-                          <h6 v-bind:style="[availableQuickReservations ? 'color: red;' : 'color: green;', 'text-align: left;']">
-                            <template v-if="!availableQuickReservations"
-                              >Total</template
-                            >
-                            <template v-if="availableQuickReservations"
+                          <h6 v-bind:style="[availableQuickReservations || adventureReservationDto.discount ? 'color: red;' : 'color: green;', 'text-align: left;']">
+                            <template v-if="availableQuickReservations || adventureReservationDto.discount"
                               >Previous</template
+                            >
+                            <template v-if="(!availableQuickReservations)&&(!adventureReservationDto.discount)"
+                              >Total</template
                             >
                             price:
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
+                          <h6 v-bind:style="[availableQuickReservations || adventureReservationDto.discount ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
                             {{
                               twoDecimales(adventureReservationDto.paymentInformationDto
                                 .totalPrice)
                             }}$ </h6>                         
                         </div>
                       </div>
-                      <template v-if="availableQuickReservations">
+                      <template v-if="availableQuickReservations || adventureReservationDto.discount">
                         <div class="row">
                           <div class="col">
                             <h6 style="text-align: left; color: green">Discount:</h6>
@@ -200,7 +200,7 @@
                         </button>
                       </div>
                       <div class="col" style="text-align: right">
-                        <template v-if="upcomingReservations">
+                        <template v-if="upcomingReservations && !adventureReservationDto.discount">
                           <button
                             @click="
                               cancelReservationModal(adventureReservationDto)
@@ -572,6 +572,7 @@ export default {
       return true;
     },
     getReservations: function () {
+      this.adventureReservationDtos = [];
       if (!this.upcomingReservations) {
         axios
           .post(
@@ -582,7 +583,19 @@ export default {
             {}
           )
           .then((response) => {
-            this.adventureReservationDtos = response.data;
+            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
+            this.reservationsLoaded = true;
+          });
+          axios
+          .post(
+            "http://localhost:8081/quickReservationAdventure/getReservationsHistory",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       } else {
@@ -596,7 +609,19 @@ export default {
             {}
           )
           .then((response) => {
-            this.adventureReservationDtos = response.data;
+            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationAdventure/getUpcomingReservations",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.adventureReservationDtos = this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       }
