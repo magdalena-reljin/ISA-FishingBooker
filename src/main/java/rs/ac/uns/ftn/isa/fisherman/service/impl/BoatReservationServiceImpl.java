@@ -4,12 +4,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfullInfo;
-import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.BoatReservationMapper;
@@ -202,7 +199,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
                 continue;
             if(boatWasAlreadyReservedInPeriod(boatPeriod.getBoat().getId(),searchAvailablePeriodsBoatDto))
                 continue;
-            if(boatNotReservedInPeriod(boatPeriod.getBoat().getId(), searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate()))
+            if(!boatNotFreeInPeriod(boatPeriod.getBoat().getId(), searchAvailablePeriodsBoatDto.getStartDate(), searchAvailablePeriodsBoatDto.getEndDate()))
                 availableBoats.add(boatPeriod.getBoat());
         }
         return availableBoats;
@@ -214,7 +211,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
 
     @Override
     public boolean makeReservation(BoatReservationDto boatReservationDto) {
-        if(boatNotFreeInPeriod(boatReservationDto))
+        if(boatNotFreeInPeriod(boatReservationDto.getBoatDto().getId(), boatReservationDto.getStartDate(), boatReservationDto.getEndDate()))
             return false;
         BoatReservation boatReservation = setUpBoatReservationFromDto(boatReservationDto);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(boatReservation, boatReservation.getBoat().getBoatOwner());
@@ -230,8 +227,10 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         return true;
     }
 
-    private boolean boatNotFreeInPeriod(BoatReservationDto boatReservationDto) {
-        return boatReservationRepository.boatReservedInPeriod(boatReservationDto.getBoatDto().getId(), boatReservationDto.getStartDate(), boatReservationDto.getEndDate());
+    @Override
+    public boolean boatNotFreeInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate) {
+        return boatReservationRepository.boatReservedInPeriod(boatId, startDate, endDate) ||
+                quickReservationBoatService.boatHasQuickReservationInPeriod(boatId, startDate, endDate);
     }
 
     @Override
@@ -278,9 +277,4 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         boatReservation.setClient(clientService.findByUsername(boatReservationDto.getClientUsername()));
         return boatReservation;
     }
-
-    private boolean boatNotReservedInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate) {
-        return !boatReservationRepository.boatReservedInPeriod(id, startDate, endDate);
-    }
-
 }

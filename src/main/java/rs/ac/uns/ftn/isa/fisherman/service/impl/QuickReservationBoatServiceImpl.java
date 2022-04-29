@@ -1,18 +1,20 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
+import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfulInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
-import rs.ac.uns.ftn.isa.fisherman.service.AvailableBoatPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,13 +23,17 @@ import java.util.Set;
 
 @Service
 public class QuickReservationBoatServiceImpl implements QuickReservationBoatService {
+    private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Autowired
     private AvailableBoatPeriodService availableBoatPeriodService;
     @Autowired
     private BoatReservationService boatReservationService;
     @Autowired
     private QuickReservationBoatRepository quickReservationBoatRepository;
-
+    @Autowired
+    private ClientService clientService;
+    @Autowired
+    private MailService mailService;
 
     @Override
     public boolean ownerCreates(QuickReservationBoat quickReservationBoat) {
@@ -93,6 +99,32 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     @Override
     public Set<QuickReservationBoat> getAvailableReservations() {
         return quickReservationBoatRepository.getAvailableReservations(LocalDateTime.now());
+    }
+
+    @Override
+    public boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto) {
+        QuickReservationBoat quickReservationBoat = quickReservationBoatRepository.getById(quickReservationBoatDto.getId());
+        if(boatReservationService.boatNotFreeInPeriod(quickReservationBoat.getBoat().getId(), quickReservationBoat.getStartDate(), quickReservationBoat.getEndDate()))
+            return false;
+        quickReservationBoat.setClient(clientService.findByUsername(quickReservationBoatDto.getClientUsername()));
+        quickReservationBoatRepository.save(quickReservationBoat);
+        SendReservationMailToClient(quickReservationBoatDto);
+        return true;
+    }
+
+    private void SendReservationMailToClient(QuickReservationBoatDto quickReservationBoatDto) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+            String message = quickReservationBoatDto.getBoatDto().getName() + " is booked from " + quickReservationBoatDto.getStartDate().format(formatter) + " to " + quickReservationBoatDto.getEndDate().format(formatter) + " .";
+            mailService.sendMail(quickReservationBoatDto.getClientUsername(), message, new BoatReservationSuccessfulInfo());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
+    }
+
+    @Override
+    public boolean boatHasQuickReservationInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationBoatRepository.boatHasQuickReservationInPeriod(boatId, startDate, endDate);
     }
 
     @Override
