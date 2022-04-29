@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationCabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
@@ -93,5 +94,23 @@ public class QuickReservationCabinController {
         }else {
             return new ResponseEntity<>("Unsuccessful booking! Cabin not available in given period!", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<QuickReservationCabinDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<QuickReservationCabinDto> quickReservationCabinDtos = new HashSet<>();
+        for(QuickReservationCabin quickReservationCabin: quickReservationCabinService.getUpcomingClientQuickReservations(userRequestDTO.getUsername()))
+            quickReservationCabinDtos.add(quickReservationCabinMapper.quickReservationToDto(quickReservationCabin));
+        return new ResponseEntity<>(quickReservationCabinDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<QuickReservationCabinDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<QuickReservationCabinDto> quickReservationCabinDtos = new HashSet<>();
+        for(QuickReservationCabin quickReservationCabin: quickReservationCabinService.getClientQuickReservationsHistory(userRequestDTO.getUsername()))
+            quickReservationCabinDtos.add(quickReservationCabinMapper.quickReservationToDto(quickReservationCabin));
+        return new ResponseEntity<>(quickReservationCabinDtos,HttpStatus.OK);
     }
 }

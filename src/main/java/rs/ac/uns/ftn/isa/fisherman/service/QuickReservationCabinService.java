@@ -23,4 +23,6 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> getAvailableReservations();
     boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto);
     boolean cabinHasQuickReservationInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
+    Set<QuickReservationCabin> getUpcomingClientQuickReservations(String clientUsername);
+    Set<QuickReservationCabin> getClientQuickReservationsHistory(String clientUsername);
 }

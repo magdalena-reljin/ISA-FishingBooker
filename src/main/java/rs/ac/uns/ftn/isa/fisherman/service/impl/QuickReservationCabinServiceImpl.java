@@ -126,6 +126,16 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         return quickReservationCabinRepository.cabinHasQuickReservationInPeriod(cabinId, startDate, endDate);
     }
 
+    @Override
+    public Set<QuickReservationCabin> getUpcomingClientQuickReservations(String clientUsername) {
+        return quickReservationCabinRepository.getUpcomingClientQuickReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public Set<QuickReservationCabin> getClientQuickReservationsHistory(String clientUsername) {
+        return quickReservationCabinRepository.getClientQuickReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
         Set<String> subscriptionEmails=cabinSubscriptionService.findCabinSubscribers(cabinId);
 
