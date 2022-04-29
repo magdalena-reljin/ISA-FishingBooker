@@ -23,4 +23,6 @@ public interface QuickReservationBoatService {
     Set<QuickReservationBoat> getAvailableReservations();
     boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto);
     boolean boatHasQuickReservationInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
+    Set<QuickReservationBoat> getUpcomingClientQuickReservations(String clientUsername);
+    Set<QuickReservationBoat> getClientQuickReservationsHistory(String clientUsername);
 }
