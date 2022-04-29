@@ -13,7 +13,7 @@
                 <div class="row">
                   <div class="col">
                     <div class="row">
-                      <div class="form-row">
+                      <div class="form-row" style="text-align: left">
                         <div class="col form-group">
                           <label id="label">Choose entity</label>
                           <select
@@ -28,11 +28,11 @@
                             <option>ADVENTURES</option>
                           </select>
                         </div>
-                        <div class="col form-group">
+                        <div class="row form-group">
                           <label id="label">Start</label>
                           <Datepicker v-model="start" required></Datepicker>
                         </div>
-                        <div class="col form-group">
+                        <div class="row form-group">
                           <label id="label">End</label>
                           <Datepicker v-model="end" required></Datepicker>
                         </div>
