@@ -112,6 +112,16 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return quickReservationAdventureRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate);
     }
 
+    @Override
+    public Set<QuickReservationAdventure> getUpcomingClientQuickReservations(String clientUsername) {
+        return quickReservationAdventureRepository.getUpcomingClientQuickReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public Set<QuickReservationAdventure> getClientQuickReservationsHistory(String clientUsername) {
+        return quickReservationAdventureRepository.getClientQuickReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
     private void SendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
