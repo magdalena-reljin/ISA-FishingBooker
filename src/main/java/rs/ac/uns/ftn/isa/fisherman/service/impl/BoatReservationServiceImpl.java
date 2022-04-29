@@ -107,8 +107,8 @@ public class BoatReservationServiceImpl implements BoatReservationService {
 
     @Override
     public boolean reservationExists(Long boatId, LocalDateTime startDate, LocalDateTime endDate){
-        if(boatReservationRepository.reservationExists(boatId,startDate,endDate).size()>0) return false;
-        return  true;
+        if(boatReservationRepository.reservationExists(boatId,startDate,endDate).size()>0) return true;
+        return  false;
     }
 
     @Override

@@ -141,8 +141,8 @@
                         <div class="col">
                           <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
                             {{
-                              boatReservationDto.paymentInformationDto
-                                .totalPrice
+                              twoDecimales(boatReservationDto.paymentInformationDto
+                                .totalPrice)
                             }}
                             $
                           </h6>
@@ -155,7 +155,7 @@
                           </div>
                           <div class="col">
                             <h6 style="text-align: left; color: green">
-                              <i>-{{boatReservationDto.discount}}%</i>
+                              <i>-{{twoDecimales(boatReservationDto.discount)}}%</i>
                             </h6>
                           </div>
                         </div>
@@ -165,7 +165,7 @@
                           </div>
                           <div class="col">
                             <h6 style="text-align: left; color: green">
-                              <b>{{ getDiscountedPrice(boatReservationDto) }}
+                              <b>{{ twoDecimales(getDiscountedPrice(boatReservationDto)) }}
                               $</b>
                             </h6>
                           </div>
@@ -307,7 +307,7 @@
           <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
               <b
-                >{{ boatForCancellation.paymentInformationDto.totalPrice }} $</b
+                >{{ twoDecimales(boatForCancellation.paymentInformationDto.totalPrice) }} $</b
               >
             </p>
           </div>
@@ -367,7 +367,7 @@
             <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="quickReservationBoat.addedAdditionalServices.length!=0">
           <div
             class="col"
             style="padding-top: 2%; text-align: left; color: gray"
@@ -415,15 +415,15 @@
         <div class="row">
           <div
             class="col-sm-3"
-            style="padding-top: 1%; text-align: left; color: gray"
+            style="padding-top: 1%; text-align: left; color: red"
           >
             <p>Previous price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left">
+          <div class="col-sm-9" style="padding: 1%; text-align: left; color: red; text-decoration: line-through;">
             <p>
               <b
                 >{{
-                  quickReservationBoat.paymentInformationDto.totalPrice
+                  twoDecimales(quickReservationBoat.paymentInformationDto.totalPrice)
                 }}
                 $</b
               >
@@ -431,13 +431,13 @@
           </div>
           <div
             class="col-sm-3"
-            style="padding-top: 1%; text-align: left; color: gray"
+            style="padding-top: 1%; text-align: left; color: green"
           >
             <p>Discounted price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left">
+          <div class="col-sm-9" style="padding: 1%; text-align: left; color: green">
             <p>
-              <b>{{ getDiscountedPrice(quickReservationBoat) }} $</b>
+              <b>{{ twoDecimales(getDiscountedPrice(quickReservationBoat)) }} $</b>
             </p>
           </div>
         </div>
@@ -629,6 +629,9 @@ export default {
         100
       );
     },
+    twoDecimales: function(number){
+      return number.toFixed(2);
+    },
     seeProfile: function (boatId) {
       this.$router.push("/boatProfile/" + this.email + "/" + boatId);
     },
@@ -655,7 +658,41 @@ export default {
       this.$refs.quickReservation.open();
     },
     quickReservationConfirm: function () {
-      //TODO: method for quick reservation
+      this.loader = this.$loading.show({
+        // Optional parameters
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
+      });
+      this.quickReservationBoat.clientUsername = this.email;
+      axios
+        .post(
+          "http://localhost:8081/quickReservationBoat/makeQuickReservation",
+          this.quickReservationBoat,
+          {}
+        )
+        .then(() => {
+          this.$refs.quickReservation.hide();
+          this.loader.hide();
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Quick boat reservation successful!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.getAvailableQuickReservations();
+        })
+        .catch((error) => {
+          this.$refs.quickReservation.hide();
+          this.loader.hide();
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: error.response.data,
+          });
+          this.getAvailableQuickReservations();
+        });
     },
     cancelReservation: function () {
       this.loader = this.$loading.show({
