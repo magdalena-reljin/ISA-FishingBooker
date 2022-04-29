@@ -29,4 +29,5 @@ public interface AdventureReservationService {
     boolean reservationExists(Long id);
     boolean checkIfReservationIsEvaluated(Long reservationId);
     void markThatReservationIsEvaluated(Long reservationId);
+    boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
 }

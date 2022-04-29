@@ -39,4 +39,8 @@ public interface QuickReservationCabinRepository extends JpaRepository<QuickRese
 
     @Query(value="select * from quick_reservation_cabin r where :currentDate <= r.start_date and r.users_id IS NULL ",nativeQuery = true)
     Set<QuickReservationCabin> getAvailableReservations(@Param("currentDate") LocalDateTime currentDate);
+
+    @Query(value="SELECT CASE WHEN  COUNT(r) > 0 THEN true ELSE false END FROM quick_reservation_cabin r where r.cabin_id=:cabin_id and r.start_date<=:endDate and r.end_date>=:startDate and r.users_id IS NOT NULL",nativeQuery = true)
+    boolean cabinHasQuickReservationInPeriod(@Param("cabin_id")Long cabinId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }

@@ -3,19 +3,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AvailableCabinPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinSubscriptionService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
-import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +37,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     private CabinSubscriptionService cabinSubscriptionService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private ClientService clientService;
     private final Logger logger= LoggerFactory.getLogger(FirebaseServiceImpl.class);
     @Override
     public boolean ownerCreates(QuickReservationCabin quickReservationCabin) {
@@ -94,6 +98,32 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Override
     public Set<QuickReservationCabin> getAvailableReservations() {
         return quickReservationCabinRepository.getAvailableReservations(LocalDateTime.now());
+    }
+
+    @Override
+    public boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto) {
+        QuickReservationCabin quickReservationCabin = quickReservationCabinRepository.getById(quickReservationCabinDto.getId());
+        if(reservationCabinService.cabinNotFreeInPeriod(quickReservationCabin.getCabin().getId(), quickReservationCabin.getStartDate(), quickReservationCabin.getEndDate()))
+            return false;
+        quickReservationCabin.setClient(clientService.findByUsername(quickReservationCabinDto.getClientUsername()));
+        quickReservationCabinRepository.save(quickReservationCabin);
+        SendReservationMailToClient(quickReservationCabinDto);
+        return true;
+    }
+
+    private void SendReservationMailToClient(QuickReservationCabinDto quickReservationCabinDto) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+            String message = quickReservationCabinDto.getCabinDto().getName() + " is booked from " + quickReservationCabinDto.getStartDate().format(formatter) + " to " + quickReservationCabinDto.getEndDate().format(formatter) + " .";
+            mailService.sendMail(quickReservationCabinDto.getClientUsername(), message, new CabinReservationSuccessfulInfo());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
+    }
+
+    @Override
+    public boolean cabinHasQuickReservationInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationCabinRepository.cabinHasQuickReservationInPeriod(cabinId, startDate, endDate);
     }
 
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){

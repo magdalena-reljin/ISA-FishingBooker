@@ -178,7 +178,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     private List<Long> getAvailableInstructors(Long clientId, LocalDateTime startDate, LocalDateTime endDate){
         List<Long> availableInstructorsIds = new ArrayList<>();
         for(Long id:availableInstructorPeriodService.getAvailableFishingInstructorsIdsForPeriod(startDate, endDate)){
-            if(!adventureReservationRepository.instructorHasReservationInPeriod(fishingInstructorRepository.findByID(id).getUsername(), startDate, endDate)){
+            if(!fishingInstructorNotFree(fishingInstructorRepository.findByID(id).getUsername(), startDate, endDate)){
                 if(!clientHasCancellationWithInstructorInPeriod(clientId, id, startDate, endDate)){
                     availableInstructorsIds.add(id);
                 }
@@ -193,7 +193,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
     @Override
     public boolean makeReservation(AdventureReservationDto adventureReservationDto) {
-        if(fishingInstructorNotFree(adventureReservationDto))
+        if(fishingInstructorNotFree(adventureReservationDto.getOwnersUsername(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate()))
             return false;
         AdventureReservation adventureReservation = setUpAdventureReservationFromDto(adventureReservationDto);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(adventureReservation, adventureReservation.getFishingInstructor());
@@ -209,8 +209,10 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         return true;
     }
 
-    private boolean fishingInstructorNotFree(AdventureReservationDto adventureReservationDto) {
-        return adventureReservationRepository.instructorHasReservationInPeriod(adventureReservationDto.getOwnersUsername(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate());
+    @Override
+    public boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return adventureReservationRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate) ||
+                quickReservationAdventureService.fishingInstructorNotFree(instructorUsername, startDate, endDate);
     }
 
     @Override

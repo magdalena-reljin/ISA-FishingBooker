@@ -84,4 +84,14 @@ public class QuickReservationCabinController {
         }
         return new ResponseEntity<>(cabinReservationDtos,HttpStatus.OK);
     }
+
+    @PostMapping("/makeQuickReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationCabinDto quickReservationCabinDto) {
+        if(quickReservationCabinService.makeQuickReservation(quickReservationCabinDto)) {
+            return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Unsuccessful booking! Cabin not available in given period!", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

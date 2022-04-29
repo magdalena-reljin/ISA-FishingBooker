@@ -81,4 +81,14 @@ public class QuickReservationAdventureController {
         }
         return new ResponseEntity<>(reservationDtos,HttpStatus.OK);
     }
+
+    @PostMapping("/makeQuickReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationAdventureDto quickReservationAdventureDto) {
+        if(quickReservationAdventureService.makeQuickReservation(quickReservationAdventureDto)) {
+            return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Unsuccessful booking! Fishing instructor not available in given period!", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -107,8 +107,11 @@ public class AdventureReservationController {
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Set<AdventureReservationDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
         Set<AdventureReservationDto> adventureReservationDtos = new HashSet<>();
-        for(AdventureReservation adventureReservation: adventureReservationService.getUpcomingClientReservationsByUsername(userRequestDTO.getUsername()))
-            adventureReservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
+        for(AdventureReservation adventureReservation: adventureReservationService.getUpcomingClientReservationsByUsername(userRequestDTO.getUsername())){
+            AdventureReservationDto adventureReservationDto = adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation);
+            adventureReservationDto.getAdventureDto().setInstructorRating(adventureReservation.getFishingInstructor().getRating());
+            adventureReservationDtos.add(adventureReservationDto);
+        }
         return new ResponseEntity<>(adventureReservationDtos,HttpStatus.OK);
     }
 
@@ -117,7 +120,9 @@ public class AdventureReservationController {
     public ResponseEntity<Set<AdventureReservationDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
         Set<AdventureReservationDto> adventureReservationDtos = new HashSet<>();
         for(AdventureReservation adventureReservation: adventureReservationService.getClientReservationHistoryByUsername(userRequestDTO.getUsername())){
-            adventureReservationDtos.add(adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation));
+            AdventureReservationDto adventureReservationDto = adventureReservationMapper.adventureReservationToAdventureReservationDto(adventureReservation);
+            adventureReservationDto.getAdventureDto().setInstructorRating(adventureReservation.getFishingInstructor().getRating());
+            adventureReservationDtos.add(adventureReservationDto);
         }
         return new ResponseEntity<>(adventureReservationDtos,HttpStatus.OK);
     }

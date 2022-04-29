@@ -143,10 +143,9 @@
                         {{ adventureReservationDto.adventureDto.maxPeople }}
                       </h6>
                     </div>
-                    <div class="col">
                       <div class="row">
                         <div class="col">
-                          <h6 style="text-align: left">
+                          <h6 v-bind:style="[availableQuickReservations ? 'color: red;' : 'color: green;', 'text-align: left;']">
                             <template v-if="!availableQuickReservations"
                               >Total</template
                             >
@@ -157,28 +156,36 @@
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 style="text-align: left; color: green">
+                          <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
                             {{
-                              adventureReservationDto.paymentInformationDto
-                                .totalPrice
-                            }}$
-                          </h6>
+                              twoDecimales(adventureReservationDto.paymentInformationDto
+                                .totalPrice)
+                            }}$ </h6>                         
                         </div>
                       </div>
                       <template v-if="availableQuickReservations">
                         <div class="row">
                           <div class="col">
-                            <h6 style="text-align: left">Discounted price:</h6>
+                            <h6 style="text-align: left; color: green">Discount:</h6>
                           </div>
                           <div class="col">
                             <h6 style="text-align: left; color: green">
-                              {{ getDiscountedPrice(adventureReservationDto) }}
-                              $
+                              <i>-{{twoDecimales(adventureReservationDto.discount)}}%</i>
+                            </h6>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <h6 style="text-align: left;  color: green">Discounted price:</h6>
+                          </div>
+                          <div class="col">
+                            <h6 style="text-align: left; color: green">
+                              <b>{{ twoDecimales(getDiscountedPrice(adventureReservationDto)) }}
+                              $</b>
                             </h6>
                           </div>
                         </div>
                       </template>
-                    </div>
                   </div>
 
                   <div class="row">
@@ -321,7 +328,7 @@
             <p>
               <b
                 >{{
-                  adventureForCancellation.paymentInformationDto.totalPrice
+                  twoDecimales(adventureForCancellation.paymentInformationDto.totalPrice)
                 }}
                 $</b
               >
@@ -382,7 +389,7 @@
             <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="quickReservationAdventure.addedAdditionalServices.length!=0">
           <div
             class="col"
             style="padding-top: 2%; text-align: left; color: gray"
@@ -432,15 +439,15 @@
         <div class="row">
           <div
             class="col-sm-3"
-            style="padding-top: 1%; text-align: left; color: gray"
+            style="padding-top: 1%; text-align: left; color: red"
           >
             <p>Previous price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left">
+          <div class="col-sm-9" style="padding: 1%; text-align: left; color: red; text-decoration: line-through;">
             <p>
               <b
                 >{{
-                  quickReservationAdventure.paymentInformationDto.totalPrice
+                  twoDecimales(quickReservationAdventure.paymentInformationDto.totalPrice)
                 }}
                 $</b
               >
@@ -448,13 +455,13 @@
           </div>
           <div
             class="col-sm-3"
-            style="padding-top: 1%; text-align: left; color: gray"
+            style="padding-top: 1%; text-align: left; color: green"
           >
             <p>Discounted price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left">
+          <div class="col-sm-9" style="padding: 1%; text-align: left; color: green">
             <p>
-              <b>{{ getDiscountedPrice(quickReservationAdventure) }} $</b>
+              <b>{{ twoDecimales(getDiscountedPrice(quickReservationAdventure)) }} $</b>
             </p>
           </div>
         </div>
@@ -646,6 +653,9 @@ export default {
         100
       );
     },
+    twoDecimales: function(number){
+      return number.toFixed(2);
+    },
     seeProfile: function (boatId) {
       this.$router.push("/adventureProfile/" + this.email + "/" + boatId);
     },
@@ -672,7 +682,41 @@ export default {
       this.$refs.quickReservation.open();
     },
     quickReservationConfirm: function () {
-      //TODO: method for quick reservation
+      this.loader = this.$loading.show({
+        // Optional parameters
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
+      });
+      this.quickReservationAdventure.clientUsername = this.email;
+      axios
+        .post(
+          "http://localhost:8081/quickReservationAdventure/makeQuickReservation",
+          this.quickReservationAdventure,
+          {}
+        )
+        .then(() => {
+          this.$refs.quickReservation.hide();
+          this.loader.hide();
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Quick adventure reservation successful!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.getAvailableQuickReservations();
+        })
+        .catch((error) => {
+          this.$refs.quickReservation.hide();
+          this.loader.hide();
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: error.response.data,
+          });
+          this.getAvailableQuickReservations();
+        });
     },
     cancelReservation: function () {
       this.loader = this.$loading.show({
