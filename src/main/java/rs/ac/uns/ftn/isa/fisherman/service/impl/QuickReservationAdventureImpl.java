@@ -4,20 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.mail.AdventureReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionAdventureInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
-import rs.ac.uns.ftn.isa.fisherman.service.AdventureSubscriptionService;
-import rs.ac.uns.ftn.isa.fisherman.service.AvailableInstructorPeriodService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import javax.mail.MessagingException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +39,9 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     private AdventureSubscriptionService adventureSubscriptionService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private ClientService clientService;
+
     @Override
     public boolean instructorCreates(QuickReservationAdventure quickReservationAdventure) {
         if(!validateForReservation(quickReservationAdventure)) return false;
@@ -92,6 +96,31 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return quickReservationAdventureRepository.getAvailableReservations(LocalDateTime.now());
     }
 
+    @Override
+    public boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto) {
+        if(adventureReservationService.fishingInstructorNotFree(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
+            return false;
+        QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(quickReservationAdventureDto.getId());
+        quickReservationAdventure.setClient(clientService.findByUsername(quickReservationAdventureDto.getClientUsername()));
+        quickReservationAdventureRepository.save(quickReservationAdventure);
+        SendReservationMailToClient(quickReservationAdventureDto);
+        return true;
+    }
+
+    @Override
+    public boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationAdventureRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate);
+    }
+
+    private void SendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+            String message = quickReservationAdventureDto.getAdventureDto().getName() + " is booked from " + quickReservationAdventureDto.getStartDate().format(formatter) + " to " + quickReservationAdventureDto.getEndDate().format(formatter) + " .";
+            mailService.sendMail(quickReservationAdventureDto.getClientUsername(), message, new AdventureReservationSuccessfulInfo());
+        } catch (MessagingException e) {
+            logger.error(e.toString());
+        }
+    }
 
     @Override
     public Set<QuickReservationAdventure> getPastReservations(String username) {
