@@ -228,7 +228,7 @@ export default {
       this.$router.push("/subscriptions/" + this.email);
     },
     viewProfile: function () {
-      this.$router.push("/client/viewProfile/" + this.email + "/" + this.email);
+      window.location.replace('http://localhost:8080/client/viewProfile/' + this.email + "/" + this.email);
     },
   },
 };
