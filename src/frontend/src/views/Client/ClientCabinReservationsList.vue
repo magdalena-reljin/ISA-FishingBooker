@@ -119,13 +119,13 @@
                   </template>
                   <template v-if="availableQuickReservations">
                   <h6 style="color: red; text-align: left;" >
-                    Previous price: <a style="text-decoration: line-through">{{ cabinReservationDto.paymentInformationDto.totalPrice }} $ </a>
+                    Previous price: <a style="text-decoration: line-through">{{ twoDecimales(cabinReservationDto.paymentInformationDto.totalPrice) }} $ </a>
                   </h6>
                   <h6 style="text-align: left; color: green">
-                    Discount: <i>-{{cabinReservationDto.discount}}%</i>
+                    Discount: <i>-{{twoDecimales(cabinReservationDto.discount)}}%</i>
                   </h6>
                   <h6 style="text-align: left; color: green">
-                    Discounted price: <b>{{ getDiscountedPrice(cabinReservationDto) }}
+                    Discounted price: <b>{{ twoDecimales(getDiscountedPrice(cabinReservationDto)) }}
                     $</b>
                   </h6>
                   </template>
@@ -261,7 +261,7 @@
             <p>
               <b
                 >{{
-                  cabinForCancellation.paymentInformationDto.totalPrice
+                  twoDecimales(cabinForCancellation.paymentInformationDto.totalPrice)
                 }}
                 $</b
               >
@@ -373,15 +373,15 @@
         <div class="row">
           <div
             class="col-sm-3"
-            style="padding-top: 1%; text-align: left; color: gray"
+            style="padding-top: 1%; text-align: left; color: red"
           >
             <p>Previous price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left">
+          <div class="col-sm-9" style="padding: 1%; text-align: left; color: red; text-decoration: line-through;">
             <p>
               <b
                 >{{
-                  quickReservationCabin.paymentInformationDto.totalPrice
+                  twoDecimales(quickReservationCabin.paymentInformationDto.totalPrice)
                 }}
                 $</b
               >
@@ -389,13 +389,13 @@
           </div>
           <div
             class="col-sm-3"
-            style="padding-top: 1%; text-align: left; color: gray"
+            style="padding-top: 1%; text-align: left; color: green"
           >
             <p>Discounted price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left">
+          <div class="col-sm-9" style="padding: 1%; text-align: left; color: green">
             <p>
-              <b>{{ getDiscountedPrice(quickReservationCabin) }} $</b>
+              <b>{{ twoDecimales(getDiscountedPrice(quickReservationCabin)) }} $</b>
             </p>
           </div>
         </div>
@@ -588,6 +588,9 @@ export default {
         100
       );
     },
+    twoDecimales: function(number){
+      return number.toFixed(2);
+    },
     seeProfile: function (cabinName) {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
@@ -608,7 +611,41 @@ export default {
       this.$refs.quickReservation.open();
     },
     quickReservationConfirm: function () {
-      //TODO: method for quick reservation
+      this.loader = this.$loading.show({
+        // Optional parameters
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
+      });
+      this.quickReservationCabin.clientUsername = this.email;
+      axios
+        .post(
+          "http://localhost:8081/quickReservationCabin/makeQuickReservation",
+          this.quickReservationCabin,
+          {}
+        )
+        .then(() => {
+          this.$refs.quickReservation.hide();
+          this.loader.hide();
+          this.$swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Quick cabin reservation successful!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.getAvailableQuickReservations();
+        })
+        .catch((error) => {
+          this.$refs.quickReservation.hide();
+          this.loader.hide();
+          this.$swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: error.response.data,
+          });
+          this.getAvailableQuickReservations();
+        });
     },
     cancelReservationModal: function (reservationDto) {
       this.cabinForCancellation = reservationDto;
