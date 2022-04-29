@@ -200,7 +200,7 @@
                         </button>
                       </div>
                       <div class="col" style="text-align: right">
-                        <template v-if="upcomingReservations && !adventureReservationDto.discount">
+                        <template v-if="upcomingReservations">
                           <button
                             @click="
                               cancelReservationModal(adventureReservationDto)
@@ -211,6 +211,7 @@
                               !possibleCancellation(
                                 adventureReservationDto.startDate
                               )
+                              || adventureReservationDto.discount
                             "
                           >
                             CANCEL

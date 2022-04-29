@@ -112,12 +112,12 @@
                     </svg>
                     {{ getFullAddress(index) }}
                   </h6>
-                  <template v-if="!availableQuickReservations">
+                  <template v-if="(!availableQuickReservations)&&(!cabinReservationDto.discount)">
                   <h6 style="text-align: left; color: green">
                     {{ cabinReservationDto.paymentInformationDto.totalPrice }} $
                   </h6>
                   </template>
-                  <template v-if="availableQuickReservations">
+                  <template v-if="availableQuickReservations || cabinReservationDto.discount">
                   <h6 style="color: red; text-align: left;" >
                     Previous price: <a style="text-decoration: line-through">{{ twoDecimales(cabinReservationDto.paymentInformationDto.totalPrice) }} $ </a>
                   </h6>
@@ -148,6 +148,7 @@
                           class="btn btn-outline-dark rounded-pill"
                           :disabled="
                             !possibleCancellation(cabinReservationDto.startDate)
+                            || cabinReservationDto.discount
                           "
                         >
                           CANCEL
@@ -507,6 +508,7 @@ export default {
       return true;
     },
     getReservations: function () {
+      this.cabinReservationDtos = [];
       if (!this.upcomingReservations) {
         axios
           .post(
@@ -517,7 +519,19 @@ export default {
             {}
           )
           .then((response) => {
-            this.cabinReservationDtos = response.data;
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(response.data);
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationCabin/getReservationsHistory",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.cabinReservationDtos =  this.cabinReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       } else {
@@ -531,7 +545,19 @@ export default {
             {}
           )
           .then((response) => {
-            this.cabinReservationDtos = response.data;
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(response.data);
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationCabin/getUpcomingReservations",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       }
