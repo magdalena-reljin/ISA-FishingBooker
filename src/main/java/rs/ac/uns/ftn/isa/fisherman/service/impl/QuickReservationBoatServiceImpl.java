@@ -128,6 +128,16 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public Set<QuickReservationBoat> getUpcomingClientQuickReservations(String clientUsername) {
+        return quickReservationBoatRepository.getUpcomingClientQuickReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public Set<QuickReservationBoat> getClientQuickReservationsHistory(String clientUsername) {
+        return quickReservationBoatRepository.getClientQuickReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
+    @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         if(quickReservationBoatRepository.quickReservationExists(id,startDate,endDate).size()>0) return false;
         return true;

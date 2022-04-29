@@ -125,53 +125,133 @@
                         Max people: {{ boatReservationDto.boatDto.maxPeople }}
                       </h6>
                     </div>
-                    <div class="col">
+<div
+                      class="row"
+                      v-if="
+                        boatReservationDto.addedAdditionalServices
+                          .length != 0
+                      "
+                    >
+                      <div
+                        class="col"
+                        style="padding-top: 2%; text-align: left; color: black"
+                      >
+                        <p>Added additional services:</p>
+                      </div>
+                      <div class="col-sm-9" style="padding: 1%; text-align: left;">
+                        <template
+                          v-for="(
+                            service, index
+                          ) in boatReservationDto.addedAdditionalServices"
+                          :key="index"
+                          class="group"
+                          role="group"
+                          aria-label="Basic outlined example"
+                        >
+                          <span
+                            v-if="service.price == 0"
+                            style="background-color: #59d47a"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - Free</span
+                          >
+                          <span
+                            v-else
+                            style="background-color: #703636"
+                            class="badge rounded-pill text-light"
+                            >{{ service.name }} - {{ service.price }}$ per
+                            day</span
+                          >
+                        </template>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <h6
+                          v-bind:style="[
+                            availableQuickReservations ||
+                            boatReservationDto.discount
+                              ? 'color: red;'
+                              : 'color: green;',
+                            'text-align: left;',
+                          ]"
+                        >
+                          <template
+                            v-if="
+                              !availableQuickReservations &&
+                              !boatReservationDto.discount
+                            "
+                            >Total</template
+                          >
+                          <template
+                            v-if="
+                              availableQuickReservations ||
+                              boatReservationDto.discount
+                            "
+                            >Previous</template
+                          >
+                          price:
+                        </h6>
+                      </div>
+                      <div class="col">
+                        <h6
+                          v-bind:style="[
+                            availableQuickReservations ||
+                            boatReservationDto.discount
+                              ? 'color: red; text-decoration: line-through;'
+                              : 'color: green;',
+                            'text-align: left;',
+                          ]"
+                        >
+                          {{
+                            twoDecimales(
+                              boatReservationDto.paymentInformationDto
+                                .totalPrice
+                            )
+                          }}
+                          $
+                        </h6>
+                      </div>
+                    </div>
+                    <template
+                      v-if="
+                        availableQuickReservations ||
+                        boatReservationDto.discount
+                      "
+                    >
                       <div class="row">
                         <div class="col">
-                          <h6 v-bind:class="[availableQuickReservations ? 'color: red;' : 'color: green;', 'text-align: left']">
-                            <template v-if="!availableQuickReservations"
-                              >Total</template
-                            >
-                            <template v-if="availableQuickReservations"
-                              >Previous</template
-                            >
-                            price:
+                          <h6 style="text-align: left; color: green">
+                            Discount:
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
-                            {{
-                              twoDecimales(boatReservationDto.paymentInformationDto
-                                .totalPrice)
-                            }}
-                            $
+                          <h6 style="text-align: left; color: green">
+                            <i
+                              >-{{
+                                boatReservationDto.discount
+                              }}%</i
+                            >
                           </h6>
                         </div>
                       </div>
-                      <template v-if="availableQuickReservations">
-                        <div class="row">
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">Discount:</h6>
-                          </div>
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">
-                              <i>-{{twoDecimales(boatReservationDto.discount)}}%</i>
-                            </h6>
-                          </div>
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left">Discounted price:</h6>
                         </div>
-                        <div class="row">
-                          <div class="col">
-                            <h6 style="text-align: left">Discounted price:</h6>
-                          </div>
-                          <div class="col">
-                            <h6 style="text-align: left; color: green">
-                              <b>{{ twoDecimales(getDiscountedPrice(boatReservationDto)) }}
-                              $</b>
-                            </h6>
-                          </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <b
+                              >{{
+                                twoDecimales(
+                                  getDiscountedPrice(boatReservationDto)
+                                )
+                              }}
+                              $</b
+                            >
+                          </h6>
                         </div>
-                      </template>
-                    </div>
+                      </div>
+                    </template>
                   </div>
 
                   <div class="row">
@@ -194,7 +274,7 @@
                             :disabled="
                               !possibleCancellation(
                                 boatReservationDto.startDate
-                              )
+                              ) || boatReservationDto.discount
                             "
                           >
                             CANCEL
@@ -307,7 +387,12 @@
           <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
               <b
-                >{{ twoDecimales(boatForCancellation.paymentInformationDto.totalPrice) }} $</b
+                >{{
+                  twoDecimales(
+                    boatForCancellation.paymentInformationDto.totalPrice
+                  )
+                }}
+                $</b
               >
             </p>
           </div>
@@ -367,7 +452,10 @@
             <Datepicker v-model="endDate" disabled></Datepicker>
           </div>
         </div>
-        <div class="row" v-if="quickReservationBoat.addedAdditionalServices.length!=0">
+        <div
+          class="row"
+          v-if="quickReservationBoat.addedAdditionalServices.length != 0"
+        >
           <div
             class="col"
             style="padding-top: 2%; text-align: left; color: gray"
@@ -419,11 +507,21 @@
           >
             <p>Previous price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; color: red; text-decoration: line-through;">
+          <div
+            class="col-sm-9"
+            style="
+              padding: 1%;
+              text-align: left;
+              color: red;
+              text-decoration: line-through;
+            "
+          >
             <p>
               <b
                 >{{
-                  twoDecimales(quickReservationBoat.paymentInformationDto.totalPrice)
+                  twoDecimales(
+                    quickReservationBoat.paymentInformationDto.totalPrice
+                  )
                 }}
                 $</b
               >
@@ -435,9 +533,17 @@
           >
             <p>Discounted price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; color: green">
+          <div
+            class="col-sm-9"
+            style="padding: 1%; text-align: left; color: green"
+          >
             <p>
-              <b>{{ twoDecimales(getDiscountedPrice(quickReservationBoat)) }} $</b>
+              <b
+                >{{
+                  twoDecimales(getDiscountedPrice(quickReservationBoat))
+                }}
+                $</b
+              >
             </p>
           </div>
         </div>
@@ -548,6 +654,7 @@ export default {
       return true;
     },
     getReservations: function () {
+      this.boatReservationDtos = [];
       if (!this.upcomingReservations) {
         axios
           .post(
@@ -558,7 +665,23 @@ export default {
             {}
           )
           .then((response) => {
-            this.boatReservationDtos = response.data;
+            this.boatReservationDtos = this.boatReservationDtos.concat(
+              response.data
+            );
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationBoat/getReservationsHistory",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.boatReservationDtos = this.boatReservationDtos.concat(
+              response.data
+            );
             this.reservationsLoaded = true;
           });
       } else {
@@ -572,7 +695,23 @@ export default {
             {}
           )
           .then((response) => {
-            this.boatReservationDtos = response.data;
+            this.boatReservationDtos = this.boatReservationDtos.concat(
+              response.data
+            );
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationBoat/getUpcomingReservations",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.boatReservationDtos = this.boatReservationDtos.concat(
+              response.data
+            );
             this.reservationsLoaded = true;
           });
       }
@@ -629,7 +768,7 @@ export default {
         100
       );
     },
-    twoDecimales: function(number){
+    twoDecimales: function (number) {
       return number.toFixed(2);
     },
     seeProfile: function (boatId) {

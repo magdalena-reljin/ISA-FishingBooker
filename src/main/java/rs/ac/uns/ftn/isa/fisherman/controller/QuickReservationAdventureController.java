@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationAdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
@@ -90,5 +91,29 @@ public class QuickReservationAdventureController {
         }else {
             return new ResponseEntity<>("Unsuccessful booking! Fishing instructor not available in given period!", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<QuickReservationAdventureDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<QuickReservationAdventureDto> quickReservationAdventureDtos = new HashSet<>();
+        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getUpcomingClientQuickReservations(userRequestDTO.getUsername())){
+            QuickReservationAdventureDto quickReservationAdventureDto = quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure);
+            quickReservationAdventureDto.getAdventureDto().setInstructorRating(quickReservationAdventure.getFishingInstructor().getRating());
+            quickReservationAdventureDtos.add(quickReservationAdventureDto);
+        }
+        return new ResponseEntity<>(quickReservationAdventureDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<QuickReservationAdventureDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<QuickReservationAdventureDto> quickReservationAdventureDtos = new HashSet<>();
+        for(QuickReservationAdventure quickReservationAdventure: quickReservationAdventureService.getClientQuickReservationsHistory(userRequestDTO.getUsername())){
+            QuickReservationAdventureDto quickReservationAdventureDto = quickReservationAdventureMapper.quickAdventureReservationToQuickAdventureReservationDto(quickReservationAdventure);
+            quickReservationAdventureDto.getAdventureDto().setInstructorRating(quickReservationAdventure.getFishingInstructor().getRating());
+            quickReservationAdventureDtos.add(quickReservationAdventureDto);
+        }
+        return new ResponseEntity<>(quickReservationAdventureDtos,HttpStatus.OK);
     }
 }

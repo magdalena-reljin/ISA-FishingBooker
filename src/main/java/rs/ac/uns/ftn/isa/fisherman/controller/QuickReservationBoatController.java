@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationBoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
@@ -98,5 +100,23 @@ public class QuickReservationBoatController {
         }else {
             return new ResponseEntity<>("Unsuccessful booking! Boat not available in given period!", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(value= "/getUpcomingReservations")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<QuickReservationBoatDto>> getUpcomingReservations(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<QuickReservationBoatDto> quickReservationBoatDtos = new HashSet<>();
+        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getUpcomingClientQuickReservations(userRequestDTO.getUsername()))
+            quickReservationBoatDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
+        return new ResponseEntity<>(quickReservationBoatDtos,HttpStatus.OK);
+    }
+
+    @PostMapping(value= "/getReservationsHistory")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<QuickReservationBoatDto>> getReservationsHistory(@RequestBody UserRequestDTO userRequestDTO) {
+        Set<QuickReservationBoatDto> quickReservationBoatDtos = new HashSet<>();
+        for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getClientQuickReservationsHistory(userRequestDTO.getUsername()))
+            quickReservationBoatDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
+        return new ResponseEntity<>(quickReservationBoatDtos,HttpStatus.OK);
     }
 }
