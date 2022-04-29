@@ -4,17 +4,43 @@
       class="navbar navbar-fixed-top navbar-expand"
       style="background-color: #1d7ac9; list-style: none"
     >
-      <div class="container-fluid" style="background-color: #1d7ac9; margin-right: 30px;">
+      <div
+        class="container-fluid"
+        style="background-color: #1d7ac9; margin-right: 30px"
+      >
         <a class="navbar-brand" href="#">
           <img src="../../assets/logoF1.png" alt="" width="194" height="80" />
         </a>
         <li class="nav-item dropdown">
-          <a style="color: white;" class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{email}}       
+          <a
+            style="color: white"
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdownMenuLink"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ email }}
           </a>
-          <ul class="dropdown-menu" style="width: 100%" aria-labelledby="navbarDropdownMenuLink">
-            <li><a @click="myProfile()" class="dropdown-item" href="#">Edit profile</a></li>
-            <li><a @click="logout()" class="dropdown-item" href="#">Log out</a></li>
+          <ul
+            class="dropdown-menu"
+            style="width: 100%"
+            aria-labelledby="navbarDropdownMenuLink"
+          >
+            <li>
+              <a @click="viewProfile()" class="dropdown-item" href="#"
+                >My profile</a
+              >
+            </li>
+            <li>
+              <a @click="myProfile()" class="dropdown-item" href="#"
+                >Edit profile</a
+              >
+            </li>
+            <li>
+              <a @click="logout()" class="dropdown-item" href="#">Log out</a>
+            </li>
           </ul>
         </li>
       </div>
@@ -44,7 +70,11 @@
         >
       </li>
       <li class="nav-item">
-        <a @click="newReservation()" style="color: white" class="nav-link active" href="#"
+        <a
+          @click="newReservation()"
+          style="color: white"
+          class="nav-link active"
+          href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -64,28 +94,83 @@
         >
       </li>
 
-    <li class="nav-item">
-      <a @click="availableQuickReservations()" style="color: white;"  class="nav-link active" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
-      <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-      </svg> AVAILABLE QUICK RESERVATIONS</a>
-      </li>
-
-     <li class="nav-item">
-      <a @click="reservations()" style="color: white;"  class="nav-link active" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
-      <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-      </svg> RESERVATIONS</a>
+      <li class="nav-item">
+        <a
+          @click="availableQuickReservations()"
+          style="color: white"
+          class="nav-link active"
+          href="#"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-calendar3"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"
+            />
+            <path
+              d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+            />
+          </svg>
+          AVAILABLE QUICK RESERVATIONS</a
+        >
       </li>
 
       <li class="nav-item">
-      <a @click="subscriptions()" style="color: white;"  class="nav-link active" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-      </svg>SUBSCRIPTIONS</a>
+        <a
+          @click="reservations()"
+          style="color: white"
+          class="nav-link active"
+          href="#"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-calendar3"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"
+            />
+            <path
+              d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+            />
+          </svg>
+          RESERVATIONS</a
+        >
       </li>
 
       <li class="nav-item">
-        <a style="color: white" @click="penalties()" class="nav-link active" href="#"
+        <a
+          @click="subscriptions()"
+          style="color: white"
+          class="nav-link active"
+          href="#"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-pencil"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
+            /></svg
+          >SUBSCRIPTIONS</a
+        >
+      </li>
+
+      <li class="nav-item">
+        <a
+          style="color: white"
+          @click="penalties()"
+          class="nav-link active"
+          href="#"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -134,12 +219,17 @@ export default {
     penalties: function () {
       this.$router.push("/penalties/" + this.email);
     },
-    logout: function(){
-      this.$store.dispatch('logOut').then(()=> {location.replace('/');})
+    logout: function () {
+      this.$store.dispatch("logOut").then(() => {
+        location.replace("/");
+      });
     },
-    subscriptions: function(){
+    subscriptions: function () {
       this.$router.push("/subscriptions/" + this.email);
-    }
+    },
+    viewProfile: function () {
+      this.$router.push("/client/viewProfile/" + this.email + "/" + this.email);
+    },
   },
 };
 </script> 

@@ -61,6 +61,7 @@ import Complaints from '../views/Admin/Complaints'
 import CabinOwnerProfile from '../views/CabinOwner/CabinOwnerProfile'
 import BoatOwnerProfile from '../views/BoatOwner/BoatOwnerProfile'
 import FishingInstructorProfile from '../views/FishingInstructor/FishingInstructorProfile'
+import ClientProfile from '../views/Client/ClientProfile'
 
 const routes = [
   
@@ -464,6 +465,19 @@ const routes = [
          }
        }                                                          
  
+  },
+  {
+    path: '/client/viewProfile/:email/:personsProfile',
+    name: 'ClientProfile',
+    component: ClientProfile,
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                            
   },
   {
     path: '/reservation/:email',
