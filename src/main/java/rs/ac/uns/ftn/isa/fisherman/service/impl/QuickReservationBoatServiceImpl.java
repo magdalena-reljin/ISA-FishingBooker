@@ -136,13 +136,13 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     private boolean validateForReservation(QuickReservationBoat quickReservationBoat){
         if(!availableBoatPeriodService.boatIsAvailable(quickReservationBoat.getBoat()
                 .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
-        System.out.println("VALIDACIJA1");
+
         if(boatReservationService.reservationExists(quickReservationBoat.getBoat()
                 .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate())) return false;
-        System.out.println("VALIDACIJA2");
+
         if(quickReservationBoatRepository.quickReservationExists(quickReservationBoat.getBoat()
                 .getId(),quickReservationBoat.getStartDate(),quickReservationBoat.getEndDate()).size()>0) return false;
-        System.out.println("VALIDACIJA3");
+
         return true;
     }
     @Override

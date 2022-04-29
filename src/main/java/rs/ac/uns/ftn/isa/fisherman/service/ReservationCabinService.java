@@ -45,4 +45,6 @@ public interface ReservationCabinService {
     boolean checkIfReservationIsEvaluated(Long id);
 
     boolean reservationExists(Long id);
+
+    boolean cabinNotFreeInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
 }

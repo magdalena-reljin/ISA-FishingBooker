@@ -68,7 +68,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 continue;
             if(searchAvailablePeriodsCabinDto.getNumberOfRooms()>cabinPeriod.getCabin().getNumOfRooms())
                 continue;
-            if(cabinNotReservedInPeriod(cabinPeriod.getCabin().getId(), searchAvailablePeriodsCabinDto.getStartDate(), searchAvailablePeriodsCabinDto.getEndDate()))
+            if(!cabinNotFreeInPeriod(cabinPeriod.getCabin().getId(), searchAvailablePeriodsCabinDto.getStartDate(), searchAvailablePeriodsCabinDto.getEndDate()))
                 availableCabins.add(cabinPeriod.getCabin());
         }
         return availableCabins;
@@ -91,7 +91,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
 
     @Override
     public boolean makeReservation(CabinReservationDto cabinReservationDto) {
-        if(cabinNotFreeInPeriod(cabinReservationDto))
+        if(cabinNotFreeInPeriod(cabinReservationDto.getCabinDto().getId(), cabinReservationDto.getStartDate(), cabinReservationDto.getEndDate()))
             return false;
         CabinReservation cabinReservation = setUpCabinReservationFromDto(cabinReservationDto);
         PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmount(cabinReservation,cabinReservation.getCabin().getCabinOwner());
@@ -107,8 +107,10 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return true;
     }
 
-    private boolean cabinNotFreeInPeriod(CabinReservationDto cabinReservationDto) {
-        return cabinReservationRepository.cabinReservedInPeriod(cabinReservationDto.getCabinDto().getId(), cabinReservationDto.getStartDate(), cabinReservationDto.getEndDate());
+    @Override
+    public boolean cabinNotFreeInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate) {
+        return cabinReservationRepository.cabinReservedInPeriod(cabinId, startDate, endDate) ||
+                quickReservationCabinService.cabinHasQuickReservationInPeriod(cabinId, startDate, endDate);
     }
 
     @NotNull
@@ -123,7 +125,6 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     private boolean clientHasCancellationForCabinInPeriod(CabinReservation cabinReservation) {
         return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabin().getId(), cabinReservation.getClient().getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate());
     }
-
 
     private void SendReservationMailToClient(CabinReservationDto cabinReservationDto) {
         try {
@@ -168,34 +169,6 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         cabinReservationRepository.save(reservation);
     }
 
-
-    private boolean periodStillAvailable(CabinReservation cabinReservation) {
-        for(AvailableCabinPeriod cabinPeriod:availableCabinPeriodService.findAll()){
-            if(cabinPeriod.getCabin().getId().equals(cabinReservation.getCabin().getId())){
-                if(cabinReservation.getStartDate().isAfter(cabinPeriod.getStartDate())
-                        &&cabinReservation.getEndDate().isBefore(cabinPeriod.getEndDate())
-                        &&cabinNotReservedInPeriod(cabinReservation.getCabin().getId(), cabinReservation.getStartDate(),
-                        cabinReservation.getEndDate())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean cabinNotReservedInPeriod(Long id, LocalDateTime start, LocalDateTime end) {
-        for(CabinReservation cabinReservation:cabinReservationRepository.findAll()){
-            if(cabinReservation.getCabin().getId().equals(id)){
-                if((cabinReservation.getStartDate().isBefore(end)||cabinReservation.getStartDate().isEqual(end))
-                        &&(cabinReservation.getEndDate().isAfter(start)||cabinReservation.getEndDate().isEqual(start))) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
     @Override
     public boolean ownerCreates(CabinReservation cabinReservation, String clientUsername) {
         Client client = clientService.findByUsername(clientUsername);
@@ -235,8 +208,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return true;
     }
     public boolean reservationExists(Long cabinId, LocalDateTime startDate, LocalDateTime endDate){
-        if(cabinReservationRepository.reservationExists(cabinId,startDate,endDate).size()>0) return true;
-        return false;
+        return cabinReservationRepository.reservationExists(cabinId, startDate, endDate).size() > 0;
     }
 
     public void sendMailNotification(CabinReservation cabinReservation,String email){
@@ -258,8 +230,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
     @Override
     public boolean futureReservationsExist(LocalDateTime currentDate,Long boatId) {
-        if(cabinReservationRepository.futureReservationsExist(currentDate,boatId).size()>0) return true ;
-        return false;
+        return cabinReservationRepository.futureReservationsExist(currentDate, boatId).size() > 0;
     }
 
     @Override
