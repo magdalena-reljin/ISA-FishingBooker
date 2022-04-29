@@ -128,18 +128,18 @@
                     <div class="col">
                       <div class="row">
                         <div class="col">
-                          <h6 v-bind:class="[availableQuickReservations ? 'color: red;' : 'color: green;', 'text-align: left']">
-                            <template v-if="!availableQuickReservations"
+                          <h6 v-bind:class="[availableQuickReservations || boatReservationDto.discount ? 'color: red;' : 'color: green;', 'text-align: left']">
+                            <template v-if="(!availableQuickReservations) && (!boatReservationDto.discount)"
                               >Total</template
                             >
-                            <template v-if="availableQuickReservations"
+                            <template v-if="availableQuickReservations || boatReservationDto.discount"
                               >Previous</template
                             >
                             price:
                           </h6>
                         </div>
                         <div class="col">
-                          <h6 v-bind:style="[availableQuickReservations ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
+                          <h6 v-bind:style="[availableQuickReservations || boatReservationDto.discount ? 'color: red; text-decoration: line-through;' : 'color: green;', 'text-align: left;']">
                             {{
                               twoDecimales(boatReservationDto.paymentInformationDto
                                 .totalPrice)
@@ -148,7 +148,7 @@
                           </h6>
                         </div>
                       </div>
-                      <template v-if="availableQuickReservations">
+                      <template v-if="availableQuickReservations || boatReservationDto.discount">
                         <div class="row">
                           <div class="col">
                             <h6 style="text-align: left; color: green">Discount:</h6>
@@ -186,7 +186,7 @@
                         </button>
                       </div>
                       <div class="col" style="text-align: right">
-                        <template v-if="upcomingReservations">
+                        <template v-if="upcomingReservations && !boatReservationDto.discount">
                           <button
                             @click="cancelReservationModal(boatReservationDto)"
                             type="button"
@@ -548,6 +548,7 @@ export default {
       return true;
     },
     getReservations: function () {
+      this.boatReservationDtos = [];
       if (!this.upcomingReservations) {
         axios
           .post(
@@ -558,7 +559,19 @@ export default {
             {}
           )
           .then((response) => {
-            this.boatReservationDtos = response.data;
+            this.boatReservationDtos = this.boatReservationDtos.concat(response.data);
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationBoat/getReservationsHistory",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.boatReservationDtos = this.boatReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       } else {
@@ -572,7 +585,19 @@ export default {
             {}
           )
           .then((response) => {
-            this.boatReservationDtos = response.data;
+            this.boatReservationDtos = this.boatReservationDtos.concat(response.data);
+            this.reservationsLoaded = true;
+          });
+        axios
+          .post(
+            "http://localhost:8081/quickReservationBoat/getUpcomingReservations",
+            {
+              username: this.email,
+            },
+            {}
+          )
+          .then((response) => {
+            this.boatReservationDtos = this.boatReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
           });
       }
