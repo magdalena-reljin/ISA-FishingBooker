@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -22,4 +24,6 @@ public interface QuickReservationAdventureService {
     boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
     Set<QuickReservationAdventure> getUpcomingClientQuickReservations(String clientUsername);
     Set<QuickReservationAdventure> getClientQuickReservationsHistory(String clientUsername);
+    List<QuickReservationAdventure> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalculatedByHoursForAdmin(List<QuickReservationAdventure> reservations, LocalDateTime start, LocalDateTime end);
 }

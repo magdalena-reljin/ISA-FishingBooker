@@ -2,10 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
-import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
-import rs.ac.uns.ftn.isa.fisherman.model.Boat;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,4 +27,6 @@ public interface AdventureReservationService {
     boolean checkIfReservationIsEvaluated(Long reservationId);
     void markThatReservationIsEvaluated(Long reservationId);
     boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
+    List<AdventureReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
+    double sumProfitForAdminOfPricesCalculatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end);
 }

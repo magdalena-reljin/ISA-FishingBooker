@@ -9,7 +9,10 @@ import rs.ac.uns.ftn.isa.fisherman.dto.StatisticsReportDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.ReservationPointsMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.ReservationPoints;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +81,68 @@ public class CabinStatisticsReportController {
                         dateRange.get(0),dateRange.get(1)
                 )
 
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/sumWeekProfitOfAllCabinsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumWeekProfit() {
+        double profit=0.0;
+        List<LocalDateTime> thisWeek=dateService.findWeek();
+        profit+=reservationCabinService.sumProfitForAdminOfPricesCalculatedByDays(
+                reservationCabinService.findAllReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),thisWeek.get(0),thisWeek.get(1)
+        );
+        profit+=quickReservationCabinService.sumProfitOfPricesCalculatedByDaysForAdmin(
+                quickReservationCabinService.findAllQucikReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),
+                thisWeek.get(0),thisWeek.get(1)
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumTodaysProfitOfAllCabinsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumTodaysProfit() {
+        double profit=0.0;
+        List<LocalDateTime> today=new ArrayList<>();
+        LocalDate date= LocalDate.now();
+        LocalDateTime start= LocalTime.MIN.atDate(date);
+        LocalDateTime end= LocalTime.MAX.atDate(date);
+
+        profit+=reservationCabinService.sumProfitForAdminOfPricesCalculatedByDays(
+                reservationCabinService.findAllReservationsForAdminProfit(start,end),start,end
+        );
+        profit+=quickReservationCabinService.sumProfitOfPricesCalculatedByDaysForAdmin(
+                quickReservationCabinService.findAllQucikReservationsForAdminProfit(start,end),
+                start,end
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumMonthProfitOfAllCabinsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumMothProfit() {
+        double profit=0.0;
+        List<LocalDateTime> thisMonth=dateService.findMonth();
+        profit+=reservationCabinService.sumProfitForAdminOfPricesCalculatedByDays(
+                reservationCabinService.findAllReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),thisMonth.get(0),thisMonth.get(1)
+        );
+        profit+=quickReservationCabinService.sumProfitOfPricesCalculatedByDaysForAdmin(
+                quickReservationCabinService.findAllQucikReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),
+                thisMonth.get(0),thisMonth.get(1)
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumYearProfitOfAllCabinsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumYearProfit() {
+        double profit=0.0;
+        List<LocalDateTime> thisYear=dateService.findYear();
+        profit+=reservationCabinService.sumProfitForAdminOfPricesCalculatedByDays(
+                reservationCabinService.findAllReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),thisYear.get(0),thisYear.get(1)
+        );
+        profit+=quickReservationCabinService.sumProfitOfPricesCalculatedByDaysForAdmin(
+                quickReservationCabinService.findAllQucikReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),
+                thisYear.get(0),thisYear.get(1)
         );
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }

@@ -23,8 +23,8 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
     @Query(value="SELECT * FROM adventure_reservation where owners_username=:username and (:currentDate <= end_date) ",nativeQuery = true)
     Set<AdventureReservation> getPresentByInstructorId(@Param("username") String username, @Param("currentDate")LocalDateTime currentDate);
 
-   @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM adventure_reservation c where adventure_id=:adventure_id and (:currentDate <= end_date) ",nativeQuery = true)
-   boolean futureReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("adventure_id") Long adventure_id);
+    @Query(value="SELECT CASE WHEN  COUNT(c) > 0 THEN true ELSE false END FROM adventure_reservation c where adventure_id=:adventure_id and (:currentDate <= end_date) ",nativeQuery = true)
+    boolean futureReservationsExist(@Param("currentDate")LocalDateTime currentDate,@Param("adventure_id") Long adventure_id);
 
     @Query(value="SELECT * FROM adventure_reservation where owners_username=:username and (:currentDate > end_date) ",nativeQuery = true)
     Set<AdventureReservation> getPastReservations(@Param("username") String username, @Param("currentDate")LocalDateTime currentDate);
@@ -57,4 +57,8 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
 
     @Query(value="SELECT CASE WHEN  COUNT(a) > 0 THEN true ELSE false END FROM adventure_reservation a where instructors_id=:instructors_id and users_id=:users_id",nativeQuery = true)
     boolean clientHasReservationWithInstructor(@Param("instructors_id")Long instructorsId, @Param("users_id")Long id);
+
+    @Query(value="select * from adventure_reservation cr where ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    List<AdventureReservation> findAllReservationsForAdminProfit(@Param("start")LocalDateTime start, @Param("end") LocalDateTime end);
+
 }

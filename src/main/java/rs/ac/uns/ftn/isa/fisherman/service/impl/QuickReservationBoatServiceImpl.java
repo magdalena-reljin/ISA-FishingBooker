@@ -138,6 +138,26 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public List<QuickReservationBoat> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end) {
+        return quickReservationBoatRepository.findAllQuickReservationsForAdminProfit(start,end);
+    }
+
+    @Override
+    public double sumProfitOfPricesCalculatedByHoursForAdmin(List<QuickReservationBoat> reservations, LocalDateTime start, LocalDateTime end) {
+        double profit=0.0;
+        double numOfHoursForReportReservation= 0.0;
+        double reservationHours=0.0;
+        for(QuickReservationBoat boatReservation: reservations){
+            numOfHoursForReportReservation= calculateOverlapingDates(start,end,boatReservation.getStartDate(),boatReservation.getEndDate());
+            reservationHours= Duration.between(boatReservation.getStartDate(),boatReservation.getEndDate()).toMinutes()/60d;
+
+            profit+=(numOfHoursForReportReservation* boatReservation.getPaymentInformation().getCompanysPart())/reservationHours;
+
+        }
+        return profit;
+    }
+
+    @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         if(quickReservationBoatRepository.quickReservationExists(id,startDate,endDate).size()>0) return false;
         return true;

@@ -81,6 +81,16 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         }
         return profit;
     }
+    @Override
+    public double sumProfitOfPricesCalculatedByDaysForAdmin(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        long numOfDaysForReportReservation= 0;
+        for(QuickReservationCabin quickReservationCabin: reservations){
+            numOfDaysForReportReservation= calculateOverlapingDates(start,end,quickReservationCabin.getStartDate(),quickReservationCabin.getEndDate());
+            profit+=(numOfDaysForReportReservation* quickReservationCabin.getPaymentInformation().getCompanysPart())/Duration.between(quickReservationCabin.getStartDate(),quickReservationCabin.getEndDate()).toDays();
+        }
+        return profit;
+    }
 
     private long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
         long numberOfOverlappingDates=0;
@@ -134,6 +144,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Override
     public Set<QuickReservationCabin> getClientQuickReservationsHistory(String clientUsername) {
         return quickReservationCabinRepository.getClientQuickReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
+    }
+
+    @Override
+    public List<QuickReservationCabin> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end) {
+        return quickReservationCabinRepository.findAllQuickReservationsForAdminProfit(start,end);
     }
 
     private void sendMailNotificationToSubscribedUsers(Long cabinId,String cabinName){
