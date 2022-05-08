@@ -113,6 +113,11 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 quickReservationCabinService.cabinHasQuickReservationInPeriod(cabinId, startDate, endDate);
     }
 
+    @Override
+    public List<CabinReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end) {
+        return cabinReservationRepository.findAllReservationsForAdminProfit(start,end);
+    }
+
     @NotNull
     private CabinReservation setUpCabinReservationFromDto(CabinReservationDto cabinReservationDto) {
         CabinOwner cabinOwner = cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername());
@@ -156,6 +161,16 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return profit;
     }
 
+    @Override
+    public double sumProfitForAdminOfPricesCalculatedByDays(List<CabinReservation> reservations, LocalDateTime start, LocalDateTime end){
+        double profit=0.0;
+        long numOfDaysForReportReservation= 0;
+        for(CabinReservation cabinReservation: reservations){
+            numOfDaysForReportReservation= calculateOverlapingDates(start,end,cabinReservation.getStartDate(),cabinReservation.getEndDate());
+            profit+=(numOfDaysForReportReservation*cabinReservation.getPaymentInformation().getCompanysPart())/Duration.between(cabinReservation.getStartDate(),cabinReservation.getEndDate()).toDays();
+        }
+        return profit;
+    }
     public long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
         long numberOfOverlappingDates=0;
         LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));

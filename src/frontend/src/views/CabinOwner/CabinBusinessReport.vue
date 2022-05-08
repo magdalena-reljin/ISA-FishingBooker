@@ -120,7 +120,7 @@
 
               <div class="col"  >
                              <h3>OWNERS INCOME</h3>
-        <BarChart :chart-data="dataIncome" :options="options" css-classes="chart-container" />
+                <BarChart :chart-data="dataIncome" :options="options" css-classes="chart-container" />
               </div>
 
         </div>

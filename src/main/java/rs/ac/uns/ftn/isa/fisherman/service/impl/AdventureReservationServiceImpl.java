@@ -216,6 +216,24 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     @Override
+    public List<AdventureReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end) {
+        return adventureReservationRepository.findAllReservationsForAdminProfit(start,end);
+    }
+
+    @Override
+    public double sumProfitForAdminOfPricesCalculatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end) {
+        double profit=0.0;
+        double numOfHoursForReportReservation= 0.0;
+        double reservationHours=0.0;
+        for(AdventureReservation adventureReservation: reservations){
+            numOfHoursForReportReservation= calculateOverlapingDates(start,end,adventureReservation.getStartDate(),adventureReservation.getEndDate());
+            reservationHours= Duration.between(adventureReservation.getStartDate(),adventureReservation.getEndDate()).toMinutes()/60d;
+            profit+=(numOfHoursForReportReservation* adventureReservation.getPaymentInformation().getCompanysPart())/reservationHours;
+        }
+        return profit;
+    }
+
+    @Override
     public Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username) {
         return adventureReservationRepository.getUpcomingClientReservations(clientService.findByUsername(username).getId(), LocalDateTime.now());
     }

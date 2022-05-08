@@ -3,6 +3,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,4 +48,8 @@ public interface QuickReservationBoatRepository extends JpaRepository<QuickReser
 
     @Query(value="SELECT * FROM quick_reservation_boat where users_id=:user_id and (:currentDate > start_date) ",nativeQuery = true)
     Set<QuickReservationBoat> getClientQuickReservationsHistory(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="select * from quick_reservation_boat cr where cr.users_id != null and((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    List<QuickReservationBoat> findAllQuickReservationsForAdminProfit(@Param("start")LocalDateTime start, @Param("end") LocalDateTime end);
+
 }

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import org.apache.tomcat.jni.Local;
+import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
@@ -47,4 +48,7 @@ public interface ReservationCabinService {
     boolean reservationExists(Long id);
 
     boolean cabinNotFreeInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<CabinReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
+    double sumProfitForAdminOfPricesCalculatedByDays(List<CabinReservation> reservations, LocalDateTime start, LocalDateTime end);
 }

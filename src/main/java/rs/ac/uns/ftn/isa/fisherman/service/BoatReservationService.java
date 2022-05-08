@@ -3,6 +3,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,4 +49,8 @@ public interface BoatReservationService {
     void markThatReservationIsEvaluated(Long reservationId);
 
     boolean boatNotFreeInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<BoatReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
+
+    double sumProfitForAdminOfPricesCalculatedByHours(List<BoatReservation> reservations, LocalDateTime start, LocalDateTime end);
 }

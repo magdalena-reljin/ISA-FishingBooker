@@ -234,6 +234,24 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
+    public List<BoatReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end) {
+        return boatReservationRepository.findAllReservationsForAdminProfit(start,end);
+    }
+
+    @Override
+    public double sumProfitForAdminOfPricesCalculatedByHours(List<BoatReservation> reservations, LocalDateTime start, LocalDateTime end) {
+        double profit=0.0;
+        double numOfHoursForReportReservation= 0.0;
+        double reservationHours=0.0;
+        for(BoatReservation boatReservation: reservations){
+            numOfHoursForReportReservation= calculateOverlapingDates(start,end,boatReservation.getStartDate(),boatReservation.getEndDate());
+            reservationHours=Duration.between(boatReservation.getStartDate(),boatReservation.getEndDate()).toMinutes()/60d;
+            profit+=(numOfHoursForReportReservation* boatReservation.getPaymentInformation().getCompanysPart())/reservationHours;
+        }
+        return profit;
+    }
+
+    @Override
     public Set<BoatReservation> getUpcomingClientReservationsByUsername(String clientUsername) {
         return boatReservationRepository.getUpcomingClientReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
     }

@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.isa.fisherman.service;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,4 +26,7 @@ public interface QuickReservationBoatService {
     boolean boatHasQuickReservationInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
     Set<QuickReservationBoat> getUpcomingClientQuickReservations(String clientUsername);
     Set<QuickReservationBoat> getClientQuickReservationsHistory(String clientUsername);
+    List<QuickReservationBoat> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalculatedByHoursForAdmin(List<QuickReservationBoat> reservations, LocalDateTime start, LocalDateTime end);
+
 }

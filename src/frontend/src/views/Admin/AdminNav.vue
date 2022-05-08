@@ -107,7 +107,7 @@ import axios from "axios";
        }
      },
      mounted() {
-
+        console.log("ja sam prop mounted nav  "+this.$props.username )
      },
      methods: {
        requests: function(){

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
 import java.time.LocalDateTime;
@@ -25,4 +26,7 @@ public interface QuickReservationCabinService {
     boolean cabinHasQuickReservationInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
     Set<QuickReservationCabin> getUpcomingClientQuickReservations(String clientUsername);
     Set<QuickReservationCabin> getClientQuickReservationsHistory(String clientUsername);
-}
+    List<QuickReservationCabin> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
+    double sumProfitOfPricesCalculatedByDaysForAdmin(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
+
+    }

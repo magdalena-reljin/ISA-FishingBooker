@@ -12,7 +12,9 @@ import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.ReservationPoints;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,66 @@ public class BoatStatisticsReportController {
         List<BoatReservation> reservations= boatReservationService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1));
         profit.add(boatReservationService.sumProfitOfPricesCalucatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
         profit.add(quickReservationBoatService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumWeekProfitOfAllBoatsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumWeekProfit() {
+        double profit=0.0;
+        List<LocalDateTime> thisWeek=dateService.findWeek();
+        profit+=boatReservationService.sumProfitForAdminOfPricesCalculatedByHours(
+                boatReservationService.findAllReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),thisWeek.get(0),thisWeek.get(1)
+        );
+        profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
+                quickReservationBoatService.findAllQucikReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),
+                thisWeek.get(0),thisWeek.get(1)
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumTodaysProfitOfAllBoatsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumTodaysProfit() {
+        double profit=0.0;
+        List<LocalDateTime> today=new ArrayList<>();
+        LocalDate date= LocalDate.now();
+        LocalDateTime start= LocalTime.MIN.atDate(date);
+        LocalDateTime end= LocalTime.MAX.atDate(date);
+
+        profit+=boatReservationService.sumProfitForAdminOfPricesCalculatedByHours(
+                boatReservationService.findAllReservationsForAdminProfit(start,end),start,end
+        );
+        profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
+                quickReservationBoatService.findAllQucikReservationsForAdminProfit(start,end),
+                start,end
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumMonthProfitOfAllBoatsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumMothProfit() {
+        double profit=0.0;
+        List<LocalDateTime> thisMonth=dateService.findMonth();
+        profit+=boatReservationService.sumProfitForAdminOfPricesCalculatedByHours(
+                boatReservationService.findAllReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),thisMonth.get(0),thisMonth.get(1)
+        );
+        profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
+                quickReservationBoatService.findAllQucikReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),
+                thisMonth.get(0),thisMonth.get(1)
+        );
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
+    @GetMapping("/sumYearProfitOfAllBoatsForAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Double> sumYearProfit() {
+        double profit=0.0;
+        List<LocalDateTime> thisYear=dateService.findYear();
+        profit+=boatReservationService.sumProfitForAdminOfPricesCalculatedByHours(
+                boatReservationService.findAllReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),thisYear.get(0),thisYear.get(1)
+        );
+        profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
+                quickReservationBoatService.findAllQucikReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),
+                thisYear.get(0),thisYear.get(1)
+        );
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
 }
