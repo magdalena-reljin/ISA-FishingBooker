@@ -44,6 +44,10 @@ public interface BoatReservationService {
 
     boolean reservationExists(Long id);
 
+    boolean checkIfOwnerHasFutureReservations(String username);
+
+    boolean checkIfClientHasFutureReservations(Long userId);
+
     boolean checkIfReservationIsEvaluated(Long reservationId);
 
     void markThatReservationIsEvaluated(Long reservationId);

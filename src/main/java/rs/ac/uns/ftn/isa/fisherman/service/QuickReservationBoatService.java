@@ -28,7 +28,8 @@ public interface QuickReservationBoatService {
     Set<QuickReservationBoat> getClientQuickReservationsHistory(String clientUsername);
     List<QuickReservationBoat> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByHoursForAdmin(List<QuickReservationBoat> reservations, LocalDateTime start, LocalDateTime end);
-
+    boolean checkIfOwnerHasFutureReservations(String username);
+    boolean checkIfClientHasFutureReservations(Long userId);
     Integer countReservationsByBoatInPeriod(LocalDateTime start, LocalDateTime end, Long id);
     List<QuickReservationBoat> findReservationsToSumProfit(String id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
     List<QuickReservationBoat> findReservationsToSumProfitByBoat(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);

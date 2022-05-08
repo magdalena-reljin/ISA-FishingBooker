@@ -1,4 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
@@ -29,6 +31,7 @@ public interface QuickReservationCabinService {
     Set<QuickReservationCabin> getClientQuickReservationsHistory(String clientUsername);
     List<QuickReservationCabin> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByDaysForAdmin(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
-
+    boolean checkIfOwnerHasFutureReservations(String username);
+    boolean checkIfClientHasFutureReservations(Long userId);
     List<QuickReservationCabin> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 }

@@ -26,9 +26,9 @@ public interface QuickReservationAdventureService {
     Set<QuickReservationAdventure> getClientQuickReservationsHistory(String clientUsername);
     List<QuickReservationAdventure> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByHoursForAdmin(List<QuickReservationAdventure> reservations, LocalDateTime start, LocalDateTime end);
-
+    boolean checkIfOwnerHasFutureReservations(String username);
+    boolean checkIfClientHasFutureReservations(Long userId);
     Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id);
-
     List<QuickReservationAdventure> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
     List<QuickReservationAdventure> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 }

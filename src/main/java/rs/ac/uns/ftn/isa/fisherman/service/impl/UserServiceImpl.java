@@ -4,13 +4,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
-import rs.ac.uns.ftn.isa.fisherman.service.AuthorityService;
-import rs.ac.uns.ftn.isa.fisherman.service.UserService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 import rs.ac.uns.ftn.isa.fisherman.mail.*;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.UserRepository;
@@ -31,6 +32,20 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private TokenUtils tokenUtils;
+    @Autowired
+    private ReservationCabinService reservationCabinService;
+    @Autowired
+    private QuickReservationCabinService quickReservationCabinService;
+    @Autowired
+    private AdventureReservationService adventureReservationService;
+    @Autowired
+    private QuickReservationAdventureService quickReservationAdventureService;
+    @Autowired
+    private BoatReservationService boatReservationService;
+    @Autowired
+    private QuickReservationBoatService quickReservationBoatService;
+
+
 
     public UserServiceImpl() {
     }
@@ -158,9 +173,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public boolean deleteUser(User user) {
+        if(checkIfCanDeletingUser(user)){
+            userRepository.delete(user);
+            return  true;
+        }
+          return  false;
     }
+
+
 
     @Override
     public void saveDeleteAccountRequest(String username, String reasonForDeleting) {
@@ -211,6 +232,54 @@ public class UserServiceImpl implements UserService {
         double rating = newGrade/2.0;
         user.setRating(rating);
         userRepository.save(user);
+    }
+    private boolean checkIfCanDeletingUser(User user){
+        if(user.getRoleApp() == "ROLE_CABINOWNER"){
+            if(checkCabinOwner(user)) return false ;
+        }else if(user.getRoleApp() == "ROLE_BOATOWNER"){
+            if(checkBoatOwner(user)) return false ;
+        }else if(user.getRoleApp() == "ROLE_FISHING_INSTRUCTOR"){
+            if(checkFishingInstructor(user)) return false ;
+        }else if(user.getRoleApp() == "ROLE_CLIENT"){
+            if(checkClient(user)) return false ;
+        }
+        return  true;
+    }
+
+    private boolean checkClient(User user){
+        if(reservationCabinService.checkIfClientHasFutureReservations(user.getId()) ||
+                quickReservationCabinService.checkIfClientHasFutureReservations(user.getId())||
+                boatReservationService.checkIfClientHasFutureReservations(user.getId()) ||
+                quickReservationBoatService.checkIfClientHasFutureReservations(user.getId())||
+                adventureReservationService.checkIfClientHasFutureReservations(user.getId()) ||
+                quickReservationAdventureService.checkIfClientHasFutureReservations(user.getId()))
+            return  true;
+
+     return  false;
+    }
+
+    private boolean checkCabinOwner(User user){
+        if(reservationCabinService.checkIfOwnerHasFutureReservations(user.getUsername()) ||
+                quickReservationCabinService.checkIfOwnerHasFutureReservations(user.getUsername()))
+            return  true;
+
+        return  false;
+    }
+
+    private boolean checkBoatOwner(User user){
+        if(boatReservationService.checkIfOwnerHasFutureReservations(user.getUsername()) ||
+                quickReservationBoatService.checkIfOwnerHasFutureReservations(user.getUsername()))
+            return  true;
+
+        return  false;
+    }
+
+    private boolean checkFishingInstructor(User user){
+        if(adventureReservationService.checkIfOwnerHasFutureReservations(user.getUsername()) ||
+                quickReservationAdventureService.checkIfOwnerHasFutureReservations(user.getUsername()))
+            return  true;
+
+        return  false;
     }
 
 

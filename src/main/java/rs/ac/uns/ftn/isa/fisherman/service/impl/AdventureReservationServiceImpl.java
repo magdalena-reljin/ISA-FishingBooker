@@ -231,6 +231,16 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     @Override
+    public boolean checkIfOwnerHasFutureReservations(String username) {
+        return adventureReservationRepository.checkIfOwnerHasFutureReservations(username,LocalDateTime.now());
+    }
+
+    @Override
+    public boolean checkIfClientHasFutureReservations(Long userId) {
+        return adventureReservationRepository.checkIfClientHasFutureReservations(userId,LocalDateTime.now());
+    }
+
+    @Override
     public Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
         return adventureReservationRepository.countReservationsInPeriodByAdventureId(start,end,id);
     }

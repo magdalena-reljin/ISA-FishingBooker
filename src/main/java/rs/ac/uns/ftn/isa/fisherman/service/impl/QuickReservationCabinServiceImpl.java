@@ -98,6 +98,16 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
+    public boolean checkIfOwnerHasFutureReservations(String username) {
+        return quickReservationCabinRepository.checkIfOwnerHasFutureReservations(username,LocalDateTime.now()) ;
+    }
+
+    @Override
+    public boolean checkIfClientHasFutureReservations(Long userId) {
+        return  quickReservationCabinRepository.checkIfClientHasFutureReservations(userId,LocalDateTime.now());
+    }
+
+    @Override
     public List<QuickReservationCabin> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
         return quickReservationCabinRepository.findReservationsInPeriodByCabinToSumProfit(id,localDateTime,localDateTime1);
     }

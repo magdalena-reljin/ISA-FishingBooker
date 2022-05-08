@@ -40,7 +40,7 @@
             </div>
 
                <div class="col "><button @click="deny(rep)"
-               type="button" class="btn btn-outline-danger" >UNAPPROVE</button>
+               type="button" class="btn btn-outline-danger" >DISAPPROVE</button>
                </div>
                
    
@@ -90,7 +90,6 @@ import dayjs from 'dayjs';
          getAllEvaluations: function(){
                     axios.get("http://localhost:8081/evaluations/getAllEvaluations")
             .then(response => {this.evaluations = response.data
-                console.log("AAAAAAAA"+response.data.ownersUsername)
               
               })
              .catch(error => {

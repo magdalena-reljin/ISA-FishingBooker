@@ -277,6 +277,16 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
+    public boolean checkIfOwnerHasFutureReservations(String username) {
+        return boatReservationRepository.checkIfOwnerHasFutureReservations(username,LocalDateTime.now());
+    }
+
+    @Override
+    public boolean checkIfClientHasFutureReservations(Long userId) {
+        return boatReservationRepository.checkIfClientHasFutureReservations(userId,LocalDateTime.now());
+    }
+
+    @Override
     public boolean checkIfReservationIsEvaluated(Long reservationId) {
         return boatReservationRepository.getById(reservationId).isEvaluated();
     }
