@@ -1,4 +1,6 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
@@ -28,7 +30,8 @@ public interface AdventureReservationService {
     boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
     List<AdventureReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitForAdminOfPricesCalculatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end);
-
+    boolean checkIfOwnerHasFutureReservations(String username);
+    boolean checkIfClientHasFutureReservations(Long userId);
     Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id);
 
     List<AdventureReservation> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);

@@ -141,6 +141,16 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     }
 
     @Override
+    public boolean checkIfOwnerHasFutureReservations(String username) {
+        return quickReservationAdventureRepository.checkIfOwnerHasFutureReservations(username,LocalDateTime.now());
+    }
+
+    @Override
+    public boolean checkIfClientHasFutureReservations(Long userId) {
+        return quickReservationAdventureRepository.checkIfClientHasFutureReservations(userId,LocalDateTime.now());
+    }
+
+    @Override
     public Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
         return quickReservationAdventureRepository.countReservationsInPeriodByAdventureId(start,end,id);
     }

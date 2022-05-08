@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.*;
 import rs.ac.uns.ftn.isa.fisherman.model.User;
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
 import rs.ac.uns.ftn.isa.fisherman.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +42,10 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@RequestBody UserRequestDTO userRequest) {
         User user= userService.findByUsername(userRequest.getUsername());
-        userService.deleteUser(user);
-        return new ResponseEntity<>("Success.", HttpStatus.OK);
+        if(userService.deleteUser(user)){
+            return new ResponseEntity<>("Success.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User has future reservations.", HttpStatus.BAD_REQUEST);
     }
     @GetMapping(value = "getUsername")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")

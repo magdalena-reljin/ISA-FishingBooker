@@ -274,6 +274,16 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     }
 
     @Override
+    public boolean checkIfOwnerHasFutureReservations(String username) {
+        return cabinReservationRepository.checkIfOwnerHasFutureReservations(username,LocalDateTime.now());
+    }
+
+    @Override
+    public boolean checkIfClientHasFutureReservations(Long userId) {
+        return  cabinReservationRepository.checkIfClientHasFutureReservations(userId,LocalDateTime.now());
+    }
+
+    @Override
     public void markThatReservationIsEvaluated(Long id){
         CabinReservation cabinReservation = cabinReservationRepository.getById(id);
         cabinReservation.setEvaluated(true);

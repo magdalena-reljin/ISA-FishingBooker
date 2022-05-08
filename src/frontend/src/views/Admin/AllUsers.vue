@@ -134,7 +134,7 @@ import axios from "axios";
            });
        },
        deleteUser: function(){
-            
+        
              axios
                .post("http://localhost:8081/userc/deleteUser",this.selectedUser)
                .then((response) => {
@@ -148,8 +148,18 @@ import axios from "axios";
                       })
                       this.getAllUsers();
                    return response; 
-               });
-
+               })
+               .catch(error => {
+                 console.log(error)
+                  this.$swal.fire({
+                      position: 'top-end',
+                      icon: 'error',
+                      title: 'User has future reservations!',
+                      showConfirmButton: false,
+                      timer: 2500
+           })
+              });
+               
        }
 
       

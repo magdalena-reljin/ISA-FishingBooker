@@ -158,6 +158,16 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public boolean checkIfOwnerHasFutureReservations(String username) {
+        return quickReservationBoatRepository.checkIfOwnerHasFutureReservations(username,LocalDateTime.now());
+    }
+
+    @Override
+    public boolean checkIfClientHasFutureReservations(Long userId) {
+        return quickReservationBoatRepository.checkIfClientHasFutureReservations(userId,LocalDateTime.now());
+    }
+
+    @Override
     public Integer countReservationsByBoatInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
         return quickReservationBoatRepository.countReservationsByBoatInPeriod(start,end,id);
     }
