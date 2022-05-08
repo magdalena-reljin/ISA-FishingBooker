@@ -158,6 +158,22 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
+    public Integer countReservationsByBoatInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
+        return quickReservationBoatRepository.countReservationsByBoatInPeriod(start,end,id);
+    }
+
+    @Override
+    public List<QuickReservationBoat> findReservationsToSumProfit(String username, LocalDateTime start, LocalDateTime end) {
+        return quickReservationBoatRepository.findReservationsInPeriodToSumProfit(username,start,end);
+    }
+
+    @Override
+    public List<QuickReservationBoat> findReservationsToSumProfitByBoat(Long id, LocalDateTime start, LocalDateTime end) {
+        return quickReservationBoatRepository.findReservationsInPeriodByBoatToSumProfit(id,start,end);
+    }
+
+
+    @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {
         if(quickReservationBoatRepository.quickReservationExists(id,startDate,endDate).size()>0) return false;
         return true;

@@ -124,6 +124,7 @@
        <div v-if="role=='CABINOWNER'" class="col" style="margin-top: 3%;">
            <button   @click="editProfile()" style="background-color: #1d7ac9; width: 100%; " type="button" class="btn text-light rounded-pill">EDIT PROFILE</button>
               <button @click="calendar()" style="background-color: #1d7ac9; width: 100%; margin-top: 10% "  type="button" class="btn text-light rounded-pill">CABIN CALENDAR</button>
+               <button @click="statistics()" style="background-color: #1d7ac9; width: 100%; margin-top: 10% "  type="button" class="btn text-light rounded-pill">SEE STATISTICS</button>
        </div>
 
       
@@ -247,6 +248,9 @@
      methods: {
        editProfile: function(){
         this.$router.push('/editCabinProfile/'+ this.email+'/'+this.cabinName);
+       },
+       statistics: function(){
+        this.$router.push('/cabinStatistics/'+ this.email+'/'+this.cabinName);
        },
        getCabin: function(){
              this.cabinDto.name=this.cabinName

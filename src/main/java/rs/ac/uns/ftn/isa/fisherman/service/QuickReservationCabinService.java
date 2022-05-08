@@ -18,6 +18,7 @@ public interface QuickReservationCabinService {
     void ownerCreatesReview(QuickReservationCabin reservation, boolean successful);
     Set<QuickReservationCabin> getAllReports();
     Integer countReservationsInPeriod(LocalDateTime startWeek, LocalDateTime endWeek, String ownerUsername);
+    Integer countReservationsInPeriodByCabinId(LocalDateTime startWeek, LocalDateTime endWeek, Long cabinId );
     List<QuickReservationCabin> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
     void save(QuickReservationCabin reservation);
@@ -29,4 +30,5 @@ public interface QuickReservationCabinService {
     List<QuickReservationCabin> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByDaysForAdmin(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
 
-    }
+    List<QuickReservationCabin> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+}

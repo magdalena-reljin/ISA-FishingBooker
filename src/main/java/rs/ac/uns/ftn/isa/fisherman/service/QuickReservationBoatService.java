@@ -29,4 +29,7 @@ public interface QuickReservationBoatService {
     List<QuickReservationBoat> findAllQucikReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalculatedByHoursForAdmin(List<QuickReservationBoat> reservations, LocalDateTime start, LocalDateTime end);
 
+    Integer countReservationsByBoatInPeriod(LocalDateTime start, LocalDateTime end, Long id);
+    List<QuickReservationBoat> findReservationsToSumProfit(String id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+    List<QuickReservationBoat> findReservationsToSumProfitByBoat(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 }

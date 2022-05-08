@@ -171,6 +171,17 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         }
         return profit;
     }
+
+    @Override
+    public Integer countReservationsInPeriodByCabinId(LocalDateTime start, LocalDateTime end, Long id) {
+        return cabinReservationRepository.countReservationsInPeriodByCabinId(start,end,id);
+    }
+
+    @Override
+    public List<CabinReservation> findReservationsByCabinToSumProfit(Long id, LocalDateTime start, LocalDateTime end) {
+        return cabinReservationRepository.findReservationsInPeriodByCabinToSumProfit(id,start,end);
+    }
+
     public long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
         long numberOfOverlappingDates=0;
         LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));

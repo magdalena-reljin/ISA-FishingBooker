@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.StatisticsReportDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.ReservationPointsMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.model.ReservationPoints;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
@@ -70,13 +71,51 @@ public class BoatStatisticsReportController {
         reservationCount.add(boatReservationService.countReservationsInPeriod(thisYear.get(0),thisYear.get(1),username));
         return new ResponseEntity<>(reservationCount, HttpStatus.OK);
     }
+    @GetMapping("/countQuickReservationsByBoat/{username:.+}/{boatName}")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<List<Integer>> countQuickReservationsByBoat (@PathVariable("username") String username,@PathVariable("boatName") String boatName) {
+        List<Integer> quickReservationCount=new ArrayList<>();
+        Long id=boatService.findByNameAndOwner(boatName,userService.findByUsername(username).getId()).getId();
+        List<LocalDateTime> thisWeek=dateService.findWeek();
+        quickReservationCount.add(quickReservationBoatService.countReservationsByBoatInPeriod(thisWeek.get(0),thisWeek.get(1),id));
+        List<LocalDateTime> thisMonth=dateService.findMonth();
+        quickReservationCount.add(quickReservationBoatService.countReservationsByBoatInPeriod(thisMonth.get(0),thisMonth.get(1),id));
+        List<LocalDateTime> thisYear=dateService.findYear();
+        quickReservationCount.add(quickReservationBoatService.countReservationsByBoatInPeriod(thisYear.get(0),thisYear.get(1),id));
+        return new ResponseEntity<>(quickReservationCount, HttpStatus.OK);
+    }
+    @GetMapping("/countReservationsByBoat/{username:.+}/{boatName}")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<List<Integer>> countReservationsByBoat(@PathVariable("username") String username,@PathVariable("boatName") String boatName) {
+        List<Integer> reservationCount=new ArrayList<>();
+        List<LocalDateTime> thisWeek=dateService.findWeek();
+        Long id=boatService.findByNameAndOwner(boatName,userService.findByUsername(username).getId()).getId();
+        reservationCount.add(boatReservationService.countReservationsByBoatInPeriod(thisWeek.get(0),thisWeek.get(1),id));
+        List<LocalDateTime> thisMonth=dateService.findMonth();
+        reservationCount.add(boatReservationService.countReservationsByBoatInPeriod(thisMonth.get(0),thisMonth.get(1),id));
+        List<LocalDateTime> thisYear=dateService.findYear();
+        reservationCount.add(boatReservationService.countReservationsByBoatInPeriod(thisYear.get(0),thisYear.get(1),id));
+        return new ResponseEntity<>(reservationCount, HttpStatus.OK);
+    }
+    @PostMapping("/sumProfitByBoat/{username:.+}/{boatName}")
+    @PreAuthorize("hasRole('BOATOWNER')")
+    public ResponseEntity<List<Double>> sumProfitByBoat(@PathVariable("username") String username,@PathVariable("boatName") String boatName,@RequestBody List<LocalDateTime> dateRange) {
+        List<Double> profit=new ArrayList<>();
+        Long id=boatService.findByNameAndOwner(boatName,userService.findByUsername(username).getId()).getId();
+        List<BoatReservation> reservations= boatReservationService.findReservationsByBoatToSumProfit(id,dateRange.get(0),dateRange.get(1));
+        List<QuickReservationBoat> quickReservationBoats=quickReservationBoatService.findReservationsToSumProfitByBoat(id,dateRange.get(0),dateRange.get(1));
+        profit.add(boatReservationService.sumProfitOfPricesCalucatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
+        profit.add(quickReservationBoatService.sumProfitOfPricesCalculatedByHours(quickReservationBoats,dateRange.get(0),dateRange.get(1)));
+        return new ResponseEntity<>(profit, HttpStatus.OK);
+    }
     @PostMapping("/sumProfit/{username:.+}/")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<List<Double>> sumProfit(@PathVariable("username") String username,@RequestBody List<LocalDateTime> dateRange) {
         List<Double> profit=new ArrayList<>();
         List<BoatReservation> reservations= boatReservationService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1));
+        List<QuickReservationBoat> quickReservationBoats=quickReservationBoatService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1));
         profit.add(boatReservationService.sumProfitOfPricesCalucatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
-        profit.add(quickReservationBoatService.findReservationsAndSumProfit(username,dateRange.get(0),dateRange.get(1)));
+        profit.add(quickReservationBoatService.sumProfitOfPricesCalculatedByHours(quickReservationBoats,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
     @GetMapping("/sumWeekProfitOfAllBoatsForAdmin")

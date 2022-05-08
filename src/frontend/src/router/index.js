@@ -62,7 +62,8 @@ import CabinOwnerProfile from '../views/CabinOwner/CabinOwnerProfile'
 import BoatOwnerProfile from '../views/BoatOwner/BoatOwnerProfile'
 import FishingInstructorProfile from '../views/FishingInstructor/FishingInstructorProfile'
 import ClientProfile from '../views/Client/ClientProfile'
-
+import CabinStatistics from '../views/CabinOwner/CabinStatistics'
+import BoatStatistics from '../views/BoatOwner/BoatStatistics'
 const routes = [
   
   {
@@ -226,6 +227,22 @@ const routes = [
  
   },
   {
+    path: '/cabinStatistics/:email/:cabin',
+    name: 'CabinStatistics',
+    component: CabinStatistics,
+    beforeEnter: (to, from,next) => {
+      // reject the navigation
+  
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CABINOWNER' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                            
+ 
+  },
+  {
     path: '/cabinOwner/viewProfile/:email/:personsProfile',
     name: 'CabinOwnerProfile',
     component: CabinOwnerProfile,
@@ -245,6 +262,22 @@ const routes = [
     path: '/boatOwner/viewProfile/:email/:personsProfile',
     name: 'BoatOwnerProfile',
     component: BoatOwnerProfile,
+    beforeEnter: (to, from,next) => {
+      // reject the navigation
+  
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='BOATOWNER' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       }                                                            
+ 
+  },
+  {
+    path: '/boatStatistics/:email/:boatName',
+    name: 'BoatStatistics',
+    component: BoatStatistics,
     beforeEnter: (to, from,next) => {
       // reject the navigation
   

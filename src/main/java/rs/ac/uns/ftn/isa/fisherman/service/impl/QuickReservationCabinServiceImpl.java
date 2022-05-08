@@ -68,6 +68,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
+    public Integer countReservationsInPeriodByCabinId(LocalDateTime start, LocalDateTime end, Long cabinId) {
+        return quickReservationCabinRepository.countReservationsInPeriodByCabinId(start,end,cabinId);
+    }
+
+    @Override
     public List<QuickReservationCabin> findReservationsToSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
         return quickReservationCabinRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end);
     }
@@ -90,6 +95,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
             profit+=(numOfDaysForReportReservation* quickReservationCabin.getPaymentInformation().getCompanysPart())/Duration.between(quickReservationCabin.getStartDate(),quickReservationCabin.getEndDate()).toDays();
         }
         return profit;
+    }
+
+    @Override
+    public List<QuickReservationCabin> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
+        return quickReservationCabinRepository.findReservationsInPeriodByCabinToSumProfit(id,localDateTime,localDateTime1);
     }
 
     private long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
