@@ -123,10 +123,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username) {
         return adventureReservationRepository.countReservationsInPeriod(start,end,username);
     }
-    @Override
-    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
-        return sumProfitOfPricesCalucatedByHours(adventureReservationRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
-    }
+
     @Override
     public double sumProfitOfPricesCalucatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end){
         double profit=0.0;
@@ -231,6 +228,21 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
             profit+=(numOfHoursForReportReservation* adventureReservation.getPaymentInformation().getCompanysPart())/reservationHours;
         }
         return profit;
+    }
+
+    @Override
+    public Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
+        return adventureReservationRepository.countReservationsInPeriodByAdventureId(start,end,id);
+    }
+
+    @Override
+    public List<AdventureReservation> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
+        return adventureReservationRepository.findReservationsInPeriodByAdventureToSumProfit(id,localDateTime,localDateTime1);
+    }
+
+    @Override
+    public List<AdventureReservation> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
+        return adventureReservationRepository.findReservationsInPeriodToSumProfit(username,localDateTime,localDateTime1);
     }
 
     @Override

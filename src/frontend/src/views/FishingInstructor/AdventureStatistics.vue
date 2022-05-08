@@ -1,10 +1,9 @@
 <template>
-<BoatOwnerNav :username=email />
+<FishingInstructorNav :username=email />
 <div style="width: 90%; padding-left: 3%; ">
-<h1>{{boatName }} &nbsp; STATISTICS</h1>
+<h1>{{advname}} &nbsp;STATISTICS</h1>
 <div class="row" style="padding-top: 3%; ">
         
-
         <div class="col">
         <h3>SUCCESSFULL RESERVATIONS</h3>
         <BarChart :chart-data="data" css-classes="chart-container" />
@@ -46,7 +45,7 @@
   </div> 
 
               <div class="col"  >
-                             <h3>OWNERS INCOME</h3>
+                             <h3>INSTRUCTORS INCOME</h3>
         <BarChart :chart-data="dataIncome" :options="options" css-classes="chart-container" />
               </div>
 
@@ -59,7 +58,7 @@
 </div>
 </template>
 <script>
-import BoatOwnerNav from './BoatOwnerNav.vue'
+import FishingInstructorNav from './FishingInstructorNav.vue'
 import {BarChart} from 'vue-chart-3'
 import dayjs from 'dayjs';
 import {Chart, BarController, CategoryScale, LinearScale,BarElement} from 'chart.js'
@@ -71,7 +70,7 @@ import axios from "axios";
 
 export default ({
     components: {
-         BoatOwnerNav,
+         FishingInstructorNav,
          BarChart,
          Datepicker
   
@@ -120,9 +119,9 @@ export default ({
                }
          },
         email: '',
+        advname: '',
         start: '',
         end: '',
-        boatName: '',
         stats: {
             ownerRating: 0.0,
             avgRating: 0.0,
@@ -138,7 +137,8 @@ export default ({
        },
        mounted() {
              this.email = this.$route.params.email
-             this.boatName= this.$route.params.boatName
+             this.advname= this.$route.params.adventureName
+            console.log("ovo je avantura "+this.advname)
              this.getReservations()
              this.getQuickReservations()
                
@@ -162,20 +162,20 @@ export default ({
           getReservations: function(){
                 axios
                 .get(
-                "http://localhost:8081/boatStatisticsReport/countReservationsByBoat/"+this.email+"/"+this.boatName)
+                "http://localhost:8081/adventureStatisticsReport/countReservationsByAdventure/"+this.email+"/"+this.advname)
                 .then((response) => {
                     
                     for(let i=0; i< response.data.length; i++)
                        this.data.datasets[0].data.push([response.data[i]])
 
-                    console.log(response.data[2])
+                    console.log(response.data[1])
 
                 });
           },
           getQuickReservations: function(){
                 axios
                 .get(
-                "http://localhost:8081/boatStatisticsReport/countQuickReservationsByBoat/"+this.email+"/"+this.boatName)
+                "http://localhost:8081/adventureStatisticsReport/countQuickReservationsByAdventure/"+this.email+"/"+this.advname)
                 .then((response) => {
                        for(let i=0; i< response.data.length; i++)
                        this.data.datasets[1].data.push([response.data[i]])
@@ -195,11 +195,12 @@ export default ({
                  return;
              }
              var dateRange=[]
+             
              dateRange.push(this.formatDate(this.start))
              dateRange.push(this.formatDate(this.end))
              axios
                 .post(
-                "http://localhost:8081/boatStatisticsReport/sumProfitByBoat/"+this.email+"/", dateRange
+                "http://localhost:8081/adventureStatisticsReport/sumProfitByAdventure/"+this.email+"/"+this.advname, dateRange
                
                 )
                 .then((response) => {
@@ -207,7 +208,8 @@ export default ({
                        this.dataIncome.datasets[1].data=[]
                        this.dataIncome.datasets[0].data.push([response.data[0]])
                        this.dataIncome.datasets[1].data.push([response.data[1]])
-                       
+                  
+
                 });
                
           }
