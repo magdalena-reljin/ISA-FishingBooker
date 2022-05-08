@@ -140,6 +140,21 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         return profit;
     }
 
+    @Override
+    public Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
+        return quickReservationAdventureRepository.countReservationsInPeriodByAdventureId(start,end,id);
+    }
+
+    @Override
+    public List<QuickReservationAdventure> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
+        return quickReservationAdventureRepository.findReservationsInPeriodByAdventureToSumProfit(id,localDateTime,localDateTime1);
+    }
+
+    @Override
+    public List<QuickReservationAdventure> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
+        return quickReservationAdventureRepository.findReservationsInPeriodToSumProfit(username,localDateTime,localDateTime1);
+    }
+
     private void SendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
@@ -169,9 +184,7 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
         return true;
     }
-    public double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end) {
-        return sumProfitOfPricesCalucatedByHours(quickReservationAdventureRepository.findReservationsInPeriodToSumProfit(ownerUsername,start,end),start,end);
-    }
+
     @Override
     public double sumProfitOfPricesCalucatedByHours(List<QuickReservationAdventure> reservations, LocalDateTime start, LocalDateTime end){
         double profit=0.0;

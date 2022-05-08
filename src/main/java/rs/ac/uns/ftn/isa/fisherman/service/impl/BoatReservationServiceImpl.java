@@ -252,6 +252,16 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
+    public Integer countReservationsByBoatInPeriod(LocalDateTime start, LocalDateTime end, Long id) {
+        return boatReservationRepository.countReservationsInPeriodByBoatId(start,end,id);
+    }
+
+    @Override
+    public List<BoatReservation> findReservationsByBoatToSumProfit(Long id, LocalDateTime start, LocalDateTime end) {
+        return boatReservationRepository.findReservationsInPeriodByBoatToSumProfit(id,start,end);
+    }
+
+    @Override
     public Set<BoatReservation> getUpcomingClientReservationsByUsername(String clientUsername) {
         return boatReservationRepository.getUpcomingClientReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
     }

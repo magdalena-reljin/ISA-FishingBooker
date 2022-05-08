@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.isa.fisherman.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 
@@ -47,6 +48,12 @@ public interface QuickReservationAdventureRepository extends JpaRepository<Quick
 
     @Query(value="select * from quick_reservation_adventure cr where cr.users_id != null and((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     List<QuickReservationAdventure> findAllQuickReservationsForAdminProfit(@Param("start")LocalDateTime start, @Param("end") LocalDateTime end);
+    @Query(value="select count(cr.adventure_id) from quick_reservation_adventure cr where cr.adventure_id=:id and cr.users_id!=null and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsInPeriodByAdventureId(@Param("start")LocalDateTime start,@Param("end") LocalDateTime end,@Param("id")Long id);
+
+    @Query(value="select * from quick_reservation_adventure cr where cr.adventure_id=:id and cr.users_id!=null and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
+    List<QuickReservationAdventure> findReservationsInPeriodByAdventureToSumProfit(@Param("id")Long id, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
 
 }
 

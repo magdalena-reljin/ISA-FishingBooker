@@ -68,4 +68,9 @@ public interface CabinReservationRepository extends JpaRepository<CabinReservati
     @Query(value="select * from cabin_reservation cr where ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     List<CabinReservation> findAllReservationsForAdminProfit(@Param("start")LocalDateTime start, @Param("end") LocalDateTime end);
 
+    @Query(value="select count(cr.cabin_id) from cabin_reservation cr where cr.cabin_id=:id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsInPeriodByCabinId(@Param("start")LocalDateTime start,@Param("end") LocalDateTime end,@Param("id")Long id);
+
+    @Query(value="select * from cabin_reservation cr where cr.cabin_id=:id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
+    List<CabinReservation> findReservationsInPeriodByCabinToSumProfit(@Param("id")Long id,@Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
 }

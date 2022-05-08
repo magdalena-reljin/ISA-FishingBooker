@@ -121,7 +121,7 @@
        <div  class="col" style="margin-top: 3%;">
            <button @click="editBoatProfile()" style="background-color: #1d7ac9; width: 100%; " type="button" class="btn text-light rounded-pill">EDIT PROFILE</button>
            <button @click="boatCalendar()" style="background-color: #1d7ac9; width: 100%; margin-top: 10%;" type="button" class="btn text-light rounded-pill">BOAT CALENDAR</button>
-
+<button @click="statistics()" style="background-color: #1d7ac9; width: 100%; margin-top: 10%;" type="button" class="btn text-light rounded-pill">SEE STATISTICS</button>
 
        </div>
        
@@ -297,6 +297,9 @@
        boatCalendar: function(){
          this.$router.push('/boatCalendar/'+ this.email+'/'+this.boatName);
 
+       },
+       statistics: function(){
+          this.$router.push('/boatStatistics/'+ this.email+'/'+this.boatName);
        },
        editBoatProfile: function(){
          this.$router.push('/editBoatProfile/'+ this.email+'/'+this.boatName);

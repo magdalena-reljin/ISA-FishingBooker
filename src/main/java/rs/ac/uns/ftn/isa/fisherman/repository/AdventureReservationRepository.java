@@ -61,4 +61,10 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
     @Query(value="select * from adventure_reservation cr where ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
     List<AdventureReservation> findAllReservationsForAdminProfit(@Param("start")LocalDateTime start, @Param("end") LocalDateTime end);
 
+    @Query(value="select count(cr.adventure_id) from adventure_reservation cr where cr.adventure_id=:id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end))",nativeQuery = true)
+    Integer countReservationsInPeriodByAdventureId(@Param("start")LocalDateTime start,@Param("end") LocalDateTime end,@Param("id")Long id);
+
+    @Query(value="select * from adventure_reservation cr where cr.adventure_id=:id and ((cr.start_date between :start and :end) or (cr.end_date between :start and :end) or ((:start between cr.start_date and cr.end_date) and (:end between cr.start_date and cr.end_date)))",nativeQuery = true)
+    List<AdventureReservation> findReservationsInPeriodByAdventureToSumProfit(@Param("id")Long id,@Param("start") LocalDateTime start,@Param("end") LocalDateTime end);
+
 }

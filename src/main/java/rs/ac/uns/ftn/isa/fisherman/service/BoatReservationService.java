@@ -53,4 +53,8 @@ public interface BoatReservationService {
     List<BoatReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
 
     double sumProfitForAdminOfPricesCalculatedByHours(List<BoatReservation> reservations, LocalDateTime start, LocalDateTime end);
+
+    Integer countReservationsByBoatInPeriod(LocalDateTime localDateTime, LocalDateTime localDateTime1, Long id);
+
+    List<BoatReservation> findReservationsByBoatToSumProfit(Long id, LocalDateTime start, LocalDateTime end);
 }

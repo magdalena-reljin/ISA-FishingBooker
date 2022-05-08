@@ -51,4 +51,7 @@ public interface ReservationCabinService {
 
     List<CabinReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitForAdminOfPricesCalculatedByDays(List<CabinReservation> reservations, LocalDateTime start, LocalDateTime end);
+    Integer countReservationsInPeriodByCabinId(LocalDateTime start, LocalDateTime end, Long id);
+
+    List<CabinReservation> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 }

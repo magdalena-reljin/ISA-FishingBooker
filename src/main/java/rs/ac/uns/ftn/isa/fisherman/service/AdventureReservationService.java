@@ -15,7 +15,6 @@ public interface AdventureReservationService {
     boolean futureReservationsExist(LocalDateTime currentDate, Long id);
     Set<AdventureReservation>  getPastReservations(String username);
     Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username);
-    double findReservationsAndSumProfit(String ownerUsername, LocalDateTime start, LocalDateTime end);
     double sumProfitOfPricesCalucatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end);
     AdventureReservation findById(Long id);
     void save (AdventureReservation adventureReservation);
@@ -29,4 +28,9 @@ public interface AdventureReservationService {
     boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
     List<AdventureReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end);
     double sumProfitForAdminOfPricesCalculatedByHours(List<AdventureReservation> reservations, LocalDateTime start, LocalDateTime end);
+
+    Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id);
+
+    List<AdventureReservation> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+    List<AdventureReservation> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 }
