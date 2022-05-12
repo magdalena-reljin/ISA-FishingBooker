@@ -8,6 +8,8 @@ import rs.ac.uns.ftn.isa.fisherman.service.RankService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationPaymentService;
 import rs.ac.uns.ftn.isa.fisherman.service.ReservationPointsService;
 
+import java.text.DecimalFormat;
+
 @Service
 public class ReservationPaymentServiceImpl implements ReservationPaymentService {
     @Autowired
@@ -36,6 +38,18 @@ public class ReservationPaymentServiceImpl implements ReservationPaymentService 
        return calculateOwnerPartOfReservationPrice(appPercentage,newTotalPrice,instructorsDiscount);
     }
 
+    @Override
+    public PaymentInformation setTotalPaymentAmountForQuickAction (Reservation reservation,User user,int discount) {
+
+       double totalPriceWithDiscount= reservation.getPaymentInformation().getTotalPrice()-(discount/100.0 * reservation.getPaymentInformation().getTotalPrice());
+        PaymentInformation paymentInformation = new PaymentInformation();
+        Double newTotalPrice = getClientsTotalPrice(reservation.getClient(),totalPriceWithDiscount);
+        paymentInformation.setTotalPrice(newTotalPrice);
+        Double ownersPart= calculateOwnersPart(newTotalPrice,user);
+        paymentInformation.setOwnersPart(ownersPart);
+        paymentInformation.setCompanysPart(newTotalPrice-ownersPart);
+        return  paymentInformation;
+    }
 
     public Double getClientsTotalPrice(Client client, Double totalPrice) {
         Integer clientDiscount= rankService.getDiscountByRank(client.getUserRank().getRankType().ordinal());

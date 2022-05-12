@@ -347,6 +347,7 @@ export default {
           ownersUsername: "",
           name: "",
           type: "",
+          role: '',
           length: "",
           engineCode: "",
           enginePower: "",
@@ -400,6 +401,7 @@ export default {
   },
   mounted() {
     this.email = this.$route.params.email;
+    this.role = localStorage.role;
     this.getBoats();
   },
   methods: {

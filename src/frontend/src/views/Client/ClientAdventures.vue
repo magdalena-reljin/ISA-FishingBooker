@@ -382,6 +382,7 @@ export default {
   },
   mounted() {
     this.email = this.$route.params.email;
+    this.role = localStorage.role;
     this.getAdventures();
   },
   methods: {
