@@ -17,4 +17,7 @@ public interface BoatSubscriptionRepository extends JpaRepository<BoatSubscripti
 
     @Query(value="SELECT * FROM boat_subscription where users_id=:users_id",nativeQuery = true)
     Set<BoatSubscription> findSubscriptionsByClientId(@Param("users_id")Long usersId);
+
+    @Query(value="SELECT u.username FROM boat_subscription c join users u on c.users_id=u.id where boat_id=:boat_id",nativeQuery = true)
+    Set<String> findCabinSubscribers(@Param("boat_id")Long boatId);
 }

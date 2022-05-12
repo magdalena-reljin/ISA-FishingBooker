@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
+import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
@@ -36,6 +37,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Autowired
     private CabinSubscriptionService cabinSubscriptionService;
     @Autowired
+    private ReservationPaymentService reservationPaymentService;
+    @Autowired
     private MailService mailService;
     @Autowired
     private ClientService clientService;
@@ -53,7 +56,7 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
             successfullQuickReservation.setAddedAdditionalServices(quickReservationCabin.getAddedAdditionalServices());
             quickReservationCabinRepository.save(successfullQuickReservation);
         }
-        //TO DO: poslati mejl onima koji su pretplaceni na akcije od tog cabina
+
         sendMailNotificationToSubscribedUsers(successfullQuickReservation.getCabin().getId(),successfullQuickReservation.getCabin().getName());
         return true;
     }
@@ -136,6 +139,10 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         if(reservationCabinService.cabinNotFreeInPeriod(quickReservationCabin.getCabin().getId(), quickReservationCabin.getStartDate(), quickReservationCabin.getEndDate()))
             return false;
         quickReservationCabin.setClient(clientService.findByUsername(quickReservationCabinDto.getClientUsername()));
+        quickReservationCabinRepository.save(quickReservationCabin);
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmountForQuickAction(quickReservationCabin,quickReservationCabin.getCabin().getCabinOwner(),quickReservationCabin.getDiscount());
+        quickReservationCabin.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(quickReservationCabin.getClient(),quickReservationCabin.getCabin().getCabinOwner());
         quickReservationCabinRepository.save(quickReservationCabin);
         SendReservationMailToClient(quickReservationCabinDto);
         return true;

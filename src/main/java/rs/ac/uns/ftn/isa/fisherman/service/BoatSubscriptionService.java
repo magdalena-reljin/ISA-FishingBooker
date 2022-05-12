@@ -9,4 +9,5 @@ public interface BoatSubscriptionService {
     void removeSubscription(String username, Long boatId);
     boolean checkIfUserIsSubscribed(String username, Long boatId);
     Set<BoatSubscription> findSubscriptionsByClientUsername(String username);
+    Set<String> findBoatSubscribers(Long boatId);
 }

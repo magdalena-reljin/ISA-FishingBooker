@@ -44,4 +44,9 @@ public class BoatSubscriptionServiceImpl implements BoatSubscriptionService {
     public Set<BoatSubscription> findSubscriptionsByClientUsername(String username) {
         return boatSubscriptionRepository.findSubscriptionsByClientId(clientService.findByUsername(username).getId());
     }
+
+    @Override
+    public Set<String> findBoatSubscribers(Long boatId) {
+        return boatSubscriptionRepository.findCabinSubscribers(boatId);
+    }
 }

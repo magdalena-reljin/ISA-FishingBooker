@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
+import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionBoatInfo;
+import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
+import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
@@ -33,7 +36,12 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     @Autowired
     private ClientService clientService;
     @Autowired
+    private ReservationPaymentService reservationPaymentService;
+    @Autowired
     private MailService mailService;
+
+    @Autowired
+    private BoatSubscriptionService boatSubscriptionService;
 
     @Override
     public boolean ownerCreates(QuickReservationBoat quickReservationBoat) {
@@ -55,7 +63,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         }else{
             quickReservationBoatRepository.save(successfullQuickReservation);
         }
-        //TO DO: poslati mejl onima koji su pretplaceni na akcije
+            sendMailNotificationToSubscribedUsers(successfullQuickReservation.getBoat().getId(),successfullQuickReservation.getBoat().getName());
 
         return true;
     }
@@ -107,6 +115,10 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         if(boatReservationService.boatNotFreeInPeriod(quickReservationBoat.getBoat().getId(), quickReservationBoat.getStartDate(), quickReservationBoat.getEndDate()))
             return false;
         quickReservationBoat.setClient(clientService.findByUsername(quickReservationBoatDto.getClientUsername()));
+        quickReservationBoatRepository.save(quickReservationBoat);
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmountForQuickAction(quickReservationBoat,quickReservationBoat.getBoat().getBoatOwner(),quickReservationBoat.getDiscount());
+        quickReservationBoat.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(quickReservationBoat.getClient(),quickReservationBoat.getBoat().getBoatOwner());
         quickReservationBoatRepository.save(quickReservationBoat);
         SendReservationMailToClient(quickReservationBoatDto);
         return true;
@@ -237,6 +249,19 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     public Set<QuickReservationBoat> getPastReservations(String username) {
         LocalDateTime currentDate=LocalDateTime.now();
         return quickReservationBoatRepository.getPastReservations(username, currentDate);
+    }
+
+    private void sendMailNotificationToSubscribedUsers(Long boatId,String boatName){
+        Set<String> subscriptionEmails=boatSubscriptionService.findBoatSubscribers(boatId);
+        subscriptionEmails.add("dajanazlokapa1@gmail.com");
+        for(String email: subscriptionEmails) {
+            try {
+                String message = boatName;
+                mailService.sendMail(email, message, new QuickActionBoatInfo());
+            } catch (MessagingException e) {
+                logger.error(e.toString());
+            }
+        }
     }
 
 

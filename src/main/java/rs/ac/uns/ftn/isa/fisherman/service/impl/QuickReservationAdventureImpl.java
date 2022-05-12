@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionAdventureInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
@@ -37,6 +38,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     private AdventureReservationService adventureReservationService;
     @Autowired
     private AdventureSubscriptionService adventureSubscriptionService;
+    @Autowired
+    private ReservationPaymentService reservationPaymentService;
     @Autowired
     private MailService mailService;
     @Autowired
@@ -98,14 +101,21 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto) {
+
         if(adventureReservationService.fishingInstructorNotFree(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
             return false;
         QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(quickReservationAdventureDto.getId());
         quickReservationAdventure.setClient(clientService.findByUsername(quickReservationAdventureDto.getClientUsername()));
         quickReservationAdventureRepository.save(quickReservationAdventure);
+        PaymentInformation paymentInformation = reservationPaymentService.setTotalPaymentAmountForQuickAction(quickReservationAdventure,quickReservationAdventure.getFishingInstructor(),quickReservationAdventure.getDiscount());
+        quickReservationAdventure.setPaymentInformation(paymentInformation);
+        reservationPaymentService.updateUserRankAfterReservation(quickReservationAdventure.getClient(),quickReservationAdventure.getFishingInstructor());
+        quickReservationAdventureRepository.save(quickReservationAdventure);
         SendReservationMailToClient(quickReservationAdventureDto);
         return true;
     }
+
+
 
     @Override
     public boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
