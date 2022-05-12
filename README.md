@@ -20,7 +20,7 @@ Web application for booking fishing cabins, boats and trips. Full stack academic
 | [Aleksa Stojic RA83/2018](https://github.com/stojic19) <br> <img src="https://avatars.githubusercontent.com/stojic19" width="170" height="170"> | [Magdalena Reljin RA82/2018](https://github.com/magdalenaRA822018) <br> <img src="https://avatars.githubusercontent.com/magdalenaRA822018" width="170" height="170"> | [Dajana Zlokapa RA240/2018](https://github.com/Dajana11-99) <br> <img src="https://avatars.githubusercontent.com/Dajana11-99" width="170" height="170"> |
 
 ## Table of Contents
-- [Built with](#tehcnologies)
+- [Built with](#built with)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
