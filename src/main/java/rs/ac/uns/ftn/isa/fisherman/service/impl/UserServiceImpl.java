@@ -234,13 +234,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
     private boolean checkIfCanDeletingUser(User user){
-        if(user.getRoleApp() == "ROLE_CABINOWNER"){
+        if(user.getRoleApp().equals("ROLE_CABINOWNER")){
             if(checkCabinOwner(user)) return false ;
-        }else if(user.getRoleApp() == "ROLE_BOATOWNER"){
+        }else if(user.getRoleApp().equals("ROLE_BOATOWNER")){
             if(checkBoatOwner(user)) return false ;
-        }else if(user.getRoleApp() == "ROLE_FISHING_INSTRUCTOR"){
+        }else if(user.getRoleApp().equals("ROLE_FISHING_INSTRUCTOR")){
             if(checkFishingInstructor(user)) return false ;
-        }else if(user.getRoleApp() == "ROLE_CLIENT"){
+        }else if(user.getRoleApp().equals("ROLE_CLIENT")){
             if(checkClient(user)) return false ;
         }
         return  true;
