@@ -18,9 +18,10 @@
       </h1>
     </form>
     <!--header-->
-    <hr>
+    
     <!-- sort -->
     <template v-if="!upcomingReservations && !availableQuickReservations">
+      <hr />
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Sort adventure reservations
@@ -62,8 +63,9 @@
         </div>
       </form>
     </template>
+      <!--sort-->
   </div>
-    <!--sort-->
+
 
   <hr />
 
@@ -73,14 +75,15 @@
 
   <template v-if="sortedReservations">
     <template v-if="sortedReservations.length == 0">
-  <h3>
-    No
-    <template v-if="upcomingReservations">upcoming</template>
-    <template v-if="availableQuickReservations">available quick</template>
-    adventure reservations to show.
-  </h3>
-</template>
-  </template>
+      <h3>
+        No
+        <template v-if="upcomingReservations">upcoming</template>
+        <template v-if="availableQuickReservations">available quick</template>
+        adventure reservations to show.
+      </h3>
+    </template></template
+  >
+
   <!-- Carousel wrapper -->
   <div
     v-if="reservationsLoaded == true"
@@ -172,7 +175,13 @@
                     Free equipment:
                     {{ adventureReservationDto.adventureDto.equipment }}
                   </h6>
-                  <template v-if="(!availableQuickReservations)&&(!adventureReservationDto.discount)&&possibleCancellation(adventureReservationDto.startDate)">
+                  <template
+                    v-if="
+                      !availableQuickReservations &&
+                      !adventureReservationDto.discount &&
+                      possibleCancellation(adventureReservationDto.startDate)
+                    "
+                  >
                     <h6 style="text-align: left">
                       Canceling condition:
                       {{
@@ -200,7 +209,10 @@
                       >
                         <p>Added additional services:</p>
                       </div>
-                      <div class="col-sm-9" style="padding: 1%; text-align: left;">
+                      <div
+                        class="col-sm-9"
+                        style="padding: 1%; text-align: left"
+                      >
                         <template
                           v-for="(
                             service, index
@@ -287,11 +299,7 @@
                         </div>
                         <div class="col">
                           <h6 style="text-align: left; color: green">
-                            <i
-                              >-{{
-                                adventureReservationDto.discount
-                              }}%</i
-                            >
+                            <i>-{{ adventureReservationDto.discount }}%</i>
                           </h6>
                         </div>
                       </div>
@@ -946,7 +954,7 @@ export default {
   },
   computed: {
     sortedReservations: function () {
-      if(this.upcomingReservations || this.availableQuickReservations)
+      if (this.upcomingReservations || this.availableQuickReservations)
         return this.adventureReservationDtos;
       {
         return this.sortedArray;
@@ -959,12 +967,16 @@ export default {
         if (this.sortBy === "date") {
           fa = new Date(this.setDate(a.startDate));
           fb = new Date(this.setDate(b.startDate));
-        }else if(this.sortBy === "price"){
+        } else if (this.sortBy === "price") {
           fa = a.paymentInformationDto.totalPrice;
           fb = b.paymentInformationDto.totalPrice;
         } else {
-          fa = new Date(this.setDate(a.endDate)) - new Date(this.setDate(a.startDate));
-          fb = new Date(this.setDate(b.endDate)) - new Date(this.setDate(b.startDate));
+          fa =
+            new Date(this.setDate(a.endDate)) -
+            new Date(this.setDate(a.startDate));
+          fb =
+            new Date(this.setDate(b.endDate)) -
+            new Date(this.setDate(b.startDate));
         }
         let modifier = 1;
         if (this.sortDirection === "desc") modifier = -1;
