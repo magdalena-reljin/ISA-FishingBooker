@@ -17,9 +17,53 @@
         >
       </h1>
     </form>
-  </div>
+    <!--header-->
+    <hr>
+    <!-- sort -->
+    <template v-if="!upcomingReservations && !availableQuickReservations">
+      <form>
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Sort adventure reservations
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('date')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Date
+            </button>
+          </div>
 
-  <!--header-->
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('price')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Price
+            </button>
+          </div>
+
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('duration')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Duration
+            </button>
+          </div>
+        </div>
+      </form>
+    </template>
+  </div>
+    <!--sort-->
 
   <hr />
 
@@ -29,13 +73,13 @@
 
   <template v-if="sortedReservations">
     <template v-if="sortedReservations.length == 0">
-      <h3>
-        No
-        <template v-if="upcomingReservations">upcoming</template>
-        <template v-if="availableQuickReservations">available quick</template>
-        adventure reservations to show.
-      </h3>
-    </template>
+  <h3>
+    No
+    <template v-if="upcomingReservations">upcoming</template>
+    <template v-if="availableQuickReservations">available quick</template>
+    adventure reservations to show.
+  </h3>
+</template>
   </template>
   <!-- Carousel wrapper -->
   <div
@@ -647,6 +691,8 @@ export default {
       quickReservationAdventure: {},
       startDate: null,
       endDate: null,
+      sortBy: "",
+      sortDirection: "asc",
     };
   },
   mounted() {
@@ -658,6 +704,12 @@ export default {
     }
   },
   methods: {
+    sort: function (s) {
+      if (s === this.sortBy) {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      }
+      this.sortBy = s;
+    },
     getNumberOfDays: function (start, end) {
       const date1 = new Date(start);
       const date2 = new Date(end);
@@ -894,7 +946,37 @@ export default {
   },
   computed: {
     sortedReservations: function () {
-      return this.adventureReservationDtos;
+      if(this.upcomingReservations || this.availableQuickReservations)
+        return this.adventureReservationDtos;
+      {
+        return this.sortedArray;
+      }
+    },
+    sortedArray: function () {
+      let sortedEntities = this.adventureReservationDtos;
+      sortedEntities = sortedEntities.sort((a, b) => {
+        let fa, fb;
+        if (this.sortBy === "date") {
+          fa = new Date(this.setDate(a.startDate));
+          fb = new Date(this.setDate(b.startDate));
+        }else if(this.sortBy === "price"){
+          fa = a.paymentInformationDto.totalPrice;
+          fb = b.paymentInformationDto.totalPrice;
+        } else {
+          fa = new Date(this.setDate(a.endDate)) - new Date(this.setDate(a.startDate));
+          fb = new Date(this.setDate(b.endDate)) - new Date(this.setDate(b.startDate));
+        }
+        let modifier = 1;
+        if (this.sortDirection === "desc") modifier = -1;
+        if (fa < fb) {
+          return -1 * modifier;
+        }
+        if (fa > fb) {
+          return 1 * modifier;
+        }
+        return 0;
+      });
+      return sortedEntities;
     },
   },
 };
