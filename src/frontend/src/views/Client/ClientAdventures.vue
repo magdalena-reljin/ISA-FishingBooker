@@ -2,7 +2,7 @@
   <template v-if="!bookAdventureOpen">
     <!-- search-->
 
-    <div v-if="role=='CLIENT'" class="header">
+    <div v-if="role == 'CLIENT'" class="header">
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Search adventures
@@ -104,44 +104,37 @@
           class="row"
         >
           <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Name</button>
-          </div>
-
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Street</button>
-          </div>
-
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">City</button>
-          </div>
-
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">
-              Country
+            <button
+              type="button"
+              @click="sort('name')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Name
             </button>
           </div>
 
           <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Rating</button>
+            <button type="button"
+              @click="sort('location')" class="form-control rounded-pill fa fa-sort">Location</button>
           </div>
 
           <div class="col">
             <button
-              @click="resetSort()"
-              style="height: 90%; background-color: #0b477b; color: white"
               type="button"
-              class="btn rounded-pill fa fa-sort"
+              @click="sort('instructorRating')"
+              class="form-control rounded-pill fa fa-sort"
             >
-              RESET SORT
+              Rating
             </button>
           </div>
+
         </div>
       </form>
     </div>
 
     <!--sort-->
 
-    <hr v-if="role=='CLIENT'" />
+    <hr v-if="role == 'CLIENT'" />
 
     <template v-if="!adventureLoaded">
       <h3>Loading...</h3>
@@ -182,23 +175,23 @@
                           {{ adventureDto.name.toUpperCase() }}
                         </h2>
                       </div>
-                      <div style="text-align: right;" class="col">
-                      <span class="badge bg-warning text-light"
-                        ><svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-star-fill"
-                          viewBox="0 0 16 16"
+                      <div style="text-align: right" class="col">
+                        <span class="badge bg-warning text-light"
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-star-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                            />
+                          </svg>
+                          {{ adventureDto.instructorRating }}</span
                         >
-                          <path
-                            d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                          />
-                        </svg>
-                        {{ adventureDto.instructorRating }}</span
-                      >
-                    </div>
+                      </div>
                     </div>
                     <hr />
                     <h6 style="text-align: left; color: gray">
@@ -297,11 +290,11 @@
 
 <script>
 import axios from "axios";
-import BookAdventure from "./BookAdventure.vue"
+import BookAdventure from "./BookAdventure.vue";
 
 export default {
   components: {
-    BookAdventure
+    BookAdventure,
   },
   props: {
     reservationProcess: Boolean,
@@ -378,6 +371,8 @@ export default {
       searchCity: "",
       searchCountry: "",
       searchMaxPeople: "",
+      sortBy: "",
+      sortDirection: "asc",
     };
   },
   mounted() {
@@ -386,6 +381,12 @@ export default {
     this.getAdventures();
   },
   methods: {
+    sort: function (s) {
+      if (s === this.sortBy) {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      }
+      this.sortBy = s;
+    },
     back() {
       this.bookAdventureOpen = false;
       this.showReservationForm(true);
@@ -442,7 +443,36 @@ export default {
   },
   computed: {
     sortedAdventures: function () {
-      return this.adventureDtos;
+      if (this.sortBy == "") return this.adventureDtos;
+      else {
+        return this.sortedArray;
+      }
+    },
+    sortedArray: function () {
+      let sortedEntities = this.adventureDtos;
+      sortedEntities = sortedEntities.sort((a, b) => {
+        let fa, fb;
+        if (this.sortBy === "name") {
+          fa = a[this.sortBy].toLowerCase();
+          fb = b[this.sortBy].toLowerCase();
+        }else if(this.sortBy === "location"){
+          fa = a.address.streetAndNum + a.address.city + a.address.country;
+          fb = b.address.streetAndNum + b.address.city + b.address.country;
+        } else {
+          fa = a[this.sortBy];
+          fb = b[this.sortBy];
+        }
+        let modifier = 1;
+        if (this.sortDirection === "desc") modifier = -1;
+        if (fa < fb) {
+          return -1 * modifier;
+        }
+        if (fa > fb) {
+          return 1 * modifier;
+        }
+        return 0;
+      });
+      return sortedEntities;
     },
   },
 };

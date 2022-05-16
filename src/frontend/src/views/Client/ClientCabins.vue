@@ -1,57 +1,59 @@
 <template>
-    <template v-if="!bookCabinOpen">
+  <template v-if="!bookCabinOpen">
     <!-- sort -->
-   
-    <div v-if="role=='CLIENT'" class="header" >
-      <form  >
-        <h1  style="text-align: left; color: #0b477b;  padding-left: 7.2%;">Sort cabins</h1>
-        <br>
-        <div style="padding-left: 7.2%; padding-right: 7.2%; width: 100%;" class="row" >
+
+    <div v-if="role == 'CLIENT'" class="header">
+      <form>
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Sort cabins
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
           <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Name</button>
+            <button
+              type="button"
+              @click="sort('name')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Name
+            </button>
           </div>
 
           <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Street</button>
+            <button
+              type="button"
+              @click="sort('location')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Location
+            </button>
           </div>
 
           <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">City</button>
+            <button
+              type="button"
+              @click="sort('instructorRating')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Rating
+            </button>
           </div>
-
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Country</button>
-          </div>
-
-          <div class="col">
-            <button class="form-control rounded-pill fa fa-sort">Rating</button>
-          </div>
-
-          <div class="col">
-          <button
-            @click="resetSort()"
-            style="height: 90%; background-color: #0b477b; color: white;"
-            type="button"
-            class="btn  rounded-pill fa fa-sort"
-          >
-            RESET SORT
-          </button>
-          </div>
-          
         </div>
       </form>
     </div>
 
     <!--sort-->
 
-
-   <hr v-if="role=='CLIENT'"/>
+    <hr v-if="role == 'CLIENT'" />
 
     <template v-if="!cabinsLoaded">
       <h3>Loading...</h3>
     </template>
 
-    <template v-if="sortedCabins.length==0">
+    <template v-if="sortedCabins.length == 0">
       <h3>No cabins to show.</h3>
     </template>
 
@@ -131,22 +133,25 @@
                     <div class="row">
                       <div class="col" style="text-align: right">
                         <template v-if="!reservationProcess">
-                        <button
-                          @click="seeProfile(cabinDto.name)&&showReservationForm(false)"
-                          type="button"
-                          class="btn btn-outline-dark rounded-pill"
-                        >
-                          SEE PROFILE
-                        </button>
+                          <button
+                            @click="
+                              seeProfile(cabinDto.name) &&
+                                showReservationForm(false)
+                            "
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            SEE PROFILE
+                          </button>
                         </template>
                         <template v-if="reservationProcess">
-                        <button
-                          @click="bookCabin(cabinDto.name)"
-                          type="button"
-                          class="btn btn-outline-dark rounded-pill"
-                        >
-                          BOOK
-                        </button>
+                          <button
+                            @click="bookCabin(cabinDto.name)"
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            BOOK
+                          </button>
                         </template>
                       </div>
                     </div>
@@ -161,27 +166,33 @@
       </div>
     </div>
     <!-- Inner -->
-    </template>
+  </template>
 
   <template v-if="bookCabinOpen">
-    <BookCabin :bookingProcess="true" :cabinName="cabinName" :back="back" :startDate="startDate" :endDate="endDate"></BookCabin>
+    <BookCabin
+      :bookingProcess="true"
+      :cabinName="cabinName"
+      :back="back"
+      :startDate="startDate"
+      :endDate="endDate"
+    ></BookCabin>
   </template>
 </template>
 
 <script>
 import axios from "axios";
-import BookCabin from './BookCabin.vue';
+import BookCabin from "./BookCabin.vue";
 
 export default {
-  components:{
-       BookCabin,
-     },
+  components: {
+    BookCabin,
+  },
   props: {
-    reservationProcess:Boolean,
-    availableCabins:Array,
-    showReservationForm:Function,
-    startDate:Date,
-    endDate:Date
+    reservationProcess: Boolean,
+    availableCabins: Array,
+    showReservationForm: Function,
+    startDate: Date,
+    endDate: Date,
   },
   data() {
     return {
@@ -226,7 +237,9 @@ export default {
       },
       cabinsLoaded: false,
       bookCabinOpen: false,
-      cabinName:'',
+      cabinName: "",
+      sortBy: "",
+      sortDirection: "asc",
     };
   },
   mounted() {
@@ -234,21 +247,24 @@ export default {
     this.getCabins();
   },
   methods: {
-    back(){
-      this.bookCabinOpen=false;
+    sort: function (s) {
+      if (s === this.sortBy) {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      }
+      this.sortBy = s;
+    },
+    back() {
+      this.bookCabinOpen = false;
       this.showReservationForm(true);
     },
     getCabins: function () {
-      if(this.reservationProcess){
-        this.cabinDtos = this.availableCabins; 
+      if (this.reservationProcess) {
+        this.cabinDtos = this.availableCabins;
         this.cabinsLoaded = true;
-      }else{
+      } else {
         this.user.username = this.email;
-      axios
-        .get(
-          "http://localhost:8081/cabins/getAll")
-        .then((response) => {
-          this.cabinDtos = response.data; 
+        axios.get("http://localhost:8081/cabins/getAll").then((response) => {
+          this.cabinDtos = response.data;
           this.cabinsLoaded = true;
         });
       }
@@ -274,14 +290,43 @@ export default {
       this.$router.push("/cabin/" + this.email + "/" + cabinName);
     },
     bookCabin: function (cabinName) {
-      this.bookCabinOpen=true;
-      this.cabinName=cabinName;
+      this.bookCabinOpen = true;
+      this.cabinName = cabinName;
       this.showReservationForm(false);
     },
   },
   computed: {
     sortedCabins: function () {
-      return this.cabinDtos;
+      if (this.sortBy == "") return this.cabinDtos;
+      else {
+        return this.sortedArray;
+      }
+    },
+    sortedArray: function () {
+      let sortedEntities = this.cabinDtos;
+      sortedEntities = sortedEntities.sort((a, b) => {
+        let fa, fb;
+        if (this.sortBy === "name") {
+          fa = a[this.sortBy].toLowerCase();
+          fb = b[this.sortBy].toLowerCase();
+        }else if(this.sortBy === "location"){
+          fa = a.addressDto.streetAndNum + a.addressDto.city + a.addressDto.country;
+          fb = b.addressDto.streetAndNum + b.addressDto.city + b.addressDto.country;
+        } else {
+          fa = a[this.sortBy];
+          fb = b[this.sortBy];
+        }
+        let modifier = 1;
+        if (this.sortDirection === "desc") modifier = -1;
+        if (fa < fb) {
+          return -1 * modifier;
+        }
+        if (fa > fb) {
+          return 1 * modifier;
+        }
+        return 0;
+      });
+      return sortedEntities;
     },
   },
 };

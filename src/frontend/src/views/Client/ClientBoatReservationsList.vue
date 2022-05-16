@@ -17,6 +17,53 @@
         >
       </h1>
     </form>
+
+    <!-- sort -->
+    <template v-if="!upcomingReservations && !availableQuickReservations">
+      <hr />
+      <form>
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Sort boat reservations
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('date')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Date
+            </button>
+          </div>
+
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('price')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Price
+            </button>
+          </div>
+
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('duration')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Duration
+            </button>
+          </div>
+        </div>
+      </form>
+    </template>
+      <!--sort-->
+
   </div>
 
   <!--header-->
@@ -621,6 +668,8 @@ export default {
       quickReservationBoat: {},
       startDate: null,
       endDate: null,
+      sortBy: "",
+      sortDirection: "asc",
     };
   },
   mounted() {
@@ -632,6 +681,12 @@ export default {
     }
   },
   methods: {
+    sort: function (s) {
+      if (s === this.sortBy) {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      }
+      this.sortBy = s;
+    },
     getNumberOfDays: function (start, end) {
       const date1 = new Date(start);
       const date2 = new Date(end);
@@ -870,9 +925,43 @@ export default {
         });
     },
   },
-  computed: {
+    computed: {
     sortedReservations: function () {
-      return this.boatReservationDtos;
+      if (this.upcomingReservations || this.availableQuickReservations)
+        return this.boatReservationDtos;
+      {
+        return this.sortedArray;
+      }
+    },
+    sortedArray: function () {
+      let sortedEntities = this.boatReservationDtos;
+      sortedEntities = sortedEntities.sort((a, b) => {
+        let fa, fb;
+        if (this.sortBy === "date") {
+          fa = new Date(this.setDate(a.startDate));
+          fb = new Date(this.setDate(b.startDate));
+        } else if (this.sortBy === "price") {
+          fa = a.paymentInformationDto.totalPrice;
+          fb = b.paymentInformationDto.totalPrice;
+        } else {
+          fa =
+            new Date(this.setDate(a.endDate)) -
+            new Date(this.setDate(a.startDate));
+          fb =
+            new Date(this.setDate(b.endDate)) -
+            new Date(this.setDate(b.startDate));
+        }
+        let modifier = 1;
+        if (this.sortDirection === "desc") modifier = -1;
+        if (fa < fb) {
+          return -1 * modifier;
+        }
+        if (fa > fb) {
+          return 1 * modifier;
+        }
+        return 0;
+      });
+      return sortedEntities;
     },
   },
 };

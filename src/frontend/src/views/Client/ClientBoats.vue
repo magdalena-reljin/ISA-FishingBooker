@@ -133,41 +133,36 @@
         Sort boats
       </h1>
       <br />
-      <div
-        style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
-        class="row"
-      >
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Name</button>
-        </div>
+              <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('name')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Name
+            </button>
+          </div>
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Street</button>
-        </div>
+          <div class="col">
+            <button type="button"
+              @click="sort('location')" class="form-control rounded-pill fa fa-sort">Location</button>
+          </div>
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">City</button>
-        </div>
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('rating')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Rating
+            </button>
+          </div>
 
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Country</button>
         </div>
-
-        <div class="col">
-          <button class="form-control rounded-pill fa fa-sort">Rating</button>
-        </div>
-
-        <div class="col">
-          <button
-            @click="resetSort()"
-            style="height: 90%; background-color: #0b477b; color: white"
-            type="button"
-            class="btn rounded-pill fa fa-sort"
-          >
-            RESET SORT
-          </button>
-        </div>
-      </div>
     </form>
   </div>
 
@@ -397,6 +392,8 @@ export default {
       searchCountry: "",
       searchType: "",
       searchMaxPeople: "",
+      sortBy: "",
+      sortDirection: "asc",
     };
   },
   mounted() {
@@ -405,6 +402,12 @@ export default {
     this.getBoats();
   },
   methods: {
+    sort: function (s) {
+      if (s === this.sortBy) {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      }
+      this.sortBy = s;
+    },
     back() {
       this.bookBoatOpen = false;
       this.showReservationForm(true);
@@ -459,7 +462,36 @@ export default {
   },
   computed: {
     sortedBoats: function () {
-      return this.boatDtos;
+       if (this.sortBy == "") return this.boatDtos;
+      else {
+        return this.sortedArray;
+      }
+    },
+    sortedArray: function () {
+      let sortedEntities = this.boatDtos;
+      sortedEntities = sortedEntities.sort((a, b) => {
+        let fa, fb;
+        if (this.sortBy === "name") {
+          fa = a[this.sortBy].toLowerCase();
+          fb = b[this.sortBy].toLowerCase();
+        }else if(this.sortBy === "location"){
+          fa = a.addressDto.streetAndNum + a.addressDto.city + a.addressDto.country;
+          fb = b.addressDto.streetAndNum + b.addressDto.city + b.addressDto.country;
+        } else {
+          fa = a[this.sortBy];
+          fb = b[this.sortBy];
+        }
+        let modifier = 1;
+        if (this.sortDirection === "desc") modifier = -1;
+        if (fa < fb) {
+          return -1 * modifier;
+        }
+        if (fa > fb) {
+          return 1 * modifier;
+        }
+        return 0;
+      });
+      return sortedEntities;
     },
   },
 };
