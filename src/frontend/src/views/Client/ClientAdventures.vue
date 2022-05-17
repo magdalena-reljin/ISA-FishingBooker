@@ -3,43 +3,51 @@
     <!-- search-->
 
     <div v-if="role == 'CLIENT'" class="header">
-      <form>
+      <form class="was-validated" v-if="!reservationProcess">
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Search adventures
         </h1>
         <br />
         <div style="padding-left: 7.2%; width: 100%" class="row">
           <div class="col">
-            <input
-              class="form-control rounded-pill"
-              type="text"
-              style="height: 90%; width: 110%; padding-left: 5%"
-              id="search-field"
-              placeholder="NAME"
-              :value="searchName"
-              @input="searchName = $event.target.value.toUpperCase()"
-            />
+            <Datepicker v-model="start" placeholder="Start date"></Datepicker>
+          </div>
+
+          <div class="col">
+            <Datepicker v-model="end" placeholder="End date"></Datepicker>
           </div>
 
           <div class="col">
             <input
               class="form-control rounded-pill"
               type="text"
-              style="height: 90%; width: 110%; padding-left: 5%"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
               placeholder="ADDRESS"
+              readonly
               :value="searchAddress"
-              @input="searchAddress = $event.target.value.toUpperCase()"
+              @click="openLocationForm()"
             />
           </div>
 
           <div class="col">
             <input
               class="form-control rounded-pill"
-              style="height: 90%; width: 110%; padding-left: 5%"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
               type="text"
               placeholder="CITY"
               :value="searchCity"
-              @input="searchCity = $event.target.value.toUpperCase()"
+              readonly
+              @click="openLocationForm()"
             />
           </div>
 
@@ -47,10 +55,16 @@
             <input
               class="form-control rounded-pill"
               type="text"
-              style="height: 90%; width: 110%; padding-left: 5%"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
               placeholder="COUNTRY"
               :value="searchCountry"
-              @input="searchCountry = $event.target.value.toUpperCase()"
+              readonly
+              @click="openLocationForm()"
             />
           </div>
 
@@ -59,8 +73,9 @@
               class="form-control rounded-pill"
               type="text"
               style="height: 90%; width: 110%; padding-left: 5%"
-              placeholder="PRICE"
+              placeholder="PRICE PER HOUR"
               :value="searchPrice"
+              pattern="[0-9]+\.?[0-9]*"
               @input="searchPrice = $event.target.value"
             />
           </div>
@@ -68,32 +83,155 @@
           <div class="col">
             <input
               class="form-control rounded-pill"
-              type="text"
+              type="number"
+              min="1"
               style="height: 90%; width: 110%; padding-left: 5%"
-              id="search-field"
               placeholder="MAX PEOPLE"
               :value="searchMaxPeople"
-              @input="searchMaxPeople = $event.target.value.toUpperCase()"
+              @input="searchMaxPeople = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="RATING"
+              :value="searchRating"
+              pattern="[0-5]\.?[0-9]*"
+              @input="searchRating = $event.target.value"
             />
           </div>
 
           <div class="col">
             <button
               @click="resetSearch()"
-              style="height: 90%; background-color: #0b477b; color: white"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
               type="button"
               class="btn rounded-pill"
+              :disabled="isResetDisabled()"
             >
               RESET SEARCH
             </button>
           </div>
+
+          <div class="col">
+            <button
+              @click="submitSearchParams"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isSearchDisabled()"
+            >
+              SEARCH
+            </button>
+          </div>
         </div>
       </form>
-
       <!--search-->
+      <!--location-->
+      <template v-if="locationOpen">
+        <form>
+          <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+            Choose location
+          </h1>
+          <br />
+          <div
+            style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+            class="row"
+          >
+            <div class="col" style="height: 300px">
+              <PickLocationMap :coordinates="[21.0059, 44.0165]" />
+            </div>
+          </div>
+          <br />
+          <div
+            style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+            class="row"
+          >
+            <div class="col">
+              <input
+                class="form-control rounded-pill"
+                type="text"
+                style="height: 90%; width: 90%; padding-left: 5%"
+                id="search-field"
+                placeholder="ADRESS"
+                :value="locationAddress"
+                @input="locationAddress = $event.target.value"
+              />
+            </div>
 
+            <div class="col">
+              <input
+                class="form-control rounded-pill"
+                type="text"
+                style="height: 90%; width: 90%; padding-left: 5%"
+                id="search-field"
+                placeholder="CITY"
+                :value="locationCity"
+                @input="locationCity = $event.target.value"
+              />
+            </div>
+
+            <div class="col">
+              <input
+                class="form-control rounded-pill"
+                type="text"
+                style="height: 90%; width: 90%; padding-left: 5%"
+                id="search-field"
+                placeholder="COUNTRY"
+                :value="locationCountry"
+                @input="locationCountry = $event.target.value"
+              />
+            </div>
+
+            <div class="col">
+              <button
+                @click="closeLocation()"
+                style="
+                  height: 90%;
+                  width: 90%;
+                  background-color: #0b477b;
+                  color: white;
+                "
+                type="button"
+                class="btn rounded-pill"
+              >
+                CANCEL
+              </button>
+            </div>
+
+            <div class="col">
+              <button
+                @click="confirmLocation()"
+                style="
+                  height: 90%;
+                  width: 90%;
+                  background-color: #0b477b;
+                  color: white;
+                "
+                type="button"
+                class="btn rounded-pill"
+              >
+                CONFIRM
+              </button>
+            </div>
+          </div>
+        </form>
+      </template>
+      <!--location-->
       <!-- sort -->
-
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Sort adventures
@@ -114,8 +252,13 @@
           </div>
 
           <div class="col">
-            <button type="button"
-              @click="sort('location')" class="form-control rounded-pill fa fa-sort">Location</button>
+            <button
+              type="button"
+              @click="sort('location')"
+              class="form-control rounded-pill fa fa-sort"
+            >
+              Location
+            </button>
           </div>
 
           <div class="col">
@@ -127,13 +270,10 @@
               Rating
             </button>
           </div>
-
         </div>
       </form>
     </div>
-
     <!--sort-->
-
     <hr v-if="role == 'CLIENT'" />
 
     <template v-if="!adventureLoaded">
@@ -244,7 +384,7 @@
 
                     <div class="row">
                       <div class="col" style="text-align: right">
-                        <template v-if="!reservationProcess">
+                        <template v-if="!reservationProcess && !searchResultDisplay">
                           <button
                             @click="seeProfile(adventureDto.id)"
                             type="button"
@@ -253,7 +393,7 @@
                             SEE PROFILE
                           </button>
                         </template>
-                        <template v-if="reservationProcess">
+                        <template v-if="reservationProcess || searchResultDisplay">
                           <button
                             @click="bookAdventure(adventureDto.id)"
                             type="button"
@@ -276,14 +416,13 @@
     </div>
     <!-- Inner -->
   </template>
-
   <template v-if="bookAdventureOpen">
     <BookAdventure
       :bookingProcess="true"
       :adventureId="adventureId"
       :back="back"
-      :startDate="startDate"
-      :endDate="endDate"
+      :startDate="start"
+      :endDate="end"
     ></BookAdventure>
   </template>
 </template>
@@ -291,10 +430,15 @@
 <script>
 import axios from "axios";
 import BookAdventure from "./BookAdventure.vue";
+import Datepicker from "vue3-date-time-picker";
+import PickLocationMap from "../../components/PickLocationMap";
+import dayjs from "dayjs";
 
 export default {
   components: {
     BookAdventure,
+    Datepicker,
+    PickLocationMap,
   },
   props: {
     reservationProcess: Boolean,
@@ -346,9 +490,7 @@ export default {
         id: null,
         username: "",
         password: "",
-
         firstname: "",
-
         lastname: "",
         phoneNum: "",
         address: {
@@ -365,22 +507,213 @@ export default {
       adventureLoaded: false,
       bookAdventureOpen: false,
       adventureId: "",
-      searchName: "",
       searchAddress: "",
       searchPrice: "",
       searchCity: "",
       searchCountry: "",
       searchMaxPeople: "",
+      searchRating: "",
       sortBy: "",
       sortDirection: "asc",
+      start: null,
+      end: null,
+      locationAddress: "",
+      locationCity: "",
+      locationCountry: "",
+      locationOpen: false,
+      searchResultDisplay: false
     };
   },
   mounted() {
     this.email = this.$route.params.email;
     this.role = localStorage.role;
+    if(this.reservationProcess){
+      this.start = this.startDate;
+      this.end = this.endDate;
+    }
     this.getAdventures();
   },
   methods: {
+    submitSearchParams: function (event) {
+      event.preventDefault();
+      if (!this.dataIsValid()) {
+        return;
+      }
+      this.adventureLoaded = false;
+      axios
+        .post(
+          "http://localhost:8081/reservationAdventure/searchAvailableAdventures",
+          {
+            startDate: this.formatDate(this.start),
+            endDate: this.formatDate(this.end),
+            streetAndNum: this.searchAddress,
+            city: this.searchCity,
+            country: this.searchCountry,
+            rating: this.searchRating === "" ? 0.0 : this.searchRating,
+            price: this.searchPrice === "" ? 0.0 : this.searchPrice,
+            maxPeople: this.searchMaxPeople === "" ? 1 : this.searchMaxPeople,
+            username: this.email,
+          },
+          {}
+        )
+        .then((response) => {
+          this.adventureDtos = response.data;
+          this.adventureLoaded = true;
+          this.searchResultDisplay = true;
+        });
+    },
+    dataIsValid() {
+      const date1 = new Date(this.start);
+      const date2 = new Date(this.end);
+      const currentDate = new Date();
+      if (this.start == null || this.end == null) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Date field can't be empty!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (date1.getTime() - date2.getTime() > 0) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Start date must be before end date!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (date1.getTime() - currentDate.getTime() < 0) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Start date can't be before today!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchMaxPeople!=="" && !this.isInt(this.searchMaxPeople)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Max people must be natural number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchPrice!=="" && !parseFloat(this.searchPrice)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Price must be double precision number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchRating!=="" && !parseFloat(this.searchRating)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Rating must be double precision number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      return true;
+    },
+    isInt: function (n) {
+      return Number(n) === n && n % 1 === 0;
+    },
+    isFloat: function (n) {
+      return Number(n) === n && n % 1 !== 0;
+    },
+    formatDate: function (formatDate) {
+      const date = dayjs(formatDate);
+      return date.format("YYYY-MM-DDTHH:mm:ss");
+    },
+    closeLocation: function () {
+      this.locationAddress = "";
+      this.locationCity = "";
+      this.locationCountry = "";
+      this.locationOpen = false;
+    },
+    confirmLocation: function () {
+      this.searchAddress = this.locationAddress;
+      this.searchCity = this.locationCity;
+      this.searchCountry = this.locationCountry;
+      this.locationOpen = false;
+      this.locationAddress = "";
+      this.locationCity = "";
+      this.locationCountry = "";
+    },
+    updateLocation: function (latitude, longitude) {
+      axios
+        .get("https://nominatim.openstreetmap.org/reverse", {
+          params: {
+            lat: longitude,
+            lon: latitude,
+            format: "json",
+            "accept-language": "en",
+          },
+        })
+        .then((response) => {
+          const { address } = response.data;
+          var flag = false;
+          var street;
+          var number;
+          if (address) {
+            if (address.road) {
+              street = address.road;
+              flag = true;
+            } else if (address.street) {
+              street = address.street;
+              flag = true;
+            }
+            if (flag && address["house-number"]) {
+              number = address["house-number"];
+            } else if (flag && address["house_number"]) {
+              number = address["house_number"];
+            }
+            if (flag && address.town) {
+              this.locationCity = address.town;
+            } else if (flag && address.city) {
+              this.locationCity = address.city;
+            }
+            if (address.country) {
+              this.locationCountry = address.country;
+            }
+            this.locationAddress = street + " " + number;
+          }
+        });
+    },
+    openLocationForm: function () {
+      this.locationOpen = true;
+    },
+    isResetDisabled: function () {
+      if (
+        this.start == null &&
+        this.searchRating === "" &&
+        this.searchAddress === "" &&
+        this.searchCity === "" &&
+        this.searchCountry === "" &&
+        this.searchPrice === "" &&
+        this.end == null &&
+        this.searchMaxPeople === ""
+      )
+        return true;
+      return false;
+    },
+    isSearchDisabled: function () {
+      if (this.start && this.end) return false;
+      return true;
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -389,7 +722,8 @@ export default {
     },
     back() {
       this.bookAdventureOpen = false;
-      this.showReservationForm(true);
+      if(!this.searchResultDisplay)
+        this.showReservationForm(true);
     },
     getAdventures: function () {
       if (this.reservationProcess) {
@@ -425,20 +759,22 @@ export default {
       this.$router.push("/adventure/" + this.email + "/" + adventureId);
     },
     bookAdventure: function (adventureId) {
-      console.log(adventureId);
       this.bookAdventureOpen = true;
       this.adventureId = adventureId;
-      this.showReservationForm(false);
+      if(!this.searchResultDisplay)
+        this.showReservationForm(false);
     },
     resetSearch: function () {
-      this.searchName = "";
+      this.start = null;
+      this.end = null;
       this.searchRating = "";
       this.searchAddress = "";
       this.searchCity = "";
       this.searchCountry = "";
       this.searchPrice = "";
-      this.searchType = "";
       this.searchMaxPeople = "";
+      this.searchResultDisplay = "";
+      this.getAdventures();
     },
   },
   computed: {
@@ -455,7 +791,7 @@ export default {
         if (this.sortBy === "name") {
           fa = a[this.sortBy].toLowerCase();
           fb = b[this.sortBy].toLowerCase();
-        }else if(this.sortBy === "location"){
+        } else if (this.sortBy === "location") {
           fa = a.address.streetAndNum + a.address.city + a.address.country;
           fb = b.address.streetAndNum + b.address.city + b.address.country;
         } else {

@@ -6,8 +6,8 @@ public class SearchAvailablePeriodsBoatAndAdventureDto extends SearchAvailablePe
 
     private Integer maxPeople;
 
-    public SearchAvailablePeriodsBoatAndAdventureDto(LocalDateTime startDate, LocalDateTime endDate, double price, String username, Integer maxPeople) {
-        super(startDate, endDate, price, username);
+    public SearchAvailablePeriodsBoatAndAdventureDto(LocalDateTime startDate, LocalDateTime endDate, double price, String username, double rating, String streetAndNum, String city, String country, Integer maxPeople) {
+        super(startDate, endDate, price, username, rating, streetAndNum, city, country);
         this.maxPeople = maxPeople;
     }
 

@@ -256,6 +256,23 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     @Override
+    public Set<Adventure> searchAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
+        Set<Adventure> adventures = new HashSet<>();
+        for(Adventure availableAdventure:getAvailableAdventures(searchAvailablePeriodsAdventureDto)){
+            if(!availableAdventure.getAddress().getStreetAndNum().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getStreetAndNum().toLowerCase()))
+                continue;
+            if(!availableAdventure.getAddress().getCity().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getCity().toLowerCase()))
+                continue;
+            if(!availableAdventure.getAddress().getCountry().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getCountry().toLowerCase()))
+                continue;
+            if(availableAdventure.getFishingInstructor().getRating()<searchAvailablePeriodsAdventureDto.getRating())
+                continue;
+            adventures.add(availableAdventure);
+        }
+        return adventures;
+    }
+
+    @Override
     public Set<AdventureReservation> getUpcomingClientReservationsByUsername(String username) {
         return adventureReservationRepository.getUpcomingClientReservations(clientService.findByUsername(username).getId(), LocalDateTime.now());
     }

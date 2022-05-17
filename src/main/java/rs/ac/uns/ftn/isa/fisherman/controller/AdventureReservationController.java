@@ -80,9 +80,9 @@ public class AdventureReservationController {
 
     @PostMapping("/getAvailableAdventures")
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<Set<AdventureDto>> getAvailableAdventures (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+    public ResponseEntity<Set<AdventureDto>> getAvailableAdventures (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
         Set<AdventureDto> adventuresDto= new HashSet<>();
-        for(Adventure adventure:adventureReservationService.getAvailableAdventures(searchAvailablePeriodsBoatDto)){
+        for(Adventure adventure:adventureReservationService.getAvailableAdventures(searchAvailablePeriodsAdventureDto)){
             AdventureDto adventureDto = adventureMapper.adventureToAdventureDto(adventure);
             adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
             adventuresDto.add(adventureDto);
@@ -138,5 +138,17 @@ public class AdventureReservationController {
             return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
         else
             return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/searchAvailableAdventures")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<AdventureDto>> searchAvailableAdventures (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
+        Set<AdventureDto> adventuresDto= new HashSet<>();
+        for(Adventure adventure:adventureReservationService.searchAvailableAdventures(searchAvailablePeriodsAdventureDto)){
+            AdventureDto adventureDto = adventureMapper.adventureToAdventureDto(adventure);
+            adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
+            adventuresDto.add(adventureDto);
+        }
+        return new ResponseEntity<>(adventuresDto, HttpStatus.OK);
     }
 }

@@ -33,7 +33,7 @@ public interface AdventureReservationService {
     boolean checkIfOwnerHasFutureReservations(String username);
     boolean checkIfClientHasFutureReservations(Long userId);
     Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id);
-
     List<AdventureReservation> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
     List<AdventureReservation> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+    Set<Adventure> searchAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto);
 }
