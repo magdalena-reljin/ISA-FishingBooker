@@ -166,10 +166,10 @@ export default {
       end: null,
       selectedEntity: "CABINS",
       display: "",
-      price: 0.0,
-      maxPeople: 0,
-      numOfRooms: 1,
-      bedsPerRoom: 1,
+      price: "",
+      maxPeople: "",
+      numOfRooms: "",
+      bedsPerRoom: "",
       availableCabins: [],
       availableBoats: [],
       availableAdventures: [],
@@ -190,7 +190,7 @@ export default {
       const date1 = new Date(this.start);
       const date2 = new Date(this.end);
       const currentDate = new Date();
-      if(this.start==null || this.end==null){
+      if (this.start == null || this.end == null) {
         this.$swal.fire({
           position: "top-end",
           icon: "error",
@@ -220,7 +220,56 @@ export default {
         });
         return false;
       }
+      if (this.price !== "" && !parseFloat(this.price)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Price must be double precision number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.selectedEntity !== "CABINS") {
+        if (this.bedsPerRoom !== "" && !this.isInt(this.bedsPerRoom)) {
+          this.$swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Beds per room must be natural number!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          return false;
+        }
+        if (this.numOfRooms !== "" && !this.isInt(this.numOfRooms)) {
+          this.$swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Number of rooms must be natural number!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          return false;
+        }
+      } else {
+        if (this.maxPeople !== "" && !this.isInt(this.maxPeople)) {
+          this.$swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Max people must be natural number!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          return false;
+        }
+      }
       return true;
+    },
+    isInt: function (n) {
+      return Number(n) === n && n % 1 === 0;
+    },
+    isFloat: function (n) {
+      return Number(n) === n && n % 1 !== 0;
     },
     formatDate: function (formatDate) {
       const date = dayjs(formatDate);
@@ -239,9 +288,9 @@ export default {
             {
               startDate: this.formatDate(this.start),
               endDate: this.formatDate(this.end),
-              price: this.price,
-              numberOfRooms: this.numOfRooms,
-              bedsPerRoom: this.bedsPerRoom,
+              price: this.price === "" ? 0.0 : this.price,
+              numberOfRooms: this.numOfRooms === "" ? 1 : this.numOfRooms,
+              bedsPerRoom: this.bedsPerRoom === "" ? 1 : this.bedsPerRoom,
               username: this.email,
             },
             {}
@@ -257,8 +306,8 @@ export default {
             {
               startDate: this.formatDate(this.start),
               endDate: this.formatDate(this.end),
-              price: this.price,
-              maxPeople: this.maxPeople,
+              price: this.price === "" ? 0.0 : this.price,
+              maxPeople: this.maxPeople === "" ? 1 : this.maxPeople,
               username: this.email,
             },
             {}
@@ -274,8 +323,8 @@ export default {
             {
               startDate: this.formatDate(this.start),
               endDate: this.formatDate(this.end),
-              price: this.price,
-              maxPeople: this.maxPeople,
+              price: this.price === "" ? 0.0 : this.price,
+              maxPeople: this.maxPeople === "" ? 1 : this.maxPeople,
               username: this.email,
             },
             {}

@@ -1,8 +1,7 @@
 <template>
   <template v-if="!bookAdventureOpen">
-    <!-- search-->
-
     <div v-if="role == 'CLIENT'" class="header">
+      <!-- search-->
       <form class="was-validated" v-if="!reservationProcess">
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Search adventures
@@ -272,8 +271,95 @@
           </div>
         </div>
       </form>
+      <!--sort-->
+      <!-- filter -->
+      <hr>
+      <form>
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Filter adventures
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
+          <div class="col">
+            <select
+              v-model="filterCancellingCondition"
+              class="form-select form-select-sm"
+              aria-label=".form-select-sm example"
+              style="height: 100%"
+            >
+              <option value="" disabled selected>
+                Select cancelling condition
+              </option>
+              <option value="FREE">FREE</option>
+              <option value="NOT FREE">
+                NOT FREE
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <Multiselect
+              style="color: gray; height: 90%"
+              v-model="filterRules"
+              mode="tags"
+              :close-on-select="false"
+              :searchable="true"
+              :create-option="false"
+              :options="rules"
+              placeholder="Select rules"
+            />
+          </div>
+
+          <div class="col">
+            <Multiselect
+              style="color: gray; height: 90%"
+              v-model="filterFreeEquipment"
+              mode="tags"
+              :close-on-select="false"
+              :searchable="true"
+              :create-option="false"
+              :options="freeEquipment"
+              placeholder="Select free equipment"
+            />
+          </div>
+
+          <div class="col">
+            <Multiselect
+              style="color: gray; height: 90%"
+              v-model="filterAdditionalServices"
+              mode="tags"
+              :close-on-select="false"
+              :searchable="true"
+              :create-option="false"
+              :options="filterAdditionalServicesOptions"
+              placeholder="Select additional services"
+            />
+          </div>
+
+          <div class="col">
+            <button
+              @click="resetFilter()"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isResetFilterDisabled()"
+            >
+              RESET FILTER
+            </button>
+          </div>
+        </div>
+      </form>
+      <!--filter-->
     </div>
-    <!--sort-->
+
     <hr v-if="role == 'CLIENT'" />
 
     <template v-if="!adventureLoaded">
@@ -384,7 +470,9 @@
 
                     <div class="row">
                       <div class="col" style="text-align: right">
-                        <template v-if="!reservationProcess && !searchResultDisplay">
+                        <template
+                          v-if="!reservationProcess && !searchResultDisplay"
+                        >
                           <button
                             @click="seeProfile(adventureDto.id)"
                             type="button"
@@ -393,7 +481,9 @@
                             SEE PROFILE
                           </button>
                         </template>
-                        <template v-if="reservationProcess || searchResultDisplay">
+                        <template
+                          v-if="reservationProcess || searchResultDisplay"
+                        >
                           <button
                             @click="bookAdventure(adventureDto.id)"
                             type="button"
@@ -433,12 +523,14 @@ import BookAdventure from "./BookAdventure.vue";
 import Datepicker from "vue3-date-time-picker";
 import PickLocationMap from "../../components/PickLocationMap";
 import dayjs from "dayjs";
+import Multiselect from "@vueform/multiselect";
 
 export default {
   components: {
     BookAdventure,
     Datepicker,
     PickLocationMap,
+    Multiselect,
   },
   props: {
     reservationProcess: Boolean,
@@ -521,19 +613,119 @@ export default {
       locationCity: "",
       locationCountry: "",
       locationOpen: false,
-      searchResultDisplay: false
+      searchResultDisplay: false,
+      filterCancellingCondition: "",
+      filterRules: [],
+      filterFreeEquipment: [],
+      filterAdditionalServices: [],
+      rules: [],
+      freeEquipment: [],
+      filterAdditionalServicesOptions: [],
     };
   },
   mounted() {
     this.email = this.$route.params.email;
     this.role = localStorage.role;
-    if(this.reservationProcess){
+    if (this.reservationProcess) {
       this.start = this.startDate;
       this.end = this.endDate;
     }
     this.getAdventures();
   },
   methods: {
+    filterList: function(adventureDtos){
+      var adventures = [];
+      adventureDtos.forEach((adventureDto) => {
+        if(this.checkAllFilters(adventureDto))
+          adventures.push(adventureDto);
+      });
+      return adventures;
+    },
+    checkAllFilters: function(adventureDto){
+      if(this.checkConditionFilter(adventureDto)&&this.checkAdditionalServicesFilter(adventureDto)
+        &&this.checkRulesFilter(adventureDto)&&this.checkEquipmentFilter(adventureDto))
+        return true;
+      return false;
+    },
+    checkEquipmentFilter: function(adventureDto){
+        var missingEquipment = false;
+        this.filterFreeEquipment.forEach((freeEquipment)=> {
+          if (!adventureDto.equipment.toLowerCase().includes(freeEquipment))
+              missingEquipment = true;
+        });
+        return !missingEquipment;
+    },
+    checkRulesFilter: function(adventureDto){
+        var missingRule = false;
+        this.filterRules.forEach((rule)=> {
+          if (!adventureDto.rules.toLowerCase().includes(rule))
+              missingRule = true;
+        });
+        return !missingRule;
+    },
+    checkAdditionalServicesFilter: function(adventureDto){
+        var additionalServicesNames = this.getAdditionalServicesNames(adventureDto.additionalServices);
+        var missingService = false;
+        this.filterAdditionalServices.forEach((additionalService)=> {
+          if (additionalServicesNames.indexOf(additionalService.toLowerCase()) === -1)
+            missingService = true;
+        });
+        return !missingService;
+    },
+    getAdditionalServicesNames: function(additionalServices){
+      var names = []
+      additionalServices.forEach((service)=>{
+        names.push(service.name.toLowerCase());
+      })
+      return names;
+    },
+    checkConditionFilter: function(adventureDto){
+      return this.filterCancellingCondition === "" || this.filterCancellingCondition===adventureDto.cancelingCondition;
+    },
+    fillRulesAndFreeEquipment: function (adventureDtos) {
+      adventureDtos.forEach((item) => {
+        item.additionalServices.forEach((additionalService) => {
+          if (this.filterAdditionalServicesOptions.indexOf(additionalService.name.toLowerCase()) === -1) {
+            this.filterAdditionalServicesOptions.push(additionalService.name.toLowerCase());
+          }
+        });
+        this.getEquipment(item.equipment).forEach((e) => {
+          var equipmentString = e.trim();  
+          if (equipmentString!==""&&this.freeEquipment.indexOf(equipmentString.toLowerCase()) === -1) {
+            this.freeEquipment.push(equipmentString.toLowerCase());
+            }
+        });
+        this.getRules(item.rules).forEach((r) => {
+          var ruleString = r.trim();
+          if (ruleString!==""&&this.rules.indexOf(ruleString.toLowerCase()) === -1) {
+            this.rules.push(ruleString.toLowerCase());
+            }
+        });
+      });
+    },
+    getEquipment: function (equipmentString) {
+      equipmentString = equipmentString.replace(".", "");
+      return equipmentString.split(",");
+    },
+    getRules: function (rulesString) {
+      return rulesString.split(".");
+    },
+    resetFilter: function () {
+      this.filterCancellingCondition = "";
+      this.filterRules = [];
+      this.filterFreeEquipment = [];
+      this.filterAdditionalServices = [];
+    },
+    isResetFilterDisabled: function () {
+      if (
+        this.filterCancellingCondition === "" &&
+        this.filterRules.length==0 &&
+        this.filterFreeEquipment.length==0 &&
+        this.filterAdditionalServices.length==0
+      )
+        return true;
+      return false;
+    },
     submitSearchParams: function (event) {
       event.preventDefault();
       if (!this.dataIsValid()) {
@@ -560,6 +752,7 @@ export default {
           this.adventureDtos = response.data;
           this.adventureLoaded = true;
           this.searchResultDisplay = true;
+          this.fillRulesAndFreeEquipment(response.data);
         });
     },
     dataIsValid() {
@@ -596,7 +789,7 @@ export default {
         });
         return false;
       }
-      if (this.searchMaxPeople!=="" && !this.isInt(this.searchMaxPeople)) {
+      if (this.searchMaxPeople !== "" && !this.isInt(this.searchMaxPeople)) {
         this.$swal.fire({
           position: "top-end",
           icon: "error",
@@ -606,7 +799,7 @@ export default {
         });
         return false;
       }
-      if (this.searchPrice!=="" && !parseFloat(this.searchPrice)) {
+      if (this.searchPrice !== "" && !parseFloat(this.searchPrice)) {
         this.$swal.fire({
           position: "top-end",
           icon: "error",
@@ -616,7 +809,7 @@ export default {
         });
         return false;
       }
-      if (this.searchRating!=="" && !parseFloat(this.searchRating)) {
+      if (this.searchRating !== "" && !parseFloat(this.searchRating)) {
         this.$swal.fire({
           position: "top-end",
           icon: "error",
@@ -722,19 +915,20 @@ export default {
     },
     back() {
       this.bookAdventureOpen = false;
-      if(!this.searchResultDisplay)
-        this.showReservationForm(true);
+      if (!this.searchResultDisplay) this.showReservationForm(true);
     },
     getAdventures: function () {
       if (this.reservationProcess) {
         this.adventureDtos = this.availableAdventures;
         this.adventureLoaded = true;
+        this.fillRulesAndFreeEquipment(this.availableAdventures);
       } else {
         axios
           .get("http://localhost:8081/adventures/getAll")
           .then((response) => {
             this.adventureDtos = response.data;
             this.adventureLoaded = true;
+            this.fillRulesAndFreeEquipment(response.data);
           });
       }
     },
@@ -761,8 +955,7 @@ export default {
     bookAdventure: function (adventureId) {
       this.bookAdventureOpen = true;
       this.adventureId = adventureId;
-      if(!this.searchResultDisplay)
-        this.showReservationForm(false);
+      if (!this.searchResultDisplay) this.showReservationForm(false);
     },
     resetSearch: function () {
       this.start = null;
@@ -779,9 +972,9 @@ export default {
   },
   computed: {
     sortedAdventures: function () {
-      if (this.sortBy == "") return this.adventureDtos;
+      if (this.sortBy == "") return this.filterList(this.adventureDtos);
       else {
-        return this.sortedArray;
+        return this.filterList(this.sortedArray);
       }
     },
     sortedArray: function () {
