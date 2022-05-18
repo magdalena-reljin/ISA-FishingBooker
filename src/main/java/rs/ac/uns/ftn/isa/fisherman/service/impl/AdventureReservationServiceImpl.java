@@ -160,6 +160,8 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public Set<Adventure> getAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
         List<Long> availableInstructorsIds = getAvailableInstructors(clientService.findByUsername(searchAvailablePeriodsAdventureDto.getUsername()).getId(), searchAvailablePeriodsAdventureDto.getStartDate(), searchAvailablePeriodsAdventureDto.getEndDate());
         Set<Adventure> availableAdventures = new HashSet<>();
+        if(availableInstructorsIds.size()==0)
+            return  availableAdventures;
         for(Adventure adventure:adventureService.findAdventuresByInstructorIds(availableInstructorsIds)){
             if(searchAvailablePeriodsAdventureDto.getPrice()!=0){
                 if(adventure.getPrice()>searchAvailablePeriodsAdventureDto.getPrice())
@@ -253,6 +255,23 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     @Override
     public List<AdventureReservation> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
         return adventureReservationRepository.findReservationsInPeriodToSumProfit(username,localDateTime,localDateTime1);
+    }
+
+    @Override
+    public Set<Adventure> searchAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
+        Set<Adventure> adventures = new HashSet<>();
+        for(Adventure availableAdventure:getAvailableAdventures(searchAvailablePeriodsAdventureDto)){
+            if(!availableAdventure.getAddress().getStreetAndNum().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getStreetAndNum().toLowerCase()))
+                continue;
+            if(!availableAdventure.getAddress().getCity().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getCity().toLowerCase()))
+                continue;
+            if(!availableAdventure.getAddress().getCountry().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getCountry().toLowerCase()))
+                continue;
+            if(availableAdventure.getFishingInstructor().getRating()!=0.0 && availableAdventure.getFishingInstructor().getRating()<searchAvailablePeriodsAdventureDto.getRating())
+                continue;
+            adventures.add(availableAdventure);
+        }
+        return adventures;
     }
 
     @Override

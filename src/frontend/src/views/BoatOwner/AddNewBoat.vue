@@ -342,6 +342,7 @@
                            lat: longitude,
                            lon: latitude,
                            format: "json",
+                           "accept-language": "en",
                  },
                  })
                  .then((response) => {

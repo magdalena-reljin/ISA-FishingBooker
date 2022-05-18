@@ -60,4 +60,6 @@ public interface ReservationCabinService {
     Integer countReservationsInPeriodByCabinId(LocalDateTime start, LocalDateTime end, Long id);
 
     List<CabinReservation> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+
+    Set<Cabin> searchAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto);
 }

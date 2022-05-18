@@ -151,4 +151,14 @@ public class CabinReservationController {
     public ResponseEntity<CabinReservationDto> getById(@PathVariable ("id") Long id) {
         return new ResponseEntity<>(cabinReservationMapper.cabinReservationToCabinReservationDto(reservationCabinService.getById(id)),HttpStatus.OK);
     }
+
+    @PostMapping("/searchAvailableCabins")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<CabinDto>> searchAvailableCabins (@RequestBody SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
+        Set<CabinDto> cabinsDto= new HashSet<>();
+        for(Cabin cabin:reservationCabinService.searchAvailableCabins(searchAvailablePeriodsCabinDto)){
+            cabinsDto.add(cabinMapper.cabinToCabinDto(cabin));
+        }
+        return new ResponseEntity<>(cabinsDto, HttpStatus.OK);
+    }
 }

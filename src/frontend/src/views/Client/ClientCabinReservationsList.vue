@@ -19,11 +19,17 @@
     </form>
 
     <!-- sort -->
-    <template v-if="!upcomingReservations && !availableQuickReservations">
+    <template
+      v-if="
+        !upcomingReservations &&
+        !availableQuickReservations &&
+        cabinReservationDtos.length != 0
+      "
+    >
       <hr />
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
-          Sort adventure reservations
+          Sort cabin reservations
         </h1>
         <br />
         <div
@@ -34,7 +40,10 @@
             <button
               type="button"
               @click="sort('date')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'date' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Date
             </button>
@@ -44,7 +53,10 @@
             <button
               type="button"
               @click="sort('price')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'price' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Price
             </button>
@@ -54,7 +66,10 @@
             <button
               type="button"
               @click="sort('duration')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'duration' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Duration
             </button>
@@ -62,8 +77,7 @@
         </div>
       </form>
     </template>
-      <!--sort-->
-
+    <!--sort-->
   </div>
 
   <!--header-->
@@ -160,101 +174,127 @@
                     {{ getFullAddress(index) }}
                   </h6>
                   <div
-                      class="row"
-                      v-if="
-                        cabinReservationDto.addedAdditionalServices
-                          .length != 0
-                      "
+                    class="row"
+                    v-if="
+                      cabinReservationDto.addedAdditionalServices.length != 0
+                    "
+                  >
+                    <div
+                      class="col"
+                      style="padding-top: 2%; text-align: left; color: black"
                     >
-                      <div
-                        class="col"
-                        style="padding-top: 2%; text-align: left; color: black"
-                      >
-                        <p>Added additional services:</p>
-                      </div>
-                      <div class="col-sm-9" style="padding: 1%; text-align: left;">
-                        <template
-                          v-for="(
-                            service, index
-                          ) in cabinReservationDto.addedAdditionalServices"
-                          :key="index"
-                          class="group"
-                          role="group"
-                          aria-label="Basic outlined example"
-                        >
-                          <span
-                            v-if="service.price == 0"
-                            style="background-color: #59d47a"
-                            class="badge rounded-pill text-light"
-                            >{{ service.name }} - Free</span
-                          >
-                          <span
-                            v-else
-                            style="background-color: #703636"
-                            class="badge rounded-pill text-light"
-                            >{{ service.name }} - {{ service.price }}$ per
-                            day</span
-                          >
-                        </template>
-                      </div>
+                      <p>Added additional services:</p>
                     </div>
-                  <template v-if="(!availableQuickReservations)&&(!cabinReservationDto.discount)">
-                  <h6 style="text-align: left; color: green">
-                    Total price: {{ cabinReservationDto.paymentInformationDto.totalPrice }} $
-                  </h6>
+                    <div class="col-sm-9" style="padding: 1%; text-align: left">
+                      <template
+                        v-for="(
+                          service, index
+                        ) in cabinReservationDto.addedAdditionalServices"
+                        :key="index"
+                        class="group"
+                        role="group"
+                        aria-label="Basic outlined example"
+                      >
+                        <span
+                          v-if="service.price == 0"
+                          style="background-color: #59d47a"
+                          class="badge rounded-pill text-light"
+                          >{{ service.name }} - Free</span
+                        >
+                        <span
+                          v-else
+                          style="background-color: #703636"
+                          class="badge rounded-pill text-light"
+                          >{{ service.name }} - {{ service.price }}$ per
+                          day</span
+                        >
+                      </template>
+                    </div>
+                  </div>
+                  <template
+                    v-if="
+                      !availableQuickReservations &&
+                      !cabinReservationDto.discount
+                    "
+                  >
+                    <h6 style="text-align: left; color: green">
+                      Total price:
+                      {{
+                        cabinReservationDto.paymentInformationDto.totalPrice
+                      }}
+                      $
+                    </h6>
                   </template>
-                  <template v-if="availableQuickReservations || cabinReservationDto.discount">
-                  <h6 style="color: red; text-align: left;" >
-                    Previous price: <a style="text-decoration: line-through">{{ twoDecimales(cabinReservationDto.paymentInformationDto.totalPrice) }} $ </a>
-                  </h6>
-                  <h6 style="text-align: left; color: green">
-                    Discount: <i>-{{cabinReservationDto.discount}}%</i>
-                  </h6>
-                  <h6 style="text-align: left; color: green">
-                    Discounted price: <b>{{ twoDecimales(getDiscountedPrice(cabinReservationDto)) }}
-                    $</b>
-                  </h6>
+                  <template
+                    v-if="
+                      availableQuickReservations || cabinReservationDto.discount
+                    "
+                  >
+                    <h6 style="color: red; text-align: left">
+                      Previous price:
+                      <a style="text-decoration: line-through"
+                        >{{
+                          twoDecimales(
+                            cabinReservationDto.paymentInformationDto.totalPrice
+                          )
+                        }}
+                        $
+                      </a>
+                    </h6>
+                    <h6 style="text-align: left; color: green">
+                      Discount: <i>-{{ cabinReservationDto.discount }}%</i>
+                    </h6>
+                    <h6 style="text-align: left; color: green">
+                      Discounted price:
+                      <b
+                        >{{
+                          twoDecimales(getDiscountedPrice(cabinReservationDto))
+                        }}
+                        $</b
+                      >
+                    </h6>
                   </template>
                   <div class="row">
                     <template v-if="!availableQuickReservations">
-                    <div class="col" style="text-align: right">
-                      <button
-                        @click="writeComplaint(cabinReservationDto)"
-                        type="button"
-                        class="btn btn-outline-dark rounded-pill"
-                      >
-                        WRITE COMPLAINT
-                      </button>
-                    </div>
-                    <div class="col" style="text-align: right">
-                      <template v-if="upcomingReservations">
+                      <div class="col" style="text-align: right">
                         <button
-                          @click="cancelReservationModal(cabinReservationDto)"
+                          @click="writeComplaint(cabinReservationDto)"
                           type="button"
                           class="btn btn-outline-dark rounded-pill"
-                          :disabled="
-                            !possibleCancellation(cabinReservationDto.startDate)
-                            || cabinReservationDto.discount
+                        >
+                          WRITE COMPLAINT
+                        </button>
+                      </div>
+                      <div class="col" style="text-align: right">
+                        <template v-if="upcomingReservations">
+                          <button
+                            @click="cancelReservationModal(cabinReservationDto)"
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                            :disabled="
+                              !possibleCancellation(
+                                cabinReservationDto.startDate
+                              ) || cabinReservationDto.discount
+                            "
+                          >
+                            CANCEL
+                          </button>
+                        </template>
+                        <template
+                          v-if="
+                            !upcomingReservations &&
+                            !cabinReservationDto.evaluated
                           "
                         >
-                          CANCEL
-                        </button>
-                      </template>
-                      <template
-                        v-if="
-                          !upcomingReservations &&
-                          !cabinReservationDto.evaluated
-                        "
-                      >
-                        <button
-                          @click="evaluateReservation(cabinReservationDto)"
-                          type="button"
-                          class="btn btn-outline-dark rounded-pill"
-                        >
-                          EVALUATE
-                        </button>
-                      </template>
-                    </div>
+                          <button
+                            @click="evaluateReservation(cabinReservationDto)"
+                            type="button"
+                            class="btn btn-outline-dark rounded-pill"
+                          >
+                            EVALUATE
+                          </button>
+                        </template>
+                      </div>
                     </template>
                     <template v-if="availableQuickReservations">
                       <button
@@ -277,7 +317,7 @@
     </div>
   </div>
   <!-- Inner -->
-    <!-- Cancellation modal -->
+  <!-- Cancellation modal -->
   <vue-modality
     ref="cancellation"
     title="Reservation cancellation"
@@ -348,7 +388,9 @@
             <p>
               <b
                 >{{
-                  twoDecimales(cabinForCancellation.paymentInformationDto.totalPrice)
+                  twoDecimales(
+                    cabinForCancellation.paymentInformationDto.totalPrice
+                  )
                 }}
                 $</b
               >
@@ -362,8 +404,8 @@
       Cancel reservation
     </button>
   </vue-modality>
-    <!-- Cancellation modal -->
-      <!-- Quick reservation modal -->
+  <!-- Cancellation modal -->
+  <!-- Quick reservation modal -->
   <vue-modality
     ref="quickReservation"
     title="Quick reservation"
@@ -451,9 +493,7 @@
           </div>
           <div class="col-sm-9" style="padding: 1%; text-align: left">
             <p>
-              <b>{{
-                quickReservationCabin.cabinDto.cancelingCondition
-              }}</b>
+              <b>{{ quickReservationCabin.cabinDto.cancelingCondition }}</b>
             </p>
           </div>
         </div>
@@ -464,11 +504,21 @@
           >
             <p>Previous price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; color: red; text-decoration: line-through;">
+          <div
+            class="col-sm-9"
+            style="
+              padding: 1%;
+              text-align: left;
+              color: red;
+              text-decoration: line-through;
+            "
+          >
             <p>
               <b
                 >{{
-                  twoDecimales(quickReservationCabin.paymentInformationDto.totalPrice)
+                  twoDecimales(
+                    quickReservationCabin.paymentInformationDto.totalPrice
+                  )
                 }}
                 $</b
               >
@@ -480,9 +530,17 @@
           >
             <p>Discounted price</p>
           </div>
-          <div class="col-sm-9" style="padding: 1%; text-align: left; color: green">
+          <div
+            class="col-sm-9"
+            style="padding: 1%; text-align: left; color: green"
+          >
             <p>
-              <b>{{ twoDecimales(getDiscountedPrice(quickReservationCabin)) }} $</b>
+              <b
+                >{{
+                  twoDecimales(getDiscountedPrice(quickReservationCabin))
+                }}
+                $</b
+              >
             </p>
           </div>
         </div>
@@ -570,7 +628,7 @@ export default {
     if (this.availableQuickReservations) {
       this.getAvailableQuickReservations();
     } else {
-    this.getReservations();
+      this.getReservations();
     }
   },
   methods: {
@@ -613,7 +671,9 @@ export default {
             {}
           )
           .then((response) => {
-            this.cabinReservationDtos = this.cabinReservationDtos.concat(response.data);
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(
+              response.data
+            );
             this.reservationsLoaded = true;
           });
         axios
@@ -625,7 +685,9 @@ export default {
             {}
           )
           .then((response) => {
-            this.cabinReservationDtos =  this.cabinReservationDtos.concat(response.data);
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(
+              response.data
+            );
             this.reservationsLoaded = true;
           });
       } else {
@@ -639,7 +701,9 @@ export default {
             {}
           )
           .then((response) => {
-            this.cabinReservationDtos = this.cabinReservationDtos.concat(response.data);
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(
+              response.data
+            );
             this.reservationsLoaded = true;
           });
         axios
@@ -651,7 +715,9 @@ export default {
             {}
           )
           .then((response) => {
-            this.cabinReservationDtos = this.cabinReservationDtos.concat(response.data);
+            this.cabinReservationDtos = this.cabinReservationDtos.concat(
+              response.data
+            );
             this.reservationsLoaded = true;
           });
       }
@@ -708,7 +774,7 @@ export default {
         100
       );
     },
-    twoDecimales: function(number){
+    twoDecimales: function (number) {
       return number.toFixed(2);
     },
     seeProfile: function (cabinName) {
@@ -810,7 +876,7 @@ export default {
         });
     },
   },
-    computed: {
+  computed: {
     sortedReservations: function () {
       if (this.upcomingReservations || this.availableQuickReservations)
         return this.cabinReservationDtos;
@@ -876,5 +942,13 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.asc:after {
+  content: "\25B2";
+}
+
+.desc:after {
+  content: "\25BC";
 }
 </style>

@@ -142,4 +142,14 @@ public class BoatReservationController {
         else
             return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/searchAvailableBoats")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Set<BoatDto>> searchAvailableBoats (@RequestBody SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        Set<BoatDto> boatsDto= new HashSet<>();
+        for(Boat boat:boatReservationService.searchAvailableBoats(searchAvailablePeriodsBoatDto)){
+            boatsDto.add(boatMapper.boatToBoatDto(boat));
+        }
+        return new ResponseEntity<>(boatsDto, HttpStatus.OK);
+    }
 }

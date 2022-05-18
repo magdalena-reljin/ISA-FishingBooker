@@ -1,9 +1,251 @@
 <template>
   <template v-if="!bookCabinOpen">
-    <!-- sort -->
-
     <div v-if="role == 'CLIENT'" class="header">
-      <form>
+      <!-- search-->
+      <form class="was-validated" v-if="!reservationProcess">
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Search cabins
+        </h1>
+        <br />
+        <div style="padding-left: 7.2%; width: 100%" class="row">
+          <div class="col">
+            <Datepicker v-model="start" placeholder="Start date"></Datepicker>
+          </div>
+
+          <div class="col">
+            <Datepicker v-model="end" placeholder="End date"></Datepicker>
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="ADDRESS"
+              readonly
+              :value="searchAddress"
+              @click="openLocationForm()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              type="text"
+              placeholder="CITY"
+              :value="searchCity"
+              readonly
+              @click="openLocationForm()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="COUNTRY"
+              :value="searchCountry"
+              readonly
+              @click="openLocationForm()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="PRICE PER DAY"
+              :value="searchPrice"
+              pattern="[0-9]+\.?[0-9]*"
+              @input="searchPrice = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="number"
+              min="1"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="ROOMS"
+              :value="searchNumberOfRooms"
+              @input="searchNumberOfRooms = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="number"
+              min="1"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="BEDS"
+              :value="searchNumberOfBeds"
+              @input="searchNumberOfBeds = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="RATING"
+              :value="searchRating"
+              pattern="[0-5]\.?[0-9]*"
+              @input="searchRating = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+            <button
+              @click="resetSearch()"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isResetDisabled()"
+            >
+              RESET SEARCH
+            </button>
+          </div>
+
+          <div class="col">
+            <button
+              @click="submitSearchParams"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isSearchDisabled()"
+            >
+              SEARCH
+            </button>
+          </div>
+        </div>
+      </form>
+      <!--search-->
+      <!--location-->
+      <template v-if="locationOpen">
+        <form>
+          <hr>
+          <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+            Choose location
+          </h1>
+          <br />
+          <div
+            style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+            class="row"
+          >
+            <div class="col" style="height: 300px">
+              <PickLocationMap :coordinates="[21.0059, 44.0165]" />
+            </div>
+          </div>
+          <br />
+          <div
+            style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+            class="row"
+          >
+            <div class="col">
+              <input
+                class="form-control rounded-pill"
+                type="text"
+                style="height: 90%; width: 90%; padding-left: 5%"
+                id="search-field"
+                placeholder="ADRESS"
+                :value="locationAddress"
+                @input="locationAddress = $event.target.value"
+              />
+            </div>
+
+            <div class="col">
+              <input
+                class="form-control rounded-pill"
+                type="text"
+                style="height: 90%; width: 90%; padding-left: 5%"
+                id="search-field"
+                placeholder="CITY"
+                :value="locationCity"
+                @input="locationCity = $event.target.value"
+              />
+            </div>
+
+            <div class="col">
+              <input
+                class="form-control rounded-pill"
+                type="text"
+                style="height: 90%; width: 90%; padding-left: 5%"
+                id="search-field"
+                placeholder="COUNTRY"
+                :value="locationCountry"
+                @input="locationCountry = $event.target.value"
+              />
+            </div>
+
+            <div class="col">
+              <button
+                @click="closeLocation()"
+                style="
+                  height: 90%;
+                  width: 90%;
+                  background-color: #0b477b;
+                  color: white;
+                "
+                type="button"
+                class="btn rounded-pill"
+              >
+                CANCEL
+              </button>
+            </div>
+
+            <div class="col">
+              <button
+                @click="confirmLocation()"
+                style="
+                  height: 90%;
+                  width: 90%;
+                  background-color: #0b477b;
+                  color: white;
+                "
+                type="button"
+                class="btn rounded-pill"
+              >
+                CONFIRM
+              </button>
+            </div>
+          </div>
+        </form>
+      </template>
+      <!--location-->
+      <!--sort-->
+      <form v-if="cabinDtos.length!=0">
+        <hr>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Sort cabins
         </h1>
@@ -16,7 +258,10 @@
             <button
               type="button"
               @click="sort('name')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'name' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Name
             </button>
@@ -26,7 +271,10 @@
             <button
               type="button"
               @click="sort('location')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'location' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Location
             </button>
@@ -36,16 +284,105 @@
             <button
               type="button"
               @click="sort('instructorRating')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'instructorRating' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Rating
             </button>
           </div>
+
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('price')"
+              v-bind:class="[
+                sortBy === 'price' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
+            >
+              Price per day
+            </button>
+          </div>
         </div>
       </form>
-    </div>
+      <!--sort-->
+      <!-- filter -->
+      <form v-if="cabinDtos.length!=0">
+        <hr>
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Filter cabins
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
+          <div class="col">
+            <select
+              v-model="filterCancellingCondition"
+              class="form-select form-select-sm"
+              aria-label=".form-select-sm example"
+              style="height: 100%"
+            >
+              <option value="" disabled selected>
+                Select cancelling condition
+              </option>
+              <option value="FREE">FREE</option>
+              <option value="NOT FREE">
+                NOT FREE
+              </option>
+            </select>
+          </div>
 
-    <!--sort-->
+          <div class="col">
+            <Multiselect
+              style="color: gray; height: 90%"
+              v-model="filterRules"
+              mode="tags"
+              :close-on-select="false"
+              :searchable="true"
+              :create-option="false"
+              :options="rules"
+              placeholder="Select rules"
+            />
+          </div>
+
+          <div class="col">
+            <Multiselect
+              style="color: gray; height: 90%"
+              v-model="filterAdditionalServices"
+              mode="tags"
+              :close-on-select="false"
+              :searchable="true"
+              :create-option="false"
+              :options="filterAdditionalServicesOptions"
+              placeholder="Select additional services"
+            />
+          </div>
+
+          <div class="col">
+            <button
+              @click="resetFilter()"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isResetFilterDisabled()"
+            >
+              RESET FILTER
+            </button>
+          </div>
+        </div>
+      </form>
+      <!--filter-->
+    </div>
+    
 
     <hr v-if="role == 'CLIENT'" />
 
@@ -132,7 +469,7 @@
                     </h6>
                     <div class="row">
                       <div class="col" style="text-align: right">
-                        <template v-if="!reservationProcess">
+                        <template v-if="!reservationProcess && !searchResultDisplay">
                           <button
                             @click="
                               seeProfile(cabinDto.name) &&
@@ -144,7 +481,7 @@
                             SEE PROFILE
                           </button>
                         </template>
-                        <template v-if="reservationProcess">
+                        <template v-if="reservationProcess || searchResultDisplay">
                           <button
                             @click="bookCabin(cabinDto.name)"
                             type="button"
@@ -173,8 +510,8 @@
       :bookingProcess="true"
       :cabinName="cabinName"
       :back="back"
-      :startDate="startDate"
-      :endDate="endDate"
+      :startDate="start"
+      :endDate="end"
     ></BookCabin>
   </template>
 </template>
@@ -182,10 +519,17 @@
 <script>
 import axios from "axios";
 import BookCabin from "./BookCabin.vue";
+import Datepicker from "vue3-date-time-picker";
+import PickLocationMap from "../../components/PickLocationMap";
+import dayjs from "dayjs";
+import Multiselect from "@vueform/multiselect";
 
 export default {
   components: {
     BookCabin,
+    Datepicker,
+    PickLocationMap,
+    Multiselect,
   },
   props: {
     reservationProcess: Boolean,
@@ -238,15 +582,314 @@ export default {
       cabinsLoaded: false,
       bookCabinOpen: false,
       cabinName: "",
+      searchAddress: "",
+      searchPrice: "",
+      searchCity: "",
+      searchCountry: "",
+      searchNumberOfRooms: "",
+      searchNumberOfBeds: "",
+      searchRating: "",
       sortBy: "",
       sortDirection: "asc",
+      start: null,
+      end: null,
+      locationAddress: "",
+      locationCity: "",
+      locationCountry: "",
+      locationOpen: false,
+      searchResultDisplay: false,
+      filterCancellingCondition: "",
+      filterRules: [],
+      filterAdditionalServices: [],
+      rules: [],
+      filterAdditionalServicesOptions: [],
     };
   },
   mounted() {
     this.email = this.$route.params.email;
+    if (this.reservationProcess) {
+      this.start = this.startDate;
+      this.end = this.endDate;
+    }
     this.getCabins();
   },
   methods: {
+    filterList: function(cabinDtos){
+      var cabins = [];
+      cabinDtos.forEach((cabinDto) => {
+        if(this.checkAllFilters(cabinDto))
+          cabins.push(cabinDto);
+      });
+      return cabins;
+    },
+    checkAllFilters: function(cabinDto){
+      if(this.checkConditionFilter(cabinDto)&&this.checkAdditionalServicesFilter(cabinDto)
+        &&this.checkRulesFilter(cabinDto))
+        return true;
+      return false;
+    },
+    checkRulesFilter: function(cabinDto){
+        var missingRule = false;
+        this.filterRules.forEach((rule)=> {
+          if (!cabinDto.rules.toLowerCase().includes(rule))
+              missingRule = true;
+        });
+        return !missingRule;
+    },
+    checkAdditionalServicesFilter: function(cabinDto){
+        var additionalServicesNames = this.getAdditionalServicesNames(cabinDto.additionalServices);
+        var missingService = false;
+        this.filterAdditionalServices.forEach((additionalService)=> {
+          if (additionalServicesNames.indexOf(additionalService.toLowerCase()) === -1)
+            missingService = true;
+        });
+        return !missingService;
+    },
+    getAdditionalServicesNames: function(additionalServices){
+      var names = []
+      additionalServices.forEach((service)=>{
+        names.push(service.name.toLowerCase());
+      })
+      return names;
+    },
+    checkConditionFilter: function(cabinDto){
+      return this.filterCancellingCondition === "" || this.filterCancellingCondition===cabinDto.cancelingCondition;
+    },
+    fillRulesAndServices: function (cabinDtos) {
+      cabinDtos.forEach((item) => {
+        item.additionalServices.forEach((additionalService) => {
+          if (this.filterAdditionalServicesOptions.indexOf(additionalService.name.toLowerCase()) === -1) {
+            this.filterAdditionalServicesOptions.push(additionalService.name.toLowerCase());
+          }
+        });
+        this.getRules(item.rules).forEach((r) => {
+          var ruleString = r.trim();
+          if (ruleString!==""&&this.rules.indexOf(ruleString.toLowerCase()) === -1) {
+            this.rules.push(ruleString.toLowerCase());
+            }
+        });
+      });
+    },
+    getRules: function (rulesString) {
+      return rulesString.split(".");
+    },
+    resetFilter: function () {
+      this.filterCancellingCondition = "";
+      this.filterRules = [];
+      this.filterAdditionalServices = [];
+    },
+    isResetFilterDisabled: function () {
+      if (
+        this.filterCancellingCondition === "" &&
+        this.filterRules.length==0 &&
+        this.filterAdditionalServices.length==0
+      )
+        return true;
+      return false;
+    },
+    submitSearchParams: function (event) {
+      event.preventDefault();
+      if (!this.dataIsValid()) {
+        return;
+      }
+      this.cabinsLoaded = false;
+      axios
+        .post(
+          "http://localhost:8081/reservationCabin/searchAvailableCabins",
+          {
+            startDate: this.formatDate(this.start),
+            endDate: this.formatDate(this.end),
+            streetAndNum: this.searchAddress,
+            city: this.searchCity,
+            country: this.searchCountry,
+            rating: this.searchRating === "" ? 0.0 : this.searchRating,
+            price: this.searchPrice === "" ? 0.0 : this.searchPrice,
+            numberOfRooms: this.searchNumberOfRooms === "" ? 1 : this.searchNumberOfRooms,
+            numberOfBeds: this.searchNumberOfBeds === "" ? 1 : this.searchNumberOfBeds,
+            username: this.email,
+          },
+          {}
+        )
+        .then((response) => {
+          this.cabinDtos = response.data;
+          this.cabinsLoaded = true;
+          this.searchResultDisplay = true;
+          this.fillRulesAndServices(response.data);
+        });
+    },
+    dataIsValid() {
+      const date1 = new Date(this.start);
+      const date2 = new Date(this.end);
+      const currentDate = new Date();
+      if (this.start == null || this.end == null) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Date field can't be empty!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (date1.getTime() - date2.getTime() > 0) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Start date must be before end date!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (date1.getTime() - currentDate.getTime() < 0) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Start date can't be before today!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchNumberOfRooms !== "" && !this.isInt(this.searchNumberOfRooms)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Number of rooms must be natural number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchNumberOfBeds !== "" && !this.isInt(this.searchNumberOfBeds)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Number of beds must be natural number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchPrice !== "" && !parseFloat(this.searchPrice)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Price must be double precision number!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (this.searchRating !== "" && !parseFloat(this.searchRating)) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Rating must be between 1.0 and 5.0!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (parseFloat(this.searchRating)<0 || parseFloat(this.searchRating)>5) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Rating must be between 1.0 and 5.0!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      return true;
+    },
+    isInt: function (n) {
+      return !isNaN(Number(n)) && n % 1 === 0;
+    },
+    isFloat: function (n) {
+      return !isNaN(Number(n)) && n % 1 !== 0;
+    },
+    formatDate: function (formatDate) {
+      const date = dayjs(formatDate);
+      return date.format("YYYY-MM-DDTHH:mm:ss");
+    },
+    closeLocation: function () {
+      this.locationAddress = "";
+      this.locationCity = "";
+      this.locationCountry = "";
+      this.locationOpen = false;
+    },
+    confirmLocation: function () {
+      this.searchAddress = this.locationAddress;
+      this.searchCity = this.locationCity;
+      this.searchCountry = this.locationCountry;
+      this.locationOpen = false;
+      this.locationAddress = "";
+      this.locationCity = "";
+      this.locationCountry = "";
+    },
+    updateLocation: function (latitude, longitude) {
+      axios
+        .get("https://nominatim.openstreetmap.org/reverse", {
+          params: {
+            lat: longitude,
+            lon: latitude,
+            format: "json",
+            "accept-language": "en",
+          },
+        })
+        .then((response) => {
+          const { address } = response.data;
+          var flag = false;
+          var street;
+          var number;
+          if (address) {
+            if (address.road) {
+              street = address.road;
+              flag = true;
+            } else if (address.street) {
+              street = address.street;
+              flag = true;
+            }
+            if (flag && address["house-number"]) {
+              number = address["house-number"];
+            } else if (flag && address["house_number"]) {
+              number = address["house_number"];
+            }
+            if (flag && address.town) {
+              this.locationCity = address.town;
+            } else if (flag && address.city) {
+              this.locationCity = address.city;
+            }
+            if (address.country) {
+              this.locationCountry = address.country;
+            }
+            this.locationAddress = street + " " + number;
+          }
+        });
+    },
+    openLocationForm: function () {
+      this.locationOpen = true;
+    },
+    isResetDisabled: function () {
+      if (
+        this.start == null &&
+        this.searchRating === "" &&
+        this.searchAddress === "" &&
+        this.searchCity === "" &&
+        this.searchCountry === "" &&
+        this.searchPrice === "" &&
+        this.end == null &&
+        this.searchNumberOfRooms === "" &&
+        this.searchNumberOfBeds === ""
+      )
+        return true;
+      return false;
+    },
+    isSearchDisabled: function () {
+      if (this.start && this.end) return false;
+      return true;
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -261,11 +904,13 @@ export default {
       if (this.reservationProcess) {
         this.cabinDtos = this.availableCabins;
         this.cabinsLoaded = true;
+        this.fillRulesAndServices(this.availableCabins);
       } else {
         this.user.username = this.email;
         axios.get("http://localhost:8081/cabins/getAll").then((response) => {
           this.cabinDtos = response.data;
           this.cabinsLoaded = true;
+          this.fillRulesAndServices(response.data);
         });
       }
     },
@@ -292,14 +937,27 @@ export default {
     bookCabin: function (cabinName) {
       this.bookCabinOpen = true;
       this.cabinName = cabinName;
-      this.showReservationForm(false);
+      if (!this.searchResultDisplay) this.showReservationForm(false);
+    },
+    resetSearch: function () {
+      this.start = null;
+      this.end = null;
+      this.searchRating = "";
+      this.searchAddress = "";
+      this.searchCity = "";
+      this.searchCountry = "";
+      this.searchPrice = "";
+      this.searchNumberOfBeds = "";
+      this.searchNumberOfRooms = "";
+      this.searchResultDisplay = false;
+      this.getCabins();
     },
   },
   computed: {
     sortedCabins: function () {
-      if (this.sortBy == "") return this.cabinDtos;
+      if (this.sortBy == "") return this.filterList(this.cabinDtos);
       else {
-        return this.sortedArray;
+        return this.filterList(this.sortedArray);
       }
     },
     sortedArray: function () {
