@@ -160,6 +160,8 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     public Set<Adventure> getAvailableAdventures(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsAdventureDto) {
         List<Long> availableInstructorsIds = getAvailableInstructors(clientService.findByUsername(searchAvailablePeriodsAdventureDto.getUsername()).getId(), searchAvailablePeriodsAdventureDto.getStartDate(), searchAvailablePeriodsAdventureDto.getEndDate());
         Set<Adventure> availableAdventures = new HashSet<>();
+        if(availableInstructorsIds.size()==0)
+            return  availableAdventures;
         for(Adventure adventure:adventureService.findAdventuresByInstructorIds(availableInstructorsIds)){
             if(searchAvailablePeriodsAdventureDto.getPrice()!=0){
                 if(adventure.getPrice()>searchAvailablePeriodsAdventureDto.getPrice())

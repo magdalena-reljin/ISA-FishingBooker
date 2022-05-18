@@ -64,10 +64,10 @@
                         </div>
 
                         <div class="col form-group">
-                          <label id="label">Beds per room </label>
+                          <label id="label">Number of beds </label>
                           <input
                             min="1"
-                            v-model="bedsPerRoom"
+                            v-model="numOfBeds"
                             type="number"
                             class="form-control"
                           />
@@ -169,7 +169,7 @@ export default {
       price: "",
       maxPeople: "",
       numOfRooms: "",
-      bedsPerRoom: "",
+      numOfBeds: "",
       availableCabins: [],
       availableBoats: [],
       availableAdventures: [],
@@ -231,11 +231,11 @@ export default {
         return false;
       }
       if (this.selectedEntity !== "CABINS") {
-        if (this.bedsPerRoom !== "" && !this.isInt(this.bedsPerRoom)) {
+        if (this.numOfBeds !== "" && !this.isInt(this.numOfBeds)) {
           this.$swal.fire({
             position: "top-end",
             icon: "error",
-            title: "Beds per room must be natural number!",
+            title: "Number of beds must be natural number!",
             showConfirmButton: false,
             timer: 1500,
           });
@@ -266,10 +266,10 @@ export default {
       return true;
     },
     isInt: function (n) {
-      return Number(n) === n && n % 1 === 0;
+      return !isNaN(Number(n)) && n % 1 === 0;
     },
     isFloat: function (n) {
-      return Number(n) === n && n % 1 !== 0;
+      return !isNaN(Number(n)) && n % 1 !== 0;
     },
     formatDate: function (formatDate) {
       const date = dayjs(formatDate);
@@ -290,7 +290,7 @@ export default {
               endDate: this.formatDate(this.end),
               price: this.price === "" ? 0.0 : this.price,
               numberOfRooms: this.numOfRooms === "" ? 1 : this.numOfRooms,
-              bedsPerRoom: this.bedsPerRoom === "" ? 1 : this.bedsPerRoom,
+              numberOfBeds: this.numOfBeds === "" ? 1 : this.numOfBeds,
               username: this.email,
             },
             {}

@@ -142,6 +142,7 @@
       <!--location-->
       <template v-if="locationOpen">
         <form>
+           <hr>
           <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
             Choose location
           </h1>
@@ -231,7 +232,8 @@
       </template>
       <!--location-->
       <!-- sort -->
-      <form>
+      <form v-if="adventureDtos.length!=0">
+         <hr>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Sort adventures
         </h1>
@@ -273,8 +275,8 @@
       </form>
       <!--sort-->
       <!-- filter -->
-      <hr>
-      <form>
+      <form v-if="adventureDtos.length!=0">
+         <hr>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Filter adventures
         </h1>

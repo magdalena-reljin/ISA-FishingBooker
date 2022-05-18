@@ -19,11 +19,11 @@
     </form>
 
     <!-- sort -->
-    <template v-if="!upcomingReservations && !availableQuickReservations">
+    <template v-if="!upcomingReservations && !availableQuickReservations && cabinReservationDtos.length!=0">
       <hr />
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
-          Sort adventure reservations
+          Sort cabin reservations
         </h1>
         <br />
         <div

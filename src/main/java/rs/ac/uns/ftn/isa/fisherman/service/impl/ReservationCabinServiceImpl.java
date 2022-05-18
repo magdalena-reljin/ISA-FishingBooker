@@ -64,7 +64,7 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
                 if(cabinPeriod.getCabin().getPrice()>searchAvailablePeriodsCabinDto.getPrice())
                     continue;
             }
-            if(searchAvailablePeriodsCabinDto.getBedsPerRoom()>cabinPeriod.getCabin().getBedsPerRoom())
+            if(searchAvailablePeriodsCabinDto.getNumberOfBeds()>(cabinPeriod.getCabin().getBedsPerRoom()*cabinPeriod.getCabin().getNumOfRooms()))
                 continue;
             if(searchAvailablePeriodsCabinDto.getNumberOfRooms()>cabinPeriod.getCabin().getNumOfRooms())
                 continue;
@@ -180,6 +180,23 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
     @Override
     public List<CabinReservation> findReservationsByCabinToSumProfit(Long id, LocalDateTime start, LocalDateTime end) {
         return cabinReservationRepository.findReservationsInPeriodByCabinToSumProfit(id,start,end);
+    }
+
+    @Override
+    public Set<Cabin> searchAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto) {
+        Set<Cabin> cabins = new HashSet<>();
+        for(Cabin availableCabin:getAvailableCabins(searchAvailablePeriodsCabinDto)){
+            if(!availableCabin.getAddress().getStreetAndNum().toLowerCase().contains(searchAvailablePeriodsCabinDto.getStreetAndNum().toLowerCase()))
+                continue;
+            if(!availableCabin.getAddress().getCity().toLowerCase().contains(searchAvailablePeriodsCabinDto.getCity().toLowerCase()))
+                continue;
+            if(!availableCabin.getAddress().getCountry().toLowerCase().contains(searchAvailablePeriodsCabinDto.getCountry().toLowerCase()))
+                continue;
+            if(availableCabin.getRating()!=0.0 && availableCabin.getRating()<searchAvailablePeriodsCabinDto.getRating())
+                continue;
+            cabins.add(availableCabin);
+        }
+        return cabins;
     }
 
     public long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
