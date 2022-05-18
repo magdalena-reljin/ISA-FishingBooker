@@ -131,7 +131,8 @@
           </div>
           <div class="col">
             <p>
-              <a href="#" @click="viewProfile()"><b>{{ boatDto.ownersUsername }}</b></a>
+              <template v-if="email"><a href="#" @click="viewProfile()"><b>{{ boatDto.ownersUsername }}</b></a></template>
+              <template v-if="!email"><b>{{ boatDto.ownersUsername }}</b></template>
             </p>
           </div>
         </div>
@@ -330,7 +331,7 @@
           </button>
         </div>
       </template>
-      <template v-if="!bookingProcess && role == 'CLIENT'">
+      <template v-if="!bookingProcess && role == 'CLIENT' && this.email">
           <template v-if="!boatDto.subscription && role == 'CLIENT'">
             <div class="col" style="margin-top: 3%">
               <button
@@ -356,7 +357,7 @@
             </div>
           </template>
       </template>
-      <template v-if="role == 'ADMIN'">
+      <template v-if="role == 'ADMIN' && this.email">
         <div class="col" style="margin-top: 3%">
           <button
            class="btn btn-lg btn-danger rounded-pill" 
@@ -570,7 +571,11 @@ export default {
       this.calculatePrice();
     },
     getBoat: function () {
-      this.boatDto.ownersUsername = this.email;
+      if(this.email)
+        this.boatDto.ownersUsername = this.email;
+      else
+        this.boatDto.ownersUsername = "";
+      
       if (this.bookingProcess) {
         this.boatDto.id = this.boatId;
       } else {

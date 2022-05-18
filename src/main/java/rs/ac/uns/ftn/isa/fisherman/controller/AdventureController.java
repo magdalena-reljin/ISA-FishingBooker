@@ -122,7 +122,8 @@ public class AdventureController {
             String clientUsername = adventureDto.getFishingInstructorUsername();
             adventureDto = adventureMapper.adventureToAdventureDto(adventure);
             adventureDto.setInstructorRating(adventure.getFishingInstructor().getRating());
-            adventureDto.setSubscription(adventureSubscriptionService.checkIfUserIsSubscribed(clientUsername, adventureDto.getId()));
+            if(!clientUsername.equals(""))
+                adventureDto.setSubscription(adventureSubscriptionService.checkIfUserIsSubscribed(clientUsername, adventureDto.getId()));
             return new ResponseEntity<>(adventureDto,HttpStatus.OK);
         }
         else

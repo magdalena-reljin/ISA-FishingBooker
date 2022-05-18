@@ -1055,7 +1055,10 @@ export default {
       return "logoF1.png";
     },
     seeProfile: function (cabinName) {
-      this.$router.push("/cabin/" + this.email + "/" + cabinName);
+      if(!this.unidentifiedUser)
+        this.$router.push("/cabin/" + this.email + "/" + cabinName);
+      else
+        this.$router.push("/cabin/" + cabinName);
     },
     bookCabin: function (cabinName) {
       this.bookCabinOpen = true;

@@ -1150,7 +1150,10 @@ export default {
       return "logoF1.png";
     },
     seeProfile: function (boatId) {
-      this.$router.push('/boat/'+ this.email+ '/' + boatId);
+      if(!this.unidentifiedUser)
+        this.$router.push('/boat/'+ this.email+ '/' + boatId);
+      else
+        this.$router.push('/boat/' + boatId);
     },
     bookBoat: function (boatId) {
       this.bookBoatOpen=true;

@@ -124,7 +124,8 @@
           </div>
           <div class="col">
             <p>
-              <a href="#" @click="viewProfile()"><b>{{ adventureDto.fishingInstructorUsername }}</b></a>
+              <template v-if="email"><a href="#" @click="viewProfile()"><b>{{ adventureDto.fishingInstructorUsername }}</b></a></template>
+              <template v-if="!email"><b>{{ adventureDto.fishingInstructorUsername }}</b></template>
             </p>
           </div>
         </div>
@@ -318,7 +319,7 @@
           </button>
         </div>
       </template>
-      <template v-if="!bookingProcess && role == 'CLIENT'">
+      <template v-if="!bookingProcess && role == 'CLIENT' && this.email">
           <template v-if="!adventureDto.subscription && role == 'CLIENT'">
             <div class="col" style="margin-top: 3%">
               <button
@@ -344,7 +345,7 @@
             </div>
           </template>
       </template>
-      <template v-if="role == 'ADMIN'">
+      <template v-if="role == 'ADMIN' && this.email">
         <div class="col" style="margin-top: 3%">
           <button
            class="btn btn-lg btn-danger rounded-pill" 
@@ -547,7 +548,10 @@ export default {
       this.calculatePrice();
     },
     getAdventure: function () {
-      this.adventureDto.fishingInstructorUsername = this.email;
+      if(this.email)
+        this.adventureDto.fishingInstructorUsername = this.email;
+      else
+        this.adventureDto.fishingInstructorUsername = "";
       if (this.bookingProcess) {
         this.adventureDto.id = this.adventureId;
       } else {

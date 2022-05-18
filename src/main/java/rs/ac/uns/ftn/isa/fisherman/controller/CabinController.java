@@ -67,7 +67,8 @@ public class CabinController {
     @PostMapping("/findByNameClient")
     public ResponseEntity<CabinDto> findByNameClient(@RequestBody CabinDto cabinDto){
         CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
-        cabin.setSubscription(cabinSubscriptionService.checkIfUserIsSubscribed(cabinDto.getOwnerUsername(), cabin.getId()));
+        if(!cabinDto.getOwnerUsername().equals(""))
+            cabin.setSubscription(cabinSubscriptionService.checkIfUserIsSubscribed(cabinDto.getOwnerUsername(), cabin.getId()));
         return new ResponseEntity<>(cabin,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER')|| hasRole('ADMIN')")

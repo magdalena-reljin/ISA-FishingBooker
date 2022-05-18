@@ -1144,7 +1144,10 @@ export default {
       return "logoF1.png";
     },
     seeProfile: function (adventureId) {
-      this.$router.push("/adventure/" + this.email + "/" + adventureId);
+      if(!this.unidentifiedUser)
+        this.$router.push("/adventure/" + this.email + "/" + adventureId);
+      else
+        this.$router.push('/adventure/' + adventureId);
     },
     bookAdventure: function (adventureId) {
       this.bookAdventureOpen = true;

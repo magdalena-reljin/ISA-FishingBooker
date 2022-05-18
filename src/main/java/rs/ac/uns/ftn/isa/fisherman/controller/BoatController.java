@@ -102,11 +102,11 @@ public class BoatController {
     @PostMapping("/findById")
     public ResponseEntity<BoatDto> findById(@RequestBody BoatDto boatDto){
         Boat boat = boatService.findById(boatDto.getId());
-        //TODO: check for users subscription
         if(boat != null){
             String clientUsername = boatDto.getOwnersUsername();
             boatDto = boatMapper.boatToBoatDto(boat);
-            boatDto.setSubscription(boatSubscriptionService.checkIfUserIsSubscribed(clientUsername, boatDto.getId()));
+            if(!clientUsername.equals(""))
+                boatDto.setSubscription(boatSubscriptionService.checkIfUserIsSubscribed(clientUsername, boatDto.getId()));
             return new ResponseEntity<>(boatDto, HttpStatus.OK);
         }
         else
