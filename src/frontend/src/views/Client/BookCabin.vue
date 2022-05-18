@@ -126,7 +126,8 @@
           </div>
           <div class="col">
             <p>
-              <a href="#" @click="viewProfile()"><b>{{ cabinDto.ownerUsername }}</b></a>
+              <template v-if="email"><a href="#" @click="viewProfile()"><b>{{ cabinDto.ownerUsername }}</b></a></template>
+              <template v-if="!email"><b>{{ cabinDto.ownerUsername }}</b></template>
             </p>
           </div>
         </div>
@@ -330,7 +331,7 @@
           </button>
         </div>
       </template>
-      <template v-if="!bookingProcess && role == 'CLIENT'">
+      <template v-if="!bookingProcess && role == 'CLIENT' && this.email">
         <template v-if="!cabinDto.subscription && role == 'CLIENT'">
           <div class="col" style="margin-top: 3%">
             <button
@@ -356,7 +357,7 @@
           </div>
         </template>
       </template>
-      <template v-if="role == 'ADMIN'">
+      <template v-if="role == 'ADMIN' && this.email">
         <div class="col" style="margin-top: 3%">
           <button
            class="btn btn-lg btn-danger rounded-pill" 
@@ -556,7 +557,11 @@ export default {
       this.calculatePrice();
     },
     getCabin: function () {
-      this.cabinDto.ownerUsername = this.email;
+      if(this.email)
+        this.cabinDto.ownerUsername = this.email;
+      else
+        this.cabinDto.ownerUsername = "";
+      
       if (this.bookingProcess) {
         this.cabinDto.name = this.cabinName;
       } else {

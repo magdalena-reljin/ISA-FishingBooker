@@ -85,7 +85,7 @@ public class BoatController {
         else
             return new ResponseEntity<>(new BoatDto(),HttpStatus.BAD_REQUEST);
     }
-    @PreAuthorize("hasRole('CLIENT') || hasRole('ADMIN')")
+
     @GetMapping("/getAll")
     public ResponseEntity<Set<BoatDto>> getAll(){
         Set<BoatDto> boats=new HashSet<>();
@@ -98,15 +98,15 @@ public class BoatController {
     public ResponseEntity<Boolean> canBeEditedOrDeleted(@PathVariable ("id") Long id ){
             return new ResponseEntity<>(boatService.canBeEditedOrDeleted(id),HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('CLIENT')|| hasRole('ADMIN')")
+
     @PostMapping("/findById")
     public ResponseEntity<BoatDto> findById(@RequestBody BoatDto boatDto){
         Boat boat = boatService.findById(boatDto.getId());
-        //TODO: check for users subscription
         if(boat != null){
             String clientUsername = boatDto.getOwnersUsername();
             boatDto = boatMapper.boatToBoatDto(boat);
-            boatDto.setSubscription(boatSubscriptionService.checkIfUserIsSubscribed(clientUsername, boatDto.getId()));
+            if(!clientUsername.equals(""))
+                boatDto.setSubscription(boatSubscriptionService.checkIfUserIsSubscribed(clientUsername, boatDto.getId()));
             return new ResponseEntity<>(boatDto, HttpStatus.OK);
         }
         else

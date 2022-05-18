@@ -597,6 +597,15 @@ const routes = [
        } 
   },
   {
+    path: '/cabin/:cabinName',
+    name: 'CabinProfileUnindentifiedUser',
+    component: ClientCabinProfile,
+    props: true,
+    beforeEnter: (to, from,next) => {
+          next()
+       } 
+  },
+  {
     path: '/boat/:email/:boatId',
     name: 'Boat',
     component: ClientBoatProfile,
@@ -611,6 +620,15 @@ const routes = [
        } 
   },
   {
+    path: '/boat/:boatId',
+    name: 'BoatProfileUnindentifiedUser',
+    component: ClientBoatProfile,
+    props: true,
+    beforeEnter: (to, from,next) => {
+           next()
+       } 
+  },
+  {
     path: '/adventure/:email/:adventureId',
     name: 'Adventure',
     component: ClientAdventureProfile,
@@ -622,6 +640,15 @@ const routes = [
          }else {
            next()
          }
+       } 
+  },
+  {
+    path: '/adventure/:adventureId',
+    name: 'AdventureProfileUnindentifiedUser',
+    component: ClientAdventureProfile,
+    props: true,
+    beforeEnter: (to, from,next) => {
+          next()
        } 
   },
   {

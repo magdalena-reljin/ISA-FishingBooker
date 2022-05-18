@@ -1,6 +1,6 @@
 <template>
   <template v-if="!bookAdventureOpen">
-    <div v-if="role == 'CLIENT'" class="header">
+    <div v-if="role == 'CLIENT' && !unidentifiedUser" class="header">
       <!-- search-->
       <form class="was-validated" v-if="!reservationProcess">
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
@@ -382,7 +382,140 @@
       <!--filter-->
     </div>
 
-    <hr v-if="role == 'CLIENT'" />
+    <div v-if="role != 'CLIENT' || unidentifiedUser" class="header">
+      <!-- search-->
+      <form v-if="!reservationProcess">
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Search adventures
+        </h1>
+        <br />
+        <div style="padding-left: 7.2%; width: 100%" class="row">
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="NAME"
+              :value="searchName"
+              @input="searchName = $event.target.value.toUpperCase()"
+            /> 
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="ADDRESS"
+              :value="searchAddress"
+              @input="searchAddress = $event.target.value.toUpperCase()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              type="text"
+              placeholder="CITY"
+              :value="searchCity"
+              @input="searchCity = $event.target.value.toUpperCase()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="COUNTRY"
+              :value="searchCountry"
+              @input="searchCountry = $event.target.value.toUpperCase()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="PRICE PER DAY"
+              :value="searchPrice"
+              @input="searchPrice = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            style="height: 90%; width:110%; padding-left: 5%;"
+            id="search-field"
+            placeholder="MAX PEOPLE"
+            :value="searchMaxPeople" 
+            @input="searchMaxPeople = $event.target.value.toUpperCase()"
+          />
+          </div>
+
+          <div class="col">
+          <select
+             style="height: 90%; width: 110%; color: #5f7280;"
+            v-model="searchRating"
+            class="form-select rounded-pill"
+            aria-label="Default select example"
+            placeholder="Rating"
+          >
+            <option  disabled value="">RATING</option>
+            <option v-bind:value="5">FIVE STARS</option>
+            <option v-bind:value="4">FOUR STARS</option>
+            <option v-bind:value="3">THREE STARS</option>
+            <option v-bind:value="2">TWO STARS</option>
+            <option v-bind:value="1">ONE STAR</option>
+          </select>
+          </div>
+
+          <div class="col">
+            <button
+              @click="resetSearch()"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isResetDisabled()"
+            >
+              RESET SEARCH
+            </button>
+          </div>
+        </div>
+      </form>
+      <!--search-->
+    </div>
+
+    <hr v-if="role == 'CLIENT' || unidentifiedUser" />
 
     <template v-if="!adventureLoaded">
       <h3>Loading...</h3>
@@ -560,6 +693,7 @@ export default {
     showReservationForm: Function,
     startDate: Date,
     endDate: Date,
+    unidentifiedUser: Boolean
   },
   data() {
     return {
@@ -643,6 +777,7 @@ export default {
       rules: [],
       freeEquipment: [],
       filterAdditionalServicesOptions: [],
+      searchName: "",
     };
   },
   mounted() {
@@ -956,7 +1091,8 @@ export default {
         this.searchCountry === "" &&
         this.searchPrice === "" &&
         this.end == null &&
-        this.searchMaxPeople === ""
+        this.searchMaxPeople === "" &&
+        this.searchName === ""
       )
         return true;
       return false;
@@ -986,7 +1122,7 @@ export default {
           .then((response) => {
             this.adventureDtos = response.data;
             this.adventureLoaded = true;
-            this.fillRulesAndFreeEquipment(response.data);
+            if(!this.unidentifiedUser) this.fillRulesAndFreeEquipment(response.data);
           });
       }
     },
@@ -1008,7 +1144,10 @@ export default {
       return "logoF1.png";
     },
     seeProfile: function (adventureId) {
-      this.$router.push("/adventure/" + this.email + "/" + adventureId);
+      if(!this.unidentifiedUser)
+        this.$router.push("/adventure/" + this.email + "/" + adventureId);
+      else
+        this.$router.push('/adventure/' + adventureId);
     },
     bookAdventure: function (adventureId) {
       this.bookAdventureOpen = true;
@@ -1025,14 +1164,18 @@ export default {
       this.searchPrice = "";
       this.searchMaxPeople = "";
       this.searchResultDisplay = false;
-      this.getAdventures();
+      this.searchName = "";
+      if(!this.unidentifiedUser) this.getAdventures();
     },
   },
   computed: {
     sortedAdventures: function () {
+      if(!this.unidentifiedUser){
       if (this.sortBy == "") return this.filterList(this.adventureDtos);
       else {
         return this.filterList(this.sortedArray);
+      }}else{
+        return this.searchAdventuresUnidentified;
       }
     },
     sortedArray: function () {
@@ -1060,6 +1203,19 @@ export default {
         return 0;
       });
       return sortedEntities;
+    },
+    searchAdventuresUnidentified: function () {
+      var temp = this.adventureDtos.filter((adventure) => {
+        return adventure.name.toUpperCase().match(this.searchName) && 
+               adventure.address.streetAndNum.toUpperCase().match(this.searchAddress) &&
+               adventure.address.city.toUpperCase().match(this.searchCity) &&
+               adventure.address.country.toUpperCase().match(this.searchCountry) && 
+               (!parseFloat(this.searchPrice) || adventure.price < this.searchPrice) &&
+               (!parseInt(this.searchMaxPeople) || adventure.maxPeople > this.searchMaxPeople) &&
+               (!parseFloat(this.searchRating) || adventure.instructorRating > this.searchRating);
+      });
+
+      return temp;
     },
   },
 };

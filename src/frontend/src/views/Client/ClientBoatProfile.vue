@@ -1,8 +1,9 @@
 <template>
 
-  <ClientNavbar v-if="role=='CLIENT'" />
-  <AdminNavbar v-else :username=email />
- 
+  <ClientNavbar v-if="role=='CLIENT' && this.email" />
+  <AdminNavbar v-if="role=='ADMIN' && this.email"  :username=email />
+  <Nav v-if="!email" />
+  
   <BookBoat :bookingProcess="false" />
 </template>
 
@@ -10,16 +11,18 @@
 import ClientNavbar from "./ClientNavbar";
 import BookBoat from "./BookBoat";
 import AdminNavbar from "../Admin/AdminNav.vue"
+import Nav from "../Nav.vue"
 
 export default {
   components: {
     ClientNavbar,
     BookBoat,
-    AdminNavbar
+    AdminNavbar,
+    Nav
   },
   data() {
     return {
-      role:localStorage.role,
+      role: localStorage.role,
       email: '',
     };
   },
