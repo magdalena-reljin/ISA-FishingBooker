@@ -1,6 +1,6 @@
 <template>
   <template v-if="!bookCabinOpen">
-    <div v-if="role == 'CLIENT'" class="header">
+    <div v-if="role == 'CLIENT' && !unidentifiedUser" class="header">
       <!-- search-->
       <form class="was-validated" v-if="!reservationProcess">
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
@@ -383,8 +383,128 @@
       <!--filter-->
     </div>
     
+    <div v-if="role != 'CLIENT' || unidentifiedUser" class="header">
+      <!-- search-->
+      <form v-if="!reservationProcess">
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Search cabins
+        </h1>
+        <br />
+        <div style="padding-left: 7.2%; width: 100%" class="row">
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="NAME"
+              :value="searchName"
+              @input="searchName = $event.target.value.toUpperCase()"
+            /> 
+          </div>
 
-    <hr v-if="role == 'CLIENT'" />
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="ADDRESS"
+              :value="searchAddress"
+              @input="searchAddress = $event.target.value.toUpperCase()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              type="text"
+              placeholder="CITY"
+              :value="searchCity"
+              @input="searchCity = $event.target.value.toUpperCase()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="
+                height: 90%;
+                width: 110%;
+                padding-left: 5%;
+                background-color: #fff;
+              "
+              placeholder="COUNTRY"
+              :value="searchCountry"
+              @input="searchCountry = $event.target.value.toUpperCase()"
+            />
+          </div>
+
+          <div class="col">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="PRICE PER DAY"
+              :value="searchPrice"
+              @input="searchPrice = $event.target.value"
+            />
+          </div>
+
+          <div class="col">
+          <select
+             style="height: 90%; width: 110%; color: #5f7280;"
+            v-model="searchRating"
+            class="form-select rounded-pill"
+            aria-label="Default select example"
+            placeholder="Rating"
+          >
+            <option  disabled value="">RATING</option>
+            <option v-bind:value="5">FIVE STARS</option>
+            <option v-bind:value="4">FOUR STARS</option>
+            <option v-bind:value="3">THREE STARS</option>
+            <option v-bind:value="2">TWO STARS</option>
+            <option v-bind:value="1">ONE STAR</option>
+          </select>
+          </div>
+
+          <div class="col">
+            <button
+              @click="resetSearch()"
+              style="
+                height: 90%;
+                width: 110%;
+                background-color: #0b477b;
+                color: white;
+              "
+              type="button"
+              class="btn rounded-pill"
+              :disabled="isResetDisabled()"
+            >
+              RESET SEARCH
+            </button>
+          </div>
+        </div>
+      </form>
+      <!--search-->
+    </div>
+
+    <hr v-if="role == 'CLIENT' || unidentifiedUser" />
 
     <template v-if="!cabinsLoaded">
       <h3>Loading...</h3>
@@ -537,6 +657,7 @@ export default {
     showReservationForm: Function,
     startDate: Date,
     endDate: Date,
+    unidentifiedUser: Boolean
   },
   data() {
     return {
@@ -603,6 +724,7 @@ export default {
       filterAdditionalServices: [],
       rules: [],
       filterAdditionalServicesOptions: [],
+      searchName: "",
     };
   },
   mounted() {
@@ -881,7 +1003,8 @@ export default {
         this.searchPrice === "" &&
         this.end == null &&
         this.searchNumberOfRooms === "" &&
-        this.searchNumberOfBeds === ""
+        this.searchNumberOfBeds === "" &&
+        this.searchName === ""
       )
         return true;
       return false;
@@ -910,7 +1033,7 @@ export default {
         axios.get("http://localhost:8081/cabins/getAll").then((response) => {
           this.cabinDtos = response.data;
           this.cabinsLoaded = true;
-          this.fillRulesAndServices(response.data);
+          if(!this.unidentifiedUser) this.fillRulesAndServices(response.data);
         });
       }
     },
@@ -950,14 +1073,18 @@ export default {
       this.searchNumberOfBeds = "";
       this.searchNumberOfRooms = "";
       this.searchResultDisplay = false;
-      this.getCabins();
+      this.searchName = "";
+      if(!this.unidentifiedUser) this.getCabins();
     },
   },
   computed: {
     sortedCabins: function () {
+      if(!this.unidentifiedUser){
       if (this.sortBy == "") return this.filterList(this.cabinDtos);
       else {
         return this.filterList(this.sortedArray);
+      }}else{
+        return this.searchCabinsUnidentified;
       }
     },
     sortedArray: function () {
@@ -985,6 +1112,18 @@ export default {
         return 0;
       });
       return sortedEntities;
+    },
+    searchCabinsUnidentified: function () {
+      var temp = this.cabinDtos.filter((cabin) => {
+        return cabin.name.toUpperCase().match(this.searchName) && 
+               cabin.addressDto.streetAndNum.toUpperCase().match(this.searchAddress) &&
+               cabin.addressDto.city.toUpperCase().match(this.searchCity) &&
+               cabin.addressDto.country.toUpperCase().match(this.searchCountry) && 
+               (!parseFloat(this.searchRating) || cabin.rating > this.searchRating) && 
+               (!parseFloat(this.searchPrice) || cabin.price < this.searchPrice);
+      });
+
+      return temp;
     },
   },
 };

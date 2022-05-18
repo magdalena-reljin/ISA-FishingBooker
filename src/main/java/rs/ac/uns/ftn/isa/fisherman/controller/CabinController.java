@@ -64,7 +64,6 @@ public class CabinController {
         CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
         return new ResponseEntity<>(cabin,HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('CLIENT')|| hasRole('ADMIN')")
     @PostMapping("/findByNameClient")
     public ResponseEntity<CabinDto> findByNameClient(@RequestBody CabinDto cabinDto){
         CabinDto cabin= cabinMapper.cabinToCabinDto(cabinService.findByName(cabinDto.getName()));
@@ -86,7 +85,7 @@ public class CabinController {
         cabinService.edit(cabin,deleteOldImages);
         return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('CLIENT')|| hasRole('ADMIN')")
+
     @GetMapping("/getAll")
     public ResponseEntity<Set<CabinDto>> getAll(){
         Set<CabinDto> cabins=new HashSet<>();

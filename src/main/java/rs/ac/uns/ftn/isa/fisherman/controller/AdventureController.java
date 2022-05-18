@@ -64,7 +64,6 @@ public class AdventureController {
         return new ResponseEntity<>(adventures, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CLIENT') || hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<Set<AdventureDto>> getAll(){
         Set<AdventureDto> adventures=new HashSet<>();
@@ -116,7 +115,6 @@ public class AdventureController {
         return new ResponseEntity<>(adventureService.canBeEditedOrDeleted(id),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CLIENT')|| hasRole('ADMIN')")
     @PostMapping("/findById")
     public ResponseEntity<AdventureDto> findById(@RequestBody AdventureDto adventureDto){
         Adventure adventure = adventureService.findById(adventureDto.getId());
