@@ -142,7 +142,7 @@
       <!--location-->
       <template v-if="locationOpen">
         <form>
-           <hr>
+          <hr />
           <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
             Choose location
           </h1>
@@ -232,8 +232,8 @@
       </template>
       <!--location-->
       <!-- sort -->
-      <form v-if="adventureDtos.length!=0">
-         <hr>
+      <form v-if="adventureDtos.length != 0">
+        <hr />
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Sort adventures
         </h1>
@@ -246,7 +246,10 @@
             <button
               type="button"
               @click="sort('name')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'name' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Name
             </button>
@@ -256,7 +259,10 @@
             <button
               type="button"
               @click="sort('location')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'location' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Location
             </button>
@@ -266,17 +272,33 @@
             <button
               type="button"
               @click="sort('instructorRating')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'instructorRating' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Rating
+            </button>
+          </div>
+
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('price')"
+              v-bind:class="[
+                sortBy === 'price' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
+            >
+              Price per hour
             </button>
           </div>
         </div>
       </form>
       <!--sort-->
       <!-- filter -->
-      <form v-if="adventureDtos.length!=0">
-         <hr>
+      <form v-if="adventureDtos.length != 0">
+        <hr />
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
           Filter adventures
         </h1>
@@ -296,9 +318,7 @@
                 Select cancelling condition
               </option>
               <option value="FREE">FREE</option>
-              <option value="NOT FREE">
-                NOT FREE
-              </option>
+              <option value="NOT FREE">NOT FREE</option>
             </select>
           </div>
 
@@ -635,73 +655,96 @@ export default {
     this.getAdventures();
   },
   methods: {
-    filterList: function(adventureDtos){
+    filterList: function (adventureDtos) {
       var adventures = [];
       adventureDtos.forEach((adventureDto) => {
-        if(this.checkAllFilters(adventureDto))
-          adventures.push(adventureDto);
+        if (this.checkAllFilters(adventureDto)) adventures.push(adventureDto);
       });
       return adventures;
     },
-    checkAllFilters: function(adventureDto){
-      if(this.checkConditionFilter(adventureDto)&&this.checkAdditionalServicesFilter(adventureDto)
-        &&this.checkRulesFilter(adventureDto)&&this.checkEquipmentFilter(adventureDto))
+    checkAllFilters: function (adventureDto) {
+      if (
+        this.checkConditionFilter(adventureDto) &&
+        this.checkAdditionalServicesFilter(adventureDto) &&
+        this.checkRulesFilter(adventureDto) &&
+        this.checkEquipmentFilter(adventureDto)
+      )
         return true;
       return false;
     },
-    checkEquipmentFilter: function(adventureDto){
-        var missingEquipment = false;
-        this.filterFreeEquipment.forEach((freeEquipment)=> {
-          if (!adventureDto.equipment.toLowerCase().includes(freeEquipment))
-              missingEquipment = true;
-        });
-        return !missingEquipment;
+    checkEquipmentFilter: function (adventureDto) {
+      var missingEquipment = false;
+      this.filterFreeEquipment.forEach((freeEquipment) => {
+        if (!adventureDto.equipment.toLowerCase().includes(freeEquipment))
+          missingEquipment = true;
+      });
+      return !missingEquipment;
     },
-    checkRulesFilter: function(adventureDto){
-        var missingRule = false;
-        this.filterRules.forEach((rule)=> {
-          if (!adventureDto.rules.toLowerCase().includes(rule))
-              missingRule = true;
-        });
-        return !missingRule;
+    checkRulesFilter: function (adventureDto) {
+      var missingRule = false;
+      this.filterRules.forEach((rule) => {
+        if (!adventureDto.rules.toLowerCase().includes(rule))
+          missingRule = true;
+      });
+      return !missingRule;
     },
-    checkAdditionalServicesFilter: function(adventureDto){
-        var additionalServicesNames = this.getAdditionalServicesNames(adventureDto.additionalServices);
-        var missingService = false;
-        this.filterAdditionalServices.forEach((additionalService)=> {
-          if (additionalServicesNames.indexOf(additionalService.toLowerCase()) === -1)
-            missingService = true;
-        });
-        return !missingService;
+    checkAdditionalServicesFilter: function (adventureDto) {
+      var additionalServicesNames = this.getAdditionalServicesNames(
+        adventureDto.additionalServices
+      );
+      var missingService = false;
+      this.filterAdditionalServices.forEach((additionalService) => {
+        if (
+          additionalServicesNames.indexOf(additionalService.toLowerCase()) ===
+          -1
+        )
+          missingService = true;
+      });
+      return !missingService;
     },
-    getAdditionalServicesNames: function(additionalServices){
-      var names = []
-      additionalServices.forEach((service)=>{
+    getAdditionalServicesNames: function (additionalServices) {
+      var names = [];
+      additionalServices.forEach((service) => {
         names.push(service.name.toLowerCase());
-      })
+      });
       return names;
     },
-    checkConditionFilter: function(adventureDto){
-      return this.filterCancellingCondition === "" || this.filterCancellingCondition===adventureDto.cancelingCondition;
+    checkConditionFilter: function (adventureDto) {
+      return (
+        this.filterCancellingCondition === "" ||
+        this.filterCancellingCondition === adventureDto.cancelingCondition
+      );
     },
     fillRulesAndFreeEquipment: function (adventureDtos) {
       adventureDtos.forEach((item) => {
         item.additionalServices.forEach((additionalService) => {
-          if (this.filterAdditionalServicesOptions.indexOf(additionalService.name.toLowerCase()) === -1) {
-            this.filterAdditionalServicesOptions.push(additionalService.name.toLowerCase());
+          if (
+            this.filterAdditionalServicesOptions.indexOf(
+              additionalService.name.toLowerCase()
+            ) === -1
+          ) {
+            this.filterAdditionalServicesOptions.push(
+              additionalService.name.toLowerCase()
+            );
           }
         });
         this.getEquipment(item.equipment).forEach((e) => {
-          var equipmentString = e.trim();  
-          if (equipmentString!==""&&this.freeEquipment.indexOf(equipmentString.toLowerCase()) === -1) {
+          var equipmentString = e.trim();
+          if (
+            equipmentString !== "" &&
+            this.freeEquipment.indexOf(equipmentString.toLowerCase()) === -1
+          ) {
             this.freeEquipment.push(equipmentString.toLowerCase());
-            }
+          }
         });
         this.getRules(item.rules).forEach((r) => {
           var ruleString = r.trim();
-          if (ruleString!==""&&this.rules.indexOf(ruleString.toLowerCase()) === -1) {
+          if (
+            ruleString !== "" &&
+            this.rules.indexOf(ruleString.toLowerCase()) === -1
+          ) {
             this.rules.push(ruleString.toLowerCase());
-            }
+          }
         });
       });
     },
@@ -721,9 +764,9 @@ export default {
     isResetFilterDisabled: function () {
       if (
         this.filterCancellingCondition === "" &&
-        this.filterRules.length==0 &&
-        this.filterFreeEquipment.length==0 &&
-        this.filterAdditionalServices.length==0
+        this.filterRules.length == 0 &&
+        this.filterFreeEquipment.length == 0 &&
+        this.filterAdditionalServices.length == 0
       )
         return true;
       return false;
@@ -821,7 +864,10 @@ export default {
         });
         return false;
       }
-      if (parseFloat(this.searchRating)<0 || parseFloat(this.searchRating)>5) {
+      if (
+        parseFloat(this.searchRating) < 0 ||
+        parseFloat(this.searchRating) > 5
+      ) {
         this.$swal.fire({
           position: "top-end",
           icon: "error",
@@ -1043,5 +1089,13 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.asc:after {
+  content: "\25B2";
+}
+
+.desc:after {
+  content: "\25BC";
 }
 </style>

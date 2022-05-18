@@ -34,7 +34,10 @@
             <button
               type="button"
               @click="sort('date')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'date' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Date
             </button>
@@ -44,7 +47,10 @@
             <button
               type="button"
               @click="sort('price')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'price' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Price
             </button>
@@ -54,7 +60,10 @@
             <button
               type="button"
               @click="sort('duration')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'duration' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Duration
             </button>
@@ -991,5 +1000,13 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.asc:after {
+  content: "\25B2";
+}
+
+.desc:after {
+  content: "\25BC";
 }
 </style>

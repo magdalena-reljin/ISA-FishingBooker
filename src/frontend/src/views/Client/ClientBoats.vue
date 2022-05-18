@@ -246,27 +246,53 @@
             <button
               type="button"
               @click="sort('name')"
-              class="form-control rounded-pill fa fa-sort"
+              v-bind:class="[
+                sortBy === 'name' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Name
             </button>
           </div>
 
           <div class="col">
-            <button type="button"
-              @click="sort('location')" class="form-control rounded-pill fa fa-sort">Location</button>
+            <button
+              type="button"
+              @click="sort('location')"
+              v-bind:class="[
+                sortBy === 'location' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
+            >
+              Location
+            </button>
           </div>
 
           <div class="col">
             <button
               type="button"
-              @click="sort('rating')"
-              class="form-control rounded-pill fa fa-sort"
+              @click="sort('instructorRating')"
+              v-bind:class="[
+                sortBy === 'instructorRating' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
             >
               Rating
             </button>
           </div>
 
+          <div class="col">
+            <button
+              type="button"
+              @click="sort('price')"
+              v-bind:class="[
+                sortBy === 'price' ? sortDirection : '',
+                'form-control rounded-pill fa fa-sort',
+              ]"
+            >
+              Price per hour
+            </button>
+          </div>
         </div>
     </form>
     <!--sort-->
