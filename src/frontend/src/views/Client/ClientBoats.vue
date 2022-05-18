@@ -474,7 +474,7 @@
 
                   <div class="row">
                     <div class="col" style="text-align: right">
-                      <template v-if="!reservationProcess">
+                      <template v-if="!reservationProcess && !searchResultDisplay">
                         <button
                           @click="
                             seeProfile(boatDto.id) &&
@@ -486,7 +486,7 @@
                           SEE PROFILE
                         </button>
                       </template>
-                      <template v-if="reservationProcess">
+                      <template v-if="reservationProcess || searchResultDisplay">
                         <button
                           @click="bookBoat(boatDto.id)"
                           type="button"
@@ -831,13 +831,23 @@ export default {
         });
         return false;
       }
+      if (parseFloat(this.searchRating)<0 || parseFloat(this.searchRating)>5) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Rating must be between 0.0 and 5.0!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
       return true;
     },
     isInt: function (n) {
-      return Number(n) === n && n % 1 === 0;
+      return !isNaN(Number(n)) && n % 1 === 0;
     },
     isFloat: function (n) {
-      return Number(n) === n && n % 1 !== 0;
+      return !isNaN(Number(n)) && n % 1 !== 0;
     },
     formatDate: function (formatDate) {
       const date = dayjs(formatDate);
@@ -927,7 +937,7 @@ export default {
     },
     back() {
       this.bookBoatOpen = false;
-      this.showReservationForm(true);
+      if (!this.searchResultDisplay) this.showReservationForm(true);
     },
     getBoats: function () {
       if (this.reservationProcess) {
@@ -966,7 +976,7 @@ export default {
     bookBoat: function (boatId) {
       this.bookBoatOpen=true;
       this.boatId=boatId;
-      this.showReservationForm(false);
+       if (!this.searchResultDisplay) this.showReservationForm(false);
     },
     resetSearch: function () {
       this.searchRating = "";
@@ -977,6 +987,8 @@ export default {
       this.searchMaxPeople = "";
       this.start = null;
       this.end = null;
+      this.searchResultDisplay = false;
+      this.getBoats();
     },
   },
   computed: {

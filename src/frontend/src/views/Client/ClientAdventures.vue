@@ -813,7 +813,17 @@ export default {
         this.$swal.fire({
           position: "top-end",
           icon: "error",
-          title: "Rating must be double precision number!",
+          title: "Rating must be between 1.0 and 5.0!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return false;
+      }
+      if (parseFloat(this.searchRating)<0 || parseFloat(this.searchRating)>5) {
+        this.$swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Rating must be between 1.0 and 5.0!",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -822,10 +832,10 @@ export default {
       return true;
     },
     isInt: function (n) {
-      return Number(n) === n && n % 1 === 0;
+      return !isNaN(Number(n)) && n % 1 === 0;
     },
     isFloat: function (n) {
-      return Number(n) === n && n % 1 !== 0;
+      return !isNaN(Number(n)) && n % 1 !== 0;
     },
     formatDate: function (formatDate) {
       const date = dayjs(formatDate);
@@ -966,7 +976,7 @@ export default {
       this.searchCountry = "";
       this.searchPrice = "";
       this.searchMaxPeople = "";
-      this.searchResultDisplay = "";
+      this.searchResultDisplay = false;
       this.getAdventures();
     },
   },

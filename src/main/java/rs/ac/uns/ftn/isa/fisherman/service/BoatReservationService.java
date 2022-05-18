@@ -61,4 +61,6 @@ public interface BoatReservationService {
     Integer countReservationsByBoatInPeriod(LocalDateTime localDateTime, LocalDateTime localDateTime1, Long id);
 
     List<BoatReservation> findReservationsByBoatToSumProfit(Long id, LocalDateTime start, LocalDateTime end);
+
+    Set<Boat> searchAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto);
 }

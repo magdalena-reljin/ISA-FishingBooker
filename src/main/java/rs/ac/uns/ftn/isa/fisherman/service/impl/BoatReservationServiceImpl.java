@@ -262,6 +262,23 @@ public class BoatReservationServiceImpl implements BoatReservationService {
     }
 
     @Override
+    public Set<Boat> searchAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto) {
+        Set<Boat> boats = new HashSet<>();
+        for(Boat availableBoat :getAvailableBoats(searchAvailablePeriodsBoatDto)){
+            if(!availableBoat.getAddress().getStreetAndNum().toLowerCase().contains(searchAvailablePeriodsBoatDto.getStreetAndNum().toLowerCase()))
+                continue;
+            if(!availableBoat.getAddress().getCity().toLowerCase().contains(searchAvailablePeriodsBoatDto.getCity().toLowerCase()))
+                continue;
+            if(!availableBoat.getAddress().getCountry().toLowerCase().contains(searchAvailablePeriodsBoatDto.getCountry().toLowerCase()))
+                continue;
+            if(availableBoat.getRating()!=0.0 && availableBoat.getRating()<searchAvailablePeriodsBoatDto.getRating())
+                continue;
+            boats.add(availableBoat);
+        }
+        return boats;
+    }
+
+    @Override
     public Set<BoatReservation> getUpcomingClientReservationsByUsername(String clientUsername) {
         return boatReservationRepository.getUpcomingClientReservations(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
     }

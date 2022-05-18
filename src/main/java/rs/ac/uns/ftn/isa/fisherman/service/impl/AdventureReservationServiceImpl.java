@@ -265,7 +265,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
                 continue;
             if(!availableAdventure.getAddress().getCountry().toLowerCase().contains(searchAvailablePeriodsAdventureDto.getCountry().toLowerCase()))
                 continue;
-            if(availableAdventure.getFishingInstructor().getRating()<searchAvailablePeriodsAdventureDto.getRating())
+            if(availableAdventure.getFishingInstructor().getRating()!=0.0 && availableAdventure.getFishingInstructor().getRating()<searchAvailablePeriodsAdventureDto.getRating())
                 continue;
             adventures.add(availableAdventure);
         }
