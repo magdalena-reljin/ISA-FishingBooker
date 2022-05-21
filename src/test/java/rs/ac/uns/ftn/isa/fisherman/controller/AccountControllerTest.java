@@ -43,7 +43,7 @@ public class AccountControllerTest {
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void testActiveAccount() throws Exception {
-        UserRequestDTO userRequestDTO = new UserRequestDTO("reljin.magdalena@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0,"",0);
+        UserRequestDTO userRequestDTO = new UserRequestDTO("isa.projekat.tim.15@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0,"",0);
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String json=objectMapper.writeValueAsString(userRequestDTO);

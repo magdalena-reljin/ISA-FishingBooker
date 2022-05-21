@@ -32,30 +32,15 @@ public class BoatReservationServiceTest {
 
     @Test
     public void testSumProfitByHours() {
-        BoatReservation firstReservation=new BoatReservation(1L, LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusHours(3),null,new PaymentInformation(120.00,20.00,100.00),
-                false,"bo@gmail.com",null,null,false);
-        BoatReservation secondReservation=new BoatReservation(2L,LocalDateTime.now().plusHours(6),
+        BoatReservation firstReservation=new BoatReservation(2L,LocalDateTime.now().plusHours(6),
                 LocalDateTime.now().plusHours(7),null,new PaymentInformation(70.00,20.00,50.00),
                 false,"bo@gmail.com",null,null,false);
-        BoatReservation thirdReservation=new BoatReservation(3L,LocalDateTime.now().plusHours(8),
+        BoatReservation secondReservation=new BoatReservation(3L,LocalDateTime.now().plusHours(8),
                 LocalDateTime.now().plusHours(9),null,new PaymentInformation(70.00,20.00,50.00),
                 false,"bo@gmail.com",null,null,false);
-        BoatReservation fourthReservation=new BoatReservation(4L,LocalDateTime.now().plusHours(11),
-                LocalDateTime.now().plusHours(3),null,new PaymentInformation(70.00,20.00,50.00),
-                false,"bo@gmail.com",null,null,false);
 
-
-        when(boatReservationRepository.findAll()).thenReturn(Arrays.asList(firstReservation,secondReservation,thirdReservation,fourthReservation));
-        when(boatReservationRepository.findReservationsInPeriodToSumProfit("bo@gmail.com",
-                LocalDateTime.now().plusHours(5),LocalDateTime.now().plusHours(10))) //zelim da pronadje samo rez u ovom intervalu i sabere profit po satu
-                .thenReturn(Arrays.asList(secondReservation,thirdReservation));
-
-
-        List<BoatReservation> reservations = boatReservationService.findReservationsToSumProfit("bo@gmail.com",
-                LocalDateTime.now().plusHours(5),LocalDateTime.now().plusHours(10));
+        List<BoatReservation> reservations = Arrays.asList(firstReservation,secondReservation);
         double profit= boatReservationService.sumProfitOfPricesCalucatedByHours(reservations,LocalDateTime.now().plusHours(5),LocalDateTime.now().plusHours(10));
-        assertThat(reservations).isNotNull();
         assertEquals(100.00,profit,0.001);
     }
     @Test

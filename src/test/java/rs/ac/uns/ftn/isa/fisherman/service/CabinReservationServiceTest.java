@@ -24,26 +24,15 @@ public class CabinReservationServiceTest {
 
     @Test
     public void testSumOwnersProfitByDays() {
-
         CabinReservation firstReservation=new CabinReservation(1L,LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),null,new PaymentInformation(120.00,20.00,100.00),
                 false,"co@gmail.com",null,null,false);
         CabinReservation secondReservation=new CabinReservation(2L,LocalDateTime.now().plusDays(3),
                 LocalDateTime.now().plusDays(4),null,new PaymentInformation(70.00,20.00,50.00),
                 false,"co@gmail.com",null,null,false);
-        CabinReservation thirdReservation=new CabinReservation(2L,LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(3),null,new PaymentInformation(70.00,20.00,50.00),
-                false,"co2@gmail.com",null,null,false);
-        when(cabinReservationRepository.findAll()).thenReturn(Arrays.asList(firstReservation,secondReservation,thirdReservation));
-        when(cabinReservationRepository.findReservationsInPeriodToSumProfit("co@gmail.com",
-                LocalDateTime.now(),LocalDateTime.now().plusDays(6)))
-                .thenReturn(Arrays.asList(firstReservation,secondReservation));
 
-
-        List<CabinReservation> reservations = reservationCabinService.findReservationsToSumProfit("co@gmail.com",
-                LocalDateTime.now(),LocalDateTime.now().plusDays(6));
+        List<CabinReservation> reservations = Arrays.asList(firstReservation,secondReservation);
         double profit= reservationCabinService.sumProfitOfPricesCalculatedByDays(reservations,LocalDateTime.now(),LocalDateTime.now().plusDays(6));
-
         assertEquals(150.00,profit,0.001);
     }
     @Test

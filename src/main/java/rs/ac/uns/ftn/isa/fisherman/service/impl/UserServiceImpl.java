@@ -142,8 +142,9 @@ public class UserServiceImpl implements UserService {
     public void acceptAccount(User user){
         user.setEnabled(true);
         userRepository.save(user);
+
         try {
-            mailService.sendMail(user.getUsername(),user.getUsername(),new AccountAcceptedInfo());
+            mailService.sendMail(user.getUsername(),"Account accepted.",new AccountAcceptedInfo());
         } catch (MessagingException e) {
              logger.error(e.toString());
         }
