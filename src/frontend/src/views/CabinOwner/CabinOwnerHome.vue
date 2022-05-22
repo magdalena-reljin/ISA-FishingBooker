@@ -1,105 +1,106 @@
 <template>
-   <CabinOwnerNav :username=email />
+  <CabinOwnerNav :username="email" />
   <div>
-   
-    <div class="header" >
+    <div class="header">
       <form>
-        <h1 style="text-align: left; color: #0b477b;  padding-left: 7.2%;">Search cabins</h1>
-        <br>
-        <div style="padding-left: 7.2%; padding-right: 7.2%; width: 100%;" class="row" >
+        <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
+          Search cabins
+        </h1>
+        <br />
+        <div
+          style="padding-left: 7.2%; padding-right: 7.2%; width: 100%"
+          class="row"
+        >
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            id="search-field"
-            placeholder="NAME"
-            :value="searchName"
-            @input="searchName = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              id="search-field"
+              placeholder="NAME"
+              :value="searchName"
+              @input="searchName = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            placeholder="STREET AND NUM"
-            :value="searchAddress"
-            @input="searchAddress = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="STREET AND NUM"
+              :value="searchAddress"
+              @input="searchAddress = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            type="text"
-            placeholder="CITY"
-            :value="searchCity"
-            @input="searchCity = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              type="text"
+              placeholder="CITY"
+              :value="searchCity"
+              @input="searchCity = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            placeholder="COUNTRY"
-            :value="searchCountry"
-            @input="searchCountry = $event.target.value.toUpperCase()"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="COUNTRY"
+              :value="searchCountry"
+              @input="searchCountry = $event.target.value.toUpperCase()"
+            />
           </div>
 
           <div class="col">
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            style="height: 90%; width:110%; padding-left: 5%;"
-            placeholder="PRICE"
-            :value="searchPrice"
-            @input="searchPrice = $event.target.value"
-          />
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              style="height: 90%; width: 110%; padding-left: 5%"
+              placeholder="PRICE"
+              :value="searchPrice"
+              @input="searchPrice = $event.target.value"
+            />
           </div>
 
           <div class="col">
-          <select
-             style="height: 90%; color: #5f7280;"
-            v-model="searchRating"
-            class="form-select rounded-pill"
-            aria-label="Default select example"
-            placeholder="Rating"
-          >
-            <option  disabled value="">RATING</option>
-            <option v-bind:value="5">FIVE STARS</option>
-            <option v-bind:value="4">FOUR STARS</option>
-            <option v-bind:value="3">THREE STARS</option>
-            <option v-bind:value="2">TWO STARS</option>
-            <option v-bind:value="1">ONE STAR</option>
-          </select>
+            <select
+              style="height: 90%; color: #5f7280"
+              v-model="searchRating"
+              class="form-select rounded-pill"
+              aria-label="Default select example"
+              placeholder="Rating"
+            >
+              <option disabled value="">RATING</option>
+              <option v-bind:value="5">FIVE STARS</option>
+              <option v-bind:value="4">FOUR STARS</option>
+              <option v-bind:value="3">THREE STARS</option>
+              <option v-bind:value="2">TWO STARS</option>
+              <option v-bind:value="1">ONE STAR</option>
+            </select>
           </div>
 
           <div class="col">
-          <button
-            @click="resetSearch()"
-            style="height: 90%; background-color: #0b477b; color: white;"
-            type="button"
-            class="btn  rounded-pill"
-          >
-            RESET SEARCH
-          </button>
+            <button
+              @click="resetSearch()"
+              style="height: 90%; background-color: #0b477b; color: white"
+              type="button"
+              class="btn rounded-pill"
+            >
+              RESET SEARCH
+            </button>
           </div>
-          
         </div>
       </form>
     </div>
 
     <!--search-->
 
-
-   <hr/>
-
+    <hr />
 
     <!-- Carousel wrapper -->
     <div
@@ -122,7 +123,7 @@
                 <div style="width: 100%; height: 95%" class="card">
                   <img
                     style="width: 100%; height: 100%"
-                    :src="require('@/assets/' + getImageUrl(index))"
+                    :src="getImageUrl(index)"
                   />
 
                   <div class="card-body">
@@ -196,18 +197,18 @@
       </div>
     </div>
     <!-- Inner -->
-
-    
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import CabinOwnerNav from './CabinOwnerNav.vue'
+import CabinOwnerNav from "./CabinOwnerNav.vue";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 export default {
   components: {
-    CabinOwnerNav
-    },
+    CabinOwnerNav,
+  },
   data() {
     return {
       email: "",
@@ -255,8 +256,8 @@ export default {
       searchPrice: "",
       searchCity: "",
       searchCountry: "",
-      
-
+      cabinImages: [],
+      defaultImage : {}
     };
   },
   mounted() {
@@ -268,17 +269,48 @@ export default {
       this.user.username = this.email;
       axios
         .get(
-          "http://localhost:8081/cabins/findCabinsByOwnersUsername/"+this.email+"/")
+          "http://localhost:8081/cabins/findCabinsByOwnersUsername/" +
+            this.email +
+            "/"
+        )
         .then((response) => {
           this.cabinDtos = response.data;
+          var imageNames = [];
+          this.cabinDtos.forEach((cabinDto) => {
+            imageNames.push(cabinDto.images[0].url);
+          })
+          this.getImages(imageNames);
           this.cabinsLoaded = true;
         });
     },
+
     getImageUrl: function (index) {
       if (this.cabinsLoaded == true) {
-        return this.filteredCabins[index].images[0].url;
+
+          var imageForReturn = require('@/assets/logoF1.png');
+
+          this.cabinImages.forEach((image) => {
+            if(image.fileName === this.filteredCabins[index].images[0].url){
+              imageForReturn = image.image;
+              }
+          });
+          console.log(imageForReturn);
+          return imageForReturn;
       }
-      return "logoF1.png";
+      return require('@/assets/logoF1.png');
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.cabinImages.push({ fileName : fileName,
+            image : img })
+          }).catch((err)=> console.log(err));
+      })
     },
     getFullAddress: function (index) {
       if (this.cabinsLoaded == true)
@@ -294,24 +326,28 @@ export default {
     seeProfile: function (cabinName) {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
-    resetSearch: function(){
-      this.searchName= ""
-      this.searchRating= ""
-      this.searchAddress= ""
-      this.searchCity= ""
-      this.searchCountry=""
-      this.searchPrice= ""
-    }
+    resetSearch: function () {
+      this.searchName = "";
+      this.searchRating = "";
+      this.searchAddress = "";
+      this.searchCity = "";
+      this.searchCountry = "";
+      this.searchPrice = "";
+    },
   },
   computed: {
     filteredCabins: function () {
       var temp = this.cabinDtos.filter((cabin) => {
-        return cabin.name.toUpperCase().match(this.searchName) && 
-               cabin.addressDto.streetAndNum.toUpperCase().match(this.searchAddress) &&
-               cabin.addressDto.city.toUpperCase().match(this.searchCity) &&
-               cabin.addressDto.country.toUpperCase().match(this.searchCountry) && 
-               cabin.rating.toString().match(this.searchRating) && 
-               cabin.price.toString().startsWith(this.searchPrice);
+        return (
+          cabin.name.toUpperCase().match(this.searchName) &&
+          cabin.addressDto.streetAndNum
+            .toUpperCase()
+            .match(this.searchAddress) &&
+          cabin.addressDto.city.toUpperCase().match(this.searchCity) &&
+          cabin.addressDto.country.toUpperCase().match(this.searchCountry) &&
+          cabin.rating.toString().match(this.searchRating) &&
+          cabin.price.toString().startsWith(this.searchPrice)
+        );
       });
 
       return temp;
