@@ -69,6 +69,8 @@ public class QuickReservationCabinController {
     @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('CABINOWNER')")
     public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        if(!ownersReportDto.isSuccess())
+            penaltyService.addPenalty(ownersReportDto.getClientUsername());
         QuickReservationCabin reservation=quickReservationCabinService.findReservationById(reservationId);
         CabinQuickReservationReport reservationReport=new CabinQuickReservationReport(ownersReportDto.getId(),
                 ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),

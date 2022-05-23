@@ -153,8 +153,9 @@ import VueModality from 'vue-modality-v3'
            this.$refs.sendResponse.open()
        },
        sendEmail: function(){
+         var giveClientPenalty = false;
          if(this.selectedPenalty ==0){
-           //SETOVATI PENAL KLIJENTUUUU
+           giveClientPenalty = true;
          }
                  this.loader = this.$loading.show({
                     container: this.fullPage ? null : this.$refs.formContainer,
@@ -165,8 +166,8 @@ import VueModality from 'vue-modality-v3'
                      id:this.id,
                     comment: this.comment,
                     ownersUsername: this.ownersUsername,
-                    clientUsername: this.clientUsername
-
+                    clientUsername: this.clientUsername,
+                    success: giveClientPenalty
                })
             .then(response => 
             {

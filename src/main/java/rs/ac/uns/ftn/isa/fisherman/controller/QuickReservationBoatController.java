@@ -75,6 +75,8 @@ public class QuickReservationBoatController {
     @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        if(!ownersReportDto.isSuccess())
+            penaltyService.addPenalty(ownersReportDto.getClientUsername());
         QuickReservationBoat reservation=quickReservationBoatService.getById(reservationId);
         BoatQuickReservationReport reservationReport=new BoatQuickReservationReport(ownersReportDto.getId(),
                 ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),

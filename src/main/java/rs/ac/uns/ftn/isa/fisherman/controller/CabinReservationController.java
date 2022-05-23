@@ -136,6 +136,8 @@ public class CabinReservationController {
     @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('CABINOWNER')")
     public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        if(!ownersReportDto.isSuccess())
+            penaltyService.addPenalty(ownersReportDto.getClientUsername());
         CabinReservation reservation=reservationCabinService.getById(reservationId);
         CabinOwnersReservationReport reservationReport=new CabinOwnersReservationReport(ownersReportDto.getId(),
                 ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),

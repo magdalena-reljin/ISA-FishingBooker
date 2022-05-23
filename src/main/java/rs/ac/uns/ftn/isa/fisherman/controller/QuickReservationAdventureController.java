@@ -65,6 +65,8 @@ public class QuickReservationAdventureController {
      @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
     public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+         if(!ownersReportDto.isSuccess())
+             penaltyService.addPenalty(ownersReportDto.getClientUsername());
         QuickReservationAdventure reservation= quickReservationAdventureService.findById(reservationId);
         InstructorQuickReport reservationReport=new InstructorQuickReport(ownersReportDto.getId(),
                 ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),
