@@ -7,16 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AddNewEvaluationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
-import rs.ac.uns.ftn.isa.fisherman.model.BoatEvaluation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/boatEvaluation", produces = MediaType.APPLICATION_JSON_VALUE)

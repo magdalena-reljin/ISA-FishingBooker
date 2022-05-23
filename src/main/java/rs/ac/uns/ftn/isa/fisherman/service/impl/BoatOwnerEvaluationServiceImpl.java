@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.AddNewEvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatOwnerEvaluation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinOwnerEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatOwnerEvaluationRepository;
