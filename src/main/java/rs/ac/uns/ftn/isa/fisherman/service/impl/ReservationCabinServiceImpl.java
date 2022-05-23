@@ -199,6 +199,12 @@ public class ReservationCabinServiceImpl implements ReservationCabinService {
         return cabins;
     }
 
+    @Override
+    public boolean cabinNotFreeForQuickReservationInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return cabinReservationRepository.cabinReservedInPeriod(id, startDate, endDate) ||
+                quickReservationCabinService.cabinHasTakenQuickReservationInPeriod(id, startDate, endDate);
+    }
+
     public long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
         long numberOfOverlappingDates=0;
         LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));

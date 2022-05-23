@@ -98,8 +98,7 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto) {
-
-        if(adventureReservationService.fishingInstructorNotFree(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
+        if(adventureReservationService.fishingInstructorNotFreeForQuickReservation(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
             return false;
         QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(quickReservationAdventureDto.getId());
         quickReservationAdventure.setClient(clientService.findByUsername(quickReservationAdventureDto.getClientUsername()));
@@ -182,6 +181,11 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
         QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(reservationId);
         quickReservationAdventure.setEvaluated(true);
         quickReservationAdventureRepository.save(quickReservationAdventure);
+    }
+
+    @Override
+    public boolean instructorHasTakenReservationInPeriod(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationAdventureRepository.instructorHasTakenReservationInPeriod(instructorUsername, startDate, endDate);
     }
 
     private void SendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {

@@ -130,6 +130,11 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
         return quickReservationCabinRepository.getById(reservationId);
     }
 
+    @Override
+    public boolean cabinHasTakenQuickReservationInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationCabinRepository.cabinHasTakenQuickReservationInPeriod(id, startDate, endDate);
+    }
+
     private long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){
         long numberOfOverlappingDates=0;
         LocalDate start = Collections.max(Arrays.asList(startReport.toLocalDate(), startReservation.toLocalDate()));
@@ -151,7 +156,7 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Override
     public boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto) {
         QuickReservationCabin quickReservationCabin = quickReservationCabinRepository.getById(quickReservationCabinDto.getId());
-        if(reservationCabinService.cabinNotFreeInPeriod(quickReservationCabin.getCabin().getId(), quickReservationCabin.getStartDate(), quickReservationCabin.getEndDate()))
+        if(reservationCabinService.cabinNotFreeForQuickReservationInPeriod(quickReservationCabin.getCabin().getId(), quickReservationCabin.getStartDate(), quickReservationCabin.getEndDate()))
             return false;
         quickReservationCabin.setClient(clientService.findByUsername(quickReservationCabinDto.getClientUsername()));
         quickReservationCabinRepository.save(quickReservationCabin);
