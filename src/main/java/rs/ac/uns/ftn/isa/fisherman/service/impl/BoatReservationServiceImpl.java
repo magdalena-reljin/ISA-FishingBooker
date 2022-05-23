@@ -75,9 +75,11 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         LocalDateTime currentDate= LocalDateTime.now();
         return boatReservationRepository.getPresentByBoatId(boatId,currentDate);
     }
-    private boolean ownerIsNotAvailable(String ownersUsermane, LocalDateTime start, LocalDateTime end){
-        if(boatReservationRepository.ownerIsNotAvailable(ownersUsermane, start, end)) return true;
-        if(quickReservationBoatService.ownerIsNotAvailableQuickResrvation(ownersUsermane, start, end)) return true;
+
+    @Override
+    public boolean ownerIsNotAvailable(String ownersUsername, LocalDateTime start, LocalDateTime end){
+        if(boatReservationRepository.ownerIsNotAvailable(ownersUsername, start, end)) return true;
+        if(quickReservationBoatService.ownerIsNotAvailableQuickResrvation(ownersUsername, start, end)) return true;
         return false;
     }
     private boolean validateForReservation(BoatReservation boatReservation,Client client){
@@ -330,6 +332,7 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         BoatReservation boatReservation = boatReservationMapper.boatReservationDtoToBoatReservation(boatReservationDto);
         boatReservation.getBoat().setBoatOwner(boatOwner);
         boatReservation.setClient(clientService.findByUsername(boatReservationDto.getClientUsername()));
+        boatReservation.setNeedsCaptainService(boatReservationDto.getNeedsCaptainServices());
         return boatReservation;
     }
 }

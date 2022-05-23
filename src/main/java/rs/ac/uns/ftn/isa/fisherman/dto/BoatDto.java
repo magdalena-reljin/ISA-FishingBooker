@@ -23,6 +23,7 @@ public class BoatDto {
     private String cancelingCondition;
     private double rating;
     private boolean subscription;
+    private boolean ownerAvailableForAdditionalService;
 
     public BoatDto(){}
 
@@ -46,6 +47,14 @@ public class BoatDto {
         this.additionalServices = additionalServices;
         this.cancelingCondition = cancelingCondition;
         this.rating = rating;
+    }
+
+    public boolean isOwnerAvailableForAdditionalService() {
+        return ownerAvailableForAdditionalService;
+    }
+
+    public void setOwnerAvailableForAdditionalService(boolean ownerAvailableForAdditionalService) {
+        this.ownerAvailableForAdditionalService = ownerAvailableForAdditionalService;
     }
 
     public boolean isSubscription() {
