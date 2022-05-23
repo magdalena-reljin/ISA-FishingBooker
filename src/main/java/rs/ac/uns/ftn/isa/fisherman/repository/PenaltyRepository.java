@@ -1,10 +1,13 @@
 package rs.ac.uns.ftn.isa.fisherman.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.Penalty;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
@@ -14,4 +17,9 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
 
     @Query(value="SELECT * FROM penalties where users_id=:users_id",nativeQuery = true)
     Set<Penalty> getUserPenalties(@Param("users_id")Long usersId);
+
+    @Transactional
+    @Modifying
+    @Query(value="DELETE FROM penalties where date<:date",nativeQuery = true)
+    void deleteOldPenalties(@Param("date")LocalDateTime withDayOfMonth);
 }
