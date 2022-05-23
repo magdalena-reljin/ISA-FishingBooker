@@ -10,11 +10,9 @@ import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationCabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnersQuickReservationReportService;
-import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +27,8 @@ public class QuickReservationCabinController {
     private CabinOwnersQuickReservationReportService cabinOwnersQuickReservationReportService;
     @Autowired
     private PenaltyService penaltyService;
+    @Autowired
+    private CabinReservationCancellationService cabinReservationCancellationService;
     private final QuickReservationCabinMapper quickReservationCabinMapper=new QuickReservationCabinMapper();
 
     @PostMapping("/ownerCreates")
@@ -119,5 +119,18 @@ public class QuickReservationCabinController {
         for(QuickReservationCabin quickReservationCabin: quickReservationCabinService.getClientQuickReservationsHistory(userRequestDTO.getUsername()))
             quickReservationCabinDtos.add(quickReservationCabinMapper.quickReservationToDto(quickReservationCabin));
         return new ResponseEntity<>(quickReservationCabinDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation (@RequestBody QuickReservationCabinDto cabinReservationDto) {
+        if(cabinReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Less than 3 days left until start!", HttpStatus.BAD_REQUEST);
+        if(!quickReservationCabinService.quickReservationExists(cabinReservationDto.getCabinDto().getId(), cabinReservationDto.getStartDate(), cabinReservationDto.getEndDate()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Reservation doesn't exist or it is already cancelled!", HttpStatus.BAD_REQUEST);
+        if(cabinReservationCancellationService.addCancellationQuickReservation(cabinReservationDto))
+            return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
     }
 }

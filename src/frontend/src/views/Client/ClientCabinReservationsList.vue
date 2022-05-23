@@ -274,7 +274,7 @@
                             :disabled="
                               !possibleCancellation(
                                 cabinReservationDto.startDate
-                              ) || cabinReservationDto.discount
+                              ) 
                             "
                           >
                             CANCEL
@@ -851,9 +851,14 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
+
+      var path = "reservationCabin";
+      if(this.cabinForCancellation.discount)
+        path = "quickReservationCabin";
+      console.log(path)
       axios
         .post(
-          "http://localhost:8081/reservationCabin/cancelReservation",
+          "http://localhost:8081/" + path + "/cancelReservation",
           this.cabinForCancellation,
           {}
         )
