@@ -661,7 +661,21 @@ const routes = [
     path: '/evaluation/:email/:entity/:reservationId',
     name: 'ClientEvaluationForm',
     component: ClientEvaluationForm,
-    props: true,
+    props: { quick: false },
+    beforeEnter: (to, from,next) => {
+      store.dispatch('refreshToken')
+      if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){
+           next('/')
+         }else {
+           next()
+         }
+       } 
+  },
+  {
+    path: '/quickEvaluation/:email/:entity/:reservationId',
+    name: 'ClientEvaluationQuickReservationForm',
+    component: ClientEvaluationForm,
+    props: { quick: true },
     beforeEnter: (to, from,next) => {
       store.dispatch('refreshToken')
       if(localStorage.token == 'empty' || localStorage.role !='CLIENT' || localStorage.logged == false){

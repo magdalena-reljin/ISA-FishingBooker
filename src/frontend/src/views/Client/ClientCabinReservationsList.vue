@@ -781,6 +781,11 @@ export default {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
     evaluateReservation: function (reservationDto) {
+       if(reservationDto.discount)
+      this.$router.push(
+        "/quickEvaluation/" + this.email + "/" + "cabin/" + reservationDto.id
+      );
+      else
       this.$router.push(
         "/evaluation/" + this.email + "/" + "cabin/" + reservationDto.id
       );

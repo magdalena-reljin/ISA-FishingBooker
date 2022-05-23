@@ -4,13 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.AdventureReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionAdventureInfo;
-import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
-import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationAdventure;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
@@ -173,6 +170,18 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     @Override
     public List<QuickReservationAdventure> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
         return quickReservationAdventureRepository.findReservationsInPeriodToSumProfit(username,localDateTime,localDateTime1);
+    }
+
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long reservationId) {
+        return quickReservationAdventureRepository.getById(reservationId).isEvaluated();
+    }
+
+    @Override
+    public void markThatReservationIsEvaluated(Long reservationId) {
+        QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(reservationId);
+        quickReservationAdventure.setEvaluated(true);
+        quickReservationAdventureRepository.save(quickReservationAdventure);
     }
 
     private void SendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {

@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
 
 @RestController
 @RequestMapping(value = "/instructors", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,6 +23,8 @@ public class FishingInstructorController {
     private FishingInstructorService fishingInstructorService;
     @Autowired
     private AdventureReservationService adventureReservationService;
+    @Autowired
+    private QuickReservationAdventureService quickReservationAdventureService;
     @Autowired
     private FishingInstructorEvaluationService fishingInstructorEvaluationService;
     private final FishingInstructorMapper fishingInstructorMapper=new FishingInstructorMapper();
@@ -44,16 +47,17 @@ public class FishingInstructorController {
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/addEvaluation")
     public ResponseEntity<String> addEvaluation(@RequestBody AddNewFishingInstructorEvaluationDto addNewFishingInstructorEvaluationDto){
-        if(!adventureReservationService.checkIfReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId())){
-            fishingInstructorEvaluationService.addEvaluation(addNewFishingInstructorEvaluationDto);
-            adventureReservationService.markThatReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId());
-            return new ResponseEntity<>("Evaluation successfully added.", HttpStatus.OK);
-        }else{
+        if(!addNewFishingInstructorEvaluationDto.isQuickReservation() && adventureReservationService.checkIfReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId())){
             return new ResponseEntity<>("Reservation already has evaluation!", HttpStatus.BAD_REQUEST);
         }
+        if(addNewFishingInstructorEvaluationDto.isQuickReservation() && quickReservationAdventureService.checkIfReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId())){
+            return new ResponseEntity<>("Quick reservation already has evaluation!", HttpStatus.BAD_REQUEST);
+        }
+        fishingInstructorEvaluationService.addEvaluation(addNewFishingInstructorEvaluationDto);
+        if(!addNewFishingInstructorEvaluationDto.isQuickReservation())
+            adventureReservationService.markThatReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId());
+        else
+            quickReservationAdventureService.markThatReservationIsEvaluated(addNewFishingInstructorEvaluationDto.getReservationId());
+        return new ResponseEntity<>("Evaluation successfully added.", HttpStatus.OK);
     }
-
-
-
-
 }
