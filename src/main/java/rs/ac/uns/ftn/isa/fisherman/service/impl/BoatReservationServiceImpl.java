@@ -82,6 +82,13 @@ public class BoatReservationServiceImpl implements BoatReservationService {
         if(quickReservationBoatService.ownerIsNotAvailableQuickResrvation(ownersUsername, start, end)) return true;
         return false;
     }
+
+    @Override
+    public boolean boatNotFreeForQuickReservation(Long id, LocalDateTime startDate, LocalDateTime endDate) {
+        return boatReservationRepository.boatReservedInPeriod(id, startDate, endDate) ||
+                quickReservationBoatService.boatHasTakenQuickReservationInPeriod(id, startDate, endDate);
+    }
+
     private boolean validateForReservation(BoatReservation boatReservation,Client client){
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;

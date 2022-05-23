@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.BoatReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
 
 public interface BoatReservationCancellationService {
 
@@ -8,4 +9,5 @@ public interface BoatReservationCancellationService {
 
     boolean clientHasCancellationForBoatInPeriod(BoatReservationDto boatReservationDto);
 
+    boolean addCancellationQuickReservation(QuickReservationBoatDto quickReservationBoatDto);
 }

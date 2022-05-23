@@ -63,4 +63,7 @@ public interface QuickReservationBoatRepository extends JpaRepository<QuickReser
 
     @Query(value="SELECT CASE WHEN  COUNT(*) > 0 THEN true ELSE false END FROM  quick_reservation_boat where users_id=:user_id and (:currentDate <= start_date) ",nativeQuery = true)
     boolean checkIfClientHasFutureReservations(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="SELECT CASE WHEN  COUNT(r) > 0 THEN true ELSE false END FROM quick_reservation_boat r where r.boat_id=:boat_id and r.start_date<=:endDate and r.end_date>=:startDate and r.users_id IS NOT NULL",nativeQuery = true)
+    boolean boatHasTakenQuickReservationInPeriod(@Param("boat_id")Long boatId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

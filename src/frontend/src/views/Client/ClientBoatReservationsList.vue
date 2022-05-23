@@ -330,7 +330,7 @@
                             :disabled="
                               !possibleCancellation(
                                 boatReservationDto.startDate
-                              ) || boatReservationDto.discount
+                              ) 
                             "
                           >
                             CANCEL
@@ -909,9 +909,12 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
+      var path = "reservationBoat";
+      if(this.boatForCancellation.discount)
+        path = "quickReservationBoat";
       axios
         .post(
-          "http://localhost:8081/reservationBoat/cancelReservation",
+          "http://localhost:8081/"+ path + "/cancelReservation",
           this.boatForCancellation,
           {}
         )
