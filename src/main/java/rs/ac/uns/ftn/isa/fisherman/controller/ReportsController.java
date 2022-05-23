@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.OwnersReportMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.OwnersReport;
 import rs.ac.uns.ftn.isa.fisherman.service.OwnersReportService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,8 @@ import java.util.Set;
 public class ReportsController {
     @Autowired
     private OwnersReportService ownersReportService;
+    @Autowired
+    private PenaltyService penaltyService;
     private OwnersReportMapper ownersReportMapper= new OwnersReportMapper();
     @GetMapping("/getAllReports")
     @PreAuthorize("hasRole('ADMIN')")
@@ -33,12 +36,10 @@ public class ReportsController {
     @PostMapping(value= "/sendReviewResponse")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> sendReviewResponse(@RequestBody OwnersReportDto ownersReportDto) {
+        if(ownersReportDto.isSuccess())
+            penaltyService.addPenalty(ownersReportDto.getClientUsername());
         ownersReportService.sendReviewResponse(ownersReportDto.getClientUsername(),ownersReportDto.getOwnersUsername(),ownersReportDto.getComment());
         ownersReportService.setReviewStatus(ownersReportDto.getId());
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
-
-
-
 }

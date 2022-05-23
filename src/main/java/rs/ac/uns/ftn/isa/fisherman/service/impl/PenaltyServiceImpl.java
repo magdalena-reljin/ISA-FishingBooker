@@ -19,14 +19,22 @@ public class PenaltyServiceImpl implements PenaltyService {
     private ClientService clientService;
 
     public void addPenalty(String clientUsername){
+        deleteOldPenalties();
         penaltyRepository.save(new Penalty(null, LocalDateTime.now(), clientService.findByUsername(clientUsername)));
     }
 
     public boolean isUserBlockedFromReservation(String username){
+        deleteOldPenalties();
         return penaltyRepository.isUserBlockedFromReservation(clientService.findByUsername(username).getId());
     }
 
     public Set<Penalty> getUserPenalties(String username){
+        deleteOldPenalties();
         return penaltyRepository.getUserPenalties(clientService.findByUsername(username).getId());
+    }
+
+    @Override
+    public void deleteOldPenalties() {
+        penaltyRepository.deleteOldPenalties(LocalDateTime.now().withDayOfMonth(1));
     }
 }

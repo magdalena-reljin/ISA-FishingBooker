@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationBoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnersQuickReservationReportService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
 
 import java.util.HashSet;
@@ -28,6 +29,8 @@ public class QuickReservationBoatController {
     private BoatOwnerService boatOwnerService;
     @Autowired
     private BoatOwnersQuickReservationReportService boatOwnersQuickReservationReportService;
+    @Autowired
+    private PenaltyService penaltyService;
     private final QuickReservationBoatMapper quickReservationBoatMapper= new QuickReservationBoatMapper();
 
     @PostMapping("/ownerCreates/{username:.+}/")
@@ -72,6 +75,8 @@ public class QuickReservationBoatController {
     @PostMapping("/ownerCreatesReview/{reservationId}")
     @PreAuthorize("hasRole('BOATOWNER')")
     public ResponseEntity<String> writeAReview (@PathVariable("reservationId") Long reservationId, @RequestBody OwnersReportDto ownersReportDto) {
+        if(!ownersReportDto.isSuccess())
+            penaltyService.addPenalty(ownersReportDto.getClientUsername());
         QuickReservationBoat reservation=quickReservationBoatService.getById(reservationId);
         BoatQuickReservationReport reservationReport=new BoatQuickReservationReport(ownersReportDto.getId(),
                 ownersReportDto.isBadComment(),ownersReportDto.getComment(),ownersReportDto.getOwnersUsername(),
@@ -95,6 +100,8 @@ public class QuickReservationBoatController {
     @PostMapping("/makeQuickReservation")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationBoatDto quickReservationBoatDto) {
+        if(penaltyService.isUserBlockedFromReservation(quickReservationBoatDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(quickReservationBoatService.makeQuickReservation(quickReservationBoatDto)) {
             return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
         }else {
