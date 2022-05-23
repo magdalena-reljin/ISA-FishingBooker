@@ -7,15 +7,26 @@ public class AddNewEvaluationDto {
     private String commentForTheEntityOwner;
     private Double gradeForTheEntityOwner;
     private String clientUsername;
+    private boolean quickReservation;
 
-    public AddNewEvaluationDto(Long reservationId, String commentForTheEntity, Double gradeForTheEntity, String commentForTheEntityOwner, Double gradeForTheEntityOwner, String clientUsername) {
+    public AddNewEvaluationDto(Long reservationId, String commentForTheEntity, Double gradeForTheEntity, String commentForTheEntityOwner, Double gradeForTheEntityOwner, String clientUsername, boolean quickReservation) {
         this.reservationId = reservationId;
         this.commentForTheEntity = commentForTheEntity;
         this.gradeForTheEntity = gradeForTheEntity;
         this.commentForTheEntityOwner = commentForTheEntityOwner;
         this.gradeForTheEntityOwner = gradeForTheEntityOwner;
         this.clientUsername = clientUsername;
+        this.quickReservation = quickReservation;
     }
+
+    public boolean isQuickReservation() {
+        return quickReservation;
+    }
+
+    public void setQuickReservation(boolean quickReservation) {
+        this.quickReservation = quickReservation;
+    }
+
     public AddNewEvaluationDto(){}
 
     public Long getReservationId() {

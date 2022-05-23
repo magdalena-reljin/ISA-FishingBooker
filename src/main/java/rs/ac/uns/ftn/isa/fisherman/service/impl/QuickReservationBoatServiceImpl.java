@@ -8,7 +8,6 @@ import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.BoatReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionBoatInfo;
-import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
@@ -192,6 +191,18 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     @Override
     public List<QuickReservationBoat> findReservationsToSumProfitByBoat(Long id, LocalDateTime start, LocalDateTime end) {
         return quickReservationBoatRepository.findReservationsInPeriodByBoatToSumProfit(id,start,end);
+    }
+
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long reservationId) {
+        return quickReservationBoatRepository.getById(reservationId).isEvaluated();
+    }
+
+    @Override
+    public void markThatReservationIsEvaluated(Long reservationId) {
+        QuickReservationBoat quickReservationBoat = quickReservationBoatRepository.getById(reservationId);
+        quickReservationBoat.setEvaluated(true);
+        quickReservationBoatRepository.save(quickReservationBoat);
     }
 
 

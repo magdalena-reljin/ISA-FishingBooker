@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerEvaluationService;
 import rs.ac.uns.ftn.isa.fisherman.service.BoatReservationService;
+import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,20 +27,27 @@ public class BoatEvaluationController {
     @Autowired
     private BoatEvaluationService boatEvaluationService;
     @Autowired
+    private QuickReservationBoatService quickReservationBoatService;
+    @Autowired
     private BoatOwnerEvaluationService boatOwnerEvaluationService;
 
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/addEvaluation")
     public ResponseEntity<String> addEvaluation(@RequestBody AddNewEvaluationDto addNewEvaluationDto){
-        if(!boatReservationService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())){
-            boatEvaluationService.addEvaluation(addNewEvaluationDto);
-            boatOwnerEvaluationService.addEvaluation(addNewEvaluationDto);
-            boatReservationService.markThatReservationIsEvaluated(addNewEvaluationDto.getReservationId());
-            return new ResponseEntity<>("Evaluations successfully added.", HttpStatus.OK);
-        }else{
+        if(!addNewEvaluationDto.isQuickReservation() && boatReservationService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())) {
             return new ResponseEntity<>("Reservation already has evaluations!", HttpStatus.BAD_REQUEST);
         }
+        if(addNewEvaluationDto.isQuickReservation() && quickReservationBoatService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())){
+            return new ResponseEntity<>("Quick reservation already has evaluations!", HttpStatus.BAD_REQUEST);
+        }
+        boatEvaluationService.addEvaluation(addNewEvaluationDto);
+        boatOwnerEvaluationService.addEvaluation(addNewEvaluationDto);
+        if(!addNewEvaluationDto.isQuickReservation())
+            boatReservationService.markThatReservationIsEvaluated(addNewEvaluationDto.getReservationId());
+        else
+            quickReservationBoatService.markThatReservationIsEvaluated(addNewEvaluationDto.getReservationId());
+        return new ResponseEntity<>("Evaluations successfully added.", HttpStatus.OK);
     }
 
 }
