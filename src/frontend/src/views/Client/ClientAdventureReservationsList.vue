@@ -866,6 +866,11 @@ export default {
       this.$router.push("/adventureProfile/" + this.email + "/" + boatId);
     },
     evaluateReservation: function (reservationDto) {
+      if(reservationDto.discount)
+        this.$router.push(
+        "/quickEvaluation/" + this.email + "/" + "adventure/" + reservationDto.id
+      );
+      else
       this.$router.push(
         "/evaluation/" + this.email + "/" + "adventure/" + reservationDto.id
       );

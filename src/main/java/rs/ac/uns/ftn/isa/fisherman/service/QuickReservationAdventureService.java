@@ -31,4 +31,6 @@ public interface QuickReservationAdventureService {
     Integer countReservationsByAdventureInPeriod(LocalDateTime start, LocalDateTime end, Long id);
     List<QuickReservationAdventure> findReservationsByAdventureToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
     List<QuickReservationAdventure> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+    boolean checkIfReservationIsEvaluated(Long reservationId);
+    void markThatReservationIsEvaluated(Long reservationId);
 }

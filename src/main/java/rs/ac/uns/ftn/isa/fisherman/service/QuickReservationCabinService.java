@@ -34,4 +34,7 @@ public interface QuickReservationCabinService {
     boolean checkIfOwnerHasFutureReservations(String username);
     boolean checkIfClientHasFutureReservations(Long userId);
     List<QuickReservationCabin> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
+    boolean checkIfReservationIsEvaluated(Long reservationId);
+    void markThatReservationIsEvaluated(Long reservationId);
+    QuickReservationCabin getById(Long reservationId);
 }

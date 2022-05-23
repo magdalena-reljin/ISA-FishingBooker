@@ -3,13 +3,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.mail.CabinReservationSuccessfulInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mail.QuickActionCabinInfo;
 import rs.ac.uns.ftn.isa.fisherman.model.PaymentInformation;
-import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationBoat;
 import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
@@ -113,6 +111,23 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     @Override
     public List<QuickReservationCabin> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1) {
         return quickReservationCabinRepository.findReservationsInPeriodByCabinToSumProfit(id,localDateTime,localDateTime1);
+    }
+
+    @Override
+    public boolean checkIfReservationIsEvaluated(Long reservationId) {
+        return quickReservationCabinRepository.getById(reservationId).isEvaluated();
+    }
+
+    @Override
+    public void markThatReservationIsEvaluated(Long reservationId) {
+        QuickReservationCabin quickReservationCabin = quickReservationCabinRepository.getById(reservationId);
+        quickReservationCabin.setEvaluated(true);
+        quickReservationCabinRepository.save(quickReservationCabin);
+    }
+
+    @Override
+    public QuickReservationCabin getById(Long reservationId) {
+        return quickReservationCabinRepository.getById(reservationId);
     }
 
     private long calculateOverlapingDates(LocalDateTime startReport, LocalDateTime endReport, LocalDateTime startReservation, LocalDateTime endReservation){

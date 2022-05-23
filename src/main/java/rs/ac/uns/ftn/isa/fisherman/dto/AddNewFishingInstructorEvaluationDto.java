@@ -6,12 +6,22 @@ public class AddNewFishingInstructorEvaluationDto {
     private String commentForTheFishingInstructor;
     private Double gradeForTheFishingInstructor;
     private String clientUsername;
+    private boolean quickReservation;
 
-    public AddNewFishingInstructorEvaluationDto(Long reservationId, String commentForTheFishingInstructor, Double gradeForTheFishingInstructor, String clientUsername) {
+    public AddNewFishingInstructorEvaluationDto(Long reservationId, String commentForTheFishingInstructor, Double gradeForTheFishingInstructor, String clientUsername, boolean quickReservation) {
         this.reservationId = reservationId;
         this.commentForTheFishingInstructor = commentForTheFishingInstructor;
         this.gradeForTheFishingInstructor = gradeForTheFishingInstructor;
         this.clientUsername = clientUsername;
+        this.quickReservation = quickReservation;
+    }
+
+    public boolean isQuickReservation() {
+        return quickReservation;
+    }
+
+    public void setQuickReservation(boolean quickReservation) {
+        this.quickReservation = quickReservation;
     }
 
     public AddNewFishingInstructorEvaluationDto(){}

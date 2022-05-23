@@ -8,19 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.isa.fisherman.dto.AddNewEvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinEvaluationDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.EvaluationDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.CabinEvaluationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinEvaluation;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinOwnerEvaluation;
-import rs.ac.uns.ftn.isa.fisherman.model.Evaluation;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinEvaluationService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerEvaluationService;
-import rs.ac.uns.ftn.isa.fisherman.service.CabinService;
-import rs.ac.uns.ftn.isa.fisherman.service.ReservationCabinService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -33,21 +25,26 @@ public class CabinEvaluationController {
     private CabinEvaluationService cabinEvaluationService;
     @Autowired
     private CabinOwnerEvaluationService cabinOwnerEvaluationService;
-
-
+    @Autowired
+    private QuickReservationCabinService quickReservationCabinService;
     private final CabinEvaluationMapper cabinEvaluationMapper=new CabinEvaluationMapper();
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/addEvaluation")
     public ResponseEntity<String> addEvaluation(@RequestBody AddNewEvaluationDto addNewEvaluationDto){
-        if(!cabinReservationService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())){
-            cabinEvaluationService.addEvaluation(addNewEvaluationDto);
-            cabinOwnerEvaluationService.addEvaluation(addNewEvaluationDto);
-            cabinReservationService.markThatReservationIsEvaluated(addNewEvaluationDto.getReservationId());
-            return new ResponseEntity<>("Evaluations successfully added.", HttpStatus.OK);
-        }else{
+        if(!addNewEvaluationDto.isQuickReservation() && cabinReservationService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())) {
             return new ResponseEntity<>("Reservation already has evaluations!", HttpStatus.BAD_REQUEST);
         }
+        if(addNewEvaluationDto.isQuickReservation() && quickReservationCabinService.checkIfReservationIsEvaluated(addNewEvaluationDto.getReservationId())){
+            return new ResponseEntity<>("Quick reservation already has evaluations!", HttpStatus.BAD_REQUEST);
+        }
+        cabinEvaluationService.addEvaluation(addNewEvaluationDto);
+        cabinOwnerEvaluationService.addEvaluation(addNewEvaluationDto);
+        if(!addNewEvaluationDto.isQuickReservation())
+            cabinReservationService.markThatReservationIsEvaluated(addNewEvaluationDto.getReservationId());
+        else
+            quickReservationCabinService.markThatReservationIsEvaluated(addNewEvaluationDto.getReservationId());
+        return new ResponseEntity<>("Evaluations successfully added.", HttpStatus.OK);
     }
     @PreAuthorize("hasRole('CABINOWNER') || hasRole('CLIENT')")
     @GetMapping("/findByCabinId/{cabinId}")

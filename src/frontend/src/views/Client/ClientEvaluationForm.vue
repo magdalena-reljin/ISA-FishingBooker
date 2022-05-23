@@ -89,6 +89,9 @@ import ClientNavbar from "./ClientNavbar";
 import StarRating from 'vue-star-rating'
 
 export default {
+  props:{
+    quick: Boolean
+  },
   components: {
     ClientNavbar,
     StarRating
@@ -151,6 +154,7 @@ export default {
               commentForTheEntityOwner: this.commentEntityOwner,
               gradeForTheEntityOwner: this.gradeEntityOwner,
               clientUsername: this.email,
+              quickReservation: this.quick
             },
             {}
           )
@@ -181,6 +185,7 @@ export default {
               commentForTheEntityOwner: this.commentEntityOwner,
               gradeForTheEntityOwner: this.gradeEntityOwner,
               clientUsername: this.email,
+              quickReservation: this.quick
             },
             {}
           )
@@ -209,6 +214,7 @@ export default {
               commentForTheFishingInstructor: this.commentEntityOwner,
               gradeForTheFishingInstructor: this.gradeEntityOwner,
               clientUsername: this.email,
+              quickReservation: this.quick
             },
             {}
           )
