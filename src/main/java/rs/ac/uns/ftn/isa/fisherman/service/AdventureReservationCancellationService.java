@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
 
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 
 public interface AdventureReservationCancellationService {
 
@@ -8,4 +9,5 @@ public interface AdventureReservationCancellationService {
 
     boolean clientHasCancellationWithInstructorInPeriod(AdventureReservationDto adventureReservationDto);
 
+    boolean addCancellationQuickReservation(QuickReservationAdventureDto adventureReservationDto);
 }

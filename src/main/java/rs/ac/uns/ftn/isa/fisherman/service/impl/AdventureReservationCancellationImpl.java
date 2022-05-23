@@ -3,9 +3,11 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
+import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 import java.util.HashSet;
@@ -25,6 +27,9 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
     private AdventureReservationRepository adventureReservationRepository;
     @Autowired
     private ReservationPaymentService reservationPaymentService;
+    @Autowired
+    private QuickReservationAdventureRepository quickReservationAdventureRepository;
+
     @Override
     public boolean addCancellation(AdventureReservationDto adventureReservationDto) {
         AdventureReservation adventureReservation = adventureReservationRepository.getById(adventureReservationDto.getId());
@@ -41,5 +46,17 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
     @Override
     public boolean clientHasCancellationWithInstructorInPeriod(AdventureReservationDto adventureReservationDto) {
         return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorService.findByUsername(adventureReservationDto.getOwnersUsername()).getId(), clientService.findByUsername(adventureReservationDto.getClientUsername()).getId(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate());
+    }
+
+    @Override
+    public boolean addCancellationQuickReservation(QuickReservationAdventureDto adventureReservationDto) {
+        QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(adventureReservationDto.getId());
+        AdventureReservationCancellation adventureReservationCancellation = new AdventureReservationCancellation(null, quickReservationAdventure.getClient(), quickReservationAdventure.getStartDate(), quickReservationAdventure.getEndDate(), quickReservationAdventure.getFishingInstructor());
+        reservationPaymentService.resetLoyaltyStatusAfterCancellation(quickReservationAdventure.getClient(), quickReservationAdventure.getFishingInstructor());
+        penaltyService.addPenalty(quickReservationAdventure.getClient().getUsername());
+        quickReservationAdventure.setClient(null);
+        quickReservationAdventureRepository.save(quickReservationAdventure);
+        adventureReservationCancellationRepository.save(adventureReservationCancellation);
+        return true;
     }
 }

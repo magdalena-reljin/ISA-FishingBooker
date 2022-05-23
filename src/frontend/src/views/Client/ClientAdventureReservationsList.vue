@@ -356,7 +356,7 @@
                             :disabled="
                               !possibleCancellation(
                                 adventureReservationDto.startDate
-                              ) || adventureReservationDto.discount
+                              ) 
                             "
                           >
                             CANCEL
@@ -936,9 +936,13 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
+      var path = "reservationAdventure";
+      if(this.adventureForCancellation.discount)
+        path = "quickReservationAdventure";
+        
       axios
         .post(
-          "http://localhost:8081/reservationAdventure/cancelReservation",
+          "http://localhost:8081/" + path + "/cancelReservation",
           this.adventureForCancellation,
           {}
         )

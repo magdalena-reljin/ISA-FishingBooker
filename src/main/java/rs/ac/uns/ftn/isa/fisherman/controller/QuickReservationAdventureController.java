@@ -5,16 +5,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationAdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
-import rs.ac.uns.ftn.isa.fisherman.service.InstructorQuickReportService;
-import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +29,8 @@ public class QuickReservationAdventureController {
     private InstructorQuickReportService instructorQuickReportService;
     @Autowired
     private PenaltyService penaltyService;
+    @Autowired
+    private AdventureReservationCancellationService adventureReservationCancellationService;
     private QuickReservationAdventureMapper quickReservationAdventureMapper = new QuickReservationAdventureMapper();
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -122,5 +124,18 @@ public class QuickReservationAdventureController {
             quickReservationAdventureDtos.add(quickReservationAdventureDto);
         }
         return new ResponseEntity<>(quickReservationAdventureDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation (@RequestBody QuickReservationAdventureDto adventureReservationDto) {
+        if(adventureReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Less than 3 days left until start!", HttpStatus.BAD_REQUEST);
+        if(!quickReservationAdventureService.quickReservationExists(adventureReservationDto.getOwnersUsername(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Reservation doesn't exist or it is already cancelled!", HttpStatus.BAD_REQUEST);
+        if(adventureReservationCancellationService.addCancellationQuickReservation(adventureReservationDto))
+            return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
     }
 }
