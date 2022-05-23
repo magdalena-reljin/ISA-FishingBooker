@@ -30,6 +30,8 @@ public class BoatReservationController {
     private PenaltyService penaltyService;
     @Autowired
     private BoatReservationCancellationService boatReservationCancellationService;
+    @Autowired
+    private BoatService boatService;
 
     private final BoatMapper boatMapper = new BoatMapper();
     private final BoatReservationMapper boatReservationMapper=new BoatReservationMapper();
@@ -107,6 +109,10 @@ public class BoatReservationController {
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(boatReservationDto))
             return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(boatReservationDto.getNeedsCaptainServices() &&
+                boatReservationService.ownerIsNotAvailable(boatReservationDto.getOwnersUsername(),
+                        boatReservationDto.getStartDate(), boatReservationDto.getEndDate()))
+            return new ResponseEntity<>("Captain service is not available!", HttpStatus.BAD_REQUEST);
         if(boatReservationService.makeReservation(boatReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else
@@ -153,5 +159,13 @@ public class BoatReservationController {
             boatsDto.add(boatMapper.boatToBoatDto(boat));
         }
         return new ResponseEntity<>(boatsDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/isOwnerAvailable")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Boolean> isOwnerAvailable(@RequestBody IsOwnerAvailableDto isOwnerAvailableDto){
+        Boat boat = boatService.findById(isOwnerAvailableDto.getBoatId());
+        return new ResponseEntity<>(!boatReservationService.ownerIsNotAvailable(boat.getBoatOwner().getUsername(),
+                isOwnerAvailableDto.getStartDate(), isOwnerAvailableDto.getEndDate()), HttpStatus.OK);
     }
 }

@@ -63,4 +63,6 @@ public interface BoatReservationService {
     List<BoatReservation> findReservationsByBoatToSumProfit(Long id, LocalDateTime start, LocalDateTime end);
 
     Set<Boat> searchAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto);
+
+    boolean ownerIsNotAvailable(String ownersUsername, LocalDateTime start, LocalDateTime end);
 }

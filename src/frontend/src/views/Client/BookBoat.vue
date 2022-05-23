@@ -675,9 +675,36 @@ export default {
     this.start = this.startDate;
     this.end = this.endDate;
     this.getBoat();
-    if (this.bookingProcess) this.calculatePrice();
+    if (this.bookingProcess) {
+      this.calculatePrice();
+      this.isOwnerAvailable();}
   },
   methods: {
+    needsCaptainServices: function(){
+      var needsCaptainServices = false;
+      this.addedAdditionalServices.forEach((service)=>{
+        if(service.name === "Captain service") needsCaptainServices = true;
+      });
+      return needsCaptainServices;
+    },
+    removeCaptainService: function(){
+      var availableAdditionalServices = [];
+      this.availableAdditionalServices.forEach((service)=>{
+        if(service.name !== "Captain service") availableAdditionalServices.push(service);
+      });
+      this.availableAdditionalServices = availableAdditionalServices;
+    },
+    isOwnerAvailable: function (){
+      axios
+        .post("http://localhost:8081/reservationBoat/isOwnerAvailable",{
+            boatId: this.boatId,
+            startDate: this.formatDate(this.start),
+            endDate: this.formatDate(this.end),
+        }, {})
+        .then((response) => {
+          if(response.data == false) this.removeCaptainService();
+        });
+    },
     setAndFormatDate: function (newDate) {
       var date = new Date();
       var splits = newDate.toString().split(",");
@@ -845,7 +872,7 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
-
+      var needsCaptainServices = this.needsCaptainServices();
       axios
         .post(
           "http://localhost:8081/reservationBoat/makeReservation",
@@ -863,6 +890,7 @@ export default {
             boatDto: this.boatDto,
             addedAdditionalServices: this.addedAdditionalServices,
             clientUsername: this.email,
+            needsCaptainServices: needsCaptainServices,
           },
           {}
         )
@@ -941,7 +969,7 @@ export default {
                 this.$swal.fire({
                   position: "top-end",
                   icon: "success",
-                  title: "Successfully  deleted!",
+                  title: "Successfully deleted!",
                   showConfirmButton: false,
                   timer: 2500,
                 });
