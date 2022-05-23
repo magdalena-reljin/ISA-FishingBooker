@@ -126,8 +126,14 @@
           </div>
           <div class="col">
             <p>
-              <template v-if="email"><a href="#" @click="viewProfile()"><b>{{ cabinDto.ownerUsername }}</b></a></template>
-              <template v-if="!email"><b>{{ cabinDto.ownerUsername }}</b></template>
+              <template v-if="email"
+                ><a href="#" @click="viewProfile()"
+                  ><b>{{ cabinDto.ownerUsername }}</b></a
+                ></template
+              >
+              <template v-if="!email"
+                ><b>{{ cabinDto.ownerUsername }}</b></template
+              >
             </p>
           </div>
         </div>
@@ -360,9 +366,9 @@
       <template v-if="role == 'ADMIN' && this.email">
         <div class="col" style="margin-top: 3%">
           <button
-           class="btn btn-lg btn-danger rounded-pill" 
-           data-bs-toggle="modal" 
-           data-bs-target="#staticBackdrop"
+            class="btn btn-lg btn-danger rounded-pill"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
           >
             DELETE CABIN
           </button>
@@ -388,27 +394,178 @@
       </div>
     </div>
 
-    
-   <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete cabin?</p>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button @click="
-          deleteCabin()" type="button" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete cabin?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              @click="deleteCabin()"
+              type="button"
+              data-bs-dismiss="modal"
+              class="btn btn-danger"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+    <!-- Modal -->
+    <!-- Comments -->
+    <template v-if="role == 'CLIENT'">
+      <br />
+      <div style="text-align: left; padding-left: 3%; padding-right: 11%">
+        <h1>Comments about cabin</h1>
+        <hr />
+        <h3 v-if="comments.length == 0">No comments to show.</h3>
+        <div v-for="(comment, index) in comments" :key="index" class="row">
+          <div class="col-sm-1">
+            <svg
+              viewBox="0 0 36 36"
+              fill="none"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              width="80"
+              height="80"
+            >
+              <title>Coretta Scott</title>
+              <mask
+                id="mask__beam"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="36"
+                height="36"
+              >
+                <rect width="36" height="36" rx="72" fill="#FFFFFF"></rect>
+              </mask>
+              <g mask="url(#mask__beam)">
+                <rect width="36" height="36" fill="#737777"></rect>
+                <rect
+                  x="0"
+                  y="0"
+                  width="36"
+                  height="36"
+                  transform="translate(5 -1) rotate(55 18 18) scale(1.1)"
+                  fill="#0e0043"
+                  rx="6"
+                ></rect>
+                <g transform="translate(7 -6) rotate(-5 18 18)">
+                  <path
+                    d="M15 20c2 1 4 1 6 0"
+                    stroke="#FFFFFF"
+                    fill="none"
+                    stroke-linecap="round"
+                  ></path>
+                  <rect
+                    x="14"
+                    y="14"
+                    width="1.5"
+                    height="2"
+                    rx="1"
+                    stroke="none"
+                    fill="#FFFFFF"
+                  ></rect>
+                  <rect
+                    x="20"
+                    y="14"
+                    width="1.5"
+                    height="2"
+                    rx="1"
+                    stroke="none"
+                    fill="#FFFFFF"
+                  ></rect>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class="col" style="text-align: left">
+            <div class="row">
+              <div class="col-sm-9">
+                <p style="font-size: 1em">
+                  <b>{{ comment.clientUsername }} </b> rated
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    style="color: orange"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-star-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                    />
+                  </svg>
+                  {{ comment.grade }}
+                </p>
+              </div>
+              <div class="col">
+                <button
+                  @click="viewProfile(comment.clientUsername)"
+                  type="button"
+                  style="background-color: #3d6b51; color: white"
+                  class="btn rounded-pill"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    fill="currentColor"
+                    class="bi bi-box-arrow-up-left"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.364 3.5a.5.5 0 0 1 .5-.5H14.5A1.5 1.5 0 0 1 16 4.5v10a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 3 14.5V7.864a.5.5 0 1 1 1 0V14.5a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5H7.864a.5.5 0 0 1-.5-.5z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M0 .5A.5.5 0 0 1 .5 0h5a.5.5 0 0 1 0 1H1.707l8.147 8.146a.5.5 0 0 1-.708.708L1 1.707V5.5a.5.5 0 0 1-1 0v-5z"
+                    />
+                  </svg>
+                  Visit profile
+                </button>
+              </div>
+            </div>
+            <p></p>
+            <p style="font-size: 1em">{{ comment.comment }}</p>
+            <p style="color: dark-gray">{{ setAndFormatDate(comment.date) }}</p>
+          </div>
+          <hr />
+          <br />
+        </div>
+      </div>
+    </template>
+    <!-- Comments -->
   </div>
 </template>
 
@@ -465,7 +622,7 @@ export default {
           },
         ],
         ownerUsername: "",
-        cancellingConditions: '',
+        cancellingConditions: "",
       },
       addedAdditionalServices: [
         {
@@ -492,6 +649,7 @@ export default {
       end: null,
       totalPrice: 0,
       cabinNameParam: "",
+      comments: [],
     };
   },
   mounted() {
@@ -504,8 +662,34 @@ export default {
     if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
+    setAndFormatDate: function (newDate) {
+      var date = new Date();
+      var splits = newDate.toString().split(",");
+      date.setDate(splits[1], splits[2], splits[0]);
+      var newData = new Date(
+        parseInt(splits[0]),
+        parseInt(splits[1]) - 1,
+        parseInt(splits[2]),
+        parseInt(splits[3]),
+        parseInt(splits[4])
+      );
+      const dateee = dayjs(newData);
+      return dateee.format("YYYY-MM-DD HH:mm:ss");
+    },
+    getComments: function () {
+      axios
+        .get(
+          "http://localhost:8081/cabinEvaluation/findByCabinId/" +
+            this.cabinDto.id
+        )
+        .then((response) => {
+          this.comments = response.data;
+        });
+    },
     viewProfile: function () {
-      this.$router.push("/client/viewProfile/" + this.email + "/" + this.cabinDto.ownerUsername);
+      this.$router.push(
+        "/client/viewProfile/" + this.email + "/" + this.cabinDto.ownerUsername
+      );
     },
     calculatePrice: function () {
       let numOfDays = this.getNumberOfDays(this.start, this.end);
@@ -557,11 +741,9 @@ export default {
       this.calculatePrice();
     },
     getCabin: function () {
-      if(this.email)
-        this.cabinDto.ownerUsername = this.email;
-      else
-        this.cabinDto.ownerUsername = "";
-      
+      if (this.email) this.cabinDto.ownerUsername = this.email;
+      else this.cabinDto.ownerUsername = "";
+
       if (this.bookingProcess) {
         this.cabinDto.name = this.cabinName;
       } else {
@@ -581,6 +763,7 @@ export default {
           this.maxImageIndex = this.cabinDto.images.length - 1;
           this.availableAdditionalServices = this.cabinDto.additionalServices;
           if (this.bookingProcess) this.calculatePrice();
+          if (this.role === "CLIENT") this.getComments();
         });
     },
     previousImage: function () {
@@ -748,14 +931,13 @@ export default {
             axios
               .post("http://localhost:8081/cabins/delete", this.cabinDto)
               .then((response) => {
-                   this.$swal.fire({
-                      position: "top-end",
-                      icon: "success",
-                      title:
-                        "Successfully  deleted!",
-                      showConfirmButton: false,
-                      timer: 2500,
-                    });
+                this.$swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "Successfully  deleted!",
+                  showConfirmButton: false,
+                  timer: 2500,
+                });
                 this.$router.push("/profileAdmin/" + this.email);
                 return response;
               });
