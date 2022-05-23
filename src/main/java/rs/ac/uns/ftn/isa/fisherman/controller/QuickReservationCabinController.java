@@ -96,6 +96,8 @@ public class QuickReservationCabinController {
     public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationCabinDto quickReservationCabinDto) {
         if(penaltyService.isUserBlockedFromReservation(quickReservationCabinDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(quickReservationCabinDto.getCabinDto().getId(), quickReservationCabinDto.getClientUsername(), quickReservationCabinDto.getStartDate(), quickReservationCabinDto.getEndDate()))
+            return new ResponseEntity<>("Client has cancellation with instructor in given period!", HttpStatus.BAD_REQUEST);
         if(quickReservationCabinService.makeQuickReservation(quickReservationCabinDto)) {
             return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
         }else {

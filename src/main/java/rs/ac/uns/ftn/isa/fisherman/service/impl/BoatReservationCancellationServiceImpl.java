@@ -64,7 +64,7 @@ public class BoatReservationCancellationServiceImpl implements BoatReservationCa
     }
     
     @Override
-    public boolean clientHasCancellationForBoatInPeriod(BoatReservationDto boatReservationDto) {
-        return boatReservationCancellationRepository.clientHasCancellationForBoatInPeriod(boatService.findById(boatReservationDto.getBoatDto().getId()).getId(), clientService.findByUsername(boatReservationDto.getClientUsername()).getId(), boatReservationDto.getStartDate(), boatReservationDto.getEndDate());
+    public boolean clientHasCancellationForBoatInPeriod(Long boatId, String clientUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return boatReservationCancellationRepository.clientHasCancellationForBoatInPeriod(boatId, clientService.findByUsername(clientUsername).getId(), startDate, endDate);
     }
 }

@@ -107,7 +107,7 @@ public class BoatReservationController {
     public ResponseEntity<String> makeReservation (@RequestBody BoatReservationDto boatReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(boatReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
-        if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(boatReservationDto))
+        if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(boatReservationDto.getBoatDto().getId(), boatReservationDto.getClientUsername(), boatReservationDto.getStartDate(), boatReservationDto.getEndDate()))
             return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
         if(boatReservationDto.getNeedsCaptainServices() &&
                 boatReservationService.ownerIsNotAvailable(boatReservationDto.getOwnersUsername(),

@@ -258,6 +258,7 @@
                             'text-align: left;',
                           ]"
                         >
+                        <template v-if="availableQuickReservations || (!availableQuickReservations && !boatReservationDto.discount)">
                           {{
                             twoDecimales(
                               boatReservationDto.paymentInformationDto
@@ -265,12 +266,57 @@
                             )
                           }}
                           $
+                          </template>
+                          <template v-if="!availableQuickReservations && boatReservationDto.discount">
+                            {{
+                            twoDecimales(
+                              getPriceBeforeDiscount(boatReservationDto)
+                            )
+                          }}$
+                          </template>
                         </h6>
                       </div>
                     </div>
                     <template
+                      v-if="availableQuickReservations"
+                    >
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            Discount:
+                          </h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <i
+                              >-{{
+                                boatReservationDto.discount
+                              }}%</i
+                            >
+                          </h6>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left">Discounted price:</h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <b
+                              >{{
+                                twoDecimales(
+                                  getDiscountedPrice(boatReservationDto)
+                                )
+                              }}
+                              $</b
+                            >
+                          </h6>
+                        </div>
+                      </div>
+                    </template>
+                    <template
                       v-if="
-                        availableQuickReservations ||
+                        !availableQuickReservations &&
                         boatReservationDto.discount
                       "
                     >
@@ -299,7 +345,7 @@
                             <b
                               >{{
                                 twoDecimales(
-                                  getDiscountedPrice(boatReservationDto)
+                                  boatReservationDto.paymentInformationDto.totalPrice
                                 )
                               }}
                               $</b
@@ -690,6 +736,13 @@ export default {
     }
   },
   methods: {
+    getPriceBeforeDiscount: function (quickReservationDto) {
+      return (
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 + quickReservationDto.discount)) /
+        100
+      );
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";

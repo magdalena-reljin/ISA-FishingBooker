@@ -47,8 +47,8 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
     }
 
     @Override
-    public boolean clientHasCancellationForCabinInPeriod(CabinReservationDto cabinReservation) {
-        return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabinDto().getId(), clientService.findByUsername(cabinReservation.getClientUsername()).getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate());
+    public boolean clientHasCancellationForCabinInPeriod(Long cabinId, String clientUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinId, clientService.findByUsername(clientUsername).getId(), startDate, endDate);
     }
 
     @Override

@@ -5,11 +5,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
 import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
-import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationAdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
@@ -95,6 +93,8 @@ public class QuickReservationAdventureController {
     public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationAdventureDto quickReservationAdventureDto) {
         if(penaltyService.isUserBlockedFromReservation(quickReservationAdventureDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        if(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getClientUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
+            return new ResponseEntity<>("Client has cancellation with instructor in given period!", HttpStatus.BAD_REQUEST);
         if(quickReservationAdventureService.makeQuickReservation(quickReservationAdventureDto)) {
             return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
         }else {

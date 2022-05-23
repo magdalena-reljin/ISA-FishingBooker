@@ -226,9 +226,7 @@
                     </h6>
                   </template>
                   <template
-                    v-if="
-                      availableQuickReservations || cabinReservationDto.discount
-                    "
+                    v-if="availableQuickReservations"
                   >
                     <h6 style="color: red; text-align: left">
                       Previous price:
@@ -249,6 +247,35 @@
                       <b
                         >{{
                           twoDecimales(getDiscountedPrice(cabinReservationDto))
+                        }}
+                        $</b
+                      >
+                    </h6>
+                  </template>
+                  <template
+                    v-if="
+                      !availableQuickReservations && cabinReservationDto.discount
+                    "
+                  >
+                    <h6 style="color: red; text-align: left">
+                      Previous price:
+                      <a style="text-decoration: line-through"
+                        >{{
+                          twoDecimales(
+                            getPriceBeforeDiscount(cabinReservationDto)
+                          )
+                        }}
+                        $
+                      </a>
+                    </h6>
+                    <h6 style="text-align: left; color: green">
+                      Discount: <i>-{{ cabinReservationDto.discount }}%</i>
+                    </h6>
+                    <h6 style="text-align: left; color: green">
+                      Discounted price:
+                      <b
+                        >{{
+                          twoDecimales(cabinReservationDto.paymentInformationDto.totalPrice)
                         }}
                         $</b
                       >
@@ -632,6 +659,13 @@ export default {
     }
   },
   methods: {
+    getPriceBeforeDiscount: function (quickReservationDto) {
+      return (
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 + quickReservationDto.discount)) /
+        100
+      );
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -855,7 +889,7 @@ export default {
       var path = "reservationCabin";
       if(this.cabinForCancellation.discount)
         path = "quickReservationCabin";
-      console.log(path)
+
       axios
         .post(
           "http://localhost:8081/" + path + "/cancelReservation",

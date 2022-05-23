@@ -97,8 +97,8 @@ public class AdventureReservationController {
     public ResponseEntity<String> makeReservation (@RequestBody AdventureReservationDto adventureReservationDto) {
         if(penaltyService.isUserBlockedFromReservation(adventureReservationDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
-        if(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(adventureReservationDto))
-            return new ResponseEntity<>("Client has cancellation for boat in given period!", HttpStatus.BAD_REQUEST);
+        if(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(adventureReservationDto.getOwnersUsername(), adventureReservationDto.getClientUsername(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate()))
+            return new ResponseEntity<>("Client has cancellation for adventure in given period!", HttpStatus.BAD_REQUEST);
         if(adventureReservationService.makeReservation(adventureReservationDto))
             return new ResponseEntity<>("Success.", HttpStatus.OK);
         else

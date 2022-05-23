@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 @Service
@@ -44,8 +45,8 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
     }
 
     @Override
-    public boolean clientHasCancellationWithInstructorInPeriod(AdventureReservationDto adventureReservationDto) {
-        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorService.findByUsername(adventureReservationDto.getOwnersUsername()).getId(), clientService.findByUsername(adventureReservationDto.getClientUsername()).getId(), adventureReservationDto.getStartDate(), adventureReservationDto.getEndDate());
+    public boolean clientHasCancellationWithInstructorInPeriod(String ownersUsername, String clientUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorService.findByUsername(ownersUsername).getId(), clientService.findByUsername(clientUsername).getId(), startDate, endDate);
     }
 
     @Override
