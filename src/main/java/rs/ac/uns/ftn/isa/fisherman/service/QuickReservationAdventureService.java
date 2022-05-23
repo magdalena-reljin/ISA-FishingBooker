@@ -15,7 +15,6 @@ public interface QuickReservationAdventureService {
     boolean futureQuickReservationsExist(LocalDateTime currentDate,Long id);
     Set<QuickReservationAdventure> getPastReservations(String username);
     Integer countReservationsInPeriod(LocalDateTime start, LocalDateTime end, String username);
-
     double sumProfitOfPricesCalucatedByHours(List<QuickReservationAdventure> reservations, LocalDateTime start, LocalDateTime end);
     void  save(QuickReservationAdventure quickReservationAdventure);
     QuickReservationAdventure findById(Long id);
@@ -33,4 +32,5 @@ public interface QuickReservationAdventureService {
     List<QuickReservationAdventure> findReservationsByOwnerToSumProfit(String username, LocalDateTime localDateTime, LocalDateTime localDateTime1);
     boolean checkIfReservationIsEvaluated(Long reservationId);
     void markThatReservationIsEvaluated(Long reservationId);
+    boolean instructorHasTakenReservationInPeriod(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
 }

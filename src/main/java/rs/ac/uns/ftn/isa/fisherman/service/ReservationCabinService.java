@@ -62,4 +62,6 @@ public interface ReservationCabinService {
     List<CabinReservation> findReservationsByCabinToSumProfit(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 
     Set<Cabin> searchAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto);
+
+    boolean cabinNotFreeForQuickReservationInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate);
 }

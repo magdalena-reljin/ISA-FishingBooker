@@ -111,7 +111,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     @Override
     public boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto) {
         QuickReservationBoat quickReservationBoat = quickReservationBoatRepository.getById(quickReservationBoatDto.getId());
-        if(boatReservationService.boatNotFreeInPeriod(quickReservationBoat.getBoat().getId(), quickReservationBoat.getStartDate(), quickReservationBoat.getEndDate()))
+        if(boatReservationService.boatNotFreeForQuickReservation(quickReservationBoat.getBoat().getId(), quickReservationBoat.getStartDate(), quickReservationBoat.getEndDate()))
             return false;
         quickReservationBoat.setClient(clientService.findByUsername(quickReservationBoatDto.getClientUsername()));
         quickReservationBoatRepository.save(quickReservationBoat);
@@ -205,6 +205,10 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         quickReservationBoatRepository.save(quickReservationBoat);
     }
 
+    @Override
+    public boolean boatHasTakenQuickReservationInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate) {
+        return quickReservationBoatRepository.boatHasTakenQuickReservationInPeriod(boatId, startDate, endDate);
+    }
 
     @Override
     public boolean quickReservationExists(Long id, LocalDateTime startDate, LocalDateTime endDate) {

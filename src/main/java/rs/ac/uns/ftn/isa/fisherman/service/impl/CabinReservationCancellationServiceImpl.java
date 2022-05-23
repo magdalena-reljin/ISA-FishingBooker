@@ -3,6 +3,9 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationCabinDto;
+import rs.ac.uns.ftn.isa.fisherman.model.QuickReservationCabin;
+import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationCabinRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinOwner;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
@@ -28,7 +31,8 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
     private PenaltyService penaltyService;
     @Autowired
     private ClientService clientService;
-
+    @Autowired
+    private QuickReservationCabinRepository quickReservationCabinRepository;
     @Override
     public boolean addCancellation(CabinReservationDto cabinReservationDto) {
         CabinReservation cabinReservation = cabinReservationRepository.getById(cabinReservationDto.getId());
@@ -43,7 +47,19 @@ public class CabinReservationCancellationServiceImpl implements CabinReservation
     }
 
     @Override
-    public boolean clientHasCancellationForCabinInPeriod(CabinReservationDto cabinReservation) {
-        return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinReservation.getCabinDto().getId(), clientService.findByUsername(cabinReservation.getClientUsername()).getId(), cabinReservation.getStartDate(), cabinReservation.getEndDate());
+    public boolean clientHasCancellationForCabinInPeriod(Long cabinId, String clientUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return cabinReservationCancellationRepository.clientHasCancellationForCabinInPeriod(cabinId, clientService.findByUsername(clientUsername).getId(), startDate, endDate);
+    }
+
+    @Override
+    public boolean addCancellationQuickReservation(QuickReservationCabinDto cabinReservationDto) {
+        QuickReservationCabin quickReservationCabin = quickReservationCabinRepository.getById(cabinReservationDto.getId());
+        CabinReservationCancellation cabinReservationCancellation = new CabinReservationCancellation(null, quickReservationCabin.getClient(), quickReservationCabin.getStartDate(), quickReservationCabin.getEndDate(), quickReservationCabin.getCabin());
+        reservationPaymentService.resetLoyaltyStatusAfterCancellation(quickReservationCabin.getClient(), cabinOwnerService.findByUsername(cabinReservationDto.getCabinDto().getOwnerUsername()));
+        penaltyService.addPenalty(quickReservationCabin.getClient().getUsername());
+        quickReservationCabin.setClient(null);
+        quickReservationCabinRepository.save(quickReservationCabin);
+        cabinReservationCancellationRepository.save(cabinReservationCancellation);
+        return true;
     }
 }

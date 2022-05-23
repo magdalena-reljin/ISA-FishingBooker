@@ -258,6 +258,7 @@
                             'text-align: left;',
                           ]"
                         >
+                        <template v-if="availableQuickReservations || (!availableQuickReservations && !boatReservationDto.discount)">
                           {{
                             twoDecimales(
                               boatReservationDto.paymentInformationDto
@@ -265,14 +266,19 @@
                             )
                           }}
                           $
+                          </template>
+                          <template v-if="!availableQuickReservations && boatReservationDto.discount">
+                            {{
+                            twoDecimales(
+                              getPriceBeforeDiscount(boatReservationDto)
+                            )
+                          }}$
+                          </template>
                         </h6>
                       </div>
                     </div>
                     <template
-                      v-if="
-                        availableQuickReservations ||
-                        boatReservationDto.discount
-                      "
+                      v-if="availableQuickReservations"
                     >
                       <div class="row">
                         <div class="col">
@@ -308,6 +314,46 @@
                         </div>
                       </div>
                     </template>
+                    <template
+                      v-if="
+                        !availableQuickReservations &&
+                        boatReservationDto.discount
+                      "
+                    >
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            Discount:
+                          </h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <i
+                              >-{{
+                                boatReservationDto.discount
+                              }}%</i
+                            >
+                          </h6>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left">Discounted price:</h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <b
+                              >{{
+                                twoDecimales(
+                                  boatReservationDto.paymentInformationDto.totalPrice
+                                )
+                              }}
+                              $</b
+                            >
+                          </h6>
+                        </div>
+                      </div>
+                    </template>
                   </div>
 
                   <div class="row">
@@ -330,7 +376,7 @@
                             :disabled="
                               !possibleCancellation(
                                 boatReservationDto.startDate
-                              ) || boatReservationDto.discount
+                              ) 
                             "
                           >
                             CANCEL
@@ -690,6 +736,13 @@ export default {
     }
   },
   methods: {
+    getPriceBeforeDiscount: function (quickReservationDto) {
+      return (
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 + quickReservationDto.discount)) /
+        100
+      );
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -909,9 +962,12 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
+      var path = "reservationBoat";
+      if(this.boatForCancellation.discount)
+        path = "quickReservationBoat";
       axios
         .post(
-          "http://localhost:8081/reservationBoat/cancelReservation",
+          "http://localhost:8081/"+ path + "/cancelReservation",
           this.boatForCancellation,
           {}
         )

@@ -285,20 +285,26 @@
                             'text-align: left;',
                           ]"
                         >
+                          <template v-if="availableQuickReservations || (!availableQuickReservations && !adventureReservationDto.discount)">
                           {{
                             twoDecimales(
                               adventureReservationDto.paymentInformationDto
                                 .totalPrice
                             )
                           }}$
+                          </template>
+                          <template v-if="!availableQuickReservations && adventureReservationDto.discount">
+                            {{
+                            twoDecimales(
+                              getPriceBeforeDiscount(adventureReservationDto)
+                            )
+                          }}$
+                          </template>
                         </h6>
                       </div>
                     </div>
                     <template
-                      v-if="
-                        availableQuickReservations ||
-                        adventureReservationDto.discount
-                      "
+                      v-if="availableQuickReservations"
                     >
                       <div class="row">
                         <div class="col">
@@ -332,6 +338,43 @@
                         </div>
                       </div>
                     </template>
+                    <template
+                      v-if="!availableQuickReservations &&
+                        adventureReservationDto.discount
+                      "
+                    >
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            Discount:
+                          </h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <i>-{{ adventureReservationDto.discount }}%</i>
+                          </h6>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            Discounted price:
+                          </h6>
+                        </div>
+                        <div class="col">
+                          <h6 style="text-align: left; color: green">
+                            <b
+                              >{{
+                                twoDecimales(
+                                  adventureReservationDto.paymentInformationDto.totalPrice
+                                )
+                              }}
+                              $</b
+                            >
+                          </h6>
+                        </div>
+                      </div>
+                    </template>
                   </div>
 
                   <div class="row">
@@ -356,7 +399,7 @@
                             :disabled="
                               !possibleCancellation(
                                 adventureReservationDto.startDate
-                              ) || adventureReservationDto.discount
+                              ) 
                             "
                           >
                             CANCEL
@@ -721,6 +764,13 @@ export default {
     }
   },
   methods: {
+    getPriceBeforeDiscount: function (quickReservationDto) {
+      return (
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 + quickReservationDto.discount)) /
+        100
+      );
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -852,6 +902,7 @@ export default {
         );
       return "logoF1.png";
     },
+    
     getDiscountedPrice: function (quickReservationDto) {
       return (
         (quickReservationDto.paymentInformationDto.totalPrice *
@@ -936,9 +987,13 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
+      var path = "reservationAdventure";
+      if(this.adventureForCancellation.discount)
+        path = "quickReservationAdventure";
+
       axios
         .post(
-          "http://localhost:8081/reservationAdventure/cancelReservation",
+          "http://localhost:8081/" + path + "/cancelReservation",
           this.adventureForCancellation,
           {}
         )

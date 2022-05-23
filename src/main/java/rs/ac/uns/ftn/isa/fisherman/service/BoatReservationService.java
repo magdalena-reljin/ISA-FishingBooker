@@ -65,4 +65,6 @@ public interface BoatReservationService {
     Set<Boat> searchAvailableBoats(SearchAvailablePeriodsBoatAndAdventureDto searchAvailablePeriodsBoatDto);
 
     boolean ownerIsNotAvailable(String ownersUsername, LocalDateTime start, LocalDateTime end);
+
+    boolean boatNotFreeForQuickReservation(Long id, LocalDateTime startDate, LocalDateTime endDate);
 }

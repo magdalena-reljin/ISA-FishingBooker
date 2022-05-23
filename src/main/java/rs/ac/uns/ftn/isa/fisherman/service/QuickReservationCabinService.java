@@ -37,4 +37,5 @@ public interface QuickReservationCabinService {
     boolean checkIfReservationIsEvaluated(Long reservationId);
     void markThatReservationIsEvaluated(Long reservationId);
     QuickReservationCabin getById(Long reservationId);
+    boolean cabinHasTakenQuickReservationInPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate);
 }

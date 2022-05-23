@@ -6,17 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.isa.fisherman.dto.OwnersReportDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationAdventureDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.QuickReservationBoatDto;
-import rs.ac.uns.ftn.isa.fisherman.dto.UserRequestDTO;
+import rs.ac.uns.ftn.isa.fisherman.dto.*;
 import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationBoatMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnerService;
-import rs.ac.uns.ftn.isa.fisherman.service.BoatOwnersQuickReservationReportService;
-import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
-import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationBoatService;
+import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +26,8 @@ public class QuickReservationBoatController {
     private BoatOwnersQuickReservationReportService boatOwnersQuickReservationReportService;
     @Autowired
     private PenaltyService penaltyService;
+    @Autowired
+    private BoatReservationCancellationService boatReservationCancellationService;
     private final QuickReservationBoatMapper quickReservationBoatMapper= new QuickReservationBoatMapper();
 
     @PostMapping("/ownerCreates/{username:.+}/")
@@ -102,6 +99,8 @@ public class QuickReservationBoatController {
     public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationBoatDto quickReservationBoatDto) {
         if(penaltyService.isUserBlockedFromReservation(quickReservationBoatDto.getClientUsername()))
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
+        if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(quickReservationBoatDto.getBoatDto().getId(), quickReservationBoatDto.getClientUsername(), quickReservationBoatDto.getStartDate(), quickReservationBoatDto.getEndDate()))
+            return new ResponseEntity<>("Client has cancellation with instructor in given period!", HttpStatus.BAD_REQUEST);
         if(quickReservationBoatService.makeQuickReservation(quickReservationBoatDto)) {
             return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
         }else {
@@ -125,5 +124,18 @@ public class QuickReservationBoatController {
         for(QuickReservationBoat quickReservationBoat: quickReservationBoatService.getClientQuickReservationsHistory(userRequestDTO.getUsername()))
             quickReservationBoatDtos.add(quickReservationBoatMapper.boatQuickReservationToDto(quickReservationBoat));
         return new ResponseEntity<>(quickReservationBoatDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelReservation")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation (@RequestBody QuickReservationBoatDto boatReservationDto) {
+        if(boatReservationDto.getStartDate().minusDays(3).isBefore(LocalDateTime.now()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Less than 3 days left until start!", HttpStatus.BAD_REQUEST);
+        if(!quickReservationBoatService.quickReservationExists(boatReservationDto.getId(), boatReservationDto.getStartDate(), boatReservationDto.getEndDate()))
+            return new ResponseEntity<>("Unsuccessful cancellation. Reservation doesn't exist or it is already cancelled!", HttpStatus.BAD_REQUEST);
+        if(boatReservationCancellationService.addCancellationQuickReservation(boatReservationDto))
+            return new ResponseEntity<>("Successful cancellation.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Unsuccessful cancellation.", HttpStatus.BAD_REQUEST);
     }
 }

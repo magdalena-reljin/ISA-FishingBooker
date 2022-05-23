@@ -35,4 +35,5 @@ public interface QuickReservationBoatService {
     List<QuickReservationBoat> findReservationsToSumProfitByBoat(Long id, LocalDateTime localDateTime, LocalDateTime localDateTime1);
     boolean checkIfReservationIsEvaluated(Long reservationId);
     void markThatReservationIsEvaluated(Long reservationId);
+    boolean boatHasTakenQuickReservationInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
 }

@@ -215,6 +215,12 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     @Override
+    public boolean fishingInstructorNotFreeForQuickReservation(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
+        return adventureReservationRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate) ||
+                quickReservationAdventureService.instructorHasTakenReservationInPeriod(instructorUsername, startDate, endDate);
+    }
+
+    @Override
     public List<AdventureReservation> findAllReservationsForAdminProfit(LocalDateTime start, LocalDateTime end) {
         return adventureReservationRepository.findAllReservationsForAdminProfit(start,end);
     }
