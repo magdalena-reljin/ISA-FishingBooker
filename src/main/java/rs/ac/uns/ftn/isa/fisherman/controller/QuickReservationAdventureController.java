@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationAdventureMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.FishingInstructorService;
 import rs.ac.uns.ftn.isa.fisherman.service.InstructorQuickReportService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationAdventureService;
 
 import java.util.HashSet;
@@ -26,6 +27,8 @@ public class QuickReservationAdventureController {
     private FishingInstructorService fishingInstructorService;
     @Autowired
     private InstructorQuickReportService instructorQuickReportService;
+    @Autowired
+    private PenaltyService penaltyService;
     private QuickReservationAdventureMapper quickReservationAdventureMapper = new QuickReservationAdventureMapper();
     @PostMapping("/instructorCreates")
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")
@@ -86,6 +89,8 @@ public class QuickReservationAdventureController {
     @PostMapping("/makeQuickReservation")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationAdventureDto quickReservationAdventureDto) {
+        if(penaltyService.isUserBlockedFromReservation(quickReservationAdventureDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(quickReservationAdventureService.makeQuickReservation(quickReservationAdventureDto)) {
             return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
         }else {

@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.isa.fisherman.mapper.QuickReservationCabinMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnersQuickReservationReportService;
+import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 import rs.ac.uns.ftn.isa.fisherman.service.QuickReservationCabinService;
 
 import java.util.HashSet;
@@ -26,6 +27,8 @@ public class QuickReservationCabinController {
     private CabinOwnerService cabinOwnerService;
     @Autowired
     private CabinOwnersQuickReservationReportService cabinOwnersQuickReservationReportService;
+    @Autowired
+    private PenaltyService penaltyService;
     private final QuickReservationCabinMapper quickReservationCabinMapper=new QuickReservationCabinMapper();
 
     @PostMapping("/ownerCreates")
@@ -89,6 +92,8 @@ public class QuickReservationCabinController {
     @PostMapping("/makeQuickReservation")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> makeQuickReservation (@RequestBody QuickReservationCabinDto quickReservationCabinDto) {
+        if(penaltyService.isUserBlockedFromReservation(quickReservationCabinDto.getClientUsername()))
+            return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(quickReservationCabinService.makeQuickReservation(quickReservationCabinDto)) {
             return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
         }else {
