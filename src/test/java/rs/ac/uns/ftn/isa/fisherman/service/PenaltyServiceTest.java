@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.repository.ClientRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.PenaltyRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.PenaltyServiceImpl;
 
@@ -30,9 +29,7 @@ public class PenaltyServiceTest {
 
     @Test
     public void testGetUserPenalties() {
-        Client client = new Client();
-        client.setId(1L);
-        client.setUsername("testUser");
+        Client client = new Client(1L, "testUser");
         Penalty penalty = new Penalty(1L, LocalDateTime.now(), client);
         when(penaltyRepository.getUserPenalties(1L)).thenReturn(Arrays.asList(penalty));
         when(clientService.findByUsername("testUser")).thenReturn(client);
@@ -43,9 +40,7 @@ public class PenaltyServiceTest {
 
     @Test
     public void testAddNewPenalty() {
-        Client client = new Client();
-        client.setId(1L);
-        client.setUsername("testUser");
+        Client client = new Client(1L, "testUser");
         Penalty penalty = new Penalty(1L, LocalDateTime.now(), client);
 
         when(clientService.findByUsername("testUser")).thenReturn(client);
@@ -61,9 +56,7 @@ public class PenaltyServiceTest {
 
     @Test
     public void testIsUserBlocked(){
-        Client client = new Client();
-        client.setId(1L);
-        client.setUsername("testUser");
+        Client client = new Client(1L, "testUser");
 
         when(clientService.findByUsername("testUser")).thenReturn(client);
         when(penaltyRepository.isUserBlockedFromReservation(1L)).thenReturn(true);
