@@ -10,7 +10,6 @@ import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatReservationRepository;
-import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationBoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.BoatReservationServiceImpl;
 
 import java.time.LocalDateTime;
