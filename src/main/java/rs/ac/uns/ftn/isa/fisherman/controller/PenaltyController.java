@@ -13,7 +13,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.PenaltyDto;
 import rs.ac.uns.ftn.isa.fisherman.mapper.PenaltyMapper;
 import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/penalty", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -25,7 +25,7 @@ public class PenaltyController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/getClientPenalties/{username}")
-    public ResponseEntity<Set<PenaltyDto>> getClientPenalties(@PathVariable("username") String username ){
+    public ResponseEntity<List<PenaltyDto>> getClientPenalties(@PathVariable("username") String username ){
         return new ResponseEntity<>(penaltyMapper.penaltiesToPenaltiesDto(penaltyService.getUserPenalties(username)), HttpStatus.OK);
     }
 

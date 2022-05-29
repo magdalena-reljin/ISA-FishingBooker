@@ -8,7 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.model.Penalty;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
 
@@ -16,7 +16,7 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
     boolean isUserBlockedFromReservation(@Param("users_id")Long usersId);
 
     @Query(value="SELECT * FROM penalties where users_id=:users_id",nativeQuery = true)
-    Set<Penalty> getUserPenalties(@Param("users_id")Long usersId);
+    List<Penalty> getUserPenalties(@Param("users_id")Long usersId);
 
     @Transactional
     @Modifying

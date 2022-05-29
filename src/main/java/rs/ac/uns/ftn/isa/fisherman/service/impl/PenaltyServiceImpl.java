@@ -8,7 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class PenaltyServiceImpl implements PenaltyService {
@@ -28,7 +28,7 @@ public class PenaltyServiceImpl implements PenaltyService {
         return penaltyRepository.isUserBlockedFromReservation(clientService.findByUsername(username).getId());
     }
 
-    public Set<Penalty> getUserPenalties(String username){
+    public List<Penalty> getUserPenalties(String username){
         deleteOldPenalties();
         return penaltyRepository.getUserPenalties(clientService.findByUsername(username).getId());
     }
