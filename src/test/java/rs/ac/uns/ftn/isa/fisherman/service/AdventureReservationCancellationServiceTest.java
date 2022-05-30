@@ -6,10 +6,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import rs.ac.uns.ftn.isa.fisherman.dto.AdventureReservationDto;
+import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservationCancellation;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationCancellationRepository;
+import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.AdventureReservationCancellationImpl;
 
 import java.time.LocalDateTime;
@@ -27,6 +30,8 @@ public class AdventureReservationCancellationServiceTest {
     private FishingInstructorService fishingInstructorService;
     @Mock
     private ClientService clientService;
+    @Mock
+    private AdventureReservationRepository adventureReservationRepository;
     @InjectMocks
     private AdventureReservationCancellationImpl adventureReservationCancellationService;
 
@@ -54,5 +59,17 @@ public class AdventureReservationCancellationServiceTest {
         assertThat(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(fishingInstructor1.getUsername(), client2.getUsername(), LocalDateTime.now().plusDays(4), LocalDateTime.now().plusDays(5))).isFalse();
         assertThat(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(fishingInstructor2.getUsername(), client1.getUsername(), LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(4))).isFalse();
         assertThat(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(fishingInstructor2.getUsername(), client2.getUsername(), LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(4))).isTrue();
+    }
+    @Test
+    public void testAddCancellation(){
+        AdventureReservation adventureReservation = new AdventureReservation();
+        adventureReservation.setId(1L);
+        adventureReservation.setStartDate(LocalDateTime.now().plusDays(2));
+        AdventureReservationDto adventureReservationDto = new AdventureReservationDto();
+        adventureReservationDto.setId(1L);
+
+        when(adventureReservationRepository.getById(1L)).thenReturn(adventureReservation);
+
+        assertThat(adventureReservationCancellationService.addCancellation(adventureReservationDto)).isFalse();
     }
 }

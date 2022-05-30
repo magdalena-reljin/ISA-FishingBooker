@@ -10,7 +10,11 @@ import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.HashSet;
 
 @Service
@@ -34,6 +38,8 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
     @Override
     public boolean addCancellation(AdventureReservationDto adventureReservationDto) {
         AdventureReservation adventureReservation = adventureReservationRepository.getById(adventureReservationDto.getId());
+        if(getDateWithoutTime(adventureReservation.getStartDate()).isBefore(getDateWithoutTime(LocalDateTime.now().plusDays(3))))
+            return false;
         AdventureReservationCancellation adventureReservationCancellation = new AdventureReservationCancellation(null, adventureReservation.getClient(), adventureReservation.getStartDate(), adventureReservation.getEndDate(), adventureReservation.getFishingInstructor());
         adventureReservation.setAddedAdditionalServices(new HashSet<>());
         reservationPaymentService.resetLoyaltyStatusAfterCancellation(adventureReservation.getClient(), adventureReservation.getFishingInstructor());
@@ -42,6 +48,12 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
         adventureReservationCancellationRepository.save(adventureReservationCancellation);
         penaltyService.addPenalty(adventureReservation.getClient().getUsername());
         return true;
+    }
+    private LocalDateTime getDateWithoutTime(LocalDateTime dateTime) {
+        dateTime.minusHours(dateTime.getHour());
+        dateTime.minusMinutes(dateTime.getMinute());
+        dateTime.minusSeconds(dateTime.getSecond());
+        return dateTime;
     }
 
     @Override
