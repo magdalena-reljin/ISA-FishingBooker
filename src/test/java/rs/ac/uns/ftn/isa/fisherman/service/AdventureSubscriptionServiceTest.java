@@ -47,6 +47,6 @@ public class AdventureSubscriptionServiceTest {
 
         assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser")).hasSize(2);
         assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser2nd")).hasSize(1);
-        assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser3rd")).hasSize(0);
+        assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser3rd")).isEmpty();
     }
 }

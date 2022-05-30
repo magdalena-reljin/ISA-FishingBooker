@@ -150,7 +150,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
         Long clientId = clientService.findByUsername(clientUsername).getId();
         Set<QuickReservationBoat> quickReservationBoats = new HashSet<>();
         for(QuickReservationBoat quickReservationBoat:quickReservationBoatRepository.findAll()){
-            if(!(quickReservationBoat.getClient()==null) && quickReservationBoat.getClient().getId().equals(clientId)
+            if(quickReservationBoat.getClient()!=null && quickReservationBoat.getClient().getId().equals(clientId)
                     && quickReservationBoat.getStartDate().isBefore(LocalDateTime.now()))
                 quickReservationBoats.add(quickReservationBoat);
         }
