@@ -57,6 +57,6 @@ public class QuickReservationBoatServiceTest {
 
         assertThat(quickReservationBoatService.getClientQuickReservationsHistory("testUser")).hasSize(2);
         assertThat(quickReservationBoatService.getClientQuickReservationsHistory("testUser2nd")).hasSize(1);
-        assertThat(quickReservationBoatService.getClientQuickReservationsHistory("testUser3rd")).hasSize(0);
+        assertThat(quickReservationBoatService.getClientQuickReservationsHistory("testUser3rd")).isEmpty();
     }
 }

@@ -13,8 +13,6 @@ import rs.ac.uns.ftn.isa.fisherman.repository.AdventureSubscriptionRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.AdventureSubscriptionServiceImpl;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -47,6 +45,6 @@ public class AdventureSubscriptionServiceTest {
 
         assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser")).hasSize(2);
         assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser2nd")).hasSize(1);
-        assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser3rd")).hasSize(0);
+        assertThat(adventureSubscriptionService.findSubscriptionsByClientUsername("testUser3rd")).isEmpty();
     }
 }
