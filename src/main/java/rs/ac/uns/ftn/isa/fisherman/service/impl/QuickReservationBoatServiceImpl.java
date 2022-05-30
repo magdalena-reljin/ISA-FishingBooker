@@ -18,7 +18,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuickReservationBoatServiceImpl implements QuickReservationBoatService {
@@ -102,12 +105,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
 
     @Override
     public Set<QuickReservationBoat> getAvailableReservations() {
-        Set<QuickReservationBoat> quickReservationBoats = new HashSet<>();
-        for(QuickReservationBoat quickReservationBoat:quickReservationBoatRepository.findAll()){
-            if(quickReservationBoat.getClient()==null && quickReservationBoat.getStartDate().isAfter(LocalDateTime.now()))
-                quickReservationBoats.add(quickReservationBoat);
-        }
-        return quickReservationBoats;
+        return quickReservationBoatRepository.getAvailableReservations(LocalDateTime.now());
     }
 
     @Override
@@ -147,14 +145,7 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
 
     @Override
     public Set<QuickReservationBoat> getClientQuickReservationsHistory(String clientUsername) {
-        Long clientId = clientService.findByUsername(clientUsername).getId();
-        Set<QuickReservationBoat> quickReservationBoats = new HashSet<>();
-        for(QuickReservationBoat quickReservationBoat:quickReservationBoatRepository.findAll()){
-            if(quickReservationBoat.getClient()!=null && quickReservationBoat.getClient().getId().equals(clientId)
-                    && quickReservationBoat.getStartDate().isBefore(LocalDateTime.now()))
-                quickReservationBoats.add(quickReservationBoat);
-        }
-        return quickReservationBoats;
+        return quickReservationBoatRepository.getClientQuickReservationsHistory(clientService.findByUsername(clientUsername).getId(), LocalDateTime.now());
     }
 
     @Override
