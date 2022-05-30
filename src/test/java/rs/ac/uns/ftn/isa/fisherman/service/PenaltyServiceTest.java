@@ -39,7 +39,7 @@ public class PenaltyServiceTest {
         assertThat(penaltyService.getUserPenalties("testUser")).hasSize(2);
         assertThat(penaltyService.getUserPenalties("testUser2nd")).hasSize(1);
     }
-    
+
     @Test
     public void testIsUserBlocked(){
         Client client1 = new Client(1L, "testUser");

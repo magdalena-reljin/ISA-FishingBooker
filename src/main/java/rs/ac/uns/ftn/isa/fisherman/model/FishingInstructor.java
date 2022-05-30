@@ -16,7 +16,10 @@ public class FishingInstructor extends  User {
         this.adventures = adventures;
         this.availableInstructorPeriods = availableInstructorPeriods;
     }
-
+    public FishingInstructor(Long id, String username) {
+        this.id = id;
+        this.username = username;
+    }
     @OneToMany(mappedBy = "fishingInstructor", fetch = FetchType.LAZY, cascade = CascadeType.DETACH, orphanRemoval = true)
     private Set<Adventure> adventures;
 

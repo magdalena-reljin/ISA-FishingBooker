@@ -7,10 +7,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto;
-import rs.ac.uns.ftn.isa.fisherman.model.Address;
-import rs.ac.uns.ftn.isa.fisherman.model.Adventure;
-import rs.ac.uns.ftn.isa.fisherman.model.Client;
-import rs.ac.uns.ftn.isa.fisherman.model.FishingInstructor;
+import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
@@ -40,6 +37,7 @@ public class AdventureReservationServiceTest {
     private FishingInstructorRepository fishingInstructorRepository;
     @Mock
     private AdventureService adventureService;
+
     @InjectMocks
     private AdventureReservationServiceImpl adventureReservationService;
 

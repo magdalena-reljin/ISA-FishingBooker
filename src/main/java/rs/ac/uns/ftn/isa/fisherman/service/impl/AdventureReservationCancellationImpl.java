@@ -46,7 +46,13 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
 
     @Override
     public boolean clientHasCancellationWithInstructorInPeriod(String ownersUsername, String clientUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorService.findByUsername(ownersUsername).getId(), clientService.findByUsername(clientUsername).getId(), startDate, endDate);
+        Long clientId = clientService.findByUsername(clientUsername).getId();
+        Long instructorId = fishingInstructorService.findByUsername(ownersUsername).getId();
+        for(AdventureReservationCancellation adventureReservationCancellation: adventureReservationCancellationRepository.findAll())
+            if(!adventureReservationCancellation.getStartDate().isAfter(endDate) && !adventureReservationCancellation.getEndDate().isBefore(startDate)
+            && adventureReservationCancellation.getClient().getId().equals(clientId) && adventureReservationCancellation.getFishingInstructor().getId().equals(instructorId))
+                return true;
+        return false;
     }
 
     @Override
