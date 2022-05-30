@@ -29,38 +29,27 @@ public class PenaltyServiceTest {
 
     @Test
     public void testGetUserPenalties() {
-        Client client = new Client(1L, "testUser");
-        Penalty penalty = new Penalty(1L, LocalDateTime.now(), client);
-        when(penaltyRepository.getUserPenalties(1L)).thenReturn(Arrays.asList(penalty));
-        when(clientService.findByUsername("testUser")).thenReturn(client);
-        List<Penalty> penaltySet = penaltyService.getUserPenalties("testUser");
+        Client client1 = new Client(1L, "testUser");
+        Client client2 = new Client(2L, "testUser2nd");
 
-        assertThat(penaltySet).hasSize(1);
+        when(penaltyRepository.findAll()).thenReturn(Arrays.asList(new Penalty(1L, LocalDateTime.now(), client1), new Penalty(2L, LocalDateTime.now(), client1),new Penalty(3L, LocalDateTime.now(), client2)));
+        when(clientService.findByUsername("testUser")).thenReturn(client1);
+        when(clientService.findByUsername("testUser2nd")).thenReturn(client2);
+
+        assertThat(penaltyService.getUserPenalties("testUser")).hasSize(2);
+        assertThat(penaltyService.getUserPenalties("testUser2nd")).hasSize(1);
     }
-
-    @Test
-    public void testAddNewPenalty() {
-        Client client = new Client(1L, "testUser");
-        Penalty penalty = new Penalty(1L, LocalDateTime.now(), client);
-
-        when(clientService.findByUsername("testUser")).thenReturn(client);
-        when(penaltyRepository.getUserPenalties(1L)).thenReturn(Arrays.asList(penalty));
-
-        penaltyService.addPenalty("testUser");
-
-        List<Penalty> penaltySet = penaltyService.getUserPenalties("testUser");
-
-        assertThat(penaltySet).isNotNull();
-        assertThat(penaltySet).hasSize(1);
-    }
-
+    
     @Test
     public void testIsUserBlocked(){
-        Client client = new Client(1L, "testUser");
+        Client client1 = new Client(1L, "testUser");
+        Client client2 = new Client(2L, "testUser2nd");
 
-        when(clientService.findByUsername("testUser")).thenReturn(client);
-        when(penaltyRepository.isUserBlockedFromReservation(1L)).thenReturn(true);
+        when(penaltyRepository.findAll()).thenReturn(Arrays.asList(new Penalty(1L, LocalDateTime.now(), client1), new Penalty(2L, LocalDateTime.now(), client1),new Penalty(3L, LocalDateTime.now(), client2),new Penalty(4L, LocalDateTime.now(), client2), new Penalty(5L, LocalDateTime.now(), client1)));
+        when(clientService.findByUsername("testUser")).thenReturn(client1);
+        when(clientService.findByUsername("testUser2nd")).thenReturn(client2);
 
         assertThat(penaltyService.isUserBlockedFromReservation("testUser")).isTrue();
+        assertThat(penaltyService.isUserBlockedFromReservation("testUser2nd")).isFalse();
     }
 }

@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
 import rs.ac.uns.ftn.isa.fisherman.service.PenaltyService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,12 +26,26 @@ public class PenaltyServiceImpl implements PenaltyService {
 
     public boolean isUserBlockedFromReservation(String username){
         deleteOldPenalties();
-        return penaltyRepository.isUserBlockedFromReservation(clientService.findByUsername(username).getId());
+        Long clientId = clientService.findByUsername(username).getId();
+        int numberOfPenalties = 0;
+        for(Penalty penalty:penaltyRepository.findAll()) {
+            if (penalty.getClient().getId().equals(clientId))
+                numberOfPenalties++;
+            if(numberOfPenalties==3)
+                return true;
+        }
+        return false;
     }
 
     public List<Penalty> getUserPenalties(String username){
         deleteOldPenalties();
-        return penaltyRepository.getUserPenalties(clientService.findByUsername(username).getId());
+        Long clientId = clientService.findByUsername(username).getId();
+        List<Penalty> userPenalties = new ArrayList<>();
+        for(Penalty penalty:penaltyRepository.findAll()) {
+            if (penalty.getClient().getId().equals(clientId))
+                userPenalties.add(penalty);
+        }
+        return userPenalties;
     }
 
     @Override
