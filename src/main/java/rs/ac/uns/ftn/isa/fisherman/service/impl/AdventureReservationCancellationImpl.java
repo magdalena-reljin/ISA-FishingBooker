@@ -10,7 +10,11 @@ import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.QuickReservationAdventureRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.HashSet;
 
 @Service
@@ -34,6 +38,8 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
     @Override
     public boolean addCancellation(AdventureReservationDto adventureReservationDto) {
         AdventureReservation adventureReservation = adventureReservationRepository.getById(adventureReservationDto.getId());
+        if(getDateWithoutTime(adventureReservation.getStartDate()).isBefore(getDateWithoutTime(LocalDateTime.now().plusDays(3))))
+            return false;
         AdventureReservationCancellation adventureReservationCancellation = new AdventureReservationCancellation(null, adventureReservation.getClient(), adventureReservation.getStartDate(), adventureReservation.getEndDate(), adventureReservation.getFishingInstructor());
         adventureReservation.setAddedAdditionalServices(new HashSet<>());
         reservationPaymentService.resetLoyaltyStatusAfterCancellation(adventureReservation.getClient(), adventureReservation.getFishingInstructor());
@@ -43,10 +49,22 @@ public class AdventureReservationCancellationImpl implements AdventureReservatio
         penaltyService.addPenalty(adventureReservation.getClient().getUsername());
         return true;
     }
+    private LocalDateTime getDateWithoutTime(LocalDateTime dateTime) {
+        dateTime.minusHours(dateTime.getHour());
+        dateTime.minusMinutes(dateTime.getMinute());
+        dateTime.minusSeconds(dateTime.getSecond());
+        return dateTime;
+    }
 
     @Override
     public boolean clientHasCancellationWithInstructorInPeriod(String ownersUsername, String clientUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorService.findByUsername(ownersUsername).getId(), clientService.findByUsername(clientUsername).getId(), startDate, endDate);
+        Long clientId = clientService.findByUsername(clientUsername).getId();
+        Long instructorId = fishingInstructorService.findByUsername(ownersUsername).getId();
+        for(AdventureReservationCancellation adventureReservationCancellation: adventureReservationCancellationRepository.findAll())
+            if(!adventureReservationCancellation.getStartDate().isAfter(endDate) && !adventureReservationCancellation.getEndDate().isBefore(startDate)
+            && adventureReservationCancellation.getClient().getId().equals(clientId) && adventureReservationCancellation.getFishingInstructor().getId().equals(instructorId))
+                return true;
+        return false;
     }
 
     @Override

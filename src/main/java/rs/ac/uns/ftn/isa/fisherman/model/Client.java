@@ -27,6 +27,11 @@ public class Client extends User{
         super(id, name, lastName, username, password, phoneNum, address,null);
     }
 
+    public Client(Long id, String username){
+        this.id = id;
+        this.username = username;
+    }
+
     @Override
     public String getRoleApp() {
         return roleApp;

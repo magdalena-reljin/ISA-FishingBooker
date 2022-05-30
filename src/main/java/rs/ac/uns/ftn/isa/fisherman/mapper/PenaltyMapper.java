@@ -3,13 +3,13 @@ package rs.ac.uns.ftn.isa.fisherman.mapper;
 import rs.ac.uns.ftn.isa.fisherman.dto.PenaltyDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Penalty;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PenaltyMapper {
 
-    public Set<PenaltyDto> penaltiesToPenaltiesDto(Set<Penalty> penalties){
-        Set<PenaltyDto> penaltiesDto = new HashSet<>();
+    public List<PenaltyDto> penaltiesToPenaltiesDto(List<Penalty> penalties){
+        List<PenaltyDto> penaltiesDto = new ArrayList<>();
         for(Penalty penalty : penalties){
             penaltiesDto.add(new PenaltyDto(penalty.getId(), penalty.getDate()));
         }
