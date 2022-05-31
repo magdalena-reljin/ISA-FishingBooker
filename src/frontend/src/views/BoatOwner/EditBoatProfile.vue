@@ -338,7 +338,7 @@
         this.boatDto.ownersUsername=this.email
         this.userRequestDto.username=this.email
         this.getBoat()
-        axios.post("http://localhost:8081/auth/findByEmail", this.userRequestDto)
+        axios.post(process.env.VUE_APP_BACKEND_URL+"auth/findByEmail", this.userRequestDto)
                .then(response => {
                         
                         this.ownerId=response.data.id 
@@ -347,7 +347,7 @@
      },
      methods: {
        getBoat: function(){
-             axios.post("http://localhost:8081/boats/findByNameAndOwnersUsername"+"/"+this.boatDto.name+"/"+this.email+"/")
+             axios.post(process.env.VUE_APP_BACKEND_URL+"boats/findByNameAndOwnersUsername"+"/"+this.boatDto.name+"/"+this.email+"/")
                .then(response => {
                         this.boatDto=response.data
                         this.idx=this.boatDto.additionalServices.length
@@ -390,10 +390,10 @@
               this.idx--;
        },
        deleteBoat: function(){
-             axios.post("http://localhost:8081/boats/canBeEditedOrDeleted/"+this.boatDto.id)
+             axios.post(process.env.VUE_APP_BACKEND_URL+"boats/canBeEditedOrDeleted/"+this.boatDto.id)
                .then(response => {
                      if(response.data == true){
-                     axios.post("http://localhost:8081/boats/delete",this.boatDto)
+                     axios.post(process.env.VUE_APP_BACKEND_URL+"boats/delete",this.boatDto)
                       .then(response => {
                             this.$router.push('/boatOwnerHome/'+ this.email);
                             return response;
@@ -411,7 +411,7 @@
               })
           
        },
-       editBoat: function(event){
+        editBoat: function(event){
            event.preventDefault()
 
            if(this.imagesSelected==true)
@@ -432,10 +432,10 @@
                     this.boatDto.cancelingCondition='NOT FREE'
                   }
              
-          axios.post("http://localhost:8081/boats/canBeEditedOrDeleted/"+this.boatDto.id)
+          axios.post(process.env.VUE_APP_BACKEND_URL+"boats/canBeEditedOrDeleted/"+this.boatDto.id)
                .then(response => {
                      if(response.data == true){
-                         axios.post("http://localhost:8081/boats/edit",this.boatDto)
+                         axios.post(process.env.VUE_APP_BACKEND_URL+"boats/edit",this.boatDto)
                         .then(response => {
                               if(this.imagesSelected==true){
                                   this.saveImages()
@@ -452,6 +452,13 @@
                                 this.$router.push('/boatProfile/'+ this.email+'/'+this.boatName);
                               }
                               return response;
+                        }).catch(error => {
+                            console.log(error)
+                              this.$swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "You can't edit this boat because future reservations exist!",
+                       });
                         })
 
                      }else{
@@ -480,7 +487,7 @@
                     let formData = new FormData();
                     let file =  this.imagesSelectedEvent.target.files[i];
                     formData.append('file', file);
-                       axios.post("http://localhost:8081/firebase/uploadBoatImage/"+this.boatDto.name+"/"+this.ownerId,formData)
+                       axios.post(process.env.VUE_APP_BACKEND_URL+"firebase/uploadBoatImage/"+this.boatDto.name+"/"+this.ownerId,formData)
                     .then(response => {
                         
                        this.$swal.fire({
