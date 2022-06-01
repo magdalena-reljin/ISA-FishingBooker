@@ -9,7 +9,6 @@
 ![Heroku](https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white)
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Dajana11-99_ISA-FishingBooker)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Dajana11-99_ISA-FishingBooker&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Dajana11-99_ISA-FishingBooker)
 # Fisherman
 
 ### Heroku
