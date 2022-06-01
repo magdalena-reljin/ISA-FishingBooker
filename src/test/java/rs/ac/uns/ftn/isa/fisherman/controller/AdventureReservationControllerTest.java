@@ -177,7 +177,7 @@ public class AdventureReservationControllerTest {
         LocalDateTime startDate = LocalDateTime.of(2022,7,11,12,0,0);
         LocalDateTime endDate = LocalDateTime.of(2022,7,11,13,0,0);
         AdventureReservationDto adventureReservationDto = new AdventureReservationDto(7L, startDate,endDate,
-                "miticrajko@gmail.com", "cl@gmail.com", new PaymentInformationDto(500.0,0.0,0.0),false,
+                "cl@gmail.com", "cl@gmail.com", new PaymentInformationDto(500.0,0.0,0.0),false,
                 false,"fi@gmail.com",adventureDto, null, false);
 
         ObjectMapper objectMapper=new ObjectMapper();
