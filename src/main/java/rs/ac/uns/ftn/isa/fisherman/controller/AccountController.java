@@ -29,12 +29,12 @@ public class AccountController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> acceptAccount(@RequestBody UserRequestDTO userRequest){
         userService.acceptAccount(userService.findByUsername(userRequest.getUsername()));
-
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }
     @PostMapping("/denyAccount/{reason}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> denyAccount(@PathVariable ("reason") String reason, @RequestBody UserRequestDTO userRequest) {
+       System.out.println("Usao u repo"+ userRequest.getUsername());
         userService.denyAccount(userService.findByUsername(userRequest.getUsername()),reason);
         return new ResponseEntity<>("Success.", HttpStatus.OK);
     }

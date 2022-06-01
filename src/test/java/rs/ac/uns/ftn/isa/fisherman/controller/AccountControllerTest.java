@@ -54,11 +54,11 @@ public class AccountControllerTest {
     @Test
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void testDenyAccount() throws Exception {
-        UserRequestDTO userRequestDTO = new UserRequestDTO("reljin.magdalena@gmail.com","Magdalena","Reljin","CABINOWNER","asdasdasd",0.0,"",0);
+        UserRequestDTO userRequestDTO = new UserRequestDTO("test@gmail.com","Rajko","Mitic","CLIENT","asdasdasd",0.0,"",0);
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String json=objectMapper.writeValueAsString(userRequestDTO);
-        mockMvc.perform(post(URL_PREFIX + "/denyAccount/"+"Bad request.").contentType(contentType).content(json))
+        mockMvc.perform(post(URL_PREFIX + "/denyAccount/"+"BadRequest.").contentType(contentType).content(json))
                 .andExpect(status().isOk());
     }
 
@@ -66,11 +66,11 @@ public class AccountControllerTest {
     @Rollback(true)
     @WithMockUser(authorities = "ROLE_ADMIN")
     public void testAcceptReasonForDeletingAccount() throws Exception {
-        MailDto mailDto = new MailDto("Ok!","dajanazlokapa1@gmail.com");
+        MailDto mailDto = new MailDto("Ok!","isa.testing.tim15@gmail.com");
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String json=objectMapper.writeValueAsString(mailDto);
-        mockMvc.perform(post(URL_PREFIX + "/sendAcceptReasonForDeletingAccount").contentType(contentType).content(json))
+        mockMvc.perform(post(URL_PREFIX + "/sendAcceptReason").contentType(contentType).content(json))
                 .andExpect(status().isOk());
     }
 
