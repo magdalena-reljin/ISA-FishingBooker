@@ -11,8 +11,9 @@
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined,version) values ('CLIENT',11,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','cl@gmail.com', true, 'Rasta','2022-01-04 15:31:53.899','Nikolic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null,0);
 
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined,version) values ('CLIENT',12,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','isa.projekat.tim.15@gmail.com', true, 'Magdalena','2022-01-04 15:31:53.899','Reljin','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null,0);
-/*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,       enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined, registration_reason,rating,version) values ('CABINOWNER',13,null, 'Beograd','Serbia',45.267136,19.833549, 'ULICA','isa.testing.tim15@gmail.com',false, 'Vlasnik','2022-01-04 15:31:53.899','Vikendice','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null,'Da zaradim malo.',5.0,0);
+/*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,       enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined, registration_reason,rating,version) values ('CABINOWNER',13,null, 'Beograd','Serbia',45.267136,19.833549, 'ULICA','isa.testing.tim15@gmail.com',true, 'Vlasnik','2022-01-04 15:31:53.899','Vikendice','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','sdfsdfsdfsdf',0,0,null,'Da zaradim malo.',5.0,0);
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined,version) values ('CLIENT',14,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','miticrajko@gmail.com', true, 'Rajko','2022-01-04 15:31:53.899','Mitic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+38106103041945','',0,0,null,0);
+/*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined,version) values ('CLIENT',15,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','test@gmail.com', false, 'Rajko','2022-01-04 15:31:53.899','Mitic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+38106103041945','asdsdasdas',0,0,null,0);
 
 INSERT INTO AUTHORITY (id ,name) VALUES (1, 'ROLE_ADMIN');
 INSERT INTO AUTHORITY (id ,name) VALUES (2, 'ROLE_CABINOWNER');
@@ -40,6 +41,9 @@ INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (11, 6);
 
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (12, 6);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (13, 2);
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (15, 6);
+
 
 
 /*

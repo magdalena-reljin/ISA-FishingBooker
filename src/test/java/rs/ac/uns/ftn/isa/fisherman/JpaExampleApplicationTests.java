@@ -1,12 +1,9 @@
 package rs.ac.uns.ftn.isa.fisherman;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.isa.fisherman.controller.*;
-import rs.ac.uns.ftn.isa.fisherman.model.CabinReservation;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 
 //@RunWith(SpringRunner.class)
