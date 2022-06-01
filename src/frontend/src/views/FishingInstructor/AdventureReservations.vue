@@ -77,7 +77,8 @@
                             <td>{{ads.adventureDto.name}}</td>
                             <td>{{setandFormatDate(ads.startDate)}}</td>
                             <td>{{setandFormatDate(ads.endDate)}}</td>
-                            <td>{{ads.clientUsername}}</td>
+                            <td >
+                              <a href="#" @click="redirectToClientProfile(ads.clientUsername)" >{{ads.clientUsername}}</a></td>
                             <td><button @click="reservationInformation(ads)" type="button" class="btn btn-info">Details</button></td>
                             </tr>
                         </tbody>
@@ -103,7 +104,7 @@
                             <td>{{ads1.adventureDto.name}}</td>
                             <td>{{setandFormatDate(ads1.startDate)}}</td>
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
-                            <td>{{ads1.clientUsername}}</td>
+                            <td><a href="#" @click="redirectToClientProfile(ads1.clientUsername)">{{ads1.clientUsername}}</a></td>
                             <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
                             <td  v-if="ads1.ownerWroteAReport==false " ><button @click="review(ads1)" type="button" class="btn btn-success">Review</button></td>
 
@@ -480,7 +481,11 @@ export default ({
               this.searchClientReservations=''
               this.getReservations();
               this.getPastReservations();
-          }
+          },
+          redirectToClientProfile: function(clientUsername){
+              this.$router.push('/cabinOwner/viewProfile/'+ this.email + "/"+clientUsername);
+        }
+
 
        },
       

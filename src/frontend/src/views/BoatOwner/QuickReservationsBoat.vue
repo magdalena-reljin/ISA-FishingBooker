@@ -94,7 +94,8 @@
                             <td>{{ads.boatDto.name}}</td>
                             <td>{{setandFormatDate(ads.startDate)}}</td>
                             <td>{{setandFormatDate(ads.endDate)}}</td>
-                            <td>{{ads.clientUsername}}</td>
+                            <td>
+                              <a href="#" @click="redirectToClientProfile(ads.clientUsername)">{{ads.clientUsername}}</a></td>
                             <td><button @click="reservationInformation(ads)" type="button" class="btn btn-info">Details</button></td>
                             </tr>
                         </tbody>
@@ -120,7 +121,7 @@
                             <td>{{ads1.boatDto.name}}</td>
                             <td>{{setandFormatDate(ads1.startDate)}}</td>
                             <td>{{setandFormatDate(ads1.endDate)}}</td>
-                            <td>{{ads1.clientUsername}}</td>
+                            <td>  <a href="#" @click="redirectToClientProfile(ads1.clientUsername)">{{ads1.clientUsername}}</a></td>
                             <td><button @click="reservationInformation(ads1)" type="button" class="btn btn-info">Details</button></td>
                             <td><button v-if="ads1.ownerWroteAReport==false && ads1.clientUsername===''" @click="writeAReview(ads1)" type="button" class="btn btn-success">Review</button></td>
 
@@ -534,6 +535,10 @@ export default ({
                 this.reservationId=0
                
           },
+          redirectToClientProfile: function(clientUsername){
+              this.$router.push('/cabinOwner/viewProfile/'+ this.email + "/"+clientUsername);
+        }
+
 
        },
         computed: {

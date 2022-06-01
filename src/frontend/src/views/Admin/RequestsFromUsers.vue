@@ -109,6 +109,13 @@ import axios from "axios";
                   axios.post(process.env.VUE_APP_BACKEND_URL+"account/acceptAccount",user)
                   .then(response => {this.userRequestDTO = response.data
                         this.loadData();
+                          this.$swal.fire({
+                 position: 'top-end',
+                  icon: 'success',
+                 title: 'Request accepted!',
+               showConfirmButton: false,
+               timer: 1500
+    })
 
                    })
                  .catch(error => {
@@ -121,6 +128,13 @@ import axios from "axios";
                   axios.post(process.env.VUE_APP_BACKEND_URL+"account/denyAccount/"+this.reason,user)
                   .then(response => {this.userRequestDTO = response.data
                         this.loadData();
+                          this.$swal.fire({
+                 position: 'top-end',
+                  icon: 'success',
+                 title: 'Request denied!',
+               showConfirmButton: false,
+               timer: 1500
+    })
                    })
                  .catch(error => {
                   this.errorMessage = error.message;
