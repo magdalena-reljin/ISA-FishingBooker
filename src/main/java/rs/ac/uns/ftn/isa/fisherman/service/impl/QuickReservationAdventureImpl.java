@@ -196,7 +196,7 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public boolean instructorHasTakenReservationInPeriod(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return quickReservationAdventureRepository.instructorHasTakenReservationInPeriod(instructorUsername, startDate, endDate);
+        return fishingInstructorNotFree(instructorUsername, startDate, endDate);
     }
 
     private void sendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {

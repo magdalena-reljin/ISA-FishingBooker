@@ -234,8 +234,16 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
     @Override
     public boolean fishingInstructorNotFreeForQuickReservation(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return adventureReservationRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate) ||
+        return instructorHasReservationInPeriod(instructorUsername, startDate, endDate) ||
                 quickReservationAdventureService.instructorHasTakenReservationInPeriod(instructorUsername, startDate, endDate);
+    }
+
+    @Override
+    public boolean clientHasReservationWithInstructor(Long instructorId, Long clientId) {
+       for(AdventureReservation adventureReservation:adventureReservationRepository.getByInstructorId(instructorId))
+           if(adventureReservation.getClient().getId().equals(clientId))
+               return true;
+       return false;
     }
 
     @Override
@@ -310,7 +318,7 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
     @Override
     public boolean reservationExists(Long id) {
-        return adventureReservationRepository.reservationExists(id);
+        return adventureReservationRepository.findById(id).isPresent();
     }
 
     @Override

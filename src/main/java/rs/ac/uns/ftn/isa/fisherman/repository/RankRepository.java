@@ -7,10 +7,10 @@ import rs.ac.uns.ftn.isa.fisherman.model.Rank;
 
 public interface RankRepository extends JpaRepository<Rank,Long> {
 
-    @Query(value="SELECT points FROM rank where rank=:rank  ",nativeQuery = true)
+    @Query(value="SELECT points FROM rank where rank_type=:rank  ",nativeQuery = true)
     Integer getPointsByRank(@Param("rank")Integer rank);
 
-    @Query(value="SELECT discount_percentage FROM rank where rank=:rank  ",nativeQuery = true)
+    @Query(value="SELECT discount_percentage FROM rank where rank_type=:rank  ",nativeQuery = true)
     Integer getDiscountByRank(@Param("rank") Integer rank);
 
 }

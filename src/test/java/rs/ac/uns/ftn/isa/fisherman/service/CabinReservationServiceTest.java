@@ -152,12 +152,6 @@ public class CabinReservationServiceTest {
         CabinReservationDto cabinReservationDto2 = new CabinReservationDto(2L, startDate2, endDate2, "testUser",
                 "", new PaymentInformationDto(), false, false,"",
                 cabin, null, false);
-        CabinReservationDto cabinReservationDto3 = new CabinReservationDto(2L, startDate3, endDate3, "testUser",
-                "", new PaymentInformationDto(), false, false,"",
-                cabin, null, false);
-        CabinReservation cabinReservation = cabinReservationMapper.cabinReservationDtoToCabinReservation(cabinReservationDto3);
-        cabinReservation.getCabin().setCabinOwner(cabinOwner);
-        cabinReservation.setClient(clientService.findByUsername(cabinReservationDto3.getClientUsername()));
 
         when(cabinReservationRepository.cabinReservedInPeriod(1L, startDate1, endDate1)).thenReturn(true);
         when(quickReservationCabinService.cabinHasQuickReservationInPeriod(1L, startDate1, endDate1)).thenReturn(false);
@@ -167,10 +161,8 @@ public class CabinReservationServiceTest {
         when(quickReservationCabinService.cabinHasQuickReservationInPeriod(1L, startDate3, endDate3)).thenReturn(false);
         when(cabinOwnerService.findByUsername("testOwner")).thenReturn(cabinOwner);
         when(clientService.findByUsername("testUser")).thenReturn(new Client(1L, "testUser"));
-        when(reservationPaymentService.setTotalPaymentAmount(cabinReservation,cabinOwner)).thenReturn(new PaymentInformation());
 
         assertThat(reservationCabinService.makeReservation(cabinReservationDto1)).isFalse();
         assertThat(reservationCabinService.makeReservation(cabinReservationDto2)).isFalse();
-        assertThat(reservationCabinService.makeReservation(cabinReservationDto3)).isTrue();
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureReservation;
+
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,4 +69,7 @@ public interface AdventureReservationRepository extends JpaRepository<AdventureR
 
     @Query(value="SELECT CASE WHEN  COUNT(*) > 0 THEN true ELSE false END FROM  adventure_reservation where users_id=:user_id and (:currentDate <= start_date) ",nativeQuery = true)
     boolean checkIfClientHasFutureReservations(@Param("user_id")Long userId,@Param("currentDate")LocalDateTime currentDate);
+
+    @Query(value="select * from adventure_reservation cr where cr.instructors_id=:id",nativeQuery = true)
+    List<AdventureReservation> getByInstructorId(@Param("id")Long instructorId);
 }

@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsBoatAndAdventureDto
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
+import rs.ac.uns.ftn.isa.fisherman.repository.ClientRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.impl.AdventureReservationServiceImpl;
 
@@ -37,7 +38,10 @@ public class AdventureReservationServiceTest {
     private FishingInstructorRepository fishingInstructorRepository;
     @Mock
     private AdventureService adventureService;
-
+    @Mock
+    private ClientRepository clientRepository;
+    @Mock
+    private AdventureReservationCancellationService adventureReservationCancellationService;
     @InjectMocks
     private AdventureReservationServiceImpl adventureReservationService;
 
@@ -72,10 +76,13 @@ public class AdventureReservationServiceTest {
 
         when(adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(1L, 1L, startDate, endDate)).thenReturn(false);
         when(adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(2L, 1L, startDate, endDate)).thenReturn(false);
+        when(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod("mirko@gmail.com", "testUser", startDate, endDate)).thenReturn(false);
+        when(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod("slavko@gmail.com", "testUser", startDate, endDate)).thenReturn(false);
 
         when(adventureService.findAdventuresByInstructorIds(Arrays.asList(1L, 2L))).thenReturn(Arrays.asList(adventure1, adventure2, adventure3, adventure4));
 
         when(clientService.findByUsername("testUser")).thenReturn(new Client(1L, "testUser"));
+        when(clientRepository.findByID(1L)).thenReturn(new Client(1L, "testUser"));
 
         assertThat(adventureReservationService.getAvailableAdventures(new SearchAvailablePeriodsBoatAndAdventureDto(startDate, endDate, 100.0,"testUser", 4.0, "", "", "", 5))).hasSize(3);
     }
@@ -115,6 +122,7 @@ public class AdventureReservationServiceTest {
         when(adventureService.findAdventuresByInstructorIds(Arrays.asList(1L, 2L))).thenReturn(Arrays.asList(adventure1, adventure2, adventure3, adventure4));
 
         when(clientService.findByUsername("testUser")).thenReturn(new Client(1L, "testUser"));
+        when(clientRepository.findByID(1L)).thenReturn(new Client(1L, "testUser"));
 
         assertThat(adventureReservationService.searchAvailableAdventures(new SearchAvailablePeriodsBoatAndAdventureDto(startDate, endDate, 100.0,"testUser", 4.2, "", "Novi Sad", "", 3))).hasSize(1);
     }
