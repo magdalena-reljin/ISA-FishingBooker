@@ -12,7 +12,7 @@
 
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined,version) values ('CLIENT',12,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','isa.projekat.tim.15@gmail.com', true, 'Magdalena','2022-01-04 15:31:53.899','Reljin','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null,0);
 /*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,       enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined, registration_reason,rating,version) values ('CABINOWNER',13,null, 'Beograd','Serbia',45.267136,19.833549, 'ULICA','isa.testing.tim15@gmail.com',false, 'Vlasnik','2022-01-04 15:31:53.899','Vikendice','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+3810616789856','',0,0,null,'Da zaradim malo.',5.0,0);
-
+/*sifra: 123*/INSERT INTO users (role, id, activation_url, city, country, latitude, longitude, street_and_num, username,         enabled, last_name, last_password_reset_date, name, password, phone_num,reason_for_deleting,current_points,rank_type, is_predefined,version) values ('CLIENT',14,null, 'Novi Sad','Serbia',45.267136,19.833549, 'ULICA','miticrajko@gmail.com', true, 'Rajko','2022-01-04 15:31:53.899','Mitic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','+38106103041945','',0,0,null,0);
 
 INSERT INTO AUTHORITY (id ,name) VALUES (1, 'ROLE_ADMIN');
 INSERT INTO AUTHORITY (id ,name) VALUES (2, 'ROLE_CABINOWNER');
@@ -130,4 +130,10 @@ INSERT INTO cabin_reservation (id, end_date, evaluated, owner_wroteareport, owne
 INSERT INTO adventure_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, users_id, adventure_id, instructors_id) VALUES (4, '2022-04-10 12:26:00', false, false, 'fi@gmail.com', 0.10000000000000009, 3.2333333333333334, 3.3333333333333335, '2022-04-10 12:25:00', true, 11, 1, 4);
 INSERT INTO adventure_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, users_id, adventure_id, instructors_id) VALUES (5, '2022-04-10 12:28:00', false, false, 'fi@gmail.com', 0.10000000000000009, 3.2333333333333334, 3.3333333333333335, '2022-04-10 12:27:00', true, 6, 1, 4);
 INSERT INTO adventure_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, users_id, adventure_id, instructors_id) VALUES (6, '2022-04-10 12:34:00', false, false, 'fi@gmail.com', 0.40000000000000036, 12.933333333333334, 13.333333333333334, '2022-04-10 12:30:00', true, 10, 1, 4);
+
+INSERT INTO adventure_reservation_cancellation (id, end_date, start_date, users_id, instructor_id) VALUES (1, '2022-07-10 12:23:00', '2022-07-04 12:24:00', 11, 4);
+
+INSERT INTO penalties (id, date, users_id) VALUES (1, '2022-07-10 12:23:00',  14);
+INSERT INTO penalties (id, date, users_id) VALUES (2, '2022-07-11 12:23:00',  14);
+INSERT INTO penalties (id, date, users_id) VALUES (3, '2022-07-12 12:23:00',  14);
 

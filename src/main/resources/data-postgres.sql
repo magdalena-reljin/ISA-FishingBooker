@@ -172,5 +172,3 @@ INSERT INTO adventure_reservation (id, end_date, evaluated, owner_wroteareport, 
 INSERT INTO adventure_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, users_id, adventure_id, instructors_id) VALUES (5, '2022-04-10 12:28:00', false, false, 'fi@gmail.com', 0.10000000000000009, 3.2333333333333334, 3.3333333333333335, '2022-04-10 12:27:00', true, 6, 1, 4);
 INSERT INTO adventure_reservation (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, users_id, adventure_id, instructors_id) VALUES (6, '2022-04-10 12:34:00', false, false, 'fi@gmail.com', 0.40000000000000036, 12.933333333333334, 13.333333333333334, '2022-04-10 12:30:00', true, 10, 1, 4);
 
-INSERT INTO adventure_reservation_cancellation (id, end_date, start_date, users_id, instructor_id) VALUES (1, '2022-07-10 12:23:00', '2022-07-04 12:24:00', 11, 4);
-
