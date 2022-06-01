@@ -37,7 +37,7 @@ public class CabinAvailablePeriodServiceTest {
         when(availableCabinPeriodRepository.findAll()).thenReturn(Arrays.asList(availableCabinPeriod,new AvailableCabinPeriod()));
 
         availableCabinPeriodService.setEditedAvailablePeriod(availableCabinPeriod,freeDays);
-        when(availableCabinPeriodRepository.save(freeDays)); //save u servisu napravi 2 nova perioda
+        when(availableCabinPeriodRepository.save(freeDays)).thenReturn(availableCabinPeriod); //save u servisu napravi 2 nova perioda
 
 
         assertEquals(availableCabinPeriod.getStartDate(),availableDaysStart);
@@ -61,7 +61,7 @@ public class CabinAvailablePeriodServiceTest {
         when(availableCabinPeriodRepository.findAll()).thenReturn(Arrays.asList(availableCabinPeriod));
 
         availableCabinPeriodService.setEditedAvailablePeriod(availableCabinPeriod,freeDays);
-        when(availableCabinPeriodRepository.save(availableCabinPeriod));
+        when(availableCabinPeriodRepository.save(availableCabinPeriod)).thenReturn(availableCabinPeriod);
         assertEquals(availableCabinPeriod.getStartDate(),freeDaysEnd.plusMinutes(1));
         assertEquals(availableCabinPeriod.getEndDate(),availableDaysEnd);
     }
@@ -79,7 +79,7 @@ public class CabinAvailablePeriodServiceTest {
         when(availableCabinPeriodRepository.findAll()).thenReturn(Arrays.asList(availableCabinPeriod,new AvailableCabinPeriod()));
 
         availableCabinPeriodService.setEditedAvailablePeriod(availableCabinPeriod,freeDays);
-        when(availableCabinPeriodRepository.save(availableCabinPeriod));
+        when(availableCabinPeriodRepository.save(availableCabinPeriod)).thenReturn(availableCabinPeriod);
         assertEquals(availableCabinPeriod.getStartDate(),availableDaysStart);
         assertEquals(availableCabinPeriod.getEndDate(),freeDaysStart.minusMinutes(1));
     }

@@ -198,7 +198,10 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public boolean instructorHasTakenReservationInPeriod(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return quickReservationAdventureRepository.instructorHasTakenReservationInPeriod(instructorUsername, startDate, endDate);
+        for(QuickReservationAdventure quickReservationAdventure:quickReservationAdventureRepository.getByInstructorUsername(instructorUsername, LocalDateTime.now()))
+            if(!quickReservationAdventure.getStartDate().isAfter(endDate)&&!quickReservationAdventure.getEndDate().isBefore(startDate))
+                return true;
+        return false;
     }
 
     private void SendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {

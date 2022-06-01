@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.isa.fisherman.mail.EvaluationSuccesfullInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.EvaluationUnapprovedInfo;
 import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.repository.*;
+import rs.ac.uns.ftn.isa.fisherman.service.AdventureReservationService;
 import rs.ac.uns.ftn.isa.fisherman.service.CabinOwnerService;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
 import rs.ac.uns.ftn.isa.fisherman.service.ClientService;
@@ -55,6 +56,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     private CabinOwnerService cabinOwnerService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private AdventureReservationService adventureReservationService;
 
     @Override
     public boolean addComplaint(NewComplaintDto newComplaintDto) {
@@ -122,7 +125,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         }else if(newComplaintDto.getSubjectRole().equals("fishing instructor")){
             AdventureReservation adventureReservation = adventureReservationRepository.getById(newComplaintDto.getReservationId());
             FishingInstructor fishingInstructor = adventureReservation.getFishingInstructor();
-            return adventureReservationRepository.clientHasReservationWithInstructor(fishingInstructor.getId(), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
+            return adventureReservationService.clientHasReservationWithInstructor(fishingInstructor.getId(), clientService.findByUsername(newComplaintDto.getClientUsername()).getId());
         }
         return false;
     }
