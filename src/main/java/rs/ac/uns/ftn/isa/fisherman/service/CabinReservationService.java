@@ -1,7 +1,4 @@
 package rs.ac.uns.ftn.isa.fisherman.service;
-import org.apache.tomcat.jni.Local;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.isa.fisherman.dto.SearchAvailablePeriodsCabinDto;
 import rs.ac.uns.ftn.isa.fisherman.model.Cabin;
 import rs.ac.uns.ftn.isa.fisherman.dto.CabinReservationDto;
@@ -10,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-public interface ReservationCabinService {
+public interface CabinReservationService {
 
     Set<Cabin> getAvailableCabins(SearchAvailablePeriodsCabinDto searchAvailablePeriodsCabinDto);
     boolean makeReservation(CabinReservationDto cabinReservationDto) throws Exception;

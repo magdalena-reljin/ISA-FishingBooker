@@ -19,9 +19,9 @@ INSERT INTO AUTHORITY (id ,name) VALUES (2, 'ROLE_CABINOWNER');
 INSERT INTO AUTHORITY (id ,name) VALUES (3, 'ROLE_BOATOWNER');
 INSERT INTO AUTHORITY (id ,name) VALUES (4, 'ROLE_FISHING_INSTRUCTOR');
 INSERT INTO AUTHORITY (id ,name) VALUES (6, 'ROLE_CLIENT');
-INSERT INTO RANK (id ,discount_percentage,points,rank) VALUES (1, 0,0,0);
-INSERT INTO RANK (id ,discount_percentage,points,rank) VALUES (2, 10,100,1);
-INSERT INTO RANK (id ,discount_percentage,points,rank) VALUES (3, 20,250,2);
+INSERT INTO RANK (id ,discount_percentage,points,rank_type) VALUES (1, 0,0,0);
+INSERT INTO RANK (id ,discount_percentage,points,rank_type) VALUES (2, 10,100,1);
+INSERT INTO RANK (id ,discount_percentage,points,rank_type) VALUES (3, 20,250,2);
 
 INSERT INTO RESERVATION_POINTS (id ,app_profit_percentage,cancelation_fee_percentage,client_points,owner_points) VALUES (1, 3,2,1,1);
 
@@ -140,3 +140,4 @@ INSERT INTO penalties (id, date, users_id) VALUES (2, '2022-07-11 12:23:00',  14
 INSERT INTO penalties (id, date, users_id) VALUES (3, '2022-07-12 12:23:00',  14);
 
 INSERT INTO quick_reservation_adventure (id, end_date, evaluated, owner_wroteareport, owners_username, companys_part, owners_part, total_price, start_date, successfull, discount, users_id, adventure_id, instructors_id) VALUES (1, '2022-07-12 13:00:00', false, false, 'fi@gmail.com', 0.0, 0, 200, '2022-07-12 12:00:00', true, 10, null, 1, 4);
+

@@ -104,7 +104,7 @@ public class BoatStatisticsReportController {
         Long id=boatService.findByNameAndOwner(boatName,userService.findByUsername(username).getId()).getId();
         List<BoatReservation> reservations= boatReservationService.findReservationsByBoatToSumProfit(id,dateRange.get(0),dateRange.get(1));
         List<QuickReservationBoat> quickReservationBoats=quickReservationBoatService.findReservationsToSumProfitByBoat(id,dateRange.get(0),dateRange.get(1));
-        profit.add(boatReservationService.sumProfitOfPricesCalucatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
+        profit.add(boatReservationService.sumProfitOfPricesCalculatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
         profit.add(quickReservationBoatService.sumProfitOfPricesCalculatedByHours(quickReservationBoats,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
@@ -114,7 +114,7 @@ public class BoatStatisticsReportController {
         List<Double> profit=new ArrayList<>();
         List<BoatReservation> reservations= boatReservationService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1));
         List<QuickReservationBoat> quickReservationBoats=quickReservationBoatService.findReservationsToSumProfit(username,dateRange.get(0),dateRange.get(1));
-        profit.add(boatReservationService.sumProfitOfPricesCalucatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
+        profit.add(boatReservationService.sumProfitOfPricesCalculatedByHours(reservations,dateRange.get(0),dateRange.get(1)));
         profit.add(quickReservationBoatService.sumProfitOfPricesCalculatedByHours(quickReservationBoats,dateRange.get(0),dateRange.get(1)));
         return new ResponseEntity<>(profit, HttpStatus.OK);
     }
@@ -127,7 +127,7 @@ public class BoatStatisticsReportController {
                 boatReservationService.findAllReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),thisWeek.get(0),thisWeek.get(1)
         );
         profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
-                quickReservationBoatService.findAllQucikReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),
+                quickReservationBoatService.findAllQuickReservationsForAdminProfit(thisWeek.get(0),thisWeek.get(1)),
                 thisWeek.get(0),thisWeek.get(1)
         );
         return new ResponseEntity<>(profit, HttpStatus.OK);
@@ -136,7 +136,6 @@ public class BoatStatisticsReportController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Double> sumTodaysProfit() {
         double profit=0.0;
-        List<LocalDateTime> today=new ArrayList<>();
         LocalDate date= LocalDate.now();
         LocalDateTime start= LocalTime.MIN.atDate(date);
         LocalDateTime end= LocalTime.MAX.atDate(date);
@@ -145,7 +144,7 @@ public class BoatStatisticsReportController {
                 boatReservationService.findAllReservationsForAdminProfit(start,end),start,end
         );
         profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
-                quickReservationBoatService.findAllQucikReservationsForAdminProfit(start,end),
+                quickReservationBoatService.findAllQuickReservationsForAdminProfit(start,end),
                 start,end
         );
         return new ResponseEntity<>(profit, HttpStatus.OK);
@@ -159,7 +158,7 @@ public class BoatStatisticsReportController {
                 boatReservationService.findAllReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),thisMonth.get(0),thisMonth.get(1)
         );
         profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
-                quickReservationBoatService.findAllQucikReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),
+                quickReservationBoatService.findAllQuickReservationsForAdminProfit(thisMonth.get(0),thisMonth.get(1)),
                 thisMonth.get(0),thisMonth.get(1)
         );
         return new ResponseEntity<>(profit, HttpStatus.OK);
@@ -173,7 +172,7 @@ public class BoatStatisticsReportController {
                 boatReservationService.findAllReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),thisYear.get(0),thisYear.get(1)
         );
         profit+=quickReservationBoatService.sumProfitOfPricesCalculatedByHoursForAdmin(
-                quickReservationBoatService.findAllQucikReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),
+                quickReservationBoatService.findAllQuickReservationsForAdminProfit(thisYear.get(0),thisYear.get(1)),
                 thisYear.get(0),thisYear.get(1)
         );
         return new ResponseEntity<>(profit, HttpStatus.OK);

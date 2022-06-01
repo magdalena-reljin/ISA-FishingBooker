@@ -4,9 +4,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TokenUtils tokenUtils;
     @Autowired
-    private ReservationCabinService reservationCabinService;
+    private CabinReservationService cabinReservationService;
     @Autowired
     private QuickReservationCabinService quickReservationCabinService;
     @Autowired
@@ -180,7 +177,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public String deleteUser(User user)   {
         try {
-
             if (checkIfCanDeletingUser(user)) {
                 userRepository.delete(user);
                 return "TRUE";
@@ -190,8 +186,6 @@ public class UserServiceImpl implements UserService {
             return "Exception"  ;
         }
     }
-
-
 
     @Override
     public void saveDeleteAccountRequest(String username, String reasonForDeleting) {
@@ -210,8 +204,6 @@ public class UserServiceImpl implements UserService {
     public boolean sendDenyReason(String response, String recipient) throws Exception {
         User user=userRepository.findByUsername(recipient);
         if(user.getReasonForDeleting() == null)return false;
-        if(user== null)
-            return false;
         user.setReasonForDeleting("");
         userRepository.save(user);
         mailService.sendMail(recipient,response,new AccountDeletingDenied());
@@ -224,8 +216,6 @@ public class UserServiceImpl implements UserService {
     public boolean sendAcceptReason(String response, String recipient) throws Exception {
         User user=userRepository.findByUsername(recipient);
         if(user.getReasonForDeleting().equals(""))return false;
-        if(user== null)
-            return false;
         userRepository.delete(user);
         mailService.sendMail(recipient,response,new AccountDeletingAccepted());
         return  true;
@@ -268,7 +258,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean checkClient(User user){
-        if(reservationCabinService.checkIfClientHasFutureReservations(user.getId()) ||
+        if(cabinReservationService.checkIfClientHasFutureReservations(user.getId()) ||
                 quickReservationCabinService.checkIfClientHasFutureReservations(user.getId())||
                 boatReservationService.checkIfClientHasFutureReservations(user.getId()) ||
                 quickReservationBoatService.checkIfClientHasFutureReservations(user.getId())||
@@ -280,7 +270,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean checkCabinOwner(User user){
-        if(reservationCabinService.checkIfOwnerHasFutureReservations(user.getUsername()) ||
+        if(cabinReservationService.checkIfOwnerHasFutureReservations(user.getUsername()) ||
                 quickReservationCabinService.checkIfOwnerHasFutureReservations(user.getUsername()))
             return  true;
 
