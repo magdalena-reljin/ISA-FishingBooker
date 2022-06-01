@@ -177,16 +177,17 @@ export default {
                axios
                .post(process.env.VUE_APP_BACKEND_URL+"auth/signUpCabinOwner",this.user)
                .then((response) => {
-                 console.log("RESPONSEE"+response.data)
-                 if(response.data =='Email already in use.'){
-                   this.flag= true
-                 }else {
                       this.$router.push('/accountAlert/'+this.user.username);
-                 }
-                 
                  return response;
                 
                })
+               .catch((error) => {
+                  this.$swal.fire({
+                    icon: "error",
+                    title: "Something went wrong!",
+                    text: error.response.data,
+                  });
+                });
             
         }else if(this.selectedClient === 'BOAT OWNER'){
                axios
@@ -195,6 +196,13 @@ export default {
                    this.$router.push('/accountAlert/'+this.user.username);
                     return response;
                })
+                .catch((err) => {
+                  this.$swal.fire({
+                    icon: "error",
+                    title: "Something went wrong!",
+                    text: err.response.data,
+                  });
+                });
 
         }else if(this.selectedClient === 'FISHING INSTRUCTOR'){
               axios
@@ -203,6 +211,13 @@ export default {
                    this.$router.push('/accountAlert/'+this.user.username);
                     return response;
                })
+                .catch((err) => {
+                  this.$swal.fire({
+                    icon: "error",
+                    title: "Something went wrong!",
+                    text: err.response.data,
+                  });
+                });
 
         }else if(this.selectedClient === 'CLIENT'){
               axios
@@ -211,6 +226,13 @@ export default {
                    this.$router.push('/clientAccountAlert/'+this.user.username);
                     return response;
                })
+                .catch((err) => {
+                  this.$swal.fire({
+                    icon: "error",
+                    title: "Something went wrong!",
+                    text: err.response.data,
+                  });
+                });
 
         }
         }else{
