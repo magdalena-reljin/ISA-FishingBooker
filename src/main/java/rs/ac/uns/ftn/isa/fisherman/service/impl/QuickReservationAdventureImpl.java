@@ -123,7 +123,10 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return quickReservationAdventureRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate);
+        for(QuickReservationAdventure quickReservationAdventure:quickReservationAdventureRepository.getByInstructorUsername(instructorUsername, LocalDateTime.now()))
+            if(!quickReservationAdventure.getStartDate().isAfter(endDate)&&!quickReservationAdventure.getEndDate().isBefore(startDate))
+                return true;
+        return false;
     }
 
     @Override

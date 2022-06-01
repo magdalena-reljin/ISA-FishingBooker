@@ -9,4 +9,7 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
 
     @Query(value="SELECT * FROM users where username=:username",nativeQuery = true)
     Client findByUsername(@Param("username")String username);
+
+    @Query(value="SELECT * FROM users where id=:id",nativeQuery = true)
+    Client findByID(@Param("id")Long id);
 }

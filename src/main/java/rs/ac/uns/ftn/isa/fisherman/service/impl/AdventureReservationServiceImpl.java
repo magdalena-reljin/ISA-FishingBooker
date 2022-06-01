@@ -14,8 +14,8 @@ import rs.ac.uns.ftn.isa.fisherman.mail.MailService;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdditionalServiceMapper;
 import rs.ac.uns.ftn.isa.fisherman.mapper.AdventureReservationMapper;
 import rs.ac.uns.ftn.isa.fisherman.model.*;
-import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationCancellationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureReservationRepository;
+import rs.ac.uns.ftn.isa.fisherman.repository.ClientRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.FishingInstructorRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import javax.mail.MessagingException;
@@ -47,7 +47,9 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     @Autowired
     private FishingInstructorService fishingInstructorService;
     @Autowired
-    private AdventureReservationCancellationRepository adventureReservationCancellationRepository;
+    private AdventureReservationCancellationService adventureReservationCancellationService;
+    @Autowired
+    private ClientRepository clientRepository;
 
     private final AdventureReservationMapper adventureReservationMapper = new AdventureReservationMapper();
     private final AdditionalServiceMapper additionalServiceMapper = new AdditionalServiceMapper();
@@ -194,7 +196,8 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
     }
 
     private boolean clientHasCancellationWithInstructorInPeriod(Long clientId, Long fishingInstructorId, LocalDateTime startDate, LocalDateTime endDate) {
-        return adventureReservationCancellationRepository.clientHasCancellationWithInstructorInPeriod(fishingInstructorId, clientId, startDate, endDate);
+        return adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(fishingInstructorRepository.findByID(fishingInstructorId).getUsername(),
+                clientRepository.findByID(clientId).getUsername(), startDate, endDate);
     }
 
     @Override
@@ -218,8 +221,15 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
 
     @Override
     public boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return adventureReservationRepository.instructorHasReservationInPeriod(instructorUsername, startDate, endDate) ||
+        return instructorHasReservationInPeriod(instructorUsername, startDate, endDate) ||
                 quickReservationAdventureService.fishingInstructorNotFree(instructorUsername, startDate, endDate);
+    }
+
+    private boolean instructorHasReservationInPeriod(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate){
+        for(AdventureReservation adventureReservation:adventureReservationRepository.getPresentByInstructorId(instructorUsername, LocalDateTime.now()))
+            if(!adventureReservation.getStartDate().isAfter(endDate)&&!adventureReservation.getEndDate().isBefore(startDate))
+                return true;
+        return false;
     }
 
     @Override
