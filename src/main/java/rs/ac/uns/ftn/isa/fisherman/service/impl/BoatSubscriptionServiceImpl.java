@@ -2,6 +2,9 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.isa.fisherman.model.BoatSubscription;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatSubscriptionRepository;
@@ -22,7 +25,8 @@ public class BoatSubscriptionServiceImpl implements BoatSubscriptionService {
     private BoatSubscriptionRepository boatSubscriptionRepository;
 
     @Override
-    public void addSubscription(String clientUsername, Long boatId) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public void addSubscription(String clientUsername, Long boatId) throws Exception{
         Client client = clientService.findByUsername(clientUsername);
         if(boatSubscriptionRepository.subscriptionExists(boatId, client.getId()))
             return;

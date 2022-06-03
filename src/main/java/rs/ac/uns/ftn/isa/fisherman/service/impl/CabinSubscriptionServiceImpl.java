@@ -2,6 +2,9 @@ package rs.ac.uns.ftn.isa.fisherman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.isa.fisherman.model.CabinSubscription;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.repository.CabinSubscriptionRepository;
@@ -23,7 +26,8 @@ public class CabinSubscriptionServiceImpl implements CabinSubscriptionService {
     private CabinSubscriptionRepository cabinSubscriptionRepository;
 
     @Override
-    public void addSubscription(String clientUsername, Long cabinId) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public void addSubscription(String clientUsername, Long cabinId) throws Exception{
         Client client = clientService.findByUsername(clientUsername);
         if(cabinSubscriptionRepository.subscriptionExists(cabinId, client.getId()))
             return;

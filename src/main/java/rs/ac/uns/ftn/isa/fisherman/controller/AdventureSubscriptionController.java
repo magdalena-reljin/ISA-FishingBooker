@@ -25,8 +25,12 @@ public class AdventureSubscriptionController {
     @PostMapping("/addSubscription")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> addSubscription (@RequestBody AdventureSubscriptionDto adventureSubscriptionDto) {
-        adventureSubscriptionService.addSubscription(adventureSubscriptionDto.getClientUsername(), adventureSubscriptionDto.getAdventureDto().getId());
-        return new ResponseEntity<>("Successful subscription!", HttpStatus.OK);
+        try {
+            adventureSubscriptionService.addSubscription(adventureSubscriptionDto.getClientUsername(), adventureSubscriptionDto.getAdventureDto().getId());
+            return new ResponseEntity<>("Successful subscription!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Owner edited adventure. Please try again.", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/removeSubscription")

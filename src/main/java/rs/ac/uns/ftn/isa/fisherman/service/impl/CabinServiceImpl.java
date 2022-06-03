@@ -71,6 +71,7 @@ public class CabinServiceImpl implements CabinService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public void delete(Long id) {
         Cabin cabin=cabinRepository.findById(id);
         Set<AdditionalServices> additionalServices=cabin.getAdditionalServices();
@@ -106,10 +107,7 @@ public class CabinServiceImpl implements CabinService {
 
     @Override
     public void updateCabinGrade(Long cabinId){
-        Set<Integer> reservationsIds = cabinReservationRepository.getCabinReservationsHistory(cabinId, LocalDateTime.now());
-        if(reservationsIds.isEmpty())
-            return;
-        Set<Double> approvedCabinGrades = cabinEvaluationRepository.getAllApprovedCabinEvaluationsByCabinReservationIds(reservationsIds);
+        Set<Double> approvedCabinGrades = cabinEvaluationRepository.getAllApprovedCabinEvaluationsByCabinId(cabinId);
         if(approvedCabinGrades.isEmpty())
             return;
         double sum = 0;

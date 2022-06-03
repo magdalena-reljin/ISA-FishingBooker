@@ -1,6 +1,9 @@
 package rs.ac.uns.ftn.isa.fisherman.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.isa.fisherman.model.AdventureSubscription;
 import rs.ac.uns.ftn.isa.fisherman.model.Client;
 import rs.ac.uns.ftn.isa.fisherman.repository.AdventureSubscriptionRepository;
@@ -22,7 +25,8 @@ public class AdventureSubscriptionServiceImpl implements AdventureSubscriptionSe
     private AdventureSubscriptionRepository adventureSubscriptionRepository;
 
     @Override
-    public void addSubscription(String clientUsername, Long adventureId) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public void addSubscription(String clientUsername, Long adventureId) throws Exception{
         Client client = clientService.findByUsername(clientUsername);
         if(adventureSubscriptionRepository.subscriptionExists(adventureId, client.getId()))
             return;
