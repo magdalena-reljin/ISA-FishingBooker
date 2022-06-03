@@ -22,11 +22,13 @@ public interface BoatService {
 
     boolean edit(Boat boat, Boolean deleteOldImages) throws Exception;
 
-    boolean delete(Long id);
+    boolean delete(Long id) throws Exception;
 
     List<Boat> findAll();
 
     boolean canBeEditedOrDeleted(Long id);
 
     double findAvgBoatRatingByOwnerId(Long ownerId);
+
+    void updateBoatGrade(Long boatId);
 }

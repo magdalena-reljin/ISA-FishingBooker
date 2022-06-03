@@ -16,7 +16,7 @@ public interface CabinService {
     boolean save(Cabin cabin, Set<AdditionalServices> additionalServices);
     void addNewImage(String cabinName, Image image);
     Set<Cabin> findByOwnersId(Long id);
-    void delete(Long id);
+    void delete(Long id) throws Exception;
     boolean edit(Cabin cabin, Boolean deleteOldImages) throws Exception;
     boolean canBeEditedOrDeleted(Long id);
     Double findAvgCabinRatingByOwnerId(Long ownerId);

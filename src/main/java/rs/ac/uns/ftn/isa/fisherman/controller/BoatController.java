@@ -77,11 +77,15 @@ public class BoatController {
     @PreAuthorize("hasRole('BOATOWNER')  || hasRole('ADMIN')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody BoatDto boatDto){
-        Boat boat=boatMapper.boatDtoToBoat(boatDto);
-        if(boatService.delete(boat.getId()))
-            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
-        else
-            return new ResponseEntity<>(BAD_REQUEST,HttpStatus.BAD_REQUEST);
+        try {
+            Boat boat=boatMapper.boatDtoToBoat(boatDto);
+            if(boatService.delete(boat.getId()))
+                return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+            else
+                return new ResponseEntity<>(BAD_REQUEST,HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unsuccessful, try again!", HttpStatus.BAD_REQUEST);
+        }
     }
     @PreAuthorize("hasRole('BOATOWNER')")
     @PostMapping("/findByNameAndOwnersUsername/{boatName}/{username:.+}/")

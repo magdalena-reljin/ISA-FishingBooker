@@ -100,10 +100,14 @@ public class QuickReservationCabinController {
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(cabinReservationCancellationService.clientHasCancellationForCabinInPeriod(quickReservationCabinDto.getCabinDto().getId(), quickReservationCabinDto.getClientUsername(), quickReservationCabinDto.getStartDate(), quickReservationCabinDto.getEndDate()))
             return new ResponseEntity<>("Client has cancellation with instructor in given period!", HttpStatus.BAD_REQUEST);
-        if(quickReservationCabinService.makeQuickReservation(quickReservationCabinDto)) {
-            return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>("Unsuccessful booking! Cabin not available in given period!", HttpStatus.BAD_REQUEST);
+        try{
+            if(quickReservationCabinService.makeQuickReservation(quickReservationCabinDto)) {
+                return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("Unsuccessful booking! Cabin not available in given period!", HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>("Someone already made reservation or owner edited cabin. Please try again.", HttpStatus.BAD_REQUEST);
         }
     }
 

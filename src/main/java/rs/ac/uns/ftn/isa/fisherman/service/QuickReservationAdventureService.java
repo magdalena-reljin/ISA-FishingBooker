@@ -18,7 +18,7 @@ public interface QuickReservationAdventureService {
     void  save(QuickReservationAdventure quickReservationAdventure);
     QuickReservationAdventure findById(Long id);
     Set<QuickReservationAdventure> getAvailableReservations();
-    boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto);
+    boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto) throws Exception;
     boolean fishingInstructorNotFree(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate);
     Set<QuickReservationAdventure> getUpcomingClientQuickReservations(String clientUsername);
     Set<QuickReservationAdventure> getClientQuickReservationsHistory(String clientUsername);

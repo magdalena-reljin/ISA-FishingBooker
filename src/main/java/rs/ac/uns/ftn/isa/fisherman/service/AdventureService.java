@@ -12,7 +12,7 @@ public interface AdventureService {
     void addNewImage(String adventureName, Image image);
     Set<Adventure> findAdventuresByInstructorId(Long id);
     Adventure findAdventureByName(String adventureName, Long fishingInstructorId);
-    void delete(Long id);
+    void delete(Long id) throws Exception;
     boolean edit(Adventure adventure, Long id) throws Exception;
     boolean canBeEditedOrDeleted(Long id);
     List<Adventure> findAll();

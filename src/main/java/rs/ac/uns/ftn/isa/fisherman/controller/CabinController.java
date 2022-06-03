@@ -73,9 +73,13 @@ public class CabinController {
     @PreAuthorize("hasRole('CABINOWNER')|| hasRole('ADMIN')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody CabinDto cabinDto){
-        Cabin cabin=cabinMapper.cabinDtoToCabin(cabinDto);
-        cabinService.delete(cabin.getId());
-        return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        try {
+            Cabin cabin=cabinMapper.cabinDtoToCabin(cabinDto);
+            cabinService.delete(cabin.getId());
+            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unsuccessful, try again!", HttpStatus.BAD_REQUEST);
+        }
     }
     @PreAuthorize("hasRole('CABINOWNER')")
     @PostMapping("/edit")

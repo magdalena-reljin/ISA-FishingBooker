@@ -22,7 +22,7 @@ public interface QuickReservationCabinService {
     double sumProfitOfPricesCalculatedByDays(List<QuickReservationCabin> reservations, LocalDateTime start, LocalDateTime end);
     void save(QuickReservationCabin reservation);
     Set<QuickReservationCabin> getAvailableReservations();
-    boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto);
+    boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto) throws Exception;
     boolean cabinHasQuickReservationInPeriod(Long cabinId, LocalDateTime startDate, LocalDateTime endDate);
     Set<QuickReservationCabin> getUpcomingClientQuickReservations(String clientUsername);
     Set<QuickReservationCabin> getClientQuickReservationsHistory(String clientUsername);

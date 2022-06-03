@@ -86,8 +86,12 @@ public class AdventureController {
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')  || hasRole('ADMIN')")
     @PostMapping("/deleteAdventure")
     public ResponseEntity<String> deleteAdventure(@RequestBody AdventureDto adventureDto){
-        adventureService.delete(adventureDto.getId());
-        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        try {
+            adventureService.delete(adventureDto.getId());
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unsuccessful, try again!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PreAuthorize("hasRole('FISHING_INSTRUCTOR')")

@@ -26,15 +26,19 @@ public class CabinSubscriptionController {
     @PostMapping("/addSubscription")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> addSubscription (@RequestBody CabinSubscriptionDto cabinSubscriptionDto) {
-        cabinSubscriptionService.addSubscription(cabinSubscriptionDto.getClientUsername(), cabinSubscriptionDto.getCabinDto().getId());
-        return new ResponseEntity<>("Successful subscription!", HttpStatus.OK);
+        try {
+            cabinSubscriptionService.addSubscription(cabinSubscriptionDto.getClientUsername(), cabinSubscriptionDto.getCabinDto().getId());
+            return new ResponseEntity<>("Successful subscription!", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Owner edited cabin. Please try again.", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/removeSubscription")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> removeSubscription (@RequestBody CabinSubscriptionDto cabinSubscriptionDto) {
-        cabinSubscriptionService.removeSubscription(cabinSubscriptionDto.getClientUsername(), cabinSubscriptionDto.getCabinDto().getId());
-        return new ResponseEntity<>("Subscription successfully removed!", HttpStatus.OK);
+            cabinSubscriptionService.removeSubscription(cabinSubscriptionDto.getClientUsername(), cabinSubscriptionDto.getCabinDto().getId());
+            return new ResponseEntity<>("Subscription successfully removed!", HttpStatus.OK);
     }
 
     @GetMapping("/getByClientUsername/{username:.+}/")

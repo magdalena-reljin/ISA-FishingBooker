@@ -100,10 +100,14 @@ public class QuickReservationAdventureController {
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(adventureReservationCancellationService.clientHasCancellationWithInstructorInPeriod(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getClientUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
             return new ResponseEntity<>("Client has cancellation with instructor in given period!", HttpStatus.BAD_REQUEST);
-        if(quickReservationAdventureService.makeQuickReservation(quickReservationAdventureDto)) {
-            return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>("Unsuccessful booking! Fishing instructor not available in given period!", HttpStatus.BAD_REQUEST);
+        try {
+            if (quickReservationAdventureService.makeQuickReservation(quickReservationAdventureDto)) {
+                return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Unsuccessful booking! Fishing instructor not available in given period!", HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>("Someone already made reservation or owner edited adventure. Please try again.", HttpStatus.BAD_REQUEST);
         }
     }
 

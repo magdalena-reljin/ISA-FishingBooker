@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.isa.fisherman.model.AdditionalServices;
 import rs.ac.uns.ftn.isa.fisherman.model.Boat;
 import rs.ac.uns.ftn.isa.fisherman.model.Image;
+import rs.ac.uns.ftn.isa.fisherman.repository.BoatEvaluationRepository;
 import rs.ac.uns.ftn.isa.fisherman.repository.BoatRepository;
 import rs.ac.uns.ftn.isa.fisherman.service.*;
 import java.time.LocalDateTime;
@@ -26,6 +27,8 @@ public class BoatServiceImpl implements BoatService {
     private QuickReservationBoatService quickReservationBoatService;
     @Autowired
     private BoatReservationService boatReservationService;
+    @Autowired
+    private BoatEvaluationRepository boatEvaluationRepository;
 
     @Override
     public void save(Boat boat) {
@@ -106,6 +109,7 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public boolean delete(Long id) {
         Boat boat=boatRepository.findById(id);
         Set<AdditionalServices> additionalServices=boat.getAdditionalServices();
@@ -142,5 +146,19 @@ public class BoatServiceImpl implements BoatService {
         }
        if (ratingExists) return sum/count;
        return sum;
+    }
+
+    @Override
+    public void updateBoatGrade(Long boatId) {
+        Set<Double> approvedBoatGrades = boatEvaluationRepository.getAllApprovedBoatEvaluationsByBoatId(boatId);
+        if(approvedBoatGrades.isEmpty())
+            return;
+        double sum = 0;
+        for(Double number: approvedBoatGrades)
+            sum += number;
+        Boat boat = boatRepository.findById(boatId);
+        double rating = sum/ approvedBoatGrades.size();
+        boat.setRating(rating);
+        boatRepository.save(boat);
     }
 }

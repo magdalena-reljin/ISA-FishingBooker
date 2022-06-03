@@ -77,6 +77,7 @@ public class AdventureServiceImpl implements AdventureService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public void delete(Long id) {
         Adventure adventure=adventureRepository.findByID(id);
         Set<AdditionalServices> additionalServices=adventure.getAdditionalServices();

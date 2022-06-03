@@ -119,7 +119,8 @@ public class QuickReservationBoatServiceImpl implements QuickReservationBoatServ
     }
 
     @Override
-    public boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
+    public boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto) throws Exception{
         QuickReservationBoat quickReservationBoat = quickReservationBoatRepository.getById(quickReservationBoatDto.getId());
         if(boatReservationService.boatNotFreeForQuickReservation(quickReservationBoat.getBoat().getId(), quickReservationBoat.getStartDate(), quickReservationBoat.getEndDate()))
             return false;

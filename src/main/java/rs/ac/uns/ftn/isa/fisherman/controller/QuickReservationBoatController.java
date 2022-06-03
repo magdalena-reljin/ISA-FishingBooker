@@ -106,10 +106,14 @@ public class QuickReservationBoatController {
             return new ResponseEntity<>("Client banned from making reservations!", HttpStatus.BAD_REQUEST);
         if(boatReservationCancellationService.clientHasCancellationForBoatInPeriod(quickReservationBoatDto.getBoatDto().getId(), quickReservationBoatDto.getClientUsername(), quickReservationBoatDto.getStartDate(), quickReservationBoatDto.getEndDate()))
             return new ResponseEntity<>("Client has cancellation with instructor in given period!", HttpStatus.BAD_REQUEST);
-        if(quickReservationBoatService.makeQuickReservation(quickReservationBoatDto)) {
-            return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>("Unsuccessful booking! Boat not available in given period!", HttpStatus.BAD_REQUEST);
+        try{
+            if(quickReservationBoatService.makeQuickReservation(quickReservationBoatDto)) {
+                return new ResponseEntity<>("Successful booking!", HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("Unsuccessful booking! Boat not available in given period!", HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>("Someone already made reservation or owner edited boat. Please try again.", HttpStatus.BAD_REQUEST);
         }
     }
 
