@@ -380,8 +380,10 @@ export default {
       if (username != "") {
         var role = this.user.role;
         console.log("roleeeee  " + this.user.role);
+
         if (role == "ROLE_CABINOWNER") {
           console.log("trazim kom od cabin ownera");
+          this.showDiscount = true;
           axios
             .get(
               process.env.VUE_APP_BACKEND_URL+"evaluations/cabinOwner/" + username + "/"
@@ -391,6 +393,7 @@ export default {
             });
         } else if (role == "ROLE_BOATOWNER") {
           console.log("trazim kom od boat ownera");
+          this.showDiscount = true;
           axios
             .get(
               process.env.VUE_APP_BACKEND_URL+"evaluations/boatOwner/" + username + "/"
@@ -399,6 +402,7 @@ export default {
               this.comments = response.data;
             });
         } else if (role == "ROLE_FISHING_INSTRUCTOR") {
+          this.showDiscount = true;
           console.log("trazim kom od instructora");
           axios
             .get(
@@ -410,10 +414,11 @@ export default {
         } else if (role == "ROLE_CLIENT") {
           this.showComments = false;
           this.showDiscount = true;
-            axios.get(process.env.VUE_APP_BACKEND_URL+"ranks/getAll").then((response) => {
+           
+        }
+         axios.get(process.env.VUE_APP_BACKEND_URL+"ranks/getAll").then((response) => {
               this.ranks = response.data;
             });
-        }
       }
     },
     setDate: function (newDate) {
@@ -431,9 +436,8 @@ export default {
       return dateee.format("YYYY-MM-DD HH:mm:ss");
     },
     visitProfile: function (username) {
-      console.log("ovo ispisujemmmm  " + username);
       this.$props.personsProfile = username;
-      console.log("izmenio sammmmm   " + this.$props.personsProfile);
+
       if(this.userRole=="ROLE_CABINOWNER"){
       this.$router.push("/cabinOwner/viewProfile/" + this.$props.emailProp + "/" + username);
 
@@ -442,10 +446,9 @@ export default {
 
       }else if(this.userRole=="ROLE_FISHING_INSTRUCTOR"){
       this.$router.push("/instructor/viewProfile/" + this.$props.emailProp + "/" + username);
-
       }
       this.getUser(username);
-    },
+      },
   },
 
   computed: {
