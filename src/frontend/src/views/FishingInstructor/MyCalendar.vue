@@ -871,8 +871,14 @@ export default {
                       return;
                     }
                     if(this.startReservation != null && this.endReservation!=null){
+                             
                                  this.additionalServicesAdded()
                                  this.calculatePrice(this.startReservation,this.endReservation,this.adventureDto[this.selected].price)
+                                  this.loader = this.$loading.show({
+                                    container: this.fullPage ? null : this.$refs.formContainer,
+                                    canCancel: true,
+                                    onCancel: this.onCancel,
+                                  });
                                 axios
                                 .post(
                                 process.env.VUE_APP_BACKEND_URL+"reservationAdventure/instructorCreates",
@@ -902,6 +908,8 @@ export default {
                                            timer: 1500
                                        })
                                        
+                                       this.loader.hide();
+                                          this.loader=null
                                        this.clearModalReservation()
                                 })
                               .catch((err) =>{
@@ -911,6 +919,9 @@ export default {
                                         title: 'Oops...',
                                         text: err.response.data,
                                })
+                                  
+                                       this.loader.hide();
+                                          this.loader=null
                                     this.clearModalReservation()
                               })
                               
@@ -974,6 +985,8 @@ export default {
                                         title: 'Oops...',
                                         text: err.response.data,
                                       })
+                                       this.loader.hide();
+                                          this.loader=null
                                     this.clearModalQuick()
                               })
                               
