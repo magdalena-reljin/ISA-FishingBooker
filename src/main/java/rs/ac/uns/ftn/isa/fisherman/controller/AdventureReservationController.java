@@ -108,7 +108,7 @@ public class AdventureReservationController {
             else
                 return new ResponseEntity<>("Fishing instructor already reserved in period!", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>("Someone already made reservatin or owner edited adventure. Please try again.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Someone already made reservation or owner edited adventure. Please try again.", HttpStatus.BAD_REQUEST);
         }
     }
 

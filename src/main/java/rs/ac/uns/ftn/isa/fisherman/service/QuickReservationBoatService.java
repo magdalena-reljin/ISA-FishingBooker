@@ -20,7 +20,7 @@ public interface QuickReservationBoatService {
     QuickReservationBoat getById(Long reservationId);
     void save(QuickReservationBoat reservation);
     Set<QuickReservationBoat> getAvailableReservations();
-    boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto);
+    boolean makeQuickReservation(QuickReservationBoatDto quickReservationBoatDto) throws Exception;
     boolean boatHasQuickReservationInPeriod(Long boatId, LocalDateTime startDate, LocalDateTime endDate);
     Set<QuickReservationBoat> getUpcomingClientQuickReservations(String clientUsername);
     Set<QuickReservationBoat> getClientQuickReservationsHistory(String clientUsername);

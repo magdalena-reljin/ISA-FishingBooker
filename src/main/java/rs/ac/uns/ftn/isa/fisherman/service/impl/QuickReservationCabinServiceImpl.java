@@ -158,7 +158,8 @@ public class QuickReservationCabinServiceImpl implements QuickReservationCabinSe
     }
 
     @Override
-    public boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
+    public boolean makeQuickReservation(QuickReservationCabinDto quickReservationCabinDto) throws Exception{
         QuickReservationCabin quickReservationCabin = quickReservationCabinRepository.getById(quickReservationCabinDto.getId());
         if(cabinReservationService.cabinNotFreeForQuickReservationInPeriod(quickReservationCabin.getCabin().getId(), quickReservationCabin.getStartDate(), quickReservationCabin.getEndDate()))
             return false;

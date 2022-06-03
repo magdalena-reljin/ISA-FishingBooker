@@ -107,7 +107,8 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
     }
 
     @Override
-    public boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
+    public boolean makeQuickReservation(QuickReservationAdventureDto quickReservationAdventureDto) throws Exception{
         if(adventureReservationService.fishingInstructorNotFreeForQuickReservation(quickReservationAdventureDto.getOwnersUsername(), quickReservationAdventureDto.getStartDate(), quickReservationAdventureDto.getEndDate()))
             return false;
         QuickReservationAdventure quickReservationAdventure = quickReservationAdventureRepository.getById(quickReservationAdventureDto.getId());
@@ -196,7 +197,11 @@ public class QuickReservationAdventureImpl implements QuickReservationAdventureS
 
     @Override
     public boolean instructorHasTakenReservationInPeriod(String instructorUsername, LocalDateTime startDate, LocalDateTime endDate) {
-        return fishingInstructorNotFree(instructorUsername, startDate, endDate);
+        for(QuickReservationAdventure quickReservationAdventure:quickReservationAdventureRepository.getByInstructorUsername(instructorUsername, LocalDateTime.now()))
+            if(!quickReservationAdventure.getStartDate().isAfter(endDate)&&!quickReservationAdventure.getEndDate().isBefore(startDate)
+                    &&quickReservationAdventure.getClient()!=null)
+                return true;
+        return false;
     }
 
     private void sendReservationMailToClient(QuickReservationAdventureDto quickReservationAdventureDto) {
