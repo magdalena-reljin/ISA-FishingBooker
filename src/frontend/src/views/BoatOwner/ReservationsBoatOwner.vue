@@ -493,7 +493,7 @@ export default ({
                
           },
           redirectToClientProfile: function(clientUsername){
-              this.$router.push('/cabinOwner/viewProfile/'+ this.email + "/"+clientUsername);
+              this.$router.push('/boatOwner/viewProfile/'+ this.email + "/"+clientUsername);
         }
 
 

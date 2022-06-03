@@ -483,7 +483,7 @@ export default ({
               this.getPastReservations();
           },
           redirectToClientProfile: function(clientUsername){
-              this.$router.push('/cabinOwner/viewProfile/'+ this.email + "/"+clientUsername);
+              this.$router.push('/instructor/viewProfile/'+ this.email + "/"+clientUsername);
         }
 
 

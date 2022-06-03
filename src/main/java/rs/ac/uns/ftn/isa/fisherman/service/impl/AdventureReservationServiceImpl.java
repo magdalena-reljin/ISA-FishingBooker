@@ -103,9 +103,9 @@ public class AdventureReservationServiceImpl implements AdventureReservationServ
         LocalDateTime currentDate= LocalDateTime.now();
         if(client==null) return false;
 
-        if(adventureReservationRepository.clientHasReservation(adventureReservation.getOwnersUsername()
+    /*    if(adventureReservationRepository.clientHasReservation(adventureReservation.getOwnersUsername()
                 ,client.getId(),currentDate).isEmpty()) return false;
-
+*/
         if(!availableInstructorPeriodService.instructorIsAvailable(adventureReservation.getFishingInstructor()
                 .getId(),adventureReservation.getStartDate(),adventureReservation.getEndDate())) return false;
 
