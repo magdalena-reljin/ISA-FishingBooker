@@ -248,7 +248,12 @@ public class UserServiceImpl implements UserService {
     public void updateOwnersRating(String username,Double grade) {
         User user = userRepository.findByUsername(username);
         Double newGrade= user.getRating()+grade;
-        double rating = newGrade/2.0;
+        double rating = 0.0;
+        if(user.getRating() == 0) {
+            rating =  newGrade;
+        }else {
+            rating = newGrade / 2.0;
+        }
         user.setRating(rating);
         userRepository.save(user);
     }
