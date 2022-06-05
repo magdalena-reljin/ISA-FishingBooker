@@ -14,7 +14,7 @@
 ### Heroku
 Backend: [![badge](https://img.shields.io/badge/Heroku-backend-9676B9)](https://ancient-cliffs-65079.herokuapp.com/)
 
-Frontend: [![badge](https://img.shields.io/badge/Heroku-frontend-9676B9)](https://rocky-ravine-63735.herokuapp.com/)
+Frontend: [![badge](https://img.shields.io/badge/Heroku-frontend-9676B9)](https://fisherman-booking.herokuapp.com/)
 
 ## Description
 
@@ -63,6 +63,7 @@ Roles and credentials:
 - Admin - username: proba@gmail.com, password: 123
 
 ## DevOps_microflow
-
+- Frontend repo for deployment: https://github.com/stojic19/fishermanFrontend
+- Backend repo for deployment: https://github.com/Dajana11-99/Test
 ![fisherman](readmeImages/backendDeployment.png)
 ![fisherman](readmeImages/deployFrontend.png)
