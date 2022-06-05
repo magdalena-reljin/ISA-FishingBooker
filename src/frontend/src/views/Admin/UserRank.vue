@@ -218,9 +218,50 @@ import axios from "axios";
                    })
          },
          validate: function(){
-             if(this.rankDto[0].points > this.rankDto[1].points || this.rankDto[0].points > this.rankDto[2].points || this.rankDto[1].points > this.rankDto[2].points )
+           var silver = 0
+           var gold = 0 
+           var bronze = 0 
+          var silverDiscount = 0
+           var goldDiscount = 0 
+           var bronzeDiscount = 0 
+           if(this.rankDto[0].rank == 'SILVER'){
+             silver = this.rankDto[0].points
+             silverDiscount = this.rankDto[0].discountPercentage
+           }else if(this.rankDto[1].rank == 'SILVER'){
+             silver = this.rankDto[1].points
+             silverDiscount = this.rankDto[1].discountPercentage
+           }else if(this.rankDto[2].rank == 'SILVER'){
+             silver = this.rankDto[2].points
+             silverDiscount = this.rankDto[2].discountPercentage
+           }
+
+             if(this.rankDto[0].rank == 'BRONZE'){
+             bronze = this.rankDto[0].points
+             bronzeDiscount = this.rankDto[0].discountPercentage
+           }else if(this.rankDto[1].rank == 'BRONZE'){
+             bronze = this.rankDto[1].points
+            bronzeDiscount = this.rankDto[1].discountPercentage
+           }else if(this.rankDto[2].rank == 'BRONZE'){
+             bronze = this.rankDto[2].points
+             bronzeDiscount = this.rankDto[2].discountPercentage
+
+           }
+
+             if(this.rankDto[0].rank == 'GOLD'){
+             gold = this.rankDto[0].points
+             goldDiscount = this.rankDto[0].discountPercentage
+
+           }else if(this.rankDto[1].rank == 'GOLD'){
+             gold = this.rankDto[1].points
+             goldDiscount = this.rankDto[1].discountPercentage
+           }else if(this.rankDto[2].rank == 'GOLD'){
+             gold = this.rankDto[2].points
+             goldDiscount = this.rankDto[2].discountPercentage
+           }
+
+             if(bronze > silver || bronze > gold || silver > gold )
                 return false;
-             if(this.rankDto[0].discountPercentage > this.rankDto[1].discountPercentage || this.rankDto[0].discountPercentage > this.rankDto[2].discountPercentage || this.rankDto[1].discountPercentage > this.rankDto[2].discountPercentage )
+             if(bronzeDiscount > silverDiscount || bronzeDiscount > goldDiscount || silverDiscount > goldDiscount )
                 return false;
             return true;
          },
