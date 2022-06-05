@@ -247,7 +247,10 @@ import axios from "axios";
 
           },
            getAllProfit: function(){
-          
+              this.allToday=0
+              this.allWeek=0
+              this.allMonth=0
+              this.allYear=0
               axios
                 .get(
                 process.env.VUE_APP_BACKEND_URL+"cabinStatisticsReport/sumTodaysProfitOfAllCabinsForAdmin")
