@@ -66,4 +66,4 @@ Roles and credentials:
 - Frontend repo for deployment: https://github.com/stojic19/fishermanFrontend
 - Backend repo for deployment: https://github.com/Dajana11-99/Test
 ![fisherman](readmeImages/backendDeployment.png)
-![fisherman](readmeImages/deployFrontend.png)
+![fisherman](readmeImages/deployFrontend2.png)
